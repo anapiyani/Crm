@@ -67,3 +67,12 @@ h6 {
 #__next {
   isolation: isolate;
 }
+
+html,
+body {
+  height: 100%;
+}
+
+html {
+  font-size: 62.5%;
+}
