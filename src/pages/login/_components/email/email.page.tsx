@@ -4,7 +4,11 @@ import icon from "@/assets/icons/icon_wise.svg";
 import { Button } from "@mui/material";
 import classNames from "classnames";
 
-const EmailLogin = () => {
+type TProps = {
+  loginWPhone: () => void;
+};
+
+const EmailLogin = (props: TProps) => {
   return (
     <div className={classes["email"]}>
       <div className={classes["email__content"]}>
@@ -69,6 +73,7 @@ const EmailLogin = () => {
             <Button
               variant="outlined"
               className={classes["email__content__form__send__button"]}
+              onClick={props.loginWPhone}
             >
               Войти по номеру телефона
             </Button>

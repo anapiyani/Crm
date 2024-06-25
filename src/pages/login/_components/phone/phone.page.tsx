@@ -5,7 +5,11 @@ import icon from "@/assets/icons/icon_wise.svg";
 import flagIcon from "../../../../assets/icons/Flags.svg"; // Adjust the path as necessary
 import { useState } from "react";
 
-const PhoneLogin = () => {
+type TProps = {
+  loginWEmail: () => void;
+};
+
+const PhoneLogin = (props: TProps) => {
   const [phone, onPhoneChange] = useState<string>("7 7");
 
   return (
@@ -67,6 +71,14 @@ const PhoneLogin = () => {
               variant="contained"
             >
               Подтвердить номер
+            </Button>
+            <p className={classes["phone__content__form__send__choice"]}>Или</p>
+            <Button
+              variant="outlined"
+              className={classes["phone__content__form__send__button"]}
+              onClick={props.loginWEmail}
+            >
+              Войти по электронной почте
             </Button>
           </div>
         </form>
