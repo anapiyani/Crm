@@ -1,11 +1,11 @@
 import { Routes, Route } from "react-router-dom";
-import classes from "@/styles.module.scss";
+import LoginPage from "./pages/login/login.page";
 
 const App = () => {
   return (
-    <div className={classes["app"]}>
+    <div>
       <Routes>
-        <Route path="/" />
+        <Route path="/login" element={<LoginPage />} />
       </Routes>
     </div>
   );
