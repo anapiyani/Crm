@@ -5,9 +5,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import Divider from "@mui/material/Divider";
 import Drawer from "@mui/material/Drawer";
 import IconButton from "@mui/material/IconButton";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-
-import { List, ListItem } from "@mui/material";
+import { List, ListItem, styled } from "@mui/material";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
@@ -15,22 +13,36 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import classes from "./styles.module.scss";
-
-import HomeIcon from "@mui/icons-material/Home";
-import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
-import NotificationsIcon from "@mui/icons-material/Notifications";
-import GroupsIcon from "@mui/icons-material/Groups";
-import PersonIcon from "@mui/icons-material/Person";
-import ContentCutIcon from "@mui/icons-material/ContentCut";
-import Inventory2Icon from "@mui/icons-material/Inventory2";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import CreditCardIcon from "@mui/icons-material/CreditCard";
-import MailIcon from "@mui/icons-material/Mail";
-import DescriptionIcon from "@mui/icons-material/Description";
-import SettingsIcon from "@mui/icons-material/Settings";
-import InfoIcon from "@mui/icons-material/Info";
-import StoreIcon from "@mui/icons-material/Store";
-import { Home } from "@mui/icons-material";
+import logo from "@/assets/icons/icon_wise_white.svg";
+import {
+  Home,
+  AttachMoney,
+  Notifications,
+  Groups,
+  Person,
+  ContentCut,
+  Inventory2,
+  ShoppingCart,
+  CreditCard,
+  Mail,
+  Description,
+  Settings,
+  Info,
+  Store,
+} from "@mui/icons-material";
+// import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
+// import NotificationsIcon from "@mui/icons-material/Notifications";
+// import GroupsIcon from "@mui/icons-material/Groups";
+// import PersonIcon from "@mui/icons-material/Person";
+// import ContentCutIcon from "@mui/icons-material/ContentCut";
+// import Inventory2Icon from "@mui/icons-material/Inventory2";
+// import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+// import CreditCardIcon from "@mui/icons-material/CreditCard";
+// import MailIcon from "@mui/icons-material/Mail";
+// import DescriptionIcon from "@mui/icons-material/Description";
+// import SettingsIcon from "@mui/icons-material/Settings";
+// import InfoIcon from "@mui/icons-material/Info";
+// import StoreIcon from "@mui/icons-material/Store";
 
 const drawerWidth = 256;
 
@@ -62,44 +74,77 @@ export default function ResponsiveDrawer(props: Props) {
     }
   };
 
+  const items = [
+    { text: "Рабочий стол", icon: <Home /> },
+    { text: "Касса", icon: <AttachMoney /> },
+    { text: "Активности", icon: <Notifications /> },
+    { text: "Клиенты", icon: <Groups /> },
+    { text: "Сотрудники", icon: <Person /> },
+    { text: "Услуги", icon: <ContentCut /> },
+    { text: "Склад", icon: <Inventory2 /> },
+    { text: "Поставщики", icon: <ShoppingCart /> },
+    { text: "Карты и скидки", icon: <CreditCard /> },
+    { text: "Рассылка", icon: <Mail /> },
+    { text: "Отчеты", icon: <Description /> },
+    { text: "Настройки", icon: <Settings /> },
+    { text: "Поддержка", icon: <Info /> },
+    { text: "Маркет", icon: <Store /> },
+  ];
+
+  const LogoContainer = styled("div")({
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    padding: "1rem 0 1rem 2rem",
+    flexDirection: "row",
+    marginTop: "1.2rem",
+  });
+
+  const LogoImage = styled("img")({
+    height: "3.6rem",
+    
+  });
+
+  const IconContainer = styled(ListItemIcon)({
+    height: "2.4rem",
+    width: "5.6rem",
+    minWidth: 'auto',
+    color: "#C7DFF7",
+    display: 'flex',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    '& svg': {
+      fontSize: "2.4rem",
+    }
+  });
+
   const drawer = (
     <div>
-      <Toolbar />
-      <Divider />
-      <List>
-        {[
-          "Рабочий стол",
-          "Касса",
-          "Активности",
-          "Клиенты",
-          "Сотрудники",
-          "Услуги",
-          "Склад",
-          "Поставщики",
-          "Карты и скидки",
-          "Рассылка",
-          "Отчеты",
-          "Настройки",
-          "Поддержка",
-          "Маркет",
-        ].map((text, index) => (
-          <ListItem key={text} disablePadding>
+      {/* <Toolbar />
+      <Divider /> */}
+
+      <LogoContainer>
+        <LogoImage src={logo} alt="SuperWise" />
+      </LogoContainer>
+
+      <List sx={{padding: "0.8rem",}}>
+        {items.map((item) => (
+          <ListItem key={item.text} disablePadding>
             <ListItemButton>
-              <ListItemIcon style={{ color: "#C7DFF7" }}>
-                <HomeIcon />
-                
-              </ListItemIcon>
+              <IconContainer>
+                {item.icon}
+              </IconContainer>
               <ListItemText
-                primary={text}
+                primary={item.text}
                 primaryTypographyProps={{
                   color: "common.white",
                   fontWeight: "400",
                   variant: "body1",
-                  fontSize: "16px",
+                  fontSize: "1.6rem",
+                  padding: "0.4rem 0 0.4rem 0",
                 }}
               />
             </ListItemButton>
-            
           </ListItem>
         ))}
       </List>
@@ -169,6 +214,7 @@ export default function ResponsiveDrawer(props: Props) {
               boxSizing: "border-box",
               width: drawerWidth,
               backgroundColor: "#0a2744",
+              
             },
           }}
           open
