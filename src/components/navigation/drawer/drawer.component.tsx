@@ -38,10 +38,6 @@ import Collapse from "@mui/material/Collapse";
 const drawerWidth = "25.6rem";
 
 interface Props {
-  /**
-   * Injected by the documentation to work in an iframe.
-   * Remove this when copying and pasting into your project.
-   */
   window?: () => Window;
 }
 
@@ -59,19 +55,16 @@ export default function ResponsiveDrawer(props: Props) {
     setIsClosing(false);
   };
 
-  // const handleDrawerToggle = () => {
-  //   if (!isClosing) {
-  //     setMobileOpen(!mobileOpen);
-  //   }
-  // };
-
   const [open, setOpen] = React.useState<string | null>(null);
-  const [selectedIndex, setSelectedIndex] = React.useState<number | null>(null);
-  
+  const [selectedIndex, setSelectedIndex] = React.useState<string | null>(null);
 
   const handleClick = (text: string, index: number) => {
     setOpen(open === text ? null : text);
-    setSelectedIndex(index);
+    setSelectedIndex(`${index}`);
+  };
+
+  const handleChildClick = (parentIndex: number, childIndex: number) => {
+    setSelectedIndex(`${parentIndex}-${childIndex}`);
   };
 
   const items = [
@@ -154,22 +147,33 @@ export default function ResponsiveDrawer(props: Props) {
         <React.Fragment key={uniqueIndex}>
           <ListItem disablePadding>
             <ListItemButton
-              selected={selectedIndex === index}
-              onClick={() => handleClick(item.text, index)}
+              selected={selectedIndex === uniqueIndex}
+              onClick={() =>
+                parentIndex === null
+                  ? handleClick(item.text, index)
+                  : handleChildClick(parentIndex, index)
+              }
               sx={{
+                transition: "background-color 0.5s ease, color 0.5s ease",
                 "&.Mui-selected": {
                   backgroundColor: "#0B6BCB",
-
                   borderRadius: "4px",
                   color: "#97C3F0",
+                  transition: "background-color 0.5s ease",
                   "& .MuiListItemIcon-root": {
                     color: "#fff",
                   },
+                  "&:hover": {
+                    backgroundColor: "#0B6BCB", // Ensure the background color remains the same on hover
+                  },
                 },
                 color: "#97C3F0",
+                
               }}
             >
-              <IconContainer>{item.icon}</IconContainer>
+              {parentIndex === null && (
+                <IconContainer>{item.icon}</IconContainer>
+              )}
               <ListItemText
                 primary={item.text}
                 primaryTypographyProps={{
@@ -180,7 +184,7 @@ export default function ResponsiveDrawer(props: Props) {
                   padding: "0.4rem 0 0.4rem 0",
                 }}
               />
-              {item.children ? (
+              {item.children && parentIndex === null ? (
                 open === item.text ? (
                   <ExpandLess />
                 ) : (
@@ -190,11 +194,7 @@ export default function ResponsiveDrawer(props: Props) {
             </ListItemButton>
           </ListItem>
           {item.children ? (
-            <Collapse
-              in={open === item.text}
-              timeout={1000}
-              unmountOnExit
-            >
+            <Collapse in={open === item.text} timeout={1000} unmountOnExit>
               <List component="div" disablePadding>
                 {renderListItems(item.children, index)}
               </List>
@@ -210,12 +210,10 @@ export default function ResponsiveDrawer(props: Props) {
       <LogoContainer>
         <LogoImage src={logo} alt="SuperWise" />
       </LogoContainer>
-
       <List sx={{ padding: "0.8rem" }}>{renderListItems(items)}</List>
     </div>
   );
 
-  // Remove this const when copying and pasting into your project.
   const container =
     window !== undefined ? () => window().document.body : undefined;
 
@@ -234,7 +232,6 @@ export default function ResponsiveDrawer(props: Props) {
         sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
         aria-label="mailbox folders"
       >
-        {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
         <StyledDrawerPaper
           container={container}
           variant="temporary"
