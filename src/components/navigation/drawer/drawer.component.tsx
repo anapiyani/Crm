@@ -1,17 +1,17 @@
 import * as React from "react";
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import CssBaseline from "@mui/material/CssBaseline";
-import Divider from "@mui/material/Divider";
-import Drawer from "@mui/material/Drawer";
-import IconButton from "@mui/material/IconButton";
-import { List, ListItem, styled } from "@mui/material";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import MenuIcon from "@mui/icons-material/Menu";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
+import {
+  AppBar,
+  Box,
+  CssBaseline,
+  Drawer,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  styled,
+} from "@mui/material";
+
 import classes from "./styles.module.scss";
 import logo from "@/assets/icons/icon_wise_white.svg";
 import {
@@ -30,21 +30,12 @@ import {
   Info,
   Store,
 } from "@mui/icons-material";
-// import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
-// import NotificationsIcon from "@mui/icons-material/Notifications";
-// import GroupsIcon from "@mui/icons-material/Groups";
-// import PersonIcon from "@mui/icons-material/Person";
-// import ContentCutIcon from "@mui/icons-material/ContentCut";
-// import Inventory2Icon from "@mui/icons-material/Inventory2";
-// import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-// import CreditCardIcon from "@mui/icons-material/CreditCard";
-// import MailIcon from "@mui/icons-material/Mail";
-// import DescriptionIcon from "@mui/icons-material/Description";
-// import SettingsIcon from "@mui/icons-material/Settings";
-// import InfoIcon from "@mui/icons-material/Info";
-// import StoreIcon from "@mui/icons-material/Store";
 
-const drawerWidth = 256;
+import ExpandLess from "@mui/icons-material/ExpandLess";
+import ExpandMore from "@mui/icons-material/ExpandMore";
+import Collapse from "@mui/material/Collapse";
+
+const drawerWidth = "25.6rem";
 
 interface Props {
   /**
@@ -68,10 +59,19 @@ export default function ResponsiveDrawer(props: Props) {
     setIsClosing(false);
   };
 
-  const handleDrawerToggle = () => {
-    if (!isClosing) {
-      setMobileOpen(!mobileOpen);
-    }
+  // const handleDrawerToggle = () => {
+  //   if (!isClosing) {
+  //     setMobileOpen(!mobileOpen);
+  //   }
+  // };
+
+  const [open, setOpen] = React.useState<string | null>(null);
+  const [selectedIndex, setSelectedIndex] = React.useState<number | null>(null);
+  
+
+  const handleClick = (text: string, index: number) => {
+    setOpen(open === text ? null : text);
+    setSelectedIndex(index);
   };
 
   const items = [
@@ -79,7 +79,21 @@ export default function ResponsiveDrawer(props: Props) {
     { text: "Касса", icon: <AttachMoney /> },
     { text: "Активности", icon: <Notifications /> },
     { text: "Клиенты", icon: <Groups /> },
-    { text: "Сотрудники", icon: <Person /> },
+    {
+      text: "Сотрудники",
+      icon: <Person />,
+      children: [
+        { text: "Найти" },
+        { text: "Добавить" },
+        { text: "График работы" },
+        { text: "Зарплата" },
+        { text: "Отделы" },
+        { text: "Кабинеты" },
+        { text: "Права доступа" },
+        { text: "Посещаемость" },
+        { text: "Рейтинг" },
+      ],
+    },
     { text: "Услуги", icon: <ContentCut /> },
     { text: "Склад", icon: <Inventory2 /> },
     { text: "Поставщики", icon: <ShoppingCart /> },
@@ -102,38 +116,60 @@ export default function ResponsiveDrawer(props: Props) {
 
   const LogoImage = styled("img")({
     height: "3.6rem",
-    
   });
 
   const IconContainer = styled(ListItemIcon)({
     height: "2.4rem",
     width: "5.6rem",
-    minWidth: 'auto',
+    minWidth: "auto",
     color: "#C7DFF7",
-    display: 'flex',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    '& svg': {
+    display: "flex",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    "& svg": {
       fontSize: "2.4rem",
-    }
+    },
   });
 
-  const drawer = (
-    <div>
-      {/* <Toolbar />
-      <Divider /> */}
+  const StyledDrawerPaper = styled(Drawer)(({ theme }) => ({
+    "& .MuiDrawer-paper": {
+      boxSizing: "border-box",
+      width: drawerWidth,
+      backgroundColor: "#0a2744",
+      overflowY: "auto",
+      scrollbarWidth: "none", // For Firefox
+      msOverflowStyle: "none", // For Internet Explorer and Edge
+      "&::-webkit-scrollbar": {
+        display: "none", // For Chrome, Safari, and Opera
+      },
+    },
+  }));
 
-      <LogoContainer>
-        <LogoImage src={logo} alt="SuperWise" />
-      </LogoContainer>
+  const renderListItems = (items: any[], parentIndex: number | null = null) => {
+    return items.map((item, index) => {
+      const uniqueIndex =
+        parentIndex !== null ? `${parentIndex}-${index}` : `${index}`;
 
-      <List sx={{padding: "0.8rem",}}>
-        {items.map((item) => (
-          <ListItem key={item.text} disablePadding>
-            <ListItemButton>
-              <IconContainer>
-                {item.icon}
-              </IconContainer>
+      return (
+        <React.Fragment key={uniqueIndex}>
+          <ListItem disablePadding>
+            <ListItemButton
+              selected={selectedIndex === index}
+              onClick={() => handleClick(item.text, index)}
+              sx={{
+                "&.Mui-selected": {
+                  backgroundColor: "#0B6BCB",
+
+                  borderRadius: "4px",
+                  color: "#97C3F0",
+                  "& .MuiListItemIcon-root": {
+                    color: "#fff",
+                  },
+                },
+                color: "#97C3F0",
+              }}
+            >
+              <IconContainer>{item.icon}</IconContainer>
               <ListItemText
                 primary={item.text}
                 primaryTypographyProps={{
@@ -144,10 +180,38 @@ export default function ResponsiveDrawer(props: Props) {
                   padding: "0.4rem 0 0.4rem 0",
                 }}
               />
+              {item.children ? (
+                open === item.text ? (
+                  <ExpandLess />
+                ) : (
+                  <ExpandMore />
+                )
+              ) : null}
             </ListItemButton>
           </ListItem>
-        ))}
-      </List>
+          {item.children ? (
+            <Collapse
+              in={open === item.text}
+              timeout={1000}
+              unmountOnExit
+            >
+              <List component="div" disablePadding>
+                {renderListItems(item.children, index)}
+              </List>
+            </Collapse>
+          ) : null}
+        </React.Fragment>
+      );
+    });
+  };
+
+  const drawer = (
+    <div>
+      <LogoContainer>
+        <LogoImage src={logo} alt="SuperWise" />
+      </LogoContainer>
+
+      <List sx={{ padding: "0.8rem" }}>{renderListItems(items)}</List>
     </div>
   );
 
@@ -161,32 +225,17 @@ export default function ResponsiveDrawer(props: Props) {
       <AppBar
         position="fixed"
         sx={{
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
-          ml: { sm: `${drawerWidth}px` },
+          width: { sm: `calc(100% - ${drawerWidth}/10rem)` },
+          ml: { sm: `${drawerWidth}/10rem` },
         }}
-      >
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            edge="start"
-            onClick={handleDrawerToggle}
-            sx={{ mr: 2, display: { sm: "none" } }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" noWrap component="div">
-            Responsive drawer
-          </Typography>
-        </Toolbar>
-      </AppBar>
+      ></AppBar>
       <Box
         component="nav"
         sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
         aria-label="mailbox folders"
       >
         {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
-        <Drawer
+        <StyledDrawerPaper
           container={container}
           variant="temporary"
           open={mobileOpen}
@@ -204,8 +253,8 @@ export default function ResponsiveDrawer(props: Props) {
           }}
         >
           {drawer}
-        </Drawer>
-        <Drawer
+        </StyledDrawerPaper>
+        <StyledDrawerPaper
           className={classes["sidebar"]}
           variant="permanent"
           sx={{
@@ -214,53 +263,21 @@ export default function ResponsiveDrawer(props: Props) {
               boxSizing: "border-box",
               width: drawerWidth,
               backgroundColor: "#0a2744",
-              
             },
           }}
           open
         >
           {drawer}
-        </Drawer>
+        </StyledDrawerPaper>
       </Box>
       <Box
         component="main"
         sx={{
           flexGrow: 1,
-          p: 3,
-          width: { sm: `calc(100% - ${drawerWidth}px)` },
+          p: "0.3rem",
+          width: { sm: `calc(100% - ${drawerWidth}/10rem)` },
         }}
-      >
-        <Toolbar />
-        <Typography paragraph>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Rhoncus
-          dolor purus non enim praesent elementum facilisis leo vel. Risus at
-          ultrices mi tempus imperdiet. Semper risus in hendrerit gravida rutrum
-          quisque non tellus. Convallis convallis tellus id interdum velit
-          laoreet id donec ultrices. Odio morbi quis commodo odio aenean sed
-          adipiscing. Amet nisl suscipit adipiscing bibendum est ultricies
-          integer quis. Cursus euismod quis viverra nibh cras. Metus vulputate
-          eu scelerisque felis imperdiet proin fermentum leo. Mauris commodo
-          quis imperdiet massa tincidunt. Cras tincidunt lobortis feugiat
-          vivamus at augue. At augue eget arcu dictum varius duis at consectetur
-          lorem. Velit sed ullamcorper morbi tincidunt. Lorem donec massa sapien
-          faucibus et molestie ac.
-        </Typography>
-        <Typography paragraph>
-          Consequat mauris nunc congue nisi vitae suscipit. Fringilla est
-          ullamcorper eget nulla facilisi etiam dignissim diam. Pulvinar
-          elementum integer enim neque volutpat ac tincidunt. Ornare suspendisse
-          sed nisi lacus sed viverra tellus. Purus sit amet volutpat consequat
-          mauris. Elementum eu facilisis sed odio morbi. Euismod lacinia at quis
-          risus sed vulputate odio. Morbi tincidunt ornare massa eget egestas
-          purus viverra accumsan in. In hendrerit gravida rutrum quisque non
-          tellus orci ac. Pellentesque nec nam aliquam sem et tortor. Habitant
-          morbi tristique senectus et. Adipiscing elit duis tristique
-          sollicitudin nibh sit. Ornare aenean euismod elementum nisi quis
-          eleifend. Commodo viverra maecenas accumsan lacus vel facilisis. Nulla
-          posuere sollicitudin aliquam ultrices sagittis orci a.
-        </Typography>
-      </Box>
+      ></Box>
     </Box>
   );
 }
