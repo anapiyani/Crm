@@ -31,6 +31,7 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import InfoIcon from "@mui/icons-material/Info";
 import StoreIcon from "@mui/icons-material/Store";
 import { Home } from "@mui/icons-material";
+import TopBar from "../topbar/topbar.component";
 
 const drawerWidth = 256;
 
@@ -113,7 +114,7 @@ export default function ResponsiveDrawer(props: Props) {
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
-      <AppBar
+      {/* <AppBar
         position="fixed"
         sx={{
           width: { sm: `calc(100% - ${drawerWidth}px)` },
@@ -134,7 +135,8 @@ export default function ResponsiveDrawer(props: Props) {
             Responsive drawer
           </Typography>
         </Toolbar>
-      </AppBar>
+      </AppBar> */}
+      <TopBar userName="John Doe" />
       <Box
         component="nav"
         sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
@@ -176,7 +178,7 @@ export default function ResponsiveDrawer(props: Props) {
           {drawer}
         </Drawer>
       </Box>
-      <Box
+      {/* <Box
         component="main"
         sx={{
           flexGrow: 1,
@@ -214,7 +216,7 @@ export default function ResponsiveDrawer(props: Props) {
           eleifend. Commodo viverra maecenas accumsan lacus vel facilisis. Nulla
           posuere sollicitudin aliquam ultrices sagittis orci a.
         </Typography>
-      </Box>
+      </Box> */}
     </Box>
   );
 }
