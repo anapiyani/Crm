@@ -10,6 +10,7 @@ import {
   ListItemIcon,
   ListItemText,
   styled,
+  Collapse,
 } from "@mui/material";
 
 import classes from "./styles.module.scss";
@@ -29,11 +30,9 @@ import {
   Settings,
   Info,
   Store,
+  ExpandLess,
+  ExpandMore,
 } from "@mui/icons-material";
-
-import ExpandLess from "@mui/icons-material/ExpandLess";
-import ExpandMore from "@mui/icons-material/ExpandMore";
-import Collapse from "@mui/material/Collapse";
 
 const drawerWidth = "25.6rem";
 
@@ -45,6 +44,8 @@ export default function ResponsiveDrawer(props: Props) {
   const { window } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [isClosing, setIsClosing] = React.useState(false);
+  const [open, setOpen] = React.useState<string | null>(null);
+  const [selectedIndex, setSelectedIndex] = React.useState<string | null>(null);
 
   const handleDrawerClose = () => {
     setIsClosing(true);
@@ -54,9 +55,6 @@ export default function ResponsiveDrawer(props: Props) {
   const handleDrawerTransitionEnd = () => {
     setIsClosing(false);
   };
-
-  const [open, setOpen] = React.useState<string | null>(null);
-  const [selectedIndex, setSelectedIndex] = React.useState<string | null>(null);
 
   const handleClick = (text: string, index: number) => {
     setOpen(open === text ? null : text);
@@ -145,7 +143,7 @@ export default function ResponsiveDrawer(props: Props) {
 
       return (
         <React.Fragment key={uniqueIndex}>
-          <ListItem disablePadding>
+          <ListItem disablePadding className={classes["aba"]}>
             <ListItemButton
               selected={selectedIndex === uniqueIndex}
               onClick={() =>
@@ -154,7 +152,6 @@ export default function ResponsiveDrawer(props: Props) {
                   : handleChildClick(parentIndex, index)
               }
               sx={{
-                transition: "background-color 0.5s ease, color 0.5s ease",
                 "&.Mui-selected": {
                   backgroundColor: "#0B6BCB",
                   borderRadius: "4px",
@@ -168,7 +165,6 @@ export default function ResponsiveDrawer(props: Props) {
                   },
                 },
                 color: "#97C3F0",
-                
               }}
             >
               {parentIndex === null && (
@@ -194,8 +190,18 @@ export default function ResponsiveDrawer(props: Props) {
             </ListItemButton>
           </ListItem>
           {item.children ? (
-            <Collapse in={open === item.text} timeout={1000} unmountOnExit>
-              <List component="div" disablePadding>
+            <Collapse
+              className={classes["collapse"]}
+              in={open === item.text}
+              timeout={1000}
+              unmountOnExit
+              sx={{ transition: "all 0.5s ease-out" }}
+            >
+              <List
+                className={classes["collapse"]}
+                component="div"
+                disablePadding
+              >
                 {renderListItems(item.children, index)}
               </List>
             </Collapse>
