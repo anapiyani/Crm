@@ -3,12 +3,26 @@ import classes from "./styles.module.scss";
 import icon from "@/assets/icons/icon_wise.svg";
 import { Button } from "@mui/material";
 import classNames from "classnames";
+import { useState } from "react";
+import { useLoginMutation } from "@/service/auth/auth.hook";
 
 type TProps = {
   loginWPhone: () => void;
 };
 
-const EmailLogin = (props: TProps) => {
+const EmailLogin = ({ loginWPhone }: TProps) => {
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+
+  const mutation = useLoginMutation();
+
+  const onLoginSubmit = () => {
+    if (email === "" || password === "") {
+      return;
+    }
+    mutation.mutate({ email, password });
+  };
+
   return (
     <div className={classes["email"]}>
       <div className={classes["email__content"]}>
@@ -43,6 +57,8 @@ const EmailLogin = (props: TProps) => {
                 },
               }}
               className={classes["email__content__form__send__input"]}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
             />
             <TextField
               id="outlined-basic"
@@ -58,22 +74,30 @@ const EmailLogin = (props: TProps) => {
                 },
               }}
               className={classes["email__content__form__send__input"]}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
             />
+            {mutation.isError && (
+              <p className={classes["email__content__form__send__error"]}>
+                Неверный логин или пароль
+              </p>
+            )}
             <Button
               variant="contained"
-              type="submit"
               sx={{ marginTop: "20px" }}
               className={classNames(
                 classes["email__content__form__send__button"]
               )}
+              onClick={onLoginSubmit}
+              disabled={mutation.status === "pending"}
             >
-              Войти
+              {mutation.status === "pending" ? "Загрузка..." : "Войти"}
             </Button>
             <p className={classes["email__content__form__send__choice"]}>Или</p>
             <Button
               variant="outlined"
               className={classes["email__content__form__send__button"]}
-              onClick={props.loginWPhone}
+              onClick={loginWPhone}
             >
               Войти по номеру телефона
             </Button>
