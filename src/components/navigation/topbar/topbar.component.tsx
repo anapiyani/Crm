@@ -1,8 +1,7 @@
-import * as React from "react";
 import AppBar from "@mui/material/AppBar";
 import classes from "./styles.module.scss";
-import {Help, Notifications, Public, Redeem,Mail} from "@mui/icons-material"; //Icons import 
-import { Badge, BadgeProps,Avatar,Typography,Toolbar,IconButton,styled,Box } from "@mui/material"; //Material UI imports
+import {Help, Notifications, Public, Redeem,Mail} from "@mui/icons-material";
+import { Badge, BadgeProps,Avatar,Typography,Toolbar,IconButton,styled,Box } from "@mui/material"; 
 
 
 
@@ -14,14 +13,11 @@ const StyledBadge = styled(Badge)<BadgeProps>(() => ({
     },
   }));
 
-interface ITopBarProps {
-  userName: string;
-}
 
 
 const topbarWidth = 256;
 
-const TopBar: React.FC<ITopBarProps> = ({ userName }) => {
+const TopBar= () => {
     const count=10;
     return (
     <Box sx={{ flexGrow: 1 }}>
@@ -104,7 +100,7 @@ const TopBar: React.FC<ITopBarProps> = ({ userName }) => {
             fontSize: '1.6rem',
 
         }}>
-          {userName}
+          User name
         </Typography>
         </div>
         <IconButton className={classes["topbar__toolbar__icon"]} color="inherit" aria-label="icon4">
