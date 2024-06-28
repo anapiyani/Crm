@@ -8,7 +8,7 @@ import axios from "axios";
 import { getToken } from "./auth/auth.service";
 
 export const api = axios.create({
-  baseURL: "https://crm-beauty-salon-94a93ffd62e6.herokuapp.com/api",
+  baseURL: "https://crm-beauty-salon-94a93ffd62e6.herokuapp.com/",
 });
 
 let refreshTokenPromise: Promise<any> | null;
