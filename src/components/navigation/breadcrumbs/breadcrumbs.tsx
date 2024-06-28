@@ -1,6 +1,6 @@
 import React from "react";
 import { Breadcrumbs as MUIbreadcrumbs, Link, ListItemBaseProps, ListItemProps, Typography } from "@mui/material";
-import { NavigateNext } from "@mui/icons-material";
+import { ChevronRightRounded, NavigateNext } from "@mui/icons-material";
 import {
     Link as RouterLink,
     Route,
@@ -16,7 +16,7 @@ export default function BreadcrumbsCustom(): JSX.Element {
 
     return (
 
-        <MUIbreadcrumbs aria-label="breadcrumb" separator="/" >
+        <MUIbreadcrumbs aria-label="breadcrumb" separator={<ChevronRightRounded/>} >
             {pathnames.map((value, index) => {
                 currentLink += `/${value}`;
                 const last = index === pathnames.length - 1;
