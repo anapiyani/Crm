@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { login, ILoginResponse } from "./auth.service";
+import { login, ILoginResponse, phoneLogin } from "./auth.service";
 import { setTokens } from "@/utils/token";
 
 export const useLoginMutation = () => {
@@ -17,4 +17,19 @@ export const useLoginMutation = () => {
       console.log(error);
     },
   });
+};
+
+export const usePhoneLoginMutation = () => {
+  return {
+    mutation: useMutation<any, string, { phone: string }>({
+      mutationFn: ({ phone }) => phoneLogin(phone),
+      onSuccess: (data) => {
+        console.log(data);
+        return data;
+      },
+      onError: (error) => {
+        console.log(error);
+      },
+    }),
+  };
 };

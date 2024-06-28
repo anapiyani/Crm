@@ -1,4 +1,4 @@
-import * as React from "react";
+import { Fragment, useState } from "react";
 import {
   Box,
   CssBaseline,
@@ -38,18 +38,17 @@ const drawerWidth = "25.6rem";
 interface Props {
   window?: () => Window;
 }
-
-export default function ResponsiveDrawer(props: Props) {
+const ResponsiveDrawer = (props: Props) => {
   const { window } = props;
-  const [mobileOpen, setMobileOpen] = React.useState(false);
-  const [isClosing, setIsClosing] = React.useState(false);
-  const [open, setOpen] = React.useState<string | null>(null);
-  const [selectedParentIndex, setSelectedParentIndex] = React.useState<
-    string | null
-  >(null);
-  const [selectedChildIndex, setSelectedChildIndex] = React.useState<
-    string | null
-  >(null);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
+  const [open, setOpen] = useState<string | null>(null);
+  const [selectedParentIndex, setSelectedParentIndex] = useState<string | null>(
+    null
+  );
+  const [selectedChildIndex, setSelectedChildIndex] = useState<string | null>(
+    null
+  );
 
   const handleDrawerClose = () => {
     setIsClosing(true);
@@ -72,8 +71,8 @@ export default function ResponsiveDrawer(props: Props) {
   };
 
   const items = [
-    { text: "Рабочий стол", icon: <Home /> },
-    { text: "Касса", icon: <AttachMoney /> },
+    { text: "Рабочий стол", icon: <Home />, link: "/" },
+    { text: "Касса", icon: <AttachMoney />, link: "/cashdesk" },
     { text: "Активности", icon: <Notifications /> },
     { text: "Клиенты", icon: <Groups /> },
     {
@@ -148,14 +147,8 @@ export default function ResponsiveDrawer(props: Props) {
         parentIndex !== null ? `${parentIndex}-${index}` : `${index}`;
 
       return (
-        <React.Fragment key={uniqueIndex}>
-          <ListItem
-            disablePadding
-            sx={{
-              position:
-                parentIndex !== null && index === 0 ? "relative" : "static",
-            }}
-          >
+        <Fragment key={uniqueIndex}>
+          <ListItem disablePadding className={classes["aba"]}>
             <ListItemButton
               selected={
                 selectedParentIndex === uniqueIndex ||
@@ -227,7 +220,7 @@ export default function ResponsiveDrawer(props: Props) {
               </List>
             </Collapse>
           ) : null}
-        </React.Fragment>
+        </Fragment>
       );
     });
   };
@@ -287,4 +280,6 @@ export default function ResponsiveDrawer(props: Props) {
       </Box>
     </Box>
   );
-}
+};
+
+export default ResponsiveDrawer;
