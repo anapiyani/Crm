@@ -1,11 +1,11 @@
-import { Button, TextField, InputAdornment, Alert } from "@mui/material";
-import classes from "./styles.module.scss";
-import InputMask from "react-input-mask";
-import icon from "@/assets/icons/icon_wise.svg";
-import flagIcon from "../../../../assets/icons/Flags.svg";
-import { MuiOtpInput } from "mui-one-time-password-input";
 import { useState } from "react";
 import { usePhoneLoginMutation } from "@/service/auth/auth.hook";
+import { MuiOtpInput } from "mui-one-time-password-input";
+import { Button, TextField, InputAdornment, Alert } from "@mui/material";
+import InputMask from "react-input-mask";
+import icon from "@/assets/icons/icon_wise.svg";
+import flagIcon from "@/assets/icons/Flags.svg";
+import classes from "./styles.module.scss";
 
 type TProps = {
   loginWEmail: () => void;
