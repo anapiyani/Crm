@@ -1,6 +1,5 @@
 import * as React from "react";
 import {
-  AppBar,
   Box,
   CssBaseline,
   Drawer,
@@ -33,9 +32,6 @@ import {
   ExpandLess,
   ExpandMore,
 } from "@mui/icons-material";
-import TopBar from "../topbar/topbar.component";
-import Breadcrumbs from "../breadcrumbs/breadcrumbs";
-import BreadcrumbsCustom from "../breadcrumbs/breadcrumbs";
 
 const drawerWidth = "25.6rem";
 
@@ -132,7 +128,7 @@ export default function ResponsiveDrawer(props: Props) {
     },
   });
 
-  const StyledDrawerPaper = styled(Drawer)(({}) => ({
+  const StyledDrawerPaper = styled(Drawer)(() => ({
     "& .MuiDrawer-paper": {
       boxSizing: "border-box",
       width: drawerWidth,
@@ -251,7 +247,6 @@ export default function ResponsiveDrawer(props: Props) {
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
-      <TopBar></TopBar>
       <Box
         component="nav"
         sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
@@ -290,14 +285,6 @@ export default function ResponsiveDrawer(props: Props) {
           {drawer}
         </StyledDrawerPaper>
       </Box>
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          p: "0.3rem",
-          width: { sm: `calc(100% - ${drawerWidth}/10rem)` },
-        }}
-      ></Box>
     </Box>
   );
 }
