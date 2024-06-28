@@ -12,7 +12,7 @@ export const login = (
   return api.post("/api/auth/", { email, password }).then((res) => res.data);
 };
 
-export const phoneLogin = (phone_number: string): Promise<ILoginResponse> => {
+export const phoneLogin = (phone_number: string): Promise<any> => {
   return api.post("/send-otp/", { phone_number }).then((res) => res.data);
 };
 
