@@ -12,7 +12,7 @@ export const login = (
   return api.post("/auth/", { email, password }).then((res) => res.data);
 };
 
-export const getRefreshToken = (
+export const getToken = (
   refresh: string
 ): Promise<Omit<ILoginResponse, "refresh">> => {
   return api.post("/token/refresh/", { refresh }).then((res) => res.data);
