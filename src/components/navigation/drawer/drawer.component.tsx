@@ -46,8 +46,12 @@ export default function ResponsiveDrawer(props: Props) {
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [isClosing, setIsClosing] = React.useState(false);
   const [open, setOpen] = React.useState<string | null>(null);
-  const [selectedParentIndex, setSelectedParentIndex] = React.useState<string | null>(null);
-  const [selectedChildIndex, setSelectedChildIndex] = React.useState<string | null>(null);
+  const [selectedParentIndex, setSelectedParentIndex] = React.useState<
+    string | null
+  >(null);
+  const [selectedChildIndex, setSelectedChildIndex] = React.useState<
+    string | null
+  >(null);
 
   const handleDrawerClose = () => {
     setIsClosing(true);
@@ -132,10 +136,10 @@ export default function ResponsiveDrawer(props: Props) {
       width: drawerWidth,
       backgroundColor: "#0a2744",
       overflowY: "auto",
-      scrollbarWidth: "none", // For Firefox
-      msOverflowStyle: "none", // For Internet Explorer and Edge
+      scrollbarWidth: "none",
+      msOverflowStyle: "none",
       "&::-webkit-scrollbar": {
-        display: "none", // For Chrome, Safari, and Opera
+        display: "none",
       },
     },
   }));
@@ -150,13 +154,15 @@ export default function ResponsiveDrawer(props: Props) {
           <ListItem
             disablePadding
             sx={{
-              
-                position: parentIndex !== null && index === 0 ? "relative" : "static",
-
+              position:
+                parentIndex !== null && index === 0 ? "relative" : "static",
             }}
           >
             <ListItemButton
-              selected={selectedParentIndex === uniqueIndex || selectedChildIndex?.startsWith(uniqueIndex)}
+              selected={
+                selectedParentIndex === uniqueIndex ||
+                selectedChildIndex?.startsWith(uniqueIndex)
+              }
               onClick={() =>
                 parentIndex === null
                   ? handleParentClick(item.text, index)
@@ -172,19 +178,19 @@ export default function ResponsiveDrawer(props: Props) {
                     color: "#fff",
                   },
                   "&:hover": {
-                    backgroundColor: "#0B6BCB", // Ensure the background color remains the same on hover
+                    backgroundColor: "#0B6BCB",
                   },
                 },
                 color: "#97C3F0",
-                pl: parentIndex !== null ? "7.2rem" : undefined, // Adjust padding for nested items
+                pl: parentIndex !== null ? "7.2rem" : undefined,
                 pr: "1.6rem",
                 pb: "0.4rem",
                 pt: "0.4rem",
-                ...(parentIndex !== null && index === 0 && {
-                  borderTopLeftRadius: "0", // Remove top border-radius for the first child
-                  borderTopRightRadius: "0",
-                }),
-
+                ...(parentIndex !== null &&
+                  index === 0 && {
+                    borderTopLeftRadius: "0",
+                    borderTopRightRadius: "0",
+                  }),
               }}
             >
               {parentIndex === null && (
@@ -195,7 +201,7 @@ export default function ResponsiveDrawer(props: Props) {
                 primaryTypographyProps={{
                   color: "common.white",
                   fontWeight: "400",
-                  variant: parentIndex === null ? "body1" : "body2", // Different typography for parent and child
+                  variant: parentIndex === null ? "body1" : "body2",
                   fontSize: parentIndex === null ? "1.6rem" : "1.4rem",
                   padding: "0.4rem 0 0.4rem 0",
                 }}
@@ -210,13 +216,13 @@ export default function ResponsiveDrawer(props: Props) {
             </ListItemButton>
           </ListItem>
           {item.children ? (
-            <Collapse in={open === item.text}  unmountOnExit>
+            <Collapse in={open === item.text} unmountOnExit>
               <List
                 component="div"
                 disablePadding
                 sx={{
-                  backgroundColor: "#12467B", // Set the background color for the nested list
-                  borderRadius: "4px", // Rounded bottom corners
+                  backgroundColor: "#12467B",
+                  borderRadius: "4px",
                 }}
               >
                 {renderListItems(item.children, index)}
@@ -243,7 +249,7 @@ export default function ResponsiveDrawer(props: Props) {
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
-      <TopBar userName="Yesset"></TopBar>
+      <TopBar></TopBar>
       <Box
         component="nav"
         sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
@@ -256,7 +262,7 @@ export default function ResponsiveDrawer(props: Props) {
           onTransitionEnd={handleDrawerTransitionEnd}
           onClose={handleDrawerClose}
           ModalProps={{
-            keepMounted: true, // Better open performance on mobile.
+            keepMounted: true,
           }}
           sx={{
             display: { xs: "block", sm: "none" },
