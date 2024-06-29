@@ -33,6 +33,7 @@ import {
   ExpandMore,
 } from "@mui/icons-material";
 import { NavLink } from "react-router-dom";
+import CounterCard from "@/components/counter-card/counter-card";
 
 const drawerWidth = "25.6rem";
 
@@ -149,7 +150,7 @@ const ResponsiveDrawer = (props: Props) => {
 
       return (
         <Fragment key={uniqueIndex}>
-          <ListItem disablePadding className={classes["aba"]}>
+          <ListItem disablePadding>
             <ListItemButton
               selected={
                 selectedParentIndex === uniqueIndex ||
@@ -210,9 +211,9 @@ const ResponsiveDrawer = (props: Props) => {
                 />
                 {item.children && parentIndex === null ? (
                   open === item.text ? (
-                    <ExpandLess />
+                    <ExpandLess sx={{ color: "#97C3F0", fontSize: "2.4rem" }} />
                   ) : (
-                    <ExpandMore />
+                    <ExpandMore sx={{ color: "#97C3F0", fontSize: "2.4rem" }} />
                   )
                 ) : null}
               </NavLink>
