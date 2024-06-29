@@ -1,16 +1,6 @@
 import React from "react";
-import { Edit, Lock } from "@mui/icons-material";
-import {
-  Box,
-  Paper,
-  TableRow,
-  TableContainer,
-  TableCell,
-  TableBody,
-  Table,
-  tableCellClasses,
-  styled,
-} from "@mui/material";
+import {Edit, Lock} from "@mui/icons-material";
+import { Box, Paper, TableRow, TableContainer, TableCell, TableBody, Table, tableCellClasses, styled } from "@mui/material";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
