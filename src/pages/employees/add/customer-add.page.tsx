@@ -1,5 +1,11 @@
+import BreadcrumbsCustom from "@/components/navigation/breadcrumbs/breadcrumbs";
+
 const EmployeeAdd = () => {
-  return <div>EmployeeAdd</div>;
+  return (
+    <div>
+      <BreadcrumbsCustom />
+    </div>
+  );
 };
 
 export default EmployeeAdd;

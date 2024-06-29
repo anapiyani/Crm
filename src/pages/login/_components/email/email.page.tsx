@@ -1,22 +1,18 @@
-import TextField from "@mui/material/TextField";
-import classes from "./styles.module.scss";
-import icon from "@/assets/icons/icon_wise.svg";
-import { Button, IconButton, InputAdornment } from "@mui/material";
-import classNames from "classnames";
 import { useState } from "react";
+import TextField from "@mui/material/TextField";
+import { Button, IconButton, InputAdornment } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { useLoginMutation } from "@/service/auth/auth.hook";
-import { login } from "@/service/auth/auth.service";
-import { setTokens } from "@/utils/token";
-import { useNavigate } from "react-router-dom";
+import icon from "@/assets/icons/icon_wise.svg";
+import classNames from "classnames";
+import classes from "./styles.module.scss";
 
 type TProps = {
   loginWPhone: () => void;
 };
 
 const EmailLogin = ({ loginWPhone }: TProps) => {
-  const navigate = useNavigate();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
