@@ -1,5 +1,5 @@
 import React from "react";
-import { CustomerSearch, CustomerAdd, Home } from "@/pages";
+import { CustomerSearch, CustomerAdd, Home, CashDesk } from "@/pages";
 // import { Role } from "@/ts/types";
 
 type IRoute = {
@@ -14,6 +14,11 @@ export const ROUTES: IRoute[] = [
     name: "Home",
     path: "/",
     component: <Home />,
+  },
+  {
+    name: "CashDesk",
+    path: "/cashdesk",
+    component: <CashDesk />,
   },
   {
     name: "Customer Search",

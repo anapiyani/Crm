@@ -32,6 +32,7 @@ import {
   ExpandLess,
   ExpandMore,
 } from "@mui/icons-material";
+import { NavLink } from "react-router-dom";
 
 const drawerWidth = "25.6rem";
 
@@ -149,77 +150,57 @@ const ResponsiveDrawer = (props: Props) => {
       return (
         <Fragment key={uniqueIndex}>
           <ListItem disablePadding className={classes["aba"]}>
-            <ListItemButton
-              selected={
-                selectedParentIndex === uniqueIndex ||
-                selectedChildIndex?.startsWith(uniqueIndex)
-              }
-              onClick={() =>
-                parentIndex === null
-                  ? handleParentClick(item.text, index)
-                  : handleChildClick(parentIndex, index)
-              }
-              sx={{
-                "&.Mui-selected": {
-                  backgroundColor: "#0B6BCB",
-                  borderRadius: "4px",
-                  color: "#97C3F0",
-                  width: "100%",
-                  "& .MuiListItemIcon-root": {
-                    color: "#fff",
-                  },
-                  "&:hover": {
-                    backgroundColor: "#0B6BCB",
-                  },
-                },
-                color: "#97C3F0",
-                pl: parentIndex !== null ? "7.2rem" : undefined,
-                pr: "1.6rem",
-                pb: "0.4rem",
-                pt: "0.4rem",
-                ...(parentIndex !== null &&
-                  index === 0 && {
-                    borderTopLeftRadius: "0",
-                    borderTopRightRadius: "0",
-                  }),
-              }}
-            >
-              {parentIndex === null && (
-                <IconContainer>{item.icon}</IconContainer>
-              )}
-              <ListItemText
-                primary={item.text}
-                primaryTypographyProps={{
-                  color: "common.white",
-                  fontWeight: "400",
-                  variant: parentIndex === null ? "body1" : "body2",
-                  fontSize: parentIndex === null ? "1.6rem" : "1.4rem",
-                  padding: "0.4rem 0 0.4rem 0",
-                }}
-              />
-              {item.children && parentIndex === null ? (
-                open === item.text ? (
-                  <ExpandLess />
-                ) : (
-                  <ExpandMore />
-                )
-              ) : null}
-            </ListItemButton>
-          </ListItem>
-          {item.children ? (
-            <Collapse in={open === item.text} unmountOnExit>
-              <List
-                component="div"
-                disablePadding
+            <NavLink to={item.link || "#"} style={{ textDecoration: "none" }}>
+              <ListItemButton
+                selected={
+                  selectedParentIndex === uniqueIndex ||
+                  selectedChildIndex?.startsWith(uniqueIndex)
+                }
+                onClick={() =>
+                  parentIndex === null
+                    ? handleParentClick(item.text, index)
+                    : handleChildClick(parentIndex, index)
+                }
                 sx={{
-                  backgroundColor: "#12467B",
-                  borderRadius: "4px",
+                  color: "#97C3F0",
+                  pl: parentIndex !== null ? "7.2rem" : undefined,
+                  // Further style adjustments can be added here
                 }}
               >
-                {renderListItems(item.children, index)}
-              </List>
-            </Collapse>
-          ) : null}
+                {parentIndex === null && (
+                  <IconContainer>{item.icon}</IconContainer>
+                )}
+                <ListItemText
+                  primary={item.text}
+                  primaryTypographyProps={{
+                    color: "common.white",
+                    // Other text styles
+                  }}
+                />
+                {item.children && parentIndex === null ? (
+                  open === item.text ? (
+                    <ExpandLess />
+                  ) : (
+                    <ExpandMore />
+                  )
+                ) : null}
+              </ListItemButton>
+            </NavLink>
+            {item.children ? (
+              <Collapse in={open === item.text} unmountOnExit>
+                <List
+                  component="div"
+                  disablePadding
+                  sx={{
+                    backgroundColor: "#12467B",
+                    borderRadius: "4px",
+                  }}
+                >
+                  {renderListItems(item.children, index)}
+                </List>
+              </Collapse>
+            ) : null}
+          </ListItem>
         </Fragment>
       );
     });
