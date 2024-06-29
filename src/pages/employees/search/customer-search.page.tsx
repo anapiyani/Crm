@@ -1,5 +1,12 @@
+import Tabs from "@/components/tabs/tabs.component";
+
 const EmployeeSearch = () => {
-  return <div>EmployeeSearch</div>;
+  return (
+    <div>
+      {" "}
+      <Tabs />
+    </div>
+  );
 };
 
 export default EmployeeSearch;
