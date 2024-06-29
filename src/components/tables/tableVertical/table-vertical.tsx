@@ -1,78 +1,153 @@
 import React from "react";
-import { styled } from '@mui/material/styles';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell, { tableCellClasses } from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
+import { styled } from "@mui/material/styles";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell, { tableCellClasses } from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
+import EditIcon from "@mui/icons-material/Edit";
+import LockIcon from "@mui/icons-material/Lock";
+import Box from "@mui/material/Box";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
-    backgroundColor: theme.palette.common.black,
-    color: theme.palette.common.white,
+    backgroundColor: theme.palette.common.white,
+    fontSize: "2.4rem",
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
+    backgroundColor: theme.palette.common.white, // Set all rows to white
   },
 }));
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  '&:nth-of-type(odd)': {
-    backgroundColor: theme.palette.action.hover,
+  "&:nth-of-type(odd)": {
+    backgroundColor: theme.palette.common.white, // Ensure odd rows are also white
   },
-  // hide last border
-  '&:last-child td, &:last-child th': {
+  "&:nth-of-type(even)": {
+    backgroundColor: theme.palette.common.white, // Ensure even rows are also white
+  },
+  "&:last-child td, &:last-child th": {
     border: 0,
+  },
+  "& td, & th": {
+    borderTop: `0.1rem  ${theme.palette.divider}`, // Add top border to all cells
   },
 }));
 
-function createData(
-  name: string,
-  calories: number,
-  fat: number,
-  carbs: number,
-  protein: number,
-) {
-  return { name, calories, fat, carbs, protein };
+type DataRow = {
+  property: string;
+  value: string | number;
+};
+
+interface TableVerticalProps {
+  data: DataRow[];
 }
 
-const rows = [
-  createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-  createData('Eclair', 262, 16.0, 24, 6.0),
-  createData('Cupcake', 305, 3.7, 67, 4.3),
-  createData('Gingerbread', 356, 16.0, 49, 3.9),
-];
-
-export default function CustomizedTables() {
+const TableVertical: React.FC<TableVerticalProps> = ({ data }) => {
   return (
-    <TableContainer component={Paper}>
-      <Table sx={{ minWidth: 700 }} aria-label="customized table">
-        <TableHead>
-          <TableRow>
-            <StyledTableCell>Dessert (100g serving)</StyledTableCell>
-            <StyledTableCell align="right">Calories</StyledTableCell>
-            <StyledTableCell align="right">Fat&nbsp;(g)</StyledTableCell>
-            <StyledTableCell align="right">Carbs&nbsp;(g)</StyledTableCell>
-            <StyledTableCell align="right">Protein&nbsp;(g)</StyledTableCell>
-          </TableRow>
-        </TableHead>
+    <TableContainer
+      component={Paper}
+      sx={{
+        width: "45rem",
+        margin: "auto",
+        border: "0.1rem solid",
+        borderRadius: "8px",
+        borderColor: "#CDD7E1",
+      }}
+    >
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          borderBottom: "0.1rem solid #CDD7E1", // Add bottom border to title box
+        }}
+      >
+        <Box
+          sx={{
+            fontSize: "2.4rem",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            width: "41rem",
+            padding: "1.6rem",
+            pr: "2.4rem",
+          }}
+        >
+          Главное
+          <EditIcon
+            sx={{
+              verticalAlign: "middle",
+              fontSize: "2.4rem",
+              color: "#2196F3",
+            }}
+          />
+        </Box>
+        <Box sx={{ padding: "0.8rem" }}>
+          <LockIcon
+            sx={{
+              verticalAlign: "middle",
+              fontSize: "2.4rem",
+              color: "#2196F3",
+            }}
+          />
+        </Box>
+      </Box>
+      <Table aria-label="customized table" sx={{ borderColor: "#CDD7E1" }}>
         <TableBody>
-          {rows.map((row) => (
-            <StyledTableRow key={row.name}>
-              <StyledTableCell component="th" scope="row">
-                {row.name}
+          {data.map((row, index) => (
+            <StyledTableRow key={row.property}>
+              <StyledTableCell
+                component="th"
+                scope="row"
+                sx={{
+                  width: "18rem",
+                  textAlign: "right",
+                  paddingRight: "16px",
+                  borderTop: index === 0 ? "0.1rem solid #CDD7E1" : undefined, // Add top border to the first row
+                }}
+              >
+                {row.property}
               </StyledTableCell>
-              <StyledTableCell align="right">{row.calories}</StyledTableCell>
-              <StyledTableCell align="right">{row.fat}</StyledTableCell>
-              <StyledTableCell align="right">{row.carbs}</StyledTableCell>
-              <StyledTableCell align="right">{row.protein}</StyledTableCell>
+              <StyledTableCell
+                sx={{
+                  textAlign: "left",
+                  fontWeight: ["Фамилия", "Имя", "Отчество"].includes(
+                    row.property
+                  )
+                    ? "bold"
+                    : "normal", // Apply bold font weight conditionally
+                }}
+              >
+                {row.value}
+              </StyledTableCell>
             </StyledTableRow>
           ))}
         </TableBody>
       </Table>
     </TableContainer>
+  );
+};
+
+// Sample data to be passed as props
+const rows: DataRow[] = [
+  { property: "ID сотрудника", value: 6 },
+  { property: "Статус", value: "Работает" },
+  { property: "Должность", value: "Универсал, Парикмахерский зал" },
+  { property: "Фамилия", value: "Гунина" },
+  { property: "Имя", value: "Анастасия" },
+  { property: "Отчество", value: "Максимовна" },
+  { property: "Отобр. онлайн", value: "Да" },
+  { property: "Моб. телефон", value: "+ (777) 7777-76-66" },
+  { property: "Push-уведомления", value: "Да" },
+];
+
+export default function App() {
+  return (
+    <div>
+      <TableVertical data={rows} />
+    </div>
   );
 }
