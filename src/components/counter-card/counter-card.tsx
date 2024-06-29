@@ -1,15 +1,5 @@
 import React from "react";
-import {
-  Card,
-  Button,
-  CardActions,
-  CardContent,
-  Typography,
-  IconButton,
-  Box,
-  styled,
-  alpha,
-} from "@mui/material";
+import { Card, Button, CardActions, CardContent } from "@mui/material";
 import { ContentCut, AddRounded } from "@mui/icons-material";
 import classes from "./styles.module.scss";
 

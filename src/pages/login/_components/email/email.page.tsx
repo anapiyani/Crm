@@ -1,9 +1,11 @@
 import TextField from "@mui/material/TextField";
 import classes from "./styles.module.scss";
 import icon from "@/assets/icons/icon_wise.svg";
-import { Button } from "@mui/material";
+import { Button, IconButton, InputAdornment } from "@mui/material";
 import classNames from "classnames";
 import { useState } from "react";
+import VisibilityIcon from "@mui/icons-material/Visibility";
+import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { useLoginMutation } from "@/service/auth/auth.hook";
 
 type TProps = {
@@ -13,6 +15,7 @@ type TProps = {
 const EmailLogin = ({ loginWPhone }: TProps) => {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const mutation = useLoginMutation();
 
@@ -21,6 +24,18 @@ const EmailLogin = ({ loginWPhone }: TProps) => {
       return;
     }
     mutation.mutate({ email, password });
+  };
+
+  const handleClickShowPassword = () => {
+    if (showPassword) {
+      setShowPassword(false);
+    } else {
+      setShowPassword(true);
+    }
+  };
+
+  const handleMouseDownPassword = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
   };
 
   return (
@@ -75,7 +90,27 @@ const EmailLogin = ({ loginWPhone }: TProps) => {
               }}
               className={classes["email__content__form__send__input"]}
               value={password}
+              type={showPassword ? "text" : "password"}
               onChange={(e) => setPassword(e.target.value)}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      style={{ marginRight: 10 }}
+                      aria-label="toggle password visibility"
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                      edge="end"
+                    >
+                      {showPassword ? (
+                        <VisibilityOffIcon style={{ fontSize: "2rem" }} />
+                      ) : (
+                        <VisibilityIcon style={{ fontSize: "2rem" }} />
+                      )}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
             />
             {mutation.isError && (
               <p className={classes["email__content__form__send__error"]}>

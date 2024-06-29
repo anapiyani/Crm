@@ -74,14 +74,14 @@ const ResponsiveDrawer = (props: Props) => {
   const items = [
     { text: "Рабочий стол", icon: <Home />, link: "/" },
     { text: "Касса", icon: <AttachMoney />, link: "/cashdesk" },
-    { text: "Активности", icon: <Notifications /> },
-    { text: "Клиенты", icon: <Groups /> },
+    { text: "Активности", icon: <Notifications />, link: "/activity" },
+    { text: "Клиенты", icon: <Groups />, link: "/clients" },
     {
       text: "Сотрудники",
       icon: <Person />,
       children: [
-        { text: "Найти" },
-        { text: "Добавить" },
+        { text: "Найти", link: "/employees" },
+        { text: "Добавить", link: "/employees/add" },
         { text: "График работы" },
         { text: "Зарплата" },
         { text: "Отделы" },
