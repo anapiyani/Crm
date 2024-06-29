@@ -63,7 +63,7 @@ const ResponsiveDrawer = (props: Props) => {
   const handleParentClick = (text: string, index: number) => {
     setOpen(open === text ? null : text);
     setSelectedParentIndex(`${index}`);
-    setSelectedChildIndex(null);
+    setSelectedChildIndex(null); // Reset child selection when a parent is selected
   };
 
   const handleChildClick = (parentIndex: number, childIndex: number) => {
@@ -150,22 +150,50 @@ const ResponsiveDrawer = (props: Props) => {
       return (
         <Fragment key={uniqueIndex}>
           <ListItem disablePadding className={classes["aba"]}>
-            <NavLink to={item.link || "#"} style={{ textDecoration: "none" }}>
-              <ListItemButton
-                selected={
-                  selectedParentIndex === uniqueIndex ||
-                  selectedChildIndex?.startsWith(uniqueIndex)
-                }
-                onClick={() =>
-                  parentIndex === null
-                    ? handleParentClick(item.text, index)
-                    : handleChildClick(parentIndex, index)
-                }
-                sx={{
+            <ListItemButton
+              selected={
+                selectedParentIndex === uniqueIndex ||
+                selectedChildIndex?.startsWith(uniqueIndex)
+              }
+              onClick={() =>
+                parentIndex === null
+                  ? handleParentClick(item.text, index)
+                  : handleChildClick(parentIndex, index)
+              }
+              sx={{
+                "&.Mui-selected": {
+                  backgroundColor: "#0B6BCB",
+                  borderRadius: "4px",
                   color: "#97C3F0",
-                  pl: parentIndex !== null ? "7.2rem" : undefined,
-                  // Further style adjustments can be added here
+                  width: "100%",
+                  "& .MuiListItemIcon-root": {
+                    color: "#fff",
+                  },
+                  "&:hover": {
+                    backgroundColor: "#0B6BCB",
+                  },
+                },
+                color: "#97C3F0",
+                pl: parentIndex !== null ? "7.2rem" : undefined,
+                pr: "1.6rem",
+                pb: "0.4rem",
+                pt: "0.4rem",
+                ...(parentIndex !== null &&
+                  index === 0 && {
+                    borderTopLeftRadius: "0",
+                    borderTopRightRadius: "0",
+                  }),
+              }}
+            >
+              <NavLink
+                to={item.link || "#"}
+                style={{
+                  textDecoration: "none",
+                  display: "flex",
+                  alignItems: "center",
+                  width: "100%",
                 }}
+                className={classes.link}
               >
                 {parentIndex === null && (
                   <IconContainer>{item.icon}</IconContainer>
@@ -174,7 +202,10 @@ const ResponsiveDrawer = (props: Props) => {
                   primary={item.text}
                   primaryTypographyProps={{
                     color: "common.white",
-                    // Other text styles
+                    fontWeight: "400",
+                    variant: parentIndex === null ? "body1" : "body2",
+                    fontSize: parentIndex === null ? "1.6rem" : "1.4rem",
+                    padding: "0.4rem 0 0.4rem 0",
                   }}
                 />
                 {item.children && parentIndex === null ? (
@@ -184,23 +215,23 @@ const ResponsiveDrawer = (props: Props) => {
                     <ExpandMore />
                   )
                 ) : null}
-              </ListItemButton>
-            </NavLink>
-            {item.children ? (
-              <Collapse in={open === item.text} unmountOnExit>
-                <List
-                  component="div"
-                  disablePadding
-                  sx={{
-                    backgroundColor: "#12467B",
-                    borderRadius: "4px",
-                  }}
-                >
-                  {renderListItems(item.children, index)}
-                </List>
-              </Collapse>
-            ) : null}
+              </NavLink>
+            </ListItemButton>
           </ListItem>
+          {item.children ? (
+            <Collapse in={open === item.text} unmountOnExit>
+              <List
+                component="div"
+                disablePadding
+                sx={{
+                  backgroundColor: "#12467B",
+                  borderRadius: "4px",
+                }}
+              >
+                {renderListItems(item.children, index)}
+              </List>
+            </Collapse>
+          ) : null}
         </Fragment>
       );
     });
