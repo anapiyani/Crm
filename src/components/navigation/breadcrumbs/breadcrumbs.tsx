@@ -42,7 +42,6 @@ const BreadcrumbsCustom: React.FC<IBreadcrumbsCustomProps> = ({
             to={match.pathname}
             className={classes["breadcrumb"]}
           >
-            {/* <>{route?.icon}</> */}
             {route?.icon && (
               <Box
                 component="span"
