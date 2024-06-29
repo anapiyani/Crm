@@ -1,12 +1,12 @@
-import TextField from "@mui/material/TextField";
-import classes from "./styles.module.scss";
-import icon from "@/assets/icons/icon_wise.svg";
-import { Button, IconButton, InputAdornment } from "@mui/material";
-import classNames from "classnames";
 import { useState } from "react";
+import TextField from "@mui/material/TextField";
+import { Button, IconButton, InputAdornment } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { useLoginMutation } from "@/service/auth/auth.hook";
+import icon from "@/assets/icons/icon_wise.svg";
+import classNames from "classnames";
+import classes from "./styles.module.scss";
 
 type TProps = {
   loginWPhone: () => void;
@@ -19,7 +19,10 @@ const EmailLogin = ({ loginWPhone }: TProps) => {
 
   const mutation = useLoginMutation();
 
-  const onLoginSubmit = () => {
+  const onLoginSubmit = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    e.preventDefault();
     if (email === "" || password === "") {
       return;
     }

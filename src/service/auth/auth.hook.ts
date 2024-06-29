@@ -10,8 +10,15 @@ export const useLoginMutation = () => {
   >({
     mutationFn: ({ email, password }) => login(email, password),
     onSuccess: (data: ILoginResponse) => {
-      setTokens(data.access, data.refresh);
-      window.location.href = "/";
+      if (data && data.access && data.refresh) {
+        setTokens(data.access, data.refresh);
+        window.location.href = "/";
+      } else {
+        console.error(
+          "Login response does not contain access and refresh tokens",
+          data
+        );
+      }
     },
     onError: (error) => {
       console.log(error);
