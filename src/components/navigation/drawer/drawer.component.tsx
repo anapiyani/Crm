@@ -63,7 +63,7 @@ const ResponsiveDrawer = (props: Props) => {
   const handleParentClick = (text: string, index: number) => {
     setOpen(open === text ? null : text);
     setSelectedParentIndex(`${index}`);
-    setSelectedChildIndex(null); // Reset child selection when a parent is selected
+    setSelectedChildIndex(null);
   };
 
   const handleChildClick = (parentIndex: number, childIndex: number) => {

@@ -1,7 +1,7 @@
 import React from "react";
 
-const CustomerSearch = () => {
-  return <div>CustomerSearch</div>;
+const EmployeeSearch = () => {
+  return <div>EmployeeSearch</div>;
 };
 
-export default CustomerSearch;
+export default EmployeeSearch;

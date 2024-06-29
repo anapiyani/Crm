@@ -1,5 +1,5 @@
-const CustomerAdd = () => {
-  return <div>CustomerAdd</div>;
+const EmployeeAdd = () => {
+  return <div>EmployeeAdd</div>;
 };
 
-export default CustomerAdd;
+export default EmployeeAdd;

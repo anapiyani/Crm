@@ -3,7 +3,7 @@ import LoginPage from "./login/login.page";
 import CashDesk from "./cash-desk/cash-desk.page";
 
 //Customers
-import CustomerSearch from "./employees/search/customer-search.page";
-import CustomerAdd from "./employees/add/customer-add.page";
+import EmployeeSearch from "./employees/search/customer-search.page";
+import EmployeeAdd from "./employees/add/customer-add.page";
 
-export { Home, LoginPage, CashDesk, CustomerSearch, CustomerAdd };
+export { Home, LoginPage, CashDesk, EmployeeSearch, EmployeeAdd };
