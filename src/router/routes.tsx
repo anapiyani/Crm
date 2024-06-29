@@ -1,5 +1,7 @@
 import React from "react";
 import { EmployeeAdd, EmployeeSearch, Home, CashDesk } from "@/pages";
+import Clients from "@/pages/clients/clients.page";
+import Activity from "@/pages/activity/activity.page";
 // import { Role } from "@/ts/types";
 
 type IRoute = {
@@ -29,5 +31,15 @@ export const ROUTES: IRoute[] = [
     name: "Customer add",
     path: "/employees/add",
     component: <EmployeeAdd />,
+  },
+  {
+    name: "Clients",
+    path: "/clients",
+    component: <Clients />,
+  },
+  {
+    name: "Activity",
+    path: "/activity",
+    component: <Activity />,
   },
 ];
