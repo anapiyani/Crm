@@ -1,0 +1,22 @@
+.topItems {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  &__icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    width: 4rem;
+    height: 4rem;
+  }
+}
+.text {
+  font-size: 1.2rem;
+  font-weight: 400;
+  padding-top: 1rem;
+}
+.textValue {
+  font-size: 2rem;
+  font-weight: 500;
+}
