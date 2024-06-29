@@ -9,7 +9,9 @@ export const login = (
   email: string,
   password: string
 ): Promise<ILoginResponse> => {
-  return api.post("/api/auth/", { email, password }).then((res) => res.data);
+  return api.post("/api/auth/", { email, password }).then((res) => {
+    return res.data;
+  });
 };
 
 export const phoneLogin = (phone_number: string): Promise<any> => {

@@ -7,19 +7,26 @@ import { useState } from "react";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { useLoginMutation } from "@/service/auth/auth.hook";
+import { login } from "@/service/auth/auth.service";
+import { setTokens } from "@/utils/token";
+import { useNavigate } from "react-router-dom";
 
 type TProps = {
   loginWPhone: () => void;
 };
 
 const EmailLogin = ({ loginWPhone }: TProps) => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const mutation = useLoginMutation();
 
-  const onLoginSubmit = () => {
+  const onLoginSubmit = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    e.preventDefault();
     if (email === "" || password === "") {
       return;
     }
