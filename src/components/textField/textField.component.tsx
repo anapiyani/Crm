@@ -1,6 +1,7 @@
 import React from "react";
 import { SxProps, Theme } from "@mui/system";
 import TextField from "@mui/material/TextField";
+import classNames from "classnames";
 import classes from "./styles.module.scss";
 
 interface IProps extends React.HTMLProps<HTMLInputElement> {
@@ -30,7 +31,7 @@ const CustomTextField: React.FC<IProps> = ({
           },
         } as SxProps<Theme>
       }
-      className={`${classes["input"]}${addClassName || ""}`.trim()}
+      className={classNames(classes["input"], addClassName)}
     />
   );
 };
