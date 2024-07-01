@@ -1,6 +1,21 @@
 import React from "react";
+<<<<<<< HEAD
 import {Edit, Lock} from "@mui/icons-material";
 import { Box, Paper, TableRow, TableContainer, TableCell, TableBody, Table, tableCellClasses, styled } from "@mui/material";
+=======
+import { Edit, Lock } from "@mui/icons-material";
+import {
+  Box,
+  Paper,
+  TableRow,
+  TableContainer,
+  TableCell,
+  TableBody,
+  Table,
+  tableCellClasses,
+  styled,
+} from "@mui/material";
+>>>>>>> bea4244 (table-vertical updated)
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
