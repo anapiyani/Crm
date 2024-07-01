@@ -6,6 +6,7 @@ import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { useLoginMutation } from "@/service/auth/auth.hook";
 import icon from "@/assets/icons/icon_wise.svg";
 import classNames from "classnames";
+import CustomTextField from "@/components/textField/textField.component";
 import classes from "./styles.module.scss";
 
 type TProps = {
@@ -20,7 +21,7 @@ const EmailLogin = ({ loginWPhone }: TProps) => {
   const mutation = useLoginMutation();
 
   const onLoginSubmit = (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
   ) => {
     e.preventDefault();
     if (email === "" || password === "") {
@@ -60,23 +61,12 @@ const EmailLogin = ({ loginWPhone }: TProps) => {
             <hr />
           </div>
           <div className={classes["email__content__form__send"]}>
-            <TextField
-              id="outlined-basic"
+            <CustomTextField
+              id="email-input"
               label="Электронная почта"
-              variant="outlined"
-              sx={{
-                fontSize: "1.6rem",
-                marginBottom: "1.4rem",
-                "& .MuiFormLabel-root": {
-                  fontSize: "1.6rem",
-                },
-                ".MuiOutlinedInput-root": {
-                  fontSize: "1.6rem",
-                },
-              }}
-              className={classes["email__content__form__send__input"]}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              classes={classes}
             />
             <TextField
               id="outlined-basic"
@@ -124,7 +114,7 @@ const EmailLogin = ({ loginWPhone }: TProps) => {
               variant="contained"
               sx={{ marginTop: "20px" }}
               className={classNames(
-                classes["email__content__form__send__button"]
+                classes["email__content__form__send__button"],
               )}
               onClick={onLoginSubmit}
               disabled={mutation.status === "pending"}

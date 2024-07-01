@@ -62,7 +62,7 @@ const BreadcrumbsCustom: React.FC<IBreadcrumbsCustomProps> = ({
                 match.pathname === location.pathname
                   ? classes["breadcrumb__active"]
                   : classes["breadcrumb__not-active"],
-                className
+                className,
               )}
             >
               {breadcrumb}
