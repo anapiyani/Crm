@@ -1,4 +1,4 @@
-import { Fragment, useState, useEffect } from "react";
+import { Fragment, useState, useEffect, ReactNode } from "react";
 import {
   Box,
   CssBaseline,
@@ -40,6 +40,16 @@ interface Props {
   window?: () => Window;
 }
 
+interface BaseItem {
+  text: string;
+  icon?: ReactNode;
+  link?: string;
+}
+
+interface Item extends BaseItem {
+  children?: BaseItem[];
+}
+
 const ResponsiveDrawer = (props: Props) => {
   const { window } = props;
   const location = useLocation();
@@ -47,10 +57,10 @@ const ResponsiveDrawer = (props: Props) => {
   const [isClosing, setIsClosing] = useState(false);
   const [open, setOpen] = useState<string | null>(null);
   const [selectedParentIndex, setSelectedParentIndex] = useState<string | null>(
-    null
+    null,
   );
   const [selectedChildIndex, setSelectedChildIndex] = useState<string | null>(
-    null
+    null,
   );
 
   useEffect(() => {
@@ -163,7 +173,10 @@ const ResponsiveDrawer = (props: Props) => {
     },
   }));
 
-  const renderListItems = (items: any[], parentIndex: number | null = null) => {
+  const renderListItems = (
+    items: Item[],
+    parentIndex: number | null = null,
+  ) => {
     return items.map((item, index) => {
       const uniqueIndex =
         parentIndex !== null ? `${parentIndex}-${index}` : `${index}`;
