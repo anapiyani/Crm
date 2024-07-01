@@ -5,9 +5,15 @@ import { SxProps, Theme } from "@mui/system";
 interface IProps extends React.HTMLProps<HTMLInputElement> {
   label: string;
   classes: { [key: string]: string };
+  addClassName?: string;
 }
 
-const CustomTextField: React.FC<IProps> = ({ label, classes, ...props }) => {
+const CustomTextField: React.FC<IProps> = ({
+  label,
+  classes,
+  addClassName,
+  ...props
+}) => {
   return (
     <TextField
       {...props}
@@ -25,7 +31,7 @@ const CustomTextField: React.FC<IProps> = ({ label, classes, ...props }) => {
           },
         } as SxProps<Theme>
       }
-      className={classes["email__content__form__send__input"]}
+      className={`${classes["email__content__form__send__input"]} ${addClassName || ""}`.trim()}
     />
   );
 };
