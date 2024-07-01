@@ -1,7 +1,5 @@
-import Tabs from "@/components/tabs/tabs.component";
-
 const Home = () => {
-  return <div>Homempagee</div>;
+  return <div></div>;
 };
 
 export default Home;
