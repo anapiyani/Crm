@@ -70,7 +70,6 @@ const EmailLogin = ({ loginWPhone }: TProps) => {
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 setEmail(e.target.value)
               }
-              classes={classes}
             />
             <TextField
               id="outlined-basic"
