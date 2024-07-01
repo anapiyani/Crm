@@ -1,8 +1,4 @@
 import React from "react";
-<<<<<<< HEAD
-import {Edit, Lock} from "@mui/icons-material";
-import { Box, Paper, TableRow, TableContainer, TableCell, TableBody, Table, tableCellClasses, styled } from "@mui/material";
-=======
 import { Edit, Lock } from "@mui/icons-material";
 import {
   Box,
@@ -15,7 +11,6 @@ import {
   tableCellClasses,
   styled,
 } from "@mui/material";
->>>>>>> bea4244 (table-vertical updated)
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -138,17 +133,5 @@ const TableVertical: React.FC<TableVerticalProps> = ({ data }) => {
   );
 };
 
-// Sample data to be passed as props
-const rows: DataRow[] = [
-  { property: "ID сотрудника", value: 6 },
-  { property: "Статус", value: "Работает" },
-  { property: "Должность", value: "Универсал, Парикмахерский зал" },
-  { property: "Фамилия", value: "Гунина" },
-  { property: "Имя", value: "Анастасия" },
-  { property: "Отчество", value: "Максимовна" },
-  { property: "Отобр. онлайн", value: "Да" },
-  { property: "Моб. телефон", value: "+ (777) 7777-76-66" },
-  { property: "Push-уведомления", value: "Да" },
-];
 
 export default TableVertical;
