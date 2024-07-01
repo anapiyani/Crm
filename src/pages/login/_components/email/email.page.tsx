@@ -62,10 +62,14 @@ const EmailLogin = ({ loginWPhone }: TProps) => {
           </div>
           <div className={classes["email__content__form__send"]}>
             <CustomTextField
+              type="email"
               id="email-input"
+              name="email"
               label="Электронная почта"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setEmail(e.target.value)
+              }
               classes={classes}
             />
             <TextField
