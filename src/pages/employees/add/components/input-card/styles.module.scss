@@ -1,7 +1,7 @@
 .container {
-  max-width: 68.7rem;
-  max-height: 25.6rem;
+  min-width: fit-content;
   padding: 3em 4rem 3rem 4rem;
+  background-color: white;
   border: 1px solid var(--divider);
   border-radius: 0.8rem;
   &__title {
