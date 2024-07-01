@@ -1,8 +1,9 @@
 import React from "react";
-import TextField, { TextFieldProps } from "@mui/material/TextField";
+import { SxProps, Theme } from "@mui/system";
+import TextField from "@mui/material/TextField";
 import classes from "./styles.module.scss";
 
-interface IProps extends Omit<TextFieldProps, "size"> {
+interface IProps extends React.HTMLProps<HTMLInputElement> {
   label: string;
   addClassName?: string;
 }
@@ -17,17 +18,19 @@ const CustomTextField: React.FC<IProps> = ({
       {...props}
       label={label}
       variant="outlined"
-      sx={{
-        fontSize: "1.6rem",
-        marginBottom: "1.4rem",
-        "& .MuiFormLabel-root": {
+      sx={
+        {
           fontSize: "1.6rem",
-        },
-        "& .MuiOutlinedInput-root": {
-          fontSize: "1.6rem",
-        },
-      }}
-      className={`${classes["input"]} ${addClassName || ""}`}
+          marginBottom: "1.4rem",
+          "& .MuiFormLabel-root": {
+            fontSize: "1.6rem",
+          },
+          "& .MuiOutlinedInput-root": {
+            fontSize: "1.6rem",
+          },
+        } as SxProps<Theme>
+      }
+      className={`${classes["input"]}${addClassName || ""}`.trim()}
     />
   );
 };
