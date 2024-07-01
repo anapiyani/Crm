@@ -1,0 +1,13 @@
+.container {
+  max-width: 68.7rem;
+  max-height: 25.6rem;
+  padding: 3em 4rem 3rem 4rem;
+  border: 1px solid var(--divider);
+  border-radius: 0.8rem;
+  &__title {
+    font-size: 2.4rem;
+    font-weight: 400;
+    color: var(--text-primary);
+    margin-bottom: 1.6rem;
+  }
+}

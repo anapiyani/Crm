@@ -20,7 +20,6 @@ const CustomTextField: React.FC<IProps> = ({
       variant="outlined"
       sx={{
         fontSize: "1.6rem",
-        marginBottom: "1.4rem",
         "& .MuiFormLabel-root": {
           fontSize: "1.6rem",
         },

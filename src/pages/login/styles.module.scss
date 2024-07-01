@@ -1,34 +1,32 @@
 .login {
-    margin: 0;
-    background-color: var(--primary-050);
-    width: 100%;
-    height: 100vh;
+  margin: 0;
+  background-color: var(--primary-050);
+  width: 100%;
+  height: 100vh;
 
-    &__content {
+  &__content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+
+    &__image {
+      flex: 0 1 40%;
+      height: 100%;
+
+      &__img {
         width: 100%;
         height: 100%;
-        display: flex;
-        justify-content: space-between;
-
-        &__image {
-            flex: 0 1 40%; 
-            height: 100%;
-            
-            &__img {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-                
-            }
-        }
-
-        &__auth {
-            flex: 0 1 60%;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            
-        }
+        object-fit: cover;
+      }
     }
+
+    &__auth {
+      flex: 0 1 60%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
 }
