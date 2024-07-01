@@ -6,4 +6,6 @@ import CashDesk from "./cash-desk/cash-desk.page";
 import EmployeeSearch from "./employees/search/customer-search.page";
 import EmployeeAdd from "./employees/add/customer-add.page";
 
-export { Home, LoginPage, CashDesk, EmployeeSearch, EmployeeAdd };
+import Unauthorized from "./unauthorized/unauthorized.page";
+
+export { Home, LoginPage, CashDesk, EmployeeSearch, EmployeeAdd, Unauthorized };
