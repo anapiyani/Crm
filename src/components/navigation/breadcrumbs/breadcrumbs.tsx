@@ -33,7 +33,10 @@ const BreadcrumbsCustom: React.FC<IBreadcrumbsCustomProps> = ({
   const breadcrumbs = useBreadcrumbs(routes);
 
   return (
-    <MUIbreadcrumbs aria-label="breadcrumb" separator={<ChevronRightRounded />}>
+    <MUIbreadcrumbs
+      aria-label="breadcrumb"
+      separator={<ChevronRightRounded sx={{ color: "var(--primary-200)" }} />}
+    >
       {breadcrumbs.map(({ match, breadcrumb }) => {
         const route = routes.find((route) => route.path === match.pathname);
         return (
@@ -45,6 +48,7 @@ const BreadcrumbsCustom: React.FC<IBreadcrumbsCustomProps> = ({
             {route?.icon && (
               <Box
                 component="span"
+                color={"var(--primary-200)"}
                 sx={{
                   display: "inline-flex",
                   alignItems: "center",
@@ -62,7 +66,7 @@ const BreadcrumbsCustom: React.FC<IBreadcrumbsCustomProps> = ({
                 match.pathname === location.pathname
                   ? classes["breadcrumb__active"]
                   : classes["breadcrumb__not-active"],
-                className,
+                className
               )}
             >
               {breadcrumb}
