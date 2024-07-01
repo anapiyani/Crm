@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, useState, useEffect } from "react";
 import {
   Box,
   CssBaseline,
@@ -32,15 +32,17 @@ import {
   ExpandLess,
   ExpandMore,
 } from "@mui/icons-material";
-import { NavLink } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 
 const drawerWidth = "25.6rem";
 
 interface Props {
   window?: () => Window;
 }
+
 const ResponsiveDrawer = (props: Props) => {
   const { window } = props;
+  const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isClosing, setIsClosing] = useState(false);
   const [open, setOpen] = useState<string | null>(null);
@@ -50,6 +52,25 @@ const ResponsiveDrawer = (props: Props) => {
   const [selectedChildIndex, setSelectedChildIndex] = useState<string | null>(
     null
   );
+
+  useEffect(() => {
+    const path = location.pathname;
+
+    items.forEach((item, index) => {
+      if (item.link === path) {
+        setSelectedParentIndex(`${index}`);
+        setSelectedChildIndex(null);
+      }
+      if (item.children) {
+        item.children.forEach((child, childIndex) => {
+          if (child.link === path) {
+            setSelectedParentIndex(`${index}`);
+            setSelectedChildIndex(`${index}-${childIndex}`);
+          }
+        });
+      }
+    });
+  }, [location]);
 
   const handleDrawerClose = () => {
     setIsClosing(true);
@@ -162,10 +183,10 @@ const ResponsiveDrawer = (props: Props) => {
               }
               sx={{
                 "&.Mui-selected": {
-                  backgroundColor: "#0B6BCB",
                   borderRadius: "4px",
                   color: "#97C3F0",
                   width: "100%",
+                  backgroundColor: "#0B6BCB",
                   "& .MuiListItemIcon-root": {
                     color: "#fff",
                   },
@@ -193,7 +214,7 @@ const ResponsiveDrawer = (props: Props) => {
                   alignItems: "center",
                   width: "100%",
                 }}
-                className={classes.link}
+                className={classes["link"]}
               >
                 {parentIndex === null && (
                   <IconContainer>{item.icon}</IconContainer>

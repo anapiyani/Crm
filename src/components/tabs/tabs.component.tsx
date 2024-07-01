@@ -1,7 +1,6 @@
 import { NavLink } from "react-router-dom";
-import classes from "./styles.module.scss";
-import React from "react";
 import { SvgIconComponent } from "@mui/icons-material";
+import classes from "./styles.module.scss";
 
 interface TabData {
   to: string;
@@ -13,7 +12,7 @@ interface TabsProps {
   tabsData: TabData[];
 }
 
-const Tabs: React.FC<TabsProps> = ({ tabsData }) => {
+const Tabs = ({ tabsData }: TabsProps) => {
   return (
     <div className={classes["tabs"]}>
       <div className={classes["tabs__content"]}>
