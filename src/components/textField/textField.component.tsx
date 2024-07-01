@@ -1,10 +1,9 @@
 import React from "react";
-import { SxProps, Theme } from "@mui/system";
-import TextField from "@mui/material/TextField";
+import TextField, { TextFieldProps } from "@mui/material/TextField";
 import classNames from "classnames";
 import classes from "./styles.module.scss";
 
-interface IProps extends React.HTMLProps<HTMLInputElement> {
+interface IProps extends Omit<TextFieldProps, "ref" | "variant"> {
   label: string;
   addClassName?: string;
 }
@@ -19,18 +18,16 @@ const CustomTextField: React.FC<IProps> = ({
       {...props}
       label={label}
       variant="outlined"
-      sx={
-        {
+      sx={{
+        fontSize: "1.6rem",
+        marginBottom: "1.4rem",
+        "& .MuiFormLabel-root": {
           fontSize: "1.6rem",
-          marginBottom: "1.4rem",
-          "& .MuiFormLabel-root": {
-            fontSize: "1.6rem",
-          },
-          "& .MuiOutlinedInput-root": {
-            fontSize: "1.6rem",
-          },
-        } as SxProps<Theme>
-      }
+        },
+        "& .MuiOutlinedInput-root": {
+          fontSize: "1.6rem",
+        },
+      }}
       className={classNames(classes["input"], addClassName)}
     />
   );
