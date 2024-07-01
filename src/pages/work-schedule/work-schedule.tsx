@@ -1,3 +1,4 @@
+import React from "react";
 import BreadcrumbsCustom from "@/components/navigation/breadcrumbs/breadcrumbs";
 import AddIcon from "@mui/icons-material/Add";
 import { Button } from "@mui/material";
@@ -22,7 +23,13 @@ const localizer = dateFnsLocalizer({
   locales,
 });
 
-const events = [
+interface CalendarEvent {
+  title: string;
+  start: Date;
+  end: Date;
+}
+
+const events: CalendarEvent[] = [
   {
     title: "Meeting with John",
     start: new Date(2024, 6, 1, 10, 0), // July 1, 2024, 10:00 AM
@@ -34,6 +41,12 @@ const events = [
     end: new Date(2024, 6, 5, 14, 0), // July 5, 2024, 2:00 PM
   },
 ];
+
+const EventComponent: React.FC<{ event: CalendarEvent }> = ({ event }) => (
+  <div>
+    <strong>{event.title}</strong>
+  </div>
+);
 
 const WorkSchedule = () => {
   moment.updateLocale("ru", {
@@ -68,11 +81,7 @@ const WorkSchedule = () => {
               endAccessor="end"
               style={{ minHeight: 600, maxHeight: 1200 }}
               components={{
-                event: ({ event }) => (
-                  <div>
-                    <strong>{event.title}</strong>
-                  </div>
-                ),
+                event: EventComponent,
                 toolbar: CustomToolbar,
               }}
               popup
@@ -80,10 +89,8 @@ const WorkSchedule = () => {
           </div>
         </div>
         <div className={classes["schedule__content__filter"]}>
-          <div className={classes["schedule__content__filter__header"]}>
-            <h1>Сотрудники</h1>
-            <hr />
-          </div>
+          <h1>Сотрудники</h1>
+          <hr />
         </div>
       </div>
     </div>
