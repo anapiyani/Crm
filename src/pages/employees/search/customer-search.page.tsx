@@ -6,8 +6,8 @@ import {
   WarningAmberOutlined,
   CalendarMonthOutlined,
 } from "@mui/icons-material";
-import TableVertical from "@/components/tables/tableVertical/table-vertical";
-import TableHorizontal from "@/components/tables/table-horizontal/table-horizontal";
+import TableVertical from "@/components/tables/tableVertical/employee-vertical-info-card";
+import TableHorizontal from "@/components/tables/table-horizontal/employee-horizontal-info-card";
 
 interface TabData {
   to: string;

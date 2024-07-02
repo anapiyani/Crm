@@ -1,5 +1,5 @@
 import React from "react";
-import { Add, Edit, Done, BorderTop } from "@mui/icons-material";
+import { Add, Edit, Done } from "@mui/icons-material";
 import {
   Box,
   Paper,
@@ -24,7 +24,6 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
-
   },
 }));
 
