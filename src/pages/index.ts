@@ -9,6 +9,9 @@ import Clients from "./clients/clients.page";
 import Activity from "./activity/activity.page";
 import WorkSchedule from "./work-schedule/work-schedule";
 import Department from "./employees/department/department.page";
+import ServiceCatalog from "./services/catalog/catalog.page";
+import ServicePriceList from "./services/price-list/price-list.page";
+
 import Unauthorized from "./unauthorized/unauthorized.page";
 
 export {
@@ -22,4 +25,6 @@ export {
   Activity,
   WorkSchedule,
   Department,
+  ServiceCatalog,
+  ServicePriceList,
 };

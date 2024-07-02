@@ -8,6 +8,8 @@ import {
   Activity,
   WorkSchedule,
   Department,
+  ServiceCatalog,
+  ServicePriceList,
 } from "@/pages";
 import EmployeeSearch from "@/pages/employees/search/customer-search.page";
 // import { Role } from "@/ts/types";
@@ -65,5 +67,15 @@ export const ROUTES: IRoute[] = [
     name: "Department",
     path: "/employees/department",
     component: <Department />,
+  },
+  {
+    name: "Service Catalog",
+    path: "/services",
+    component: <ServiceCatalog />,
+  },
+  {
+    name: "Service Price List",
+    path: "/services/price-list",
+    component: <ServicePriceList />,
   },
 ];
