@@ -41,7 +41,6 @@ const EmployeeAdd = () => {
     apartment: "",
     comment: "",
   });
-
   const mutation = useAddEmployee();
 
   const onFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -82,7 +81,7 @@ const EmployeeAdd = () => {
     }));
   };
 
-  const removeMask = (phoneNumber) => {
+  const removeMask = (phoneNumber: string) => {
     return phoneNumber.replace(/\D/g, "");
   };
 
