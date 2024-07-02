@@ -10,4 +10,11 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  optimizeDeps: {
+    include: [
+      "@fullcalendar/core",
+      "@fullcalendar/daygrid",
+      "@fullcalendar/react",
+    ],
+  },
 });
