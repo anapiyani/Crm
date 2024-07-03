@@ -9,7 +9,10 @@ import VerticalTextField from "@/components/textfield-vertical/textfield-vertica
 import { getDepartment } from "@/service/department/department.service";
 import toast from "react-hot-toast";
 import { IDepartment, IRoles } from "@/ts/types";
-import { useUpdateRole } from "@/service/department/department.hook";
+import {
+  useUpdateRole,
+  useDeleteRole,
+} from "@/service/department/department.hook";
 
 const Department = () => {
   const { data, isPending, isError } = useQuery({
@@ -18,6 +21,7 @@ const Department = () => {
     staleTime: 300,
   });
   const updateRoleMutation = useUpdateRole();
+  const deleteRoleMutation = useDeleteRole();
 
   const [selectedDepartment, setSelectedDepartment] = useState<number | null>(
     null,
@@ -64,6 +68,12 @@ const Department = () => {
         name: positionName,
         department: selectedDepartment,
       });
+    }
+  };
+
+  const handleDeleteClick = () => {
+    if (selectedPosition !== null) {
+      deleteRoleMutation.mutate(selectedPosition);
     }
   };
 
@@ -143,7 +153,11 @@ const Department = () => {
             <div
               className={classes["department__content__column__items__btns"]}
             >
-              <Button variant="outlined" startIcon={<DeleteIcon />}>
+              <Button
+                onClick={handleDeleteClick}
+                variant="outlined"
+                startIcon={<DeleteIcon />}
+              >
                 Удалить
               </Button>
               <Button

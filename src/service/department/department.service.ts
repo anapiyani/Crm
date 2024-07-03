@@ -14,3 +14,7 @@ export const updateRole = ({
     .put(`/departments/roles/${id}/`, { name, department })
     .then((res) => res.data);
 };
+
+export const deleteRole = (id: number) => {
+  return api.delete(`/departments/roles/${id}/`).then((res) => res.data);
+};

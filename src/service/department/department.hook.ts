@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
-import { updateRole } from "./department.service";
+import { updateRole, deleteRole } from "./department.service";
 import { IRoleChange } from "@/ts/types";
 
 export const useUpdateRole = () => {
@@ -13,6 +13,20 @@ export const useUpdateRole = () => {
     },
     onError: () => {
       toast.error("Что-то пошло не так.");
+    },
+  });
+};
+
+export const useDeleteRole = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: deleteRole,
+    onSuccess: () => {
+      toast.success("Должность успешно удален.");
+      queryClient.invalidateQueries({ queryKey: ["departmentData"] });
+    },
+    onError: () => {
+      toast.error("Ошибка при удалении должности.");
     },
   });
 };
