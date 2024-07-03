@@ -1,5 +1,6 @@
 import React from "react";
-import { EmployeeAdd, EmployeeSearch, Home, CashDesk } from "@/pages";
+import { EmployeeAdd, Home, CashDesk } from "@/pages";
+import EmployeeCard from "@/pages/employees/employee-card/employee-card.page";
 import Clients from "@/pages/clients/clients.page";
 import Activity from "@/pages/activity/activity.page";
 import WorkSchedule from "@/pages/work-schedule/work-schedule";
@@ -23,11 +24,7 @@ export const ROUTES: IRoute[] = [
     path: "/cashdesk",
     component: <CashDesk />,
   },
-  {
-    name: "Customer Search",
-    path: "/employees",
-    component: <EmployeeSearch />,
-  },
+ 
   {
     name: "Customer add",
     path: "/employees/add",
@@ -48,4 +45,9 @@ export const ROUTES: IRoute[] = [
     path: "/employees/work-schedule",
     component: <WorkSchedule />,
   },
+  {
+    name: "Employee card",
+    path: "employees/employee-card",
+    component: <EmployeeCard />,
+  }
 ];
