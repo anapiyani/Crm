@@ -52,10 +52,6 @@ const TableVertical: React.FC<TableVerticalProps> = ({
     <TableContainer
       component={Paper}
       sx={{
-<<<<<<< Updated upstream
-=======
-        // width: "45rem",
->>>>>>> Stashed changes
         border: "0.1rem solid",
         borderRadius: "8px",
         borderColor: "#CDD7E1",
