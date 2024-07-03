@@ -8,6 +8,18 @@ import EmployeeAdd from "./employees/add/customer-add.page";
 import Clients from "./clients/clients.page";
 import Activity from "./activity/activity.page";
 import WorkSchedule from "./work-schedule/work-schedule";
+import Department from "./employees/department/department.page";
 import Unauthorized from "./unauthorized/unauthorized.page";
 
-export { Home, LoginPage, CashDesk, EmployeeCard, EmployeeAdd, Unauthorized, Clients, Activity, WorkSchedule};
+export {
+  Home,
+  LoginPage,
+  CashDesk,
+  EmployeeCard,
+  EmployeeAdd,
+  Unauthorized,
+  Clients,
+  Activity,
+  WorkSchedule,
+  Department,
+};
