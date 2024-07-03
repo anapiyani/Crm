@@ -1,9 +1,6 @@
 import React from "react";
-import { EmployeeAdd, Home, CashDesk } from "@/pages";
-import EmployeeCard from "@/pages/employees/employee-card/employee-card.page";
-import Clients from "@/pages/clients/clients.page";
-import Activity from "@/pages/activity/activity.page";
-import WorkSchedule from "@/pages/work-schedule/work-schedule";
+import { EmployeeAdd, Home, CashDesk, EmployeeCard, Clients, Activity,WorkSchedule } from "@/pages";
+
 // import { Role } from "@/ts/types";
 
 type IRoute = {

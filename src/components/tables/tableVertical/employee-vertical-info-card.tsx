@@ -71,7 +71,6 @@ const TableVertical: React.FC<TableVerticalProps> = ({
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
-            // width: showLockIcon || extraAction ? "41rem" : "100%",
             padding: "1.6rem",
             pr: "2.4rem",
           }}
@@ -85,7 +84,7 @@ const TableVertical: React.FC<TableVerticalProps> = ({
             alignItems: "center",
           }}
         >
-          {!showLockIcon && (
+          {!showLockIcon ? (
             <Box
               sx={{
                 padding: "0.8rem",
@@ -100,9 +99,7 @@ const TableVertical: React.FC<TableVerticalProps> = ({
                 }}
               />
             </Box>
-          )}
-
-          {showLockIcon && (
+          ) : (
             <Box
               sx={{
                 display: "flex",

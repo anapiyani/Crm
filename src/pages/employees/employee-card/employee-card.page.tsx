@@ -8,7 +8,7 @@ import {
 } from "@mui/icons-material";
 import TableVertical from "@/components/tables/tableVertical/employee-vertical-info-card";
 import TableHorizontal from "@/components/tables/table-horizontal/employee-horizontal-info-card";
-import Grid from "@mui/material/Unstable_Grid2"; // Grid version 2
+import Grid from "@mui/material/Unstable_Grid2";
 
 interface TabData {
   to: string;
