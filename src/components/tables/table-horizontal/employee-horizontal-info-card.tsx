@@ -52,7 +52,7 @@ const TableHorizontal: React.FC<ContactsTableProps> = ({ data, title }) => {
     <TableContainer
       component={Paper}
       sx={{
-        width: "45rem",
+        // width: "45rem",
         border: "0.1rem solid",
         borderRadius: "8px",
         borderColor: "#CDD7E1",

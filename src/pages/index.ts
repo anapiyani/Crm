@@ -3,9 +3,11 @@ import LoginPage from "./login/login.page";
 import CashDesk from "./cash-desk/cash-desk.page";
 
 //Customers
-import EmployeeSearch from "./employees/search/customer-search.page";
+import EmployeeCard from "./employees/employee-card/employee-card.page";
 import EmployeeAdd from "./employees/add/customer-add.page";
-
+import Clients from "./clients/clients.page";
+import Activity from "./activity/activity.page";
+import WorkSchedule from "./work-schedule/work-schedule";
 import Unauthorized from "./unauthorized/unauthorized.page";
 
-export { Home, LoginPage, CashDesk, EmployeeSearch, EmployeeAdd, Unauthorized };
+export { Home, LoginPage, CashDesk, EmployeeCard, EmployeeAdd, Unauthorized, Clients, Activity, WorkSchedule};

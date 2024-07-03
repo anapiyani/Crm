@@ -52,8 +52,6 @@ const TableVertical: React.FC<TableVerticalProps> = ({
     <TableContainer
       component={Paper}
       sx={{
-        width: "45rem",
-        mb: "5rem",
         border: "0.1rem solid",
         borderRadius: "8px",
         borderColor: "#CDD7E1",
@@ -73,32 +71,67 @@ const TableVertical: React.FC<TableVerticalProps> = ({
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
-            width: showLockIcon || extraAction ? "41rem" : "100%",
             padding: "1.6rem",
             pr: "2.4rem",
           }}
         >
           {title}
           {extraAction}
-          <Edit
-            sx={{
-              verticalAlign: "middle",
-              fontSize: "2.4rem",
-              color: "#2196F3",
-            }}
-          />
         </Box>
-        {showLockIcon && (
-          <Box sx={{ padding: "0.8rem" }}>
-            <Lock
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          {!showLockIcon ? (
+            <Box
               sx={{
-                verticalAlign: "middle",
-                fontSize: "2.4rem",
-                color: "#2196F3",
+                padding: "0.8rem",
+                pr: "2.4rem",
               }}
-            />
-          </Box>
-        )}
+            >
+              <Edit
+                sx={{
+                  verticalAlign: "middle",
+                  fontSize: "2.4rem",
+                  color: "#2196F3",
+                }}
+              />
+            </Box>
+          ) : (
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <Box
+                sx={{
+                  padding: "0.8rem",
+                  pr: "2.4rem",
+                }}
+              >
+                <Edit
+                  sx={{
+                    verticalAlign: "middle",
+                    fontSize: "2.4rem",
+                    color: "#2196F3",
+                  }}
+                />
+              </Box>
+              <Box sx={{ padding: "0.8rem" }}>
+                <Lock
+                  sx={{
+                    verticalAlign: "middle",
+                    fontSize: "2.4rem",
+                    color: "#2196F3",
+                  }}
+                />
+              </Box>
+            </Box>
+          )}
+        </Box>
       </Box>
       <Table aria-label="customized table" sx={{ borderColor: "#CDD7E1" }}>
         <TableBody>
