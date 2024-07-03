@@ -6,7 +6,7 @@ const ServiceCatalog = () => {
     <div className={classes["catalog"]}>
       <BreadcrumbsCustom />
       <div className={classes["catalog__upper"]}>
-        <h1>Service Catalog</h1>
+        
       </div>
     </div>
   );

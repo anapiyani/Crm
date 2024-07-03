@@ -3,5 +3,38 @@
 
   &__upper {
     margin-top: 1.6rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(25rem, 1fr));
+    gap: 1.5rem;
+
+    &__header {
+      font-size: 2.4rem;
+      font-weight: 400;
+      line-height: 3.2rem;
+      font-family: "Ubuntu", sans-serif;
+      margin-bottom: 1rem;
+      color: #000;
+    }
+
+    &__divider {
+      margin-top: 1.6rem;
+      border: 0.5px solid var(--divider);
+    }
+
+    &__radio-container {
+      display: flex;
+      flex-direction: column;
+      // gap: 1rem;
+    }
+
+    &__radio-solo {
+      display: flex;
+      align-items: center;
+      flex-direction: row;
+    }
+
+    &__radio-text {
+      font-size: 1.6rem;
+    }
   }
 }
