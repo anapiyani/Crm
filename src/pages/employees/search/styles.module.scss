@@ -10,37 +10,43 @@
     color: var(--text-primary);
   }
   &__upper {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(40rem, 1fr));
-    gap: 1rem;
-    grid-template-areas:
-      "main pos rev"
-      "ext pos rev";
+    display: flex;
+    flex-wrap: wrap;
+
+    gap: 2rem;
+    justify-items: right;
     &__main {
-      grid-area: main;
+      display: flex;
+      flex: 2;
+      flex-direction: column;
+      gap: 2rem;
     }
     &__position {
-      grid-area: pos;
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      gap: 2rem;
     }
     &__reviews {
-      grid-area: rev;
-    }
-    &__external {
-      grid-area: ext;
+      flex: 2;
     }
     &__checkboxes {
       display: flex;
-      width: 28rem;
       flex-direction: row;
+      width: 45rem;
       gap: 2rem;
       align-items: center;
-      &__label {
+      p {
         font-size: 1.6rem;
         color: var(--text-primary);
       }
     }
     &__autocomplete {
-      width: 29rem;
+      display: flex;
+      flex-direction: row;
+      width: 46rem;
+      gap: 2rem;
+      align-items: center;
     }
     &__card {
       display: flex;
@@ -49,10 +55,4 @@
       gap: 1rem;
     }
   }
-}
-.container__searchFilterCard {
-  display: flex;
-  width: 25%;
-  flex-direction: column;
-  gap: 0.5rem;
 }

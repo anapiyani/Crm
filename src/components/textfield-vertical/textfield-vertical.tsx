@@ -50,9 +50,7 @@ const VerticalTextField: React.FC<IProps> = ({
             />
           </div>
         );
-      // Add more cases as needed
       default:
-        // Default case
         return (
           <TextField
             {...props}
