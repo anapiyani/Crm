@@ -1,0 +1,14 @@
+.row {
+  &__label {
+    margin-left: 1rem;
+    font-size: 1.6rem;
+    color: var(--text-primary);
+  }
+  &__child {
+    padding: 1rem;
+    padding-left: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+}

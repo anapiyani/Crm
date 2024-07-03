@@ -2,8 +2,6 @@ import BreadcrumbsCustom from "@/components/navigation/breadcrumbs/breadcrumbs";
 
 import {
   Autocomplete,
-  AutocompleteRenderInputParams,
-  Box,
   Button,
   Checkbox,
   FormControlLabel,
@@ -12,80 +10,12 @@ import {
 import classes from "./styles.module.scss";
 import SearchFilterCard from "./components/search-filter-card";
 import VerticalTextField from "@/components/textfield-vertical/textfield-vertical";
-import { useState } from "react";
-
-function IndeterminateCheckbox() {
-  const [checked, setChecked] = useState([true, false]);
-
-  const handleChange1 = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setChecked([event.target.checked, event.target.checked]);
-  };
-
-  const handleChange2 = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setChecked([event.target.checked, checked[1]]);
-  };
-
-  const handleChange3 = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setChecked([checked[0], event.target.checked]);
-  };
-
-  const children = (
-    <Box sx={{ display: "flex", flexDirection: "column", ml: 3 }}>
-      <FormControlLabel
-        label="Child 1"
-        control={<Checkbox checked={checked[0]} onChange={handleChange2} />}
-      />
-      <FormControlLabel
-        label="Child 2"
-        control={<Checkbox checked={checked[1]} onChange={handleChange3} />}
-      />
-    </Box>
-  );
-
-  return (
-    <div>
-      <FormControlLabel
-        label="Parent"
-        control={
-          <Checkbox
-            checked={checked[0] && checked[1]}
-            indeterminate={checked[0] !== checked[1]}
-            onChange={handleChange1}
-          />
-        }
-      />
-      {children}
-    </div>
-  );
-}
-
-// interface TabData {
-//   to: string;
-//   icon: typeof HomeOutlined;
-//   label: string;
-// }
+import {
+  ChildCheckbox,
+  TriStateCheckbox,
+} from "@/components/intermediate-checkbox/intermediate-checkbox";
 
 const EmployeeSearch = () => {
-  // const tabsData: TabData[] = [
-  //   { to: "/employees", icon: HomeOutlined, label: "Обзор" },
-  //   { to: "/employees/visit", icon: ExitToAppOutlined, label: "Посещения" },
-  //   {
-  //     to: "/employees/balance",
-  //     icon: AccountBalanceWalletOutlined,
-  //     label: "Зарплата, штрафы, премии, авансы",
-  //   },
-  //   {
-  //     to: "/employees/reviews",
-  //     icon: WarningAmberOutlined,
-  //     label: "Отзывы / жалобы",
-  //   },
-  //   {
-  //     to: "/employees/work-schedule",
-  //     icon: CalendarMonthOutlined,
-  //     label: "график работы",
-  //   },
-  // ];
-
   return (
     <div className={classes["main"]}>
       <BreadcrumbsCustom></BreadcrumbsCustom>
@@ -108,46 +38,6 @@ const EmployeeSearch = () => {
               </div>
             }
           ></SearchFilterCard>
-        </div>
-        <div className={classes["main__upper__position"]}>
-          <SearchFilterCard
-            classNameUnique="container__searchFilterCard"
-            title={"Должность"}
-            children={
-              <div className={classes["main__upper__card"]}>
-                <IndeterminateCheckbox />
-              </div>
-            }
-          ></SearchFilterCard>
-        </div>
-        <div className={classes["main__upper__reviews"]}>
-          <SearchFilterCard
-            title={"Отзывы"}
-            children={
-              <div className={classes["main__upper__card"]}>
-                <VerticalTextField
-                  label="Отзыв от"
-                  placeholder="Введите ФИО"
-                  placeholderOptional="Введите телефон"
-                  type="double"
-                  doubleDivier="/"
-                />
-                <VerticalTextField
-                  label={"Отзыв о"}
-                  placeholder="Введите имя"
-                />
-                <VerticalTextField
-                  label={"Дата"}
-                  placeholder="С"
-                  placeholderOptional="По"
-                  type="double"
-                  doubleDivier="-"
-                />
-              </div>
-            }
-          ></SearchFilterCard>
-        </div>
-        <div className={classes["main__upper__external"]}>
           <SearchFilterCard
             title={"Доп. информация"}
             children={
@@ -180,8 +70,26 @@ const EmployeeSearch = () => {
                 <div className={classes["main__upper__checkboxes"]}>
                   <p>Пол</p>
                   <FormGroup sx={{ flexDirection: "row" }}>
-                    <FormControlLabel control={<Checkbox />} label="Муж" />
-                    <FormControlLabel control={<Checkbox />} label="Жен" />
+                    <FormControlLabel
+                      sx={{
+                        fontSize: "1.6rem",
+                        "& .MuiTypography-root": {
+                          fontSize: "1.6rem",
+                        },
+                      }}
+                      control={<Checkbox />}
+                      label="Муж"
+                    />
+                    <FormControlLabel
+                      sx={{
+                        fontSize: "1.6rem",
+                        "& .MuiTypography-root": {
+                          fontSize: "1.6rem",
+                        },
+                      }}
+                      control={<Checkbox />}
+                      label="Жен"
+                    />
                   </FormGroup>
                 </div>
                 <div className={classes["main__upper__autocomplete"]}>
@@ -208,7 +116,100 @@ const EmployeeSearch = () => {
             }
           ></SearchFilterCard>
         </div>
+        <div className={classes["main__upper__position"]}>
+          <SearchFilterCard
+            title={"Должность"}
+            children={
+              <div className={classes["main__upper__card"]}>
+                <TriStateCheckbox label="Parent Checkbox">
+                  <ChildCheckbox
+                    label="Child Checkbox 1"
+                    parentChecked={null}
+                    onChildChange={() => {}}
+                  />
+                  <ChildCheckbox
+                    label="Child Checkbox 2"
+                    parentChecked={null}
+                    onChildChange={() => {}}
+                  />
+                </TriStateCheckbox>
+                <TriStateCheckbox label="Parent Checkbox">
+                  <ChildCheckbox
+                    label="Child Checkbox 1"
+                    parentChecked={null}
+                    onChildChange={() => {}}
+                  />
+                  <ChildCheckbox
+                    label="Child Checkbox 2"
+                    parentChecked={null}
+                    onChildChange={() => {}}
+                  />
+                  <ChildCheckbox
+                    label="Child Checkbox 1"
+                    parentChecked={null}
+                    onChildChange={() => {}}
+                  />
+                  <ChildCheckbox
+                    label="Child Checkbox 2"
+                    parentChecked={null}
+                    onChildChange={() => {}}
+                  />
+                  <ChildCheckbox
+                    label="Child Checkbox 1"
+                    parentChecked={null}
+                    onChildChange={() => {}}
+                  />
+                  <ChildCheckbox
+                    label="Child Checkbox 2"
+                    parentChecked={null}
+                    onChildChange={() => {}}
+                  />
+                </TriStateCheckbox>
+                <TriStateCheckbox label="Parent Checkbox">
+                  <ChildCheckbox
+                    label="Child Checkbox 1"
+                    parentChecked={null}
+                    onChildChange={() => {}}
+                  />
+                  <ChildCheckbox
+                    label="Child Checkbox 2"
+                    parentChecked={null}
+                    onChildChange={() => {}}
+                  />
+                </TriStateCheckbox>
+              </div>
+            }
+          ></SearchFilterCard>
+        </div>
+        <div className={classes["main__upper__reviews"]}>
+          <SearchFilterCard
+            title={"Отзывы"}
+            children={
+              <div className={classes["main__upper__card"]}>
+                <VerticalTextField
+                  label="Отзыв от"
+                  placeholder="Введите ФИО"
+                  placeholderOptional="Введите телефон"
+                  type="double"
+                  doubleDivier="/"
+                />
+                <VerticalTextField
+                  label={"Отзыв о"}
+                  placeholder="Введите имя"
+                />
+                <VerticalTextField
+                  label={"Дата"}
+                  placeholder="С"
+                  placeholderOptional="По"
+                  type="double"
+                  doubleDivier="-"
+                />
+              </div>
+            }
+          ></SearchFilterCard>
+        </div>
       </div>
+      <div className={classes["main__lower"]}></div>
     </div>
   );
 };
