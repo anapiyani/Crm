@@ -23,6 +23,17 @@
 body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+}
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none; /* For Chrome, Safari, and Opera */
+}
+
+html {
+  -ms-overflow-style: none; /* For Internet Explorer and Edge */
+  scrollbar-width: none; /* For Firefox */
 }
 
 /*
@@ -75,5 +86,5 @@ body {
 
 html {
   font-size: 62.5%;
-  font-family: 'Ubuntu', sans-serif;  
+  font-family: "Ubuntu", sans-serif;
 }
