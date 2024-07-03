@@ -48,7 +48,6 @@
     height: 40px;
     border-radius: 50%;
     margin: 5px;
-    background-color: #f9f9f9;
     font-size: 14px;
     color: #666;
 }
@@ -63,9 +62,4 @@
 
 .day.today {
     background-color: #e0f7fa;
-}
-
-.day:hover {
-    cursor: pointer;
-    background-color: #ddd;
 }
