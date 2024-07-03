@@ -12,7 +12,9 @@ import { IDepartment, IRoles } from "@/ts/types";
 import {
   useUpdateRole,
   useDeleteRole,
+  useCreateRole,
 } from "@/service/department/department.hook";
+import ModalWindow from "@/components/modal-window/modal-window";
 
 const Department = () => {
   const { data, isPending, isError } = useQuery({
@@ -22,12 +24,14 @@ const Department = () => {
   });
   const updateRoleMutation = useUpdateRole();
   const deleteRoleMutation = useDeleteRole();
+  const createRoleMutation = useCreateRole();
 
   const [selectedDepartment, setSelectedDepartment] = useState<number | null>(
     null,
   );
   const [selectedPosition, setSelectedPosition] = useState<number | null>(null);
   const [positionName, setPositionName] = useState<string>("");
+  const [modalOpen, setModalOpen] = useState(false);
 
   if (isError) {
     const errorMessage = "Произошла ошибка при получении данных.";
@@ -71,10 +75,31 @@ const Department = () => {
     }
   };
 
+  const handleAddPosition = (): void => {
+    if (positionName && selectedDepartment) {
+      createRoleMutation.mutate({
+        name: positionName,
+        department: selectedDepartment,
+      });
+      setModalOpen(false);
+      setPositionName("");
+    } else {
+      toast.error("Пожалуйста выберите отдел и напишите должность.");
+    }
+  };
+
   const handleDeleteClick = () => {
     if (selectedPosition !== null) {
       deleteRoleMutation.mutate(selectedPosition);
     }
+  };
+
+  const handleOpenModal = () => {
+    setModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalOpen(false);
   };
 
   return (
@@ -110,7 +135,7 @@ const Department = () => {
         <div className={classes["department__content__column"]}>
           <div className={classes["department__content__column__header"]}>
             <h2>
-              Должность <Button>+ Добавить</Button>
+              Должность <Button onClick={handleOpenModal}>+ Добавить</Button>
             </h2>
             <Divider />
           </div>
@@ -171,6 +196,20 @@ const Department = () => {
           </div>
         </div>
       </div>
+      <ModalWindow
+        title="Добавить должность"
+        open={modalOpen}
+        handleClose={handleCloseModal}
+        handleSave={handleAddPosition}
+      >
+        <VerticalTextField
+          fullWidth
+          label="Название должности"
+          value={positionName}
+          onChange={(e) => setPositionName(e.target.value)}
+          placeholder="Введите название должности"
+        />
+      </ModalWindow>
     </div>
   );
 };

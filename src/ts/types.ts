@@ -50,3 +50,8 @@ export interface IRoleChange {
   department: number;
   name: string;
 }
+
+export interface IRoleCreate {
+  name: string;
+  department: number;
+}
