@@ -1,3 +1,4 @@
+import BreadcrumbsCustom from "@/components/navigation/breadcrumbs/breadcrumbs";
 import Tabs from "@/components/tabs/tabs.component";
 import {
   HomeOutlined,
@@ -5,80 +6,217 @@ import {
   AccountBalanceWalletOutlined,
   WarningAmberOutlined,
   CalendarMonthOutlined,
+  Search,
+  CheckBox,
 } from "@mui/icons-material";
-import TableVertical from "@/components/tables/tableVertical/employee-vertical-info-card";
-import TableHorizontal from "@/components/tables/table-horizontal/employee-horizontal-info-card";
+import {
+  Autocomplete,
+  AutocompleteRenderInputParams,
+  Box,
+  Button,
+  Checkbox,
+  FormControlLabel,
+  FormGroup,
+} from "@mui/material";
+import classes from "./styles.module.scss";
+import SearchFilterCard from "./components/search-filter-card";
+import VerticalTextField from "@/components/textfield-vertical/textfield-vertical";
+import { C } from "node_modules/@fullcalendar/core/internal-common";
+import { ReactNode, useState } from "react";
 
-interface TabData {
-  to: string;
-  icon: typeof HomeOutlined;
-  label: string;
-}
+function IndeterminateCheckbox() {
+  const [checked, setChecked] = useState([true, false]);
 
-const EmployeeSearch = () => {
-  const tabsData: TabData[] = [
-    { to: "/employees", icon: HomeOutlined, label: "Обзор" },
-    { to: "/employees/visit", icon: ExitToAppOutlined, label: "Посещения" },
-    {
-      to: "/employees/balance",
-      icon: AccountBalanceWalletOutlined,
-      label: "Зарплата, штрафы, премии, авансы",
-    },
-    {
-      to: "/employees/reviews",
-      icon: WarningAmberOutlined,
-      label: "Отзывы / жалобы",
-    },
-    {
-      to: "/employees/work-schedule",
-      icon: CalendarMonthOutlined,
-      label: "график работы",
-    },
-  ];
+  const handleChange1 = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setChecked([event.target.checked, event.target.checked]);
+  };
 
-  const mainTableData = [
-    { property: "ID сотрудника", value: 6 },
-    { property: "Статус", value: "Работает" },
-    { property: "Должность", value: "Универсал, Парикмахерский зал" },
-    { property: "Фамилия", value: "Гунина" },
-    { property: "Имя", value: "Анастасия" },
-    { property: "Отчество", value: "Максимовна" },
-    { property: "Отобр. онлайн", value: "Да" },
-    { property: "Моб. телефон", value: "+ (777) 7777-76-66" },
-    { property: "Push-уведомления", value: "Да" },
-  ];
-  
-  const additionalTableData = [
-    { property: "Работает с.", value: "22.06.2020" },
-    { property: "Пол", value: "Жен." },
-    { property: "Интервал", value: "По умолчанию" },
-    { property: "Блокировать", value: "Да" },
-  ];
-  
-  const contactsData = [
-    { type: "Моб. телефон", contact: "+7 (777) 777-76-66", primary: true },
-  ];
-  
-  const addressData = [{ property: "Адрес", value: "Нет данных." }];
+  const handleChange2 = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setChecked([event.target.checked, checked[1]]);
+  };
+
+  const handleChange3 = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setChecked([checked[0], event.target.checked]);
+  };
+
+  const children = (
+    <Box sx={{ display: "flex", flexDirection: "column", ml: 3 }}>
+      <FormControlLabel
+        label="Child 1"
+        control={<Checkbox checked={checked[0]} onChange={handleChange2} />}
+      />
+      <FormControlLabel
+        label="Child 2"
+        control={<Checkbox checked={checked[1]} onChange={handleChange3} />}
+      />
+    </Box>
+  );
 
   return (
     <div>
-      <Tabs tabsData={tabsData} />
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          gap: 24,
-          paddingLeft: "7.6rem",
-        }}
-      >
-        <TableVertical data={mainTableData} title="Главное" showLockIcon />
-        <div>
-          <TableVertical data={additionalTableData} title="Доп. информация" />
+      <FormControlLabel
+        label="Parent"
+        control={
+          <Checkbox
+            checked={checked[0] && checked[1]}
+            indeterminate={checked[0] !== checked[1]}
+            onChange={handleChange1}
+          />
+        }
+      />
+      {children}
+    </div>
+  );
+}
+
+// interface TabData {
+//   to: string;
+//   icon: typeof HomeOutlined;
+//   label: string;
+// }
+
+const EmployeeSearch = () => {
+  // const tabsData: TabData[] = [
+  //   { to: "/employees", icon: HomeOutlined, label: "Обзор" },
+  //   { to: "/employees/visit", icon: ExitToAppOutlined, label: "Посещения" },
+  //   {
+  //     to: "/employees/balance",
+  //     icon: AccountBalanceWalletOutlined,
+  //     label: "Зарплата, штрафы, премии, авансы",
+  //   },
+  //   {
+  //     to: "/employees/reviews",
+  //     icon: WarningAmberOutlined,
+  //     label: "Отзывы / жалобы",
+  //   },
+  //   {
+  //     to: "/employees/work-schedule",
+  //     icon: CalendarMonthOutlined,
+  //     label: "график работы",
+  //   },
+  // ];
+
+  return (
+    <div className={classes["main"]}>
+      <BreadcrumbsCustom></BreadcrumbsCustom>
+      <h1 className={classes["main__title"]}>Расширенный поиск</h1>
+      <div className={classes["main__upper"]}>
+        <div className={classes["main__upper__main"]}>
+          <SearchFilterCard
+            title={"Основные данные"}
+            children={
+              <div className={classes["main__upper__card"]}>
+                <VerticalTextField label={"ФИО"} placeholder="Введите имя" />
+                <VerticalTextField
+                  label={"Телефон"}
+                  placeholder="Введите номер"
+                />
+                <VerticalTextField
+                  label={"ID сотрудника"}
+                  placeholder="Введите ID"
+                />
+              </div>
+            }
+          ></SearchFilterCard>
         </div>
-        <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
-          <TableHorizontal data={contactsData} title="Контакты" />
-          <TableVertical data={addressData} title="Адрес проживания" />
+        <div className={classes["main__upper__position"]}>
+          <SearchFilterCard
+            classNameUnique="container__searchFilterCard"
+            title={"Должность"}
+            children={
+              <div className={classes["main__upper__card"]}>
+                <IndeterminateCheckbox />
+              </div>
+            }
+          ></SearchFilterCard>
+        </div>
+        <div className={classes["main__upper__reviews"]}>
+          <SearchFilterCard
+            title={"Отзывы"}
+            children={
+              <div className={classes["main__upper__card"]}>
+                <VerticalTextField
+                  label="Отзыв от"
+                  placeholder="Введите ФИО"
+                  placeholderOptional="Введите телефон"
+                  type="double"
+                  doubleDivier="/"
+                />
+                <VerticalTextField
+                  label={"Отзыв о"}
+                  placeholder="Введите имя"
+                />
+                <VerticalTextField
+                  label={"Дата"}
+                  placeholder="С"
+                  placeholderOptional="По"
+                  type="double"
+                  doubleDivier="-"
+                />
+              </div>
+            }
+          ></SearchFilterCard>
+        </div>
+        <div className={classes["main__upper__external"]}>
+          <SearchFilterCard
+            title={"Доп. информация"}
+            children={
+              <div className={classes["main__upper__card"]}>
+                <VerticalTextField
+                  label={"Email"}
+                  placeholder="Введите email "
+                />
+                <VerticalTextField
+                  label={"Работает"}
+                  placeholder="С"
+                  placeholderOptional="По"
+                  type="double"
+                  doubleDivier="-"
+                />
+                <VerticalTextField
+                  label={"Дата рождения"}
+                  placeholder="С"
+                  placeholderOptional="По"
+                  type="double"
+                  doubleDivier="-"
+                />
+                <VerticalTextField
+                  label={"Возраст"}
+                  placeholder="С"
+                  placeholderOptional="По"
+                  type="double"
+                  doubleDivier="-"
+                />
+                <div className={classes["main__upper__checkboxes"]}>
+                  <p>Пол</p>
+                  <FormGroup sx={{ flexDirection: "row" }}>
+                    <FormControlLabel control={<Checkbox />} label="Муж" />
+                    <FormControlLabel control={<Checkbox />} label="Жен" />
+                  </FormGroup>
+                </div>
+                <div className={classes["main__upper__autocomplete"]}>
+                  <Autocomplete
+                    sx={{ width: "100%" }}
+                    options={[
+                      { label: "Option 1", value: "1" },
+                      { label: "Option 2", value: "2" },
+                      { label: "Option 3", value: "3" },
+                      { label: "Option 4", value: "4" },
+                      { label: "Option 5", value: "5" },
+                    ]}
+                    getOptionLabel={(option) => option.label}
+                    renderInput={(params) => (
+                      <VerticalTextField
+                        label={"Статус"}
+                        placeholder="Выберите"
+                        {...params}
+                      />
+                    )}
+                  />
+                </div>
+              </div>
+            }
+          ></SearchFilterCard>
         </div>
       </div>
     </div>

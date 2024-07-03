@@ -1,0 +1,58 @@
+.main {
+  display: flex;
+  padding: 4rem 7rem 4rem 7rem;
+  flex-direction: column;
+  gap: 1rem;
+  height: 100%;
+  &__title {
+    font-size: 3.4rem;
+    font-weight: 400;
+    color: var(--text-primary);
+  }
+  &__upper {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(40rem, 1fr));
+    gap: 1rem;
+    grid-template-areas:
+      "main pos rev"
+      "ext pos rev";
+    &__main {
+      grid-area: main;
+    }
+    &__position {
+      grid-area: pos;
+    }
+    &__reviews {
+      grid-area: rev;
+    }
+    &__external {
+      grid-area: ext;
+    }
+    &__checkboxes {
+      display: flex;
+      width: 28rem;
+      flex-direction: row;
+      gap: 2rem;
+      align-items: center;
+      &__label {
+        font-size: 1.6rem;
+        color: var(--text-primary);
+      }
+    }
+    &__autocomplete {
+      width: 29rem;
+    }
+    &__card {
+      display: flex;
+      align-items: end;
+      flex-direction: column;
+      gap: 1rem;
+    }
+  }
+}
+.container__searchFilterCard {
+  display: flex;
+  width: 25%;
+  flex-direction: column;
+  gap: 0.5rem;
+}
