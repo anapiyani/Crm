@@ -17,7 +17,7 @@
         display: flex;
         &__column {
             padding: 2rem;
-            width: 28.8rem;
+            width: 100%;
             margin-right: 3rem;
 
             &__header {
@@ -27,6 +27,11 @@
                     font-weight: 400;
                     color: var(--text-primary);
                     padding-bottom: 0.5rem;
+                    display: flex;
+                    justify-content: space-between;
+                    button {
+                        font-size: 1.2rem;
+                    }
                 }
             }
             &__items {
@@ -44,6 +49,27 @@
                             color: var(--text-primary);
                             font-weight: 400;
                             text-transform: capitalize;
+                            &.selected {
+                                background-color: #2196f314;
+                            }
+                        }
+                    }
+                }
+                &__inputs {
+                    width: 100%;
+                    display: flex;
+                    justify-content: start;
+                }
+                &__btns {
+                    display: flex;
+                    margin-top: 1rem;
+                    width: 100%;
+                    justify-content: start;
+                    button {
+                        font-size: 1.2rem;
+                        text-transform: capitalize;
+                        &:first-child {
+                            margin-right: 1rem;
                         }
                     }
                 }
