@@ -1,0 +1,29 @@
+.modal {
+  width: 54rem;
+  height: fit-content;
+  border-radius: 8px;
+  background-color: white;
+  z-index: 1000;
+  &__window {
+    padding: 2rem;
+    &__content {
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    &__header {
+      height: 4rem;
+    }
+    &__title {
+      font-size: 1.6rem;
+      color: var(--text-primary);
+      font-weight: 400;
+    }
+    &__bottom {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+    }
+  }
+}

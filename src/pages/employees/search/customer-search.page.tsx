@@ -2,8 +2,6 @@ import BreadcrumbsCustom from "@/components/navigation/breadcrumbs/breadcrumbs";
 
 import {
   Autocomplete,
-  AutocompleteRenderInputParams,
-  Box,
   Button,
   Checkbox,
   FormControlLabel,
@@ -12,39 +10,12 @@ import {
 import classes from "./styles.module.scss";
 import SearchFilterCard from "./components/search-filter-card";
 import VerticalTextField from "@/components/textfield-vertical/textfield-vertical";
-import { useState } from "react";
 import {
   ChildCheckbox,
   TriStateCheckbox,
 } from "@/components/intermediate-checkbox/intermediate-checkbox";
 
-// interface TabData {
-//   to: string;
-//   icon: typeof HomeOutlined;
-//   label: string;
-// }
-
 const EmployeeSearch = () => {
-  // const tabsData: TabData[] = [
-  //   { to: "/employees", icon: HomeOutlined, label: "Обзор" },
-  //   { to: "/employees/visit", icon: ExitToAppOutlined, label: "Посещения" },
-  //   {
-  //     to: "/employees/balance",
-  //     icon: AccountBalanceWalletOutlined,
-  //     label: "Зарплата, штрафы, премии, авансы",
-  //   },
-  //   {
-  //     to: "/employees/reviews",
-  //     icon: WarningAmberOutlined,
-  //     label: "Отзывы / жалобы",
-  //   },
-  //   {
-  //     to: "/employees/work-schedule",
-  //     icon: CalendarMonthOutlined,
-  //     label: "график работы",
-  //   },
-  // ];
-
   return (
     <div className={classes["main"]}>
       <BreadcrumbsCustom></BreadcrumbsCustom>
@@ -238,6 +209,7 @@ const EmployeeSearch = () => {
           ></SearchFilterCard>
         </div>
       </div>
+      <div className={classes["main__lower"]}></div>
     </div>
   );
 };

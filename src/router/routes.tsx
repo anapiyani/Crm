@@ -9,6 +9,7 @@ import {
   WorkSchedule,
   Department,
 } from "@/pages";
+import EmployeeSearch from "@/pages/employees/search/customer-search.page";
 // import { Role } from "@/ts/types";
 
 type IRoute = {
@@ -30,6 +31,11 @@ export const ROUTES: IRoute[] = [
     component: <CashDesk />,
   },
 
+  {
+    name: "Employee search",
+    path: "/employees",
+    component: <EmployeeSearch />,
+  },
   {
     name: "Customer add",
     path: "/employees/add",
