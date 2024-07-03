@@ -1,4 +1,4 @@
-import { IDepartmentData, IRoleChange } from "@/ts/types";
+import { IDepartmentData, IRoleChange, IRoleCreate } from "@/ts/types";
 import api from "../api";
 
 export const getDepartment = (): Promise<IDepartmentData> => {
@@ -17,4 +17,16 @@ export const updateRole = ({
 
 export const deleteRole = (id: number) => {
   return api.delete(`/departments/roles/${id}/`).then((res) => res.data);
+};
+
+export const createRole = ({
+  name,
+  department,
+}: {
+  name: string;
+  department: number;
+}): Promise<IRoleCreate> => {
+  return api
+    .post("/departments/roles/create/", { name, department })
+    .then((res) => res.data);
 };
