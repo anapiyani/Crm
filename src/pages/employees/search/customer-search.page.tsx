@@ -1,14 +1,5 @@
 import BreadcrumbsCustom from "@/components/navigation/breadcrumbs/breadcrumbs";
-import Tabs from "@/components/tabs/tabs.component";
-import {
-  HomeOutlined,
-  ExitToAppOutlined,
-  AccountBalanceWalletOutlined,
-  WarningAmberOutlined,
-  CalendarMonthOutlined,
-  Search,
-  CheckBox,
-} from "@mui/icons-material";
+
 import {
   Autocomplete,
   AutocompleteRenderInputParams,
@@ -21,8 +12,7 @@ import {
 import classes from "./styles.module.scss";
 import SearchFilterCard from "./components/search-filter-card";
 import VerticalTextField from "@/components/textfield-vertical/textfield-vertical";
-import { C } from "node_modules/@fullcalendar/core/internal-common";
-import { ReactNode, useState } from "react";
+import { useState } from "react";
 
 function IndeterminateCheckbox() {
   const [checked, setChecked] = useState([true, false]);
