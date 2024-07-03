@@ -25,3 +25,28 @@ export interface IEmployeeAddForm {
   apartment: string;
   comment: string;
 }
+
+export interface IRoles {
+  id: number;
+  name: string;
+  department: number;
+}
+
+export interface IDepartment {
+  id: number;
+  roles: IRoles[];
+  name: string;
+}
+
+export interface IDepartmentData {
+  count: number;
+  next: null;
+  previous: null;
+  results: IDepartment[];
+}
+
+export interface IRoleChange {
+  id: number;
+  department: number;
+  name: string;
+}

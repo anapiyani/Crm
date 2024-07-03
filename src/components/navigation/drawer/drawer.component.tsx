@@ -116,7 +116,7 @@ const ResponsiveDrawer = (props: Props) => {
         { text: "Добавить", link: "/employees/add" },
         { text: "График работы", link: "/employees/work-schedule" },
         { text: "Зарплата" },
-        { text: "Отделы" },
+        { text: "Отделы", link: "/employees/department" },
         { text: "Кабинеты" },
         { text: "Права доступа" },
         { text: "Посещаемость" },

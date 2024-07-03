@@ -1,6 +1,14 @@
 import React from "react";
-import { EmployeeAdd, Home, CashDesk, EmployeeCard, Clients, Activity,WorkSchedule } from "@/pages";
-
+import {
+  EmployeeAdd,
+  Home,
+  CashDesk,
+  EmployeeCard,
+  Clients,
+  Activity,
+  WorkSchedule,
+  Department,
+} from "@/pages";
 // import { Role } from "@/ts/types";
 
 type IRoute = {
@@ -21,7 +29,7 @@ export const ROUTES: IRoute[] = [
     path: "/cashdesk",
     component: <CashDesk />,
   },
- 
+
   {
     name: "Customer add",
     path: "/employees/add",
@@ -46,5 +54,10 @@ export const ROUTES: IRoute[] = [
     name: "Employee card",
     path: "employees/employee-card",
     component: <EmployeeCard />,
-  }
+  },
+  {
+    name: "Department",
+    path: "/employees/department",
+    component: <Department />,
+  },
 ];
