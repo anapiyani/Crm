@@ -17,9 +17,7 @@ const CounterCard: React.FC<CounterCardProps> = (props) => {
     <Card
       sx={{
         maxHeight: "14.8",
-        maxWidth: "30rem",
-        marginTop: 9,
-        marginLeft: 8,
+        width: "30rem",
         alignItems: "center",
       }}
     >
@@ -31,7 +29,7 @@ const CounterCard: React.FC<CounterCardProps> = (props) => {
               backgroundColor: props.backgroundColor,
             }}
           >
-            <ContentCut sx={{ color: props.iconColor }} />
+            <ContentCut sx={{ color: props.iconColor, width:24 }} />
           </div>
           <CardActions>
             {props.isButton ? (
