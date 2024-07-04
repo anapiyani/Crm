@@ -120,7 +120,7 @@ const ResponsiveDrawer = (props: Props) => {
         { text: "Кабинеты" },
         { text: "Права доступа" },
         { text: "Посещаемость" },
-        { text: "Рейтинг" },
+        { text: "Рейтинг", link: "/employees/rating" },
       ],
     },
     {

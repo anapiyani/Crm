@@ -15,6 +15,9 @@ export default defineConfig({
       "@fullcalendar/core",
       "@fullcalendar/daygrid",
       "@fullcalendar/react",
+      "@mui/material/Radio",
+      "@mui/material/RadioGroup",
+      "@mui/material/FormControlLabel",
     ],
   },
 });

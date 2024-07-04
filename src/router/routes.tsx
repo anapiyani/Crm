@@ -8,8 +8,12 @@ import {
   Activity,
   WorkSchedule,
   Department,
+<<<<<<< Updated upstream
   ServiceCatalog,
   ServicePriceList,
+=======
+  Rating,
+>>>>>>> Stashed changes
 } from "@/pages";
 import EmployeeSearch from "@/pages/employees/search/customer-search.page";
 // import { Role } from "@/ts/types";
@@ -69,6 +73,7 @@ export const ROUTES: IRoute[] = [
     component: <Department />,
   },
   {
+<<<<<<< Updated upstream
     name: "Service Catalog",
     path: "/services",
     component: <ServiceCatalog />,
@@ -77,5 +82,10 @@ export const ROUTES: IRoute[] = [
     name: "Service Price List",
     path: "/services/price-list",
     component: <ServicePriceList />,
+=======
+    name: "Rating",
+    path: "/employees/rating",
+    component: <Rating />,
+>>>>>>> Stashed changes
   },
 ];

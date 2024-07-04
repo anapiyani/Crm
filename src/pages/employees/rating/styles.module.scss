@@ -1,0 +1,60 @@
+.rating {
+    width: 100%;
+    padding: 30px 50px;
+    &__header {
+        padding: 20px 0;
+        h1 {
+            font-weight: 400;
+            font-size: 3.4rem;
+            color: car(--text-primary);
+        }
+        p {
+            font-weight: 400;
+            font-size: 1.6rem;
+            color: var(--text-secondary);
+            opacity: 60%;
+        }
+        h2 {
+            font-size: 2.4rem;
+            font-weight: 400;
+            color: var(--text-primary);
+            opacity: 87%;
+            padding: 0.5rem 0;
+        }
+    }
+    &__choices {
+        display: flex;
+        justify-content: space-between;
+        span {
+            font-size: 1.6rem;
+            opacity: 87%;
+        }
+        &__btns {
+            button {
+                padding: 0.5rem 1rem;
+                margin-right: 1rem;
+                font-size: 1.3rem;
+                &:last-child {
+                    margin-right: 0;
+                }
+            }
+        }
+    }
+    .table {
+        margin-top: 2rem;
+        min-width: 650px;
+        background-color: #fbfcfe;
+        thead th {
+            font-weight: 600;
+            color: var(--text-primary);
+            text-align: center;
+            font-size: 1.2rem;
+        }
+        tbody td {
+            font-weight: 400;
+            color: var(--text-secondary);
+            border: 1px solid #ddd;
+            font-size: 1.2rem;
+        }
+    }
+}
