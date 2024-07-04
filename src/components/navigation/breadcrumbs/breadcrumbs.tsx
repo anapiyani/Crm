@@ -24,7 +24,7 @@ const BreadcrumbsCustom: React.FC<IBreadcrumbsCustomProps> = ({
   const location = useLocation();
 
   const routes: IRoute[] = [
-    { path: "/", breadcrumb: "Домой", icon: <Person sx={{ fontSize: 20 }} /> },
+    { path: "/", breadcrumb: "Домой", icon: <Person sx={{ fontSize: 16, color:("var(--primary-500)") }} /> },
     { path: "/cashdesk", breadcrumb: "Касса" },
     { path: "/employees", breadcrumb: "Сотрудники" },
     { path: "/employees/add", breadcrumb: "Создание карты сотрудника" },
