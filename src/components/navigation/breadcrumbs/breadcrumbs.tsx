@@ -24,7 +24,11 @@ const BreadcrumbsCustom: React.FC<IBreadcrumbsCustomProps> = ({
   const location = useLocation();
 
   const routes: IRoute[] = [
-    { path: "/", breadcrumb: "Домой", icon: <Person sx={{ fontSize: 16, color:("var(--primary-500)") }} /> },
+    {
+      path: "/",
+      breadcrumb: "Домой",
+      icon: <Person sx={{ fontSize: 16, color: "var(--primary-500)" }} />,
+    },
     { path: "/cashdesk", breadcrumb: "Касса" },
     { path: "/employees", breadcrumb: "Сотрудники" },
     { path: "/employees/add", breadcrumb: "Создание карты сотрудника" },
@@ -34,6 +38,14 @@ const BreadcrumbsCustom: React.FC<IBreadcrumbsCustomProps> = ({
       breadcrumb: "Едрес Есетович Шарипович",
     },
     { path: "/employees/department", breadcrumb: "Редактирование должности" },
+    {
+      path: "/services",
+      breadcrumb: "Услуги",
+    },
+    {
+      path: "/services/price-list",
+      breadcrumb: "Прейскурант",
+    },
   ];
 
   const breadcrumbs = useBreadcrumbs(routes);
