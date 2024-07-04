@@ -1,15 +1,17 @@
 .main {
   display: flex;
-  padding: 4rem 7rem 4rem 7rem;
   flex-direction: column;
-  gap: 1rem;
   height: 100%;
+  &__wrapper {
+    padding: 4rem 7rem 0rem 7rem;
+  }
   &__title {
     font-size: 3.4rem;
     font-weight: 400;
     color: var(--text-primary);
   }
   &__upper {
+    padding: 0rem 7rem 4rem 7rem;
     display: flex;
     flex-wrap: wrap;
 
@@ -54,5 +56,10 @@
       flex-direction: column;
       gap: 1rem;
     }
+  }
+  &__lower {
+    gap: 2rem;
+    background-color: var(--neutral-050);
+    padding: 2rem 7rem 2rem 7rem;
   }
 }

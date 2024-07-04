@@ -4,8 +4,12 @@ import {
   Autocomplete,
   Button,
   Checkbox,
+  Divider,
   FormControlLabel,
   FormGroup,
+  Table,
+  TableCell,
+  TableHead,
 } from "@mui/material";
 import classes from "./styles.module.scss";
 import SearchFilterCard from "./components/search-filter-card";
@@ -14,12 +18,16 @@ import {
   ChildCheckbox,
   TriStateCheckbox,
 } from "@/components/intermediate-checkbox/intermediate-checkbox";
+import Datatable from "@/components/datatable/datatable";
 
 const EmployeeSearch = () => {
   return (
     <div className={classes["main"]}>
-      <BreadcrumbsCustom></BreadcrumbsCustom>
-      <h1 className={classes["main__title"]}>Расширенный поиск</h1>
+      <div className={classes["main__wrapper"]}>
+        <BreadcrumbsCustom></BreadcrumbsCustom>
+        <h1 className={classes["main__title"]}>Расширенный поиск</h1>
+      </div>
+
       <div className={classes["main__upper"]}>
         <div className={classes["main__upper__main"]}>
           <SearchFilterCard
@@ -209,7 +217,76 @@ const EmployeeSearch = () => {
           ></SearchFilterCard>
         </div>
       </div>
-      <div className={classes["main__lower"]}></div>
+      <Divider />
+      <div className={classes["main__lower"]}>
+        <Datatable
+          header={
+            <div className={classes["main__lower__header"]}>
+              <h2>Результаты поиска</h2>
+            </div>
+          }
+          columns={
+            <>
+              <tr>
+                <th
+                  style={{
+                    width: "3%",
+                  }}
+                >
+                  N
+                </th>
+                <th>Calories</th>
+                <th>Fat&nbsp;(g)</th>
+                <th>Carbs&nbsp;(g)</th>
+                <th>Protein&nbsp;(g)</th>
+              </tr>
+            </>
+          }
+          children={
+            <tbody>
+              <tr>
+                <td>1</td>
+                <td>159</td>
+                <td>6</td>
+                <td>24</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>3</td>
+                <td>262</td>
+                <td style={{ padding: "0px" }}>
+                  <table>
+                    <tbody>
+                      <tr>
+                        <td>Name: John Doe</td>
+                      </tr>
+                      <tr>
+                        <td>Occupation: Developer</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+                <td>24</td>
+                <td>6</td>
+              </tr>
+              <tr>
+                <td>4</td>
+                <td>305</td>
+                <td>3.7</td>
+                <td>67</td>
+                <td>4.3</td>
+              </tr>
+              <tr>
+                <td>5</td>
+                <td>356</td>
+                <td>16</td>
+                <td>49</td>
+                <td>3.9</td>
+              </tr>
+            </tbody>
+          }
+        />
+      </div>
     </div>
   );
 };
