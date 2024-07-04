@@ -12,6 +12,7 @@ import Department from "./employees/department/department.page";
 import ServiceCatalog from "./services/catalog/catalog.page";
 import ServicePriceList from "./services/price-list/price-list.page";
 
+import Rating from "./employees/rating/rating-page";
 import Unauthorized from "./unauthorized/unauthorized.page";
 
 export {
@@ -27,4 +28,5 @@ export {
   Department,
   ServiceCatalog,
   ServicePriceList,
+  Rating,
 };
