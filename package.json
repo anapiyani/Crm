@@ -33,10 +33,7 @@
     "mui-one-time-password-input": "^2.0.2",
     "react": "^18.3.1",
     "react-big-calendar": "^1.13.0",
-<<<<<<< Updated upstream
-=======
     "react-chartjs-2": "^5.2.0",
->>>>>>> Stashed changes
     "react-datepicker": "^7.2.0",
     "react-dom": "^18.3.1",
     "react-hot-toast": "^2.4.1",
