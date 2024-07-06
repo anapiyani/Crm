@@ -5,6 +5,7 @@ import {
   AccountBalanceWalletOutlined,
   WarningAmberOutlined,
   CalendarMonthOutlined,
+  Margin,
 } from "@mui/icons-material";
 import TableVertical from "@/components/tables/tableVertical/employee-vertical-info-card";
 import TableHorizontal from "@/components/tables/table-horizontal/employee-horizontal-info-card";
@@ -13,7 +14,7 @@ import BreadcrumbsCustom from "@/components/navigation/breadcrumbs/breadcrumbs";
 import classes from "./styles.module.scss";
 import CounterCard from "@/components/counter-card/counter-card";
 import MyChart from "./components/chart";
-
+import { Box } from "@mui/material";
 interface TabData {
   to: string;
   icon: typeof HomeOutlined;
@@ -68,37 +69,44 @@ const EmployeeCard = () => {
 
   return (
     <div className={classes["main"]}>
-      <div className={classes["main__upper"]}>
-        <div>
-          <BreadcrumbsCustom />
-          <h1 className={classes["main__upper__title"]}>
-            Карта сотрудника - Анастасия Гунина
-          </h1>
-        </div>
-        <Tabs tabsData={tabsData} />
-        <div className={classes["main__upper__row"]}>
-          <div className={classes["main__upper__row__cards"]}>
-            <CounterCard
-              backgroundColor="rgba(76, 175, 80, 0.3)"
-              iconColor="var(--success-main)"
-              textTitle="Выручка за все время"
-              valueText="796 540 руб."
-            />
-            <CounterCard
-              backgroundColor="rgba(33, 150, 243, 0.3)"
-              iconColor="var(--primary-main)"
-              textTitle="Обслуженные посещения"
-              valueText="141"
-            />
-            <CounterCard
-              backgroundColor="rgba(156,39,176, 0.3)"
-              iconColor="var(--secondary-main)"
-              textTitle="Является сотрудником"
-              valueText="8 месяцев 20 дней"
-            />
+      <div className={classes["main__header"]}>
+        <Box sx={{ ml: { xs: "2rem", xl: "7.6rem" } }}>
+          <div className={classes["main__header__upper"]}>
+            <div>
+              <BreadcrumbsCustom />
+              <h1 className={classes["main__header__upper__title"]}>
+                Карта сотрудника - Анастасия Гунина
+              </h1>
+            </div>
+            <Tabs tabsData={tabsData} />
+            <div className={classes["main__header__upper__row"]}>
+              <Grid container xl={12} md={12} xs={9} sx={{ gap: "0.8rem"}}>
+                <div className={classes["main__header__upper__row__cards"]}>
+                  <CounterCard
+                    backgroundColor="rgba(76, 175, 80, 0.3)"
+                    iconColor="var(--success-main)"
+                    textTitle="Выручка за все время"
+                    valueText="796 540 руб."
+                  />
+                  <CounterCard
+                    backgroundColor="rgba(33, 150, 243, 0.3)"
+                    iconColor="var(--primary-main)"
+                    textTitle="Обслуженные посещения"
+                    valueText="141"
+                  />
+
+                  <CounterCard
+                    backgroundColor="rgba(156,39,176, 0.3)"
+                    iconColor="var(--secondary-main)"
+                    textTitle="Является сотрудником"
+                    valueText="8 месяцев 20 дней"
+                  />
+                </div>
+                <MyChart />
+              </Grid>
+            </div>
           </div>
-          <MyChart />
-        </div>
+        </Box>
       </div>
 
       <Grid
