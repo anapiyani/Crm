@@ -1,20 +1,15 @@
-import Tabs from "@/components/tabs/tabs.component";
-import {
-  HomeOutlined,
-  ExitToAppOutlined,
-  AccountBalanceWalletOutlined,
-  WarningAmberOutlined,
-  CalendarMonthOutlined,
-  Margin,
-} from "@mui/icons-material";
+import React from "react";
+import { HomeOutlined, ExitToAppOutlined, AccountBalanceWalletOutlined, WarningAmberOutlined, CalendarMonthOutlined } from "@mui/icons-material";
 import TableVertical from "@/components/tables/tableVertical/employee-vertical-info-card";
 import TableHorizontal from "@/components/tables/table-horizontal/employee-horizontal-info-card";
 import Grid from "@mui/material/Unstable_Grid2";
 import BreadcrumbsCustom from "@/components/navigation/breadcrumbs/breadcrumbs";
 import classes from "./styles.module.scss";
 import CounterCard from "@/components/counter-card/counter-card";
-import MyChart from "./components/chart";
+import RevenueChart from "./components/chart";
 import { Box } from "@mui/material";
+import ResponsiveTabs from "@/components/tabs/tabs.component";
+
 interface TabData {
   to: string;
   icon: typeof HomeOutlined;
@@ -78,9 +73,9 @@ const EmployeeCard = () => {
                 Карта сотрудника - Анастасия Гунина
               </h1>
             </div>
-            <Tabs tabsData={tabsData} />
+            <ResponsiveTabs tabsData={tabsData} />
             <div className={classes["main__header__upper__row"]}>
-              <Grid container xl={12} md={12} xs={9} sx={{ gap: "0.8rem"}}>
+              <Grid container xl={12} md={12} xs={9} sx={{ gap: "0.8rem" }}>
                 <div className={classes["main__header__upper__row__cards"]}>
                   <CounterCard
                     backgroundColor="rgba(76, 175, 80, 0.3)"
@@ -102,7 +97,7 @@ const EmployeeCard = () => {
                     valueText="8 месяцев 20 дней"
                   />
                 </div>
-                <MyChart />
+                <RevenueChart />
               </Grid>
             </div>
           </div>

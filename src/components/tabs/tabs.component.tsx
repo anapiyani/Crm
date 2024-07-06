@@ -1,6 +1,7 @@
 import { NavLink } from "react-router-dom";
 import { SvgIconComponent } from "@mui/icons-material";
 import classes from "./styles.module.scss";
+import { MenuItem, Select, useMediaQuery, useTheme, Grid, Box } from "@mui/material";
 
 interface TabData {
   to: string;
@@ -8,22 +9,45 @@ interface TabData {
   label: string;
 }
 
-interface TabsProps {
+interface ResponsiveTabsProps {
   tabsData: TabData[];
 }
 
-const Tabs = ({ tabsData }: TabsProps) => {
-  return (
+const ResponsiveTabs = ({ tabsData }: ResponsiveTabsProps) => {
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
+
+  return isSmallScreen ? (
+    <Grid container xs={9}>
+      <Select
+        value=""
+        onChange={(event) =>
+          (window.location.href = event.target.value as string)
+        }
+        className={classes["dropdown"]}
+        displayEmpty
+        sx={{ width: "100%" }}
+      >
+        <MenuItem value="" disabled>
+          Select Tab
+        </MenuItem>
+        {tabsData.map(({ to, icon: Icon, label }) => (
+          <MenuItem key={to} value={to}>
+            <Icon style={{ marginRight: 8 }} />
+            {label}
+          </MenuItem>
+        ))}
+      </Select>
+    </Grid>
+  ) : (
     <div className={classes["tabs"]}>
-      <div className={classes["tabs__content"]}>
+      <Box sx={{ display: { xs: 'none', md: 'block' } }} className={classes["tabs__content"]}>
         <div className={classes["tabs__content__tab"]}>
           {tabsData.map(({ to, icon: Icon, label }) => (
             <NavLink
               key={to}
               className={({ isActive }) =>
-                `${classes["tabs__content__tab__link"]} ${
-                  isActive ? classes["active"] : ""
-                }`
+                `${classes["tabs__content__tab__link"]} ${isActive ? classes["active"] : ""}`
               }
               to={to}
             >
@@ -36,9 +60,9 @@ const Tabs = ({ tabsData }: TabsProps) => {
           ))}
         </div>
         <hr className={classes["tabs__content__lineArrow"]} />
-      </div>
+      </Box>
     </div>
   );
 };
 
-export default Tabs;
+export default ResponsiveTabs;
