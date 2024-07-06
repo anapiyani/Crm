@@ -15,9 +15,10 @@ type CounterCardProps = {
 const CounterCard: React.FC<CounterCardProps> = (props) => {
   return (
     <Card
+    
       sx={{
         maxHeight: "14.8",
-        width: "30rem",
+        width: { xs: "22rem", md: "30rem" },
         alignItems: "center",
       }}
     >

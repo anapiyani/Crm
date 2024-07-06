@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Line } from "react-chartjs-2";
 import { Chart, registerables } from "chart.js";
-import { FormGroup, FormControlLabel, Switch } from "@mui/material";
+import { FormGroup, FormControlLabel, Switch, Box } from "@mui/material";
 Chart.register(...registerables);
 Chart.defaults.font.size = 12;
 Chart.defaults.font.weight = "normal";
@@ -89,11 +89,11 @@ const MyChart: React.FC = () => {
   };
 
   return (
-    <div style={{ display: "flex", alignItems: "center" }}>
-      <div style={{ width: "40rem", height: "15rem" }}>
+    <Box sx={{ display: "flex", alignItems: "center", flexDirection: { xs: "column", md: "row" }, flexWrap: "wrap" }}>
+      <Box sx={{ width: "33rem", height: "15rem" }}>
         <Line data={data} options={options} />
-      </div>
-      <FormGroup sx={{ ml: "2rem" }}>
+      </Box>
+      <FormGroup sx={{ ml: { xs: 0, md: "1.6rem" }, mt: { xs: "1.6rem", md: 0 }, display: "flex", flexDirection: { xs: "row", md: "column" }, flexWrap: "wrap" }}>
         <FormControlLabel
           control={
             <Switch
@@ -115,8 +115,8 @@ const MyChart: React.FC = () => {
           label="Выручка"
           sx={{
             "& .MuiFormControlLabel-label": {
-              fontSize: 16, // Change the font size
-              fontWeight: "400", // Change the font weight
+              fontSize: 16,
+              fontWeight: "400",
             },
           }}
         />
@@ -141,13 +141,13 @@ const MyChart: React.FC = () => {
           label="Клиенты"
           sx={{
             "& .MuiFormControlLabel-label": {
-              fontSize: 16, // Change the font size
-              fontWeight: "400", // Change the font weight
+              fontSize: 16,
+              fontWeight: "400",
             },
           }}
         />
       </FormGroup>
-    </div>
+    </Box>
   );
 };
 
