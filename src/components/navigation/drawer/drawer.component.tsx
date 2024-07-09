@@ -10,6 +10,7 @@ import {
   ListItemText,
   styled,
   Collapse,
+  IconButton,
 } from "@mui/material";
 
 import classes from "./styles.module.scss";
@@ -31,14 +32,16 @@ import {
   Store,
   ExpandLess,
   ExpandMore,
+  Close,
 } from "@mui/icons-material";
 import { NavLink, useLocation } from "react-router-dom";
-import CounterCard from "@/components/counter-card/counter-card";
+import TopBar from "@/components/navigation/topbar/topbar.component"; // Adjust the import path as needed
 
 const drawerWidth = "25.6rem";
 
-interface Props {
+interface IProps {
   window?: () => Window;
+  isOpen: boolean;
 }
 
 interface BaseItem {
@@ -51,11 +54,9 @@ interface Item extends BaseItem {
   children?: BaseItem[];
 }
 
-const ResponsiveDrawer = (props: Props) => {
+const ResponsiveDrawer = (props: IProps) => {
   const { window } = props;
   const location = useLocation();
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const [isClosing, setIsClosing] = useState(false);
   const [open, setOpen] = useState<string | null>(null);
   const [selectedParentIndex, setSelectedParentIndex] = useState<string | null>(
     null
@@ -83,15 +84,6 @@ const ResponsiveDrawer = (props: Props) => {
     });
   }, [location]);
 
-  const handleDrawerClose = () => {
-    setIsClosing(true);
-    setMobileOpen(false);
-  };
-
-  const handleDrawerTransitionEnd = () => {
-    setIsClosing(false);
-  };
-
   const handleParentClick = (text: string, index: number) => {
     setOpen(open === text ? null : text);
     setSelectedParentIndex(`${index}`);
@@ -107,7 +99,16 @@ const ResponsiveDrawer = (props: Props) => {
     { text: "Рабочий стол", icon: <Home />, link: "/" },
     { text: "Касса", icon: <AttachMoney />, link: "/cashdesk" },
     { text: "Активности", icon: <Notifications />, link: "/activity" },
-    { text: "Клиенты", icon: <Groups />, link: "/clients" },
+    {
+      text: "Клиенты",
+      icon: <Groups />,
+      children: [
+        { text: "Найти", link: "/clients" },
+        { text: "Добавить", link: "/clients/add" },
+        { text: "Настройки", link: "/clients/settings" },
+        { text: "Лист ожидания", link: "/clients/waiting-list" },
+      ],
+    },
     {
       text: "Сотрудники",
       icon: <Person />,
@@ -281,8 +282,19 @@ const ResponsiveDrawer = (props: Props) => {
 
   const drawer = (
     <div>
-      <LogoContainer>
+      <LogoContainer
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          mr: "1.6rem",
+          
+        }}
+      >
         <LogoImage src={logo} alt="SuperWise" />
+
+        <IconButton sx={{color: "#fff",}}>
+          <Close sx={{ display: { sm: "none" } }} />
+        </IconButton>
       </LogoContainer>
       <List sx={{ padding: "0.8rem" }}>{renderListItems(items)}</List>
     </div>
@@ -294,17 +306,17 @@ const ResponsiveDrawer = (props: Props) => {
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
+
       <Box
         component="nav"
         sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
         aria-label="mailbox folders"
       >
         <StyledDrawerPaper
+          className={classes["sidebar"]}
           container={container}
+          open={props.isOpen}
           variant="temporary"
-          open={mobileOpen}
-          onTransitionEnd={handleDrawerTransitionEnd}
-          onClose={handleDrawerClose}
           ModalProps={{
             keepMounted: true,
           }}
@@ -315,7 +327,10 @@ const ResponsiveDrawer = (props: Props) => {
               width: drawerWidth,
             },
           }}
-        ></StyledDrawerPaper>
+        >
+          {drawer}
+        </StyledDrawerPaper>
+
         <StyledDrawerPaper
           className={classes["sidebar"]}
           variant="permanent"

@@ -1,6 +1,13 @@
-import AppBar from "@mui/material/AppBar";
 import classes from "./styles.module.scss";
-import { Help, Notifications, Public, Redeem, Mail } from "@mui/icons-material";
+import {
+  Help,
+  Notifications,
+  Public,
+  Redeem,
+  Mail,
+  Menu,
+  Close,
+} from "@mui/icons-material";
 import {
   Badge,
   BadgeProps,
@@ -10,6 +17,7 @@ import {
   IconButton,
   styled,
   Box,
+  AppBar,
 } from "@mui/material";
 
 const StyledBadge = styled(Badge)<BadgeProps>(() => ({
@@ -22,7 +30,17 @@ const StyledBadge = styled(Badge)<BadgeProps>(() => ({
 
 const topbarWidth = 256;
 
-const TopBar = () => {
+interface TopBarProps {
+  openMenuBar: () => void;
+  mobileOpen: boolean;
+}
+
+const TopBar = (props: TopBarProps) => {
+
+  const openMenu = () => {
+    props.openMenuBar();
+  }
+
   const count = 10;
   return (
     <Box
@@ -48,6 +66,14 @@ const TopBar = () => {
             gap: 3,
           }}
         >
+          <IconButton
+            color="inherit"
+            edge="start"
+            onClick={openMenu}
+            sx={{ display: { sm: "none" } }}
+          >
+            <Menu />
+          </IconButton>
           <IconButton
             className={classes["topbar__toolbar__icon"]}
             edge="start"
@@ -116,7 +142,6 @@ const TopBar = () => {
                 height: "3.2rem",
               }}
             />{" "}
-            {}
             <Typography
               style={{ flexGrow: 1, textAlign: "right" }}
               sx={{
