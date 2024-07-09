@@ -3,6 +3,7 @@ import LoginPage from "./pages/login/login.page";
 import { ROUTES } from "./router/routes";
 import MainLayout from "./layout/main.layout";
 import ProtectedRoute from "./utils/protected-route";
+import { NotFound } from "./pages";
 
 const App = () => {
   return (
@@ -18,6 +19,7 @@ const App = () => {
             />
           ))}
         </Route>
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </div>
   );
