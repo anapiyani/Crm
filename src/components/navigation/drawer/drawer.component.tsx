@@ -58,10 +58,10 @@ const ResponsiveDrawer = (props: Props) => {
   const [isClosing, setIsClosing] = useState(false);
   const [open, setOpen] = useState<string | null>(null);
   const [selectedParentIndex, setSelectedParentIndex] = useState<string | null>(
-    null
+    null,
   );
   const [selectedChildIndex, setSelectedChildIndex] = useState<string | null>(
-    null
+    null,
   );
 
   useEffect(() => {
@@ -131,7 +131,14 @@ const ResponsiveDrawer = (props: Props) => {
         { text: "Прейскурант", link: "/services/price-list" },
       ],
     },
-    { text: "Склад", icon: <Inventory2 /> },
+    {
+      text: "Склад",
+      icon: <Inventory2 />,
+      children: [
+        { text: "Склад", link: "/storage" },
+        { text: "Настройки", link: "/storage/settings" },
+      ],
+    },
     { text: "Поставщики", icon: <ShoppingCart /> },
     { text: "Карты и скидки", icon: <CreditCard /> },
     { text: "Рассылка", icon: <Mail /> },
@@ -183,7 +190,7 @@ const ResponsiveDrawer = (props: Props) => {
 
   const renderListItems = (
     items: Item[],
-    parentIndex: number | null = null
+    parentIndex: number | null = null,
   ) => {
     return items.map((item, index) => {
       const uniqueIndex =

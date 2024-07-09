@@ -11,6 +11,7 @@ import {
   ServiceCatalog,
   ServicePriceList,
   Rating,
+  StorageSettings,
 } from "@/pages";
 import EmployeeSearch from "@/pages/employees/search/customer-search.page";
 // import { Role } from "@/ts/types";
@@ -83,5 +84,10 @@ export const ROUTES: IRoute[] = [
     name: "Rating",
     path: "/employees/rating",
     component: <Rating />,
+  },
+  {
+    name: "Storage Settings",
+    path: "/storage/settings",
+    component: <StorageSettings />,
   },
 ];
