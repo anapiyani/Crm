@@ -46,6 +46,10 @@ const BreadcrumbsCustom: React.FC<IBreadcrumbsCustomProps> = ({
       path: "/services/price-list",
       breadcrumb: "Прейскурант",
     },
+    {
+      path: "/storage/settings",
+      breadcrumb: "Настройки",
+    },
   ];
 
   const breadcrumbs = useBreadcrumbs(routes);

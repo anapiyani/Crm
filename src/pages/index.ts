@@ -11,6 +11,7 @@ import WorkSchedule from "./work-schedule/work-schedule";
 import Department from "./employees/department/department.page";
 import ServiceCatalog from "./services/catalog/catalog.page";
 import ServicePriceList from "./services/price-list/price-list.page";
+import StorageSettings from "./storage/settings/settings-storage.page";
 
 import Rating from "./employees/rating/rating-page";
 import NotFound from "./not-found/not-found-page";
@@ -31,4 +32,5 @@ export {
   ServicePriceList,
   NotFound,
   Rating,
+  StorageSettings,
 };
