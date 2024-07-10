@@ -7,7 +7,7 @@ Chart.defaults.font.size = 12;
 Chart.defaults.font.weight = "normal";
 Chart.defaults.color = "#000";
 
-const MyChart: React.FC = () => {
+const RevenueChart: React.FC = () => {
   const [showRevenue, setShowRevenue] = useState(true);
   const [showClients, setShowClients] = useState(true);
 
@@ -151,4 +151,4 @@ const MyChart: React.FC = () => {
   );
 };
 
-export default MyChart;
+export default RevenueChart;
