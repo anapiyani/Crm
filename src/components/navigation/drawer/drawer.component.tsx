@@ -35,13 +35,13 @@ import {
   Close,
 } from "@mui/icons-material";
 import { NavLink, useLocation } from "react-router-dom";
-import TopBar from "@/components/navigation/topbar/topbar.component"; // Adjust the import path as needed
 
 const drawerWidth = "25.6rem";
 
 interface IProps {
   window?: () => Window;
   isOpen: boolean;
+  handleClose: () => void;
 }
 
 interface BaseItem {
@@ -93,6 +93,10 @@ const ResponsiveDrawer = (props: IProps) => {
   const handleChildClick = (parentIndex: number, childIndex: number) => {
     setSelectedParentIndex(`${parentIndex}`);
     setSelectedChildIndex(`${parentIndex}-${childIndex}`);
+  };
+
+  const handleCloseMenu = () => {
+    props.handleClose();
   };
 
   const items = [
@@ -294,13 +298,12 @@ const ResponsiveDrawer = (props: IProps) => {
           display: "flex",
           justifyContent: "space-between",
           mr: "1.6rem",
-          
         }}
       >
         <LogoImage src={logo} alt="SuperWise" />
 
-        <IconButton sx={{color: "#fff",}}>
-          <Close sx={{ display: { sm: "none" } }} />
+        <IconButton sx={{ color: "#fff" }}>
+          <Close sx={{ display: { sm: "none" } }} onClick={handleCloseMenu} />
         </IconButton>
       </LogoContainer>
       <List sx={{ padding: "0.8rem" }}>{renderListItems(items)}</List>
