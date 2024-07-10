@@ -41,7 +41,7 @@ const TableService: React.FC<ITableServiceProps> = ({ headers, data }) => {
             },
           }}
         >
-          {data.map((category) => (
+          {data.map((category: any) => (
             <React.Fragment key={category.id}>
               <TableRow
                 key={category.id}
@@ -49,7 +49,7 @@ const TableService: React.FC<ITableServiceProps> = ({ headers, data }) => {
               >
                 <TableCell colSpan={9}>{category.category}</TableCell>
               </TableRow>
-              {category.items.map((item, index) => (
+              {category.items.map((item: any, index: number) => (
                 <TableRow key={`${item.name}-${index}`}>
                   <TableCell>{item.name}</TableCell>
                   <TableCell>{item.cost}</TableCell>
