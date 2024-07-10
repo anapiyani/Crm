@@ -1,6 +1,6 @@
 import { useState } from "react";
 import TextField from "@mui/material/TextField";
-import { Button, IconButton, InputAdornment } from "@mui/material";
+import { Button, IconButton, InputAdornment, Alert } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
 import { useLoginMutation } from "@/service/auth/auth.hook";
@@ -108,10 +108,12 @@ const EmailLogin = ({ loginWPhone }: TProps) => {
                 ),
               }}
             />
-            {mutation.isError && (
-              <p className={classes["email__content__form__send__error"]}>
-                Неверный логин или пароль
-              </p>
+            {mutation.isError ? (
+              <Alert sx={{ marginTop: 1, fontSize: 16 }} severity="error">
+                Неправильный номер, попробуйте еще раз
+              </Alert>
+            ) : (
+              ""
             )}
             <Button
               variant="contained"
