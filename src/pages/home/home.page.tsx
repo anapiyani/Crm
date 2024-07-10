@@ -8,8 +8,6 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import dayjs, { Dayjs } from "dayjs";
 
-import ArrowLeftIcon from "@/assets/icons/arrow-left.svg";
-import ArrowRightHideIcon from "@/assets/icons/arrow-right-hide.svg";
 
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import "moment/locale/ru";
@@ -18,6 +16,8 @@ import FullCalendar from "@fullcalendar/react";
 import resourceTimeGridPlugin from "@fullcalendar/resource-timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 
+import ArrowLeftIcon from "@/assets/icons/arrow-left.svg";
+import ArrowRightHideIcon from "@/assets/icons/arrow-right-hide.svg";
 import "./custom.css";
 
 const Home = () => {
