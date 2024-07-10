@@ -34,7 +34,7 @@ const VerticalTextField: React.FC<IProps> = ({
               placeholder={placeholder}
               className={classNames(
                 classes["main__double__inputDouble"],
-                addClassName,
+                addClassName
               )}
             />
             <p>{doubleDivier}</p>
@@ -45,7 +45,7 @@ const VerticalTextField: React.FC<IProps> = ({
               placeholder={placeholderOptional}
               className={classNames(
                 classes["main__double__inputDouble"],
-                addClassName,
+                addClassName
               )}
             />
           </div>

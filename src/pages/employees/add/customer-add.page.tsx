@@ -15,7 +15,7 @@ import { useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import InputMask from "react-input-mask";
-import InputCard from "./components/input-card/input-card";
+import InputCard from "@/components/input-card/input-card";
 import classes from "./styles.module.scss";
 import { IEmployeeAddForm } from "@/ts/types";
 import { useAddEmployee } from "@/service/employee/employee.hook";
@@ -196,7 +196,7 @@ const EmployeeAdd = () => {
             }
           ></InputCard>
           <InputCard
-            title={"Главное"}
+            title={"Контакты"}
             children={
               <div>
                 <div className={classes["main__lower__container__card"]}>
@@ -330,7 +330,8 @@ const EmployeeAdd = () => {
                   onChange={onTextareaChange}
                   sx={{
                     width: "100%",
-                    height: "12rem",
+                    height: "16.5rem",
+
                     backgroundColor: "white",
                     boxShadow: "none",
                     fontSize: "1.6rem",

@@ -11,6 +11,7 @@ import {
   ServiceCatalog,
   ServicePriceList,
   Rating,
+  ClientAdd,
   StorageSettings,
 } from "@/pages";
 import EmployeeSearch from "@/pages/employees/search/customer-search.page";
@@ -89,5 +90,10 @@ export const ROUTES: IRoute[] = [
     name: "Storage Settings",
     path: "/storage/settings",
     component: <StorageSettings />,
+  },
+  {
+    name: "Add client",
+    path: "/clients/add",
+    component: <ClientAdd />,
   },
 ];
