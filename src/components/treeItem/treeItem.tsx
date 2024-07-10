@@ -19,7 +19,7 @@ const ServiceItem: React.FC<IServiceProps> = ({ service }) => {
   );
 };
 
-interface CategoryProps {
+interface ICategoryProps {
   category: IServiceCategory;
 }
 
@@ -33,7 +33,7 @@ const levelsIcon: Record<string, JSX.Element> = {
   services: <ContentCutIcon style={{ color: "#388E3C" }} />,
 };
 
-const TreeItem: React.FC<CategoryProps> = ({ category }) => {
+const TreeItem = ({ category }: ICategoryProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
 
