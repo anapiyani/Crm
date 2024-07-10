@@ -1,42 +1,43 @@
 import React from "react";
-import { HomeOutlined, ExitToAppOutlined, AccountBalanceWalletOutlined, WarningAmberOutlined, CalendarMonthOutlined } from "@mui/icons-material";
+import {
+  HomeOutlined,
+  ExitToAppOutlined,
+  AccountBalanceWalletOutlined,
+  WarningAmberOutlined,
+  CalendarMonthOutlined,
+} from "@mui/icons-material";
 import TableVertical from "@/components/tables/tableVertical/employee-vertical-info-card";
 import TableHorizontal from "@/components/tables/table-horizontal/employee-horizontal-info-card";
 import Grid from "@mui/material/Unstable_Grid2";
-import BreadcrumbsCustom from "@/components/navigation/breadcrumbs/breadcrumbs";
 import classes from "./styles.module.scss";
-import CounterCard from "@/components/counter-card/counter-card";
-import RevenueChart from "./components/chart";
-import { Box } from "@mui/material";
-import ResponsiveTabs from "@/components/tabs/tabs.component";
+import InfoHeader from "@/components/navigation/header/info-header";
 
-interface TabData {
-  to: string;
-  icon: typeof HomeOutlined;
-  label: string;
-}
+const employeeTabsData = [
+  { to: "/employees", icon: HomeOutlined, label: "Обзор" },
+  { to: "/employees/visit", icon: ExitToAppOutlined, label: "Посещения" },
+  {
+    to: "/employees/balance",
+    icon: AccountBalanceWalletOutlined,
+    label: "Зарплата, штрафы, премии, авансы",
+  },
+  {
+    to: "/employees/reviews",
+    icon: WarningAmberOutlined,
+    label: "Отзывы / жалобы",
+  },
+  {
+    to: "/employees/work-schedule",
+    icon: CalendarMonthOutlined,
+    label: "график работы",
+  },
+];
+
+const employeeNameData = {
+  name: "Карта сотрудника - Гунина Анастасия",
+};
+
 
 const EmployeeCard = () => {
-  const tabsData: TabData[] = [
-    { to: "/employees", icon: HomeOutlined, label: "Обзор" },
-    { to: "/employees/visit", icon: ExitToAppOutlined, label: "Посещения" },
-    {
-      to: "/employees/balance",
-      icon: AccountBalanceWalletOutlined,
-      label: "Зарплата, штрафы, премии, авансы",
-    },
-    {
-      to: "/employees/reviews",
-      icon: WarningAmberOutlined,
-      label: "Отзывы / жалобы",
-    },
-    {
-      to: "/employees/work-schedule",
-      icon: CalendarMonthOutlined,
-      label: "график работы",
-    },
-  ];
-
   const mainTableData = [
     { property: "ID сотрудника", value: 6 },
     { property: "Статус", value: "Работает" },
@@ -64,46 +65,7 @@ const EmployeeCard = () => {
 
   return (
     <div className={classes["main"]}>
-      <div className={classes["main__header"]}>
-        <Box sx={{ ml: { xs: "2rem", xl: "7.6rem" } }}>
-          <div className={classes["main__header__upper"]}>
-            <div>
-              <BreadcrumbsCustom />
-              <h1 className={classes["main__header__upper__title"]}>
-                Карта сотрудника - Анастасия Гунина
-              </h1>
-            </div>
-            <ResponsiveTabs tabsData={tabsData} />
-            <div className={classes["main__header__upper__row"]}>
-              <Grid container xl={12} md={12} xs={9} sx={{ gap: "0.8rem" }}>
-                <div className={classes["main__header__upper__row__cards"]}>
-                  <CounterCard
-                    backgroundColor="rgba(76, 175, 80, 0.3)"
-                    iconColor="var(--success-main)"
-                    textTitle="Выручка за все время"
-                    valueText="796 540 руб."
-                  />
-                  <CounterCard
-                    backgroundColor="rgba(33, 150, 243, 0.3)"
-                    iconColor="var(--primary-main)"
-                    textTitle="Обслуженные посещения"
-                    valueText="141"
-                  />
-
-                  <CounterCard
-                    backgroundColor="rgba(156,39,176, 0.3)"
-                    iconColor="var(--secondary-main)"
-                    textTitle="Является сотрудником"
-                    valueText="8 месяцев 20 дней"
-                  />
-                </div>
-                <RevenueChart />
-              </Grid>
-            </div>
-          </div>
-        </Box>
-      </div>
-
+      <InfoHeader tabsData={employeeTabsData} nameData={employeeNameData}/>
       <Grid
         container
         sx={{
