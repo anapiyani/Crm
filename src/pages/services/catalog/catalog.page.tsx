@@ -5,15 +5,8 @@ import { IServiceCategory } from "@/ts/types";
 import { Button, CircularProgress, Divider } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import toast from "react-hot-toast";
-import {
-  ExpandLess,
-  ExpandMore,
-  LanOutlined,
-  Folder,
-  ContentCut,
-} from "@mui/icons-material";
+import { LanOutlined, Folder, ContentCut } from "@mui/icons-material";
 import classes from "./styles.module.scss";
-import { C } from "node_modules/@fullcalendar/core/internal-common";
 import CustomTextField from "@/components/textField/textField.component";
 
 const ServiceCatalog = () => {
@@ -23,6 +16,15 @@ const ServiceCatalog = () => {
     staleTime: Infinity,
     refetchOnWindowFocus: false,
   });
+  const rows = [
+    { IconComponent: LanOutlined, color: "#0B6BCB", label: "Отдел" },
+    { IconComponent: Folder, color: "#1E88E5", label: "Секция" },
+    { IconComponent: Folder, color: "#1565C0", label: "Тип" },
+    { IconComponent: Folder, color: "#7B1FA2", label: "Группа" },
+    { IconComponent: Folder, color: "#EF6C00", label: "Категория" },
+    { IconComponent: Folder, color: "#FBC02D", label: "Подкатегория" },
+    { IconComponent: ContentCut, color: "#388E3C", label: "Услуга" },
+  ];
 
   if (isError) {
     toast.error("Произошла ошибка при получении данных.");
@@ -46,70 +48,14 @@ const ServiceCatalog = () => {
             </div>
             <Divider />
             <div className={classes.catalog__upper__content__hint}>
-              <div className={classes.catalog__upper__content__hint__row}>
-                <LanOutlined
-                  style={{
-                    color: "#0B6BCB",
-                    fontSize: "24px",
-                  }}
-                />
-                <label>Отдел</label>
-              </div>
-              <div className={classes.catalog__upper__content__hint__row}>
-                <Folder
-                  style={{
-                    color: "#1E88E5",
-                    fontSize: "24px",
-                  }}
-                />
-                <label>Секция</label>
-              </div>
-              <div className={classes.catalog__upper__content__hint__row}>
-                <Folder
-                  style={{
-                    color: "#1565C0",
-                    fontSize: "24px",
-                  }}
-                />
-                <label>Тип</label>
-              </div>
-              <div className={classes.catalog__upper__content__hint__row}>
-                <Folder
-                  style={{
-                    color: "#7B1FA2",
-                    fontSize: "24px",
-                  }}
-                />
-
-                <label>Группа</label>
-              </div>
-              <div className={classes.catalog__upper__content__hint__row}>
-                <Folder
-                  style={{
-                    color: "#EF6C00",
-                    fontSize: "24px",
-                  }}
-                />
-                <label>Категория</label>
-              </div>
-              <div className={classes.catalog__upper__content__hint__row}>
-                <Folder
-                  style={{
-                    color: "#FBC02D",
-                    fontSize: "24px",
-                  }}
-                />
-                <label>Подкатегория</label>
-              </div>
-              <div className={classes.catalog__upper__content__hint__row}>
-                <ContentCut
-                  style={{
-                    color: "#388E3C",
-                    fontSize: "24px",
-                  }}
-                />
-                <label>Услуга</label>
-              </div>
+              {rows.map((row, index) => (
+                <div className={classes.catalog__upper__content__hint__row}>
+                  <row.IconComponent
+                    style={{ color: row.color, fontSize: "24px" }}
+                  />
+                  <label>{row.label}</label>
+                </div>
+              ))}
             </div>
           </div>
         </div>
