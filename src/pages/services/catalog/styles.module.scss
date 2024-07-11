@@ -3,7 +3,11 @@
 
   &__upper {
     margin-top: 1.6rem;
+    display: flex;
+    gap: 1rem;
+    flex-direction: row;
     &__content {
+      flex: 3;
       width: 90rem;
       &__label {
         font-size: 24px;
@@ -11,7 +15,7 @@
       }
       &__items {
         overflow: auto;
-        height: 59rem;
+        height: 50rem;
         scrollbar-width: thin;
         scroll-behavior: smooth;
         margin: 1.6rem 0 0 0;
@@ -30,6 +34,34 @@
           font-size: 1.6rem;
           gap: 3rem;
           align-items: center;
+        }
+      }
+    }
+    &__search {
+      flex: 3;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      &__content {
+        margin-top: 1rem;
+        display: flex;
+        flex-direction: column;
+        align-items: end;
+        gap: 1rem;
+        &__row {
+          width: 95%;
+          display: flex;
+          flex-direction: row;
+          gap: 1rem;
+          align-items: center;
+          justify-content: end;
+          font-size: 1.6rem;
+        }
+        &__label {
+          width: 30%;
+          white-space: nowrap;
+          max-lines: 1;
+          text-align: end;
         }
       }
     }
