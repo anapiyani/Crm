@@ -8,7 +8,6 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
 import dayjs, { Dayjs } from "dayjs";
 
-
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import "moment/locale/ru";
 import "react-big-calendar/lib/css/react-big-calendar.css";
@@ -19,6 +18,7 @@ import interactionPlugin from "@fullcalendar/interaction";
 import ArrowLeftIcon from "@/assets/icons/arrow-left.svg";
 import ArrowRightHideIcon from "@/assets/icons/arrow-right-hide.svg";
 import "./custom.css";
+import { ResourceApi } from "@fullcalendar/resource/index.js";
 
 const Home = () => {
   const [isHide, setIsHide] = useState<boolean>(false);
@@ -30,6 +30,38 @@ const Home = () => {
 
   const handlePanelHide = () => {
     setIsHide(!isHide);
+  };
+
+  // [
+  //   "scheduled", color-header: var(--primary-400), background: var(--primary-100)
+  //   "completed", color-header: var(--success-400), background: var(--success-300)
+  //   "underway", color-header: var(--deep-purple-050), background: var(--deep-purple-400)
+  //   "late", color-header: var(--danger-400), background: var(--danger-100)
+  //   "no_show", color-header: var(--neutral-400), background: var(--neutral-100)
+  //   "unconfirmed", color-header: var(--neutral-800), background: var(--neutral-800)
+  // ]
+
+  const statusInfo: Record<string, string> = {};
+
+  const renderResource = (arg: ResourceApi) => (
+    <div className={classes["fullcalendar__user"]}>
+      <div className={classes["fullcalendar__user--icon"]}></div>
+      <p>{arg.title}</p>
+      <p>profession</p>
+      <p>time</p>
+    </div>
+  );
+
+  const getStatus = () => {
+    const statuses = [
+      "scheduled",
+      "completed",
+      "underway",
+      "late",
+      "no_show",
+      "unconfirmed",
+    ];
+    return statuses[2];
   };
 
   return (
@@ -52,25 +84,62 @@ const Home = () => {
             selectable={true}
             selectMirror={true}
             droppable={true}
+            headerToolbar={{
+              left: "prev,next today",
+              center: "title",
+              right: "resourceTimeGridDay",
+            }}
+            slotLabelFormat={{
+              hour: "numeric",
+              minute: "2-digit",
+              omitZeroMinute: false,
+              meridiem: false,
+            }}
+            eventContent={(eventInfo) => {
+              return (
+                <div
+                  className={classNames(
+                    classes["fullcalendar__event"],
+                    classes[`fullcalendar__event--${getStatus()}`]
+                  )}
+                >
+                  <div
+                    className={classNames(
+                      classes["fullcalendar__event--header"],
+                      classes[`fullcalendar__event--${getStatus()}--header`]
+                    )}
+                  >
+                    {eventInfo.timeText}
+                  </div>
+                  <div className={classes["fullcalendar__event--body"]}>
+                    <p>{eventInfo.event.title}</p>
+                    <p>location</p>
+                  </div>
+                </div>
+              );
+            }}
             resources={[
-              { id: "a", title: "Room A" },
-              { id: "b", title: "Room B" },
-              { id: "c", title: "Room C" },
+              { id: "a", title: "Nurik" },
+              { id: "b", title: "Django" },
+              { id: "c", title: "Yesset" },
             ]}
+            resourceLabelContent={(arg) =>
+              renderResource(arg.resource as ResourceApi)
+            }
             events={[
               {
                 id: "1",
                 resourceId: "a",
                 title: "event 1",
-                start: "2024-07-10T14:00:00",
-                end: "2024-07-10T18:00:00",
+                start: "2024-07-12T14:00:00",
+                end: "2024-07-12T18:00:00",
               },
               {
                 id: "2",
                 resourceId: "b",
                 title: "event 2",
-                start: "2024-07-10T14:00:00",
-                end: "2024-07-10T18:00:00",
+                start: "2024-07-12T14:00:00",
+                end: "2024-07-12T18:00:00",
               },
               {
                 id: "3",

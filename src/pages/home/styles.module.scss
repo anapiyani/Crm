@@ -105,3 +105,78 @@
 .u-m-md {
   margin-top: 5rem;
 }
+
+.fullcalendar {
+  &__event {
+    display: flex;
+    flex-direction: column;
+    border-radius: 4px;
+    color: #000000;
+    height: 100%;
+
+    &--header {
+      display: flex;
+      justify-content: center;
+    }
+  }
+
+  &__event--scheduled {
+    background-color: var(--primary-100);
+    border: 1px solid var(--primary-400);
+
+    &--header {
+      background-color: var(--primary-300);
+    }
+  }
+
+  &__event--completed {
+    background-color: var(--success-300);
+    border: 1px solid var(--success-400);
+
+    &--header {
+      background-color: var(--success-400);
+    }
+  }
+
+  &__event--underway {
+    background-color: var(--deep-purple-050);
+    border: 1px solid var(--deep-purple-400);
+
+    &--header {
+      background-color: var(--deep-purple-200);
+    }
+  }
+
+  &__event--late {
+    background-color: var(--danger-100);
+    border: 1px solid var(--danger-400);
+
+    &--header {
+      background-color: var(--danger-300);
+    }
+  }
+
+  &__event--no_show {
+    background-color: var(--neutral-100);
+    border: 1px solid var(--neutral-400);
+
+    &--header {
+      background-color: var(--neutral-400);
+    }
+  }
+
+  &__event--unconfirmed {
+    background-color: var(--neutral-800);
+    border: 1px solid var(--neutral-800);
+    color: #ffffff;
+
+    &--header {
+      background-color: var(--neutral-800);
+    }
+  }
+
+  &__user {
+    display: flex;
+    flex-direction: column;
+  }
+}

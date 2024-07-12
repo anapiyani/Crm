@@ -1,3 +1,30 @@
 .fc-license-message {
   display: none;
 }
+.fc .fc-timegrid-axis {
+  border-right: none;
+}
+.fc .fc-col-header-cell {
+  background-color: white !important;
+  border-left: none; 
+  border-right: none;
+  border-top: none;
+}
+
+.fc-scrollgrid  .fc-scrollgrid-liquid {
+  border-top: none !important; 
+}
+
+.fc .fc-timegrid-slot {
+  height: 3rem;
+}
+
+.fc table {
+  border-collapse: collapse;
+}
+
+.fc .fc-event {
+  padding: 0 !important; 
+  background-color: transparent !important;
+  border: 1px solid var(--success-400);
+}
