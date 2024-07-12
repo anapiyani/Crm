@@ -13,8 +13,12 @@ interface IServiceProps {
 
 const ServiceItem: React.FC<IServiceProps> = ({ service }) => {
   return (
-    <li style={{ listStyle: "none" }}>
-      <ContentCutIcon /> {service.name}
+    <li
+      className={classes["tree__service"]}
+      style={{ listStyle: "none", gap: "1.6rem" }}
+    >
+      <ContentCutIcon style={{ color: "#388E3C", fontSize: "24px" }} />{" "}
+      {service.name}
     </li>
   );
 };
@@ -24,13 +28,36 @@ interface ICategoryProps {
 }
 
 const levelsIcon: Record<string, JSX.Element> = {
-  department: <LanOutlinedIcon style={{ color: "#0B6BCB" }} />,
-  section: <FolderIcon style={{ color: "#1E88E5" }} />,
-  service_type: <FolderIcon style={{ color: "#1565C0" }} />,
-  group: <FolderIcon style={{ color: "#7B1FA2" }} />,
-  category: <FolderIcon style={{ color: "#EF6C00" }} />,
-  subcategory: <FolderIcon style={{ color: "#FBC02D" }} />,
-  services: <ContentCutIcon style={{ color: "#388E3C" }} />,
+  department: (
+    <LanOutlinedIcon
+      style={{ color: "#0B6BCB", fontSize: "24px", marginRight: "1.6rem" }}
+    />
+  ),
+  section: (
+    <FolderIcon
+      style={{ color: "#1E88E5", fontSize: "24px", marginRight: "1.6rem" }}
+    />
+  ),
+  service_type: (
+    <FolderIcon
+      style={{ color: "#1565C0", fontSize: "24px", marginRight: "1.6rem" }}
+    />
+  ),
+  group: (
+    <FolderIcon
+      style={{ color: "#7B1FA2", fontSize: "24px", marginRight: "1.6rem" }}
+    />
+  ),
+  category: (
+    <FolderIcon
+      style={{ color: "#EF6C00", fontSize: "24px", marginRight: "1.6rem" }}
+    />
+  ),
+  subcategory: (
+    <FolderIcon
+      style={{ color: "#FBC02D", fontSize: "24px", marginRight: "1.6rem" }}
+    />
+  ),
 };
 
 const TreeItem = ({ category }: ICategoryProps) => {
@@ -38,16 +65,22 @@ const TreeItem = ({ category }: ICategoryProps) => {
   const toggle = () => setIsOpen(!isOpen);
 
   return (
-    <div>
-      <div onClick={toggle} style={{ cursor: "pointer" }}>
+    <div className={classes["tree"]}>
+      <div onClick={toggle} className={classes["tree__branch"]}>
         {levelsIcon[category.level]}
         {category.name}
         {(category.children.length > 0 || category.services.length > 0) && (
-          <span>{isOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}</span>
+          <span style={{ paddingTop: "8px" }}>
+            {isOpen ? (
+              <ExpandLessIcon style={{ fontSize: "24px" }} />
+            ) : (
+              <ExpandMoreIcon style={{ fontSize: "24px" }} />
+            )}
+          </span>
         )}
       </div>
       {isOpen && (
-        <div style={{ paddingLeft: "20px" }}>
+        <div className={classes["tree__open"]}>
           {category.children.map((child) => (
             <TreeItem key={child.id} category={child} />
           ))}
