@@ -1,5 +1,5 @@
-import React from "react";
-import { Edit, Lock } from "@mui/icons-material";
+import React, { useState } from "react";
+import { Edit, Lock, } from "@mui/icons-material";
 import {
   Box,
   Paper,
@@ -10,6 +10,9 @@ import {
   Table,
   tableCellClasses,
   styled,
+  Select,
+  MenuItem,
+  SelectChangeEvent,
 } from "@mui/material";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -33,6 +36,8 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 type DataRow = {
   property: string;
   value: string | number;
+  link?: string;
+  linkLabel?: string;
 };
 
 interface TableVerticalProps {
@@ -40,6 +45,7 @@ interface TableVerticalProps {
   title: string;
   showLockIcon?: boolean;
   extraAction?: React.ReactNode;
+  includeDropdown?: boolean;
 }
 
 const TableVertical: React.FC<TableVerticalProps> = ({
@@ -47,14 +53,23 @@ const TableVertical: React.FC<TableVerticalProps> = ({
   title,
   showLockIcon = false,
   extraAction,
+  includeDropdown = false,
 }) => {
+  const [dropdownValue, setDropdownValue] = useState(
+    data[data.length - 1].value // Assuming the last item is for the dropdown
+  );
+
+  const handleDropdownChange = (event: SelectChangeEvent<string | number>) => {
+    setDropdownValue(event.target.value as string);
+  };
+
   return (
     <TableContainer
       component={Paper}
       sx={{
-        border: "0.1rem solid",
+        border: "0.1rem solid #CDD7E1",
         borderRadius: "8px",
-        borderColor: "#CDD7E1",
+        boxShadow: "0rem 0.1rem 0.2rem 0rem rgba(21, 21, 21, 0.08)",
       }}
     >
       <Box
@@ -159,7 +174,32 @@ const TableVertical: React.FC<TableVerticalProps> = ({
                     : "normal",
                 }}
               >
-                {row.value}
+                {index === data.length - 1 && includeDropdown ? (
+                  <Select
+                    value={dropdownValue}
+                    sx={{ minWidth: 200, color: "rgba(0,0,0,0.38)" }}
+                    onChange={handleDropdownChange}
+                  >
+                    <MenuItem value="Пользовательский аккаунт активен">
+                      Пользовательский аккаунт активен
+                    </MenuItem>
+                    <MenuItem value="Пользовательский аккаунт не активен">
+                      Пользовательский аккаунт не активен
+                    </MenuItem>
+                  </Select>
+                ) : row.link ? (
+                  <>
+                    {row.value}{" "}
+                    <a
+                      href={row.link}
+                      style={{ color: "#2196F3", textDecoration: "none" }}
+                    >
+                      {row.linkLabel}
+                    </a>
+                  </>
+                ) : (
+                  row.value
+                )}
               </StyledTableCell>
             </StyledTableRow>
           ))}

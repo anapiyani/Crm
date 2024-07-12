@@ -1,5 +1,5 @@
 import React from "react";
-import { Add, Edit, Done } from "@mui/icons-material";
+import { Add, Edit, Done, RemoveRedEyeOutlined } from "@mui/icons-material";
 import {
   Box,
   Paper,
@@ -14,13 +14,10 @@ import {
 } from "@mui/material";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
-  "&:nth-of-type(odd)": {
-    textAlign: "right",
-  },
   [`&.${tableCellClasses.head}`]: {
     fontSize: "1.4rem",
     fontWeight: "700",
-    BorderTop: "none",
+    borderTop: "none",
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
@@ -37,25 +34,33 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 type ContactRow = {
-  type: string;
+  type?: string;
   contact: string;
-  primary: boolean;
+  primary?: boolean;
 };
 
 interface ContactsTableProps {
   data: ContactRow[];
   title: string;
+  showEyeIcon?: boolean;
+  hasTableHead?: boolean;
 }
 
-const TableHorizontal: React.FC<ContactsTableProps> = ({ data, title }) => {
+const TableHorizontal: React.FC<ContactsTableProps> = ({
+  data,
+  title,
+  showEyeIcon = false,
+  hasTableHead = true,
+}) => {
+  const isSingleData = data.length === 1;
+
   return (
     <TableContainer
       component={Paper}
       sx={{
-        // width: "45rem",
-        border: "0.1rem solid",
+        border: "0.1rem solid #CDD7E1",
         borderRadius: "8px",
-        borderColor: "#CDD7E1",
+        boxShadow: "0rem 0.1rem 0.2rem 0rem rgba(21, 21, 21, 0.08)",
       }}
     >
       <Box
@@ -93,35 +98,59 @@ const TableHorizontal: React.FC<ContactsTableProps> = ({ data, title }) => {
           </Box>
         </Box>
         <Box sx={{ p: "0.8rem" }}>
-          <Edit
-            sx={{
-              verticalAlign: "middle",
-              fontSize: "2.4rem",
-              color: "#2196F3",
-            }}
-          />
+          {showEyeIcon ? (
+            <RemoveRedEyeOutlined
+              sx={{
+                verticalAlign: "middle",
+                fontSize: "2.4rem",
+                color: "#2196F3",
+              }}
+            />
+          ) : (
+            <Edit
+              sx={{
+                verticalAlign: "middle",
+                fontSize: "2.4rem",
+                color: "#2196F3",
+              }}
+            />
+          )}
         </Box>
       </Box>
       <Table aria-label="customized table" sx={{ borderColor: "#CDD7E1" }}>
-        <TableHead>
-          <TableRow>
-            <StyledTableCell sx={{ textAlign: "right" }}>Тип</StyledTableCell>
-            <StyledTableCell>Контакт</StyledTableCell>
-            <StyledTableCell>Основной</StyledTableCell>
-          </TableRow>
-        </TableHead>
+        {hasTableHead && (
+          <TableHead>
+            <TableRow>
+              <StyledTableCell sx={{ textAlign: "right" }}>Тип</StyledTableCell>
+              <StyledTableCell>Контакт</StyledTableCell>
+              <StyledTableCell>Основной</StyledTableCell>
+            </TableRow>
+          </TableHead>
+        )}
         <TableBody>
-          {data.map((row) => (
+          {data.map((row, index) => (
             <StyledTableRow key={row.contact}>
-              <StyledTableCell>{row.type}</StyledTableCell>
-              <StyledTableCell>{row.contact}</StyledTableCell>
-              <StyledTableCell>
-                {row.primary ? (
-                  <Done sx={{ fontSize: "2.4rem", color: "#2E7D32" }} />
-                ) : (
-                  ""
-                )}
+              {hasTableHead && (
+                <StyledTableCell sx={{ textAlign: "right" }}>
+                  {row.type}
+                </StyledTableCell>
+              )}
+              <StyledTableCell
+                sx={{
+                  textAlign: isSingleData ? "left" : index % 2 === 0 ? "right" : "left",
+                }}
+              >
+                {row.contact}
               </StyledTableCell>
+              {hasTableHead && (
+                <StyledTableCell sx={{ textAlign: "right" }}>
+                  {row.primary ? (
+                    <Done sx={{ fontSize: "2.4rem", color: "#2E7D32" }} />
+                  ) : (
+                    ""
+                  )}
+                </StyledTableCell>
+              )}
             </StyledTableRow>
           ))}
         </TableBody>

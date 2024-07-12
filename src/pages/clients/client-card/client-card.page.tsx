@@ -25,6 +25,7 @@ const ClientCard = () => {
     { property: "Черный список", value: "Нет" },
     { property: "Онлайн запись", value: "Да" },
     { property: "Явка", value: "100% (0 из 48 не пришёл)" },
+    { property: "Явка", value: "" },
   ];
 
   const additionalInfoTableData = [
@@ -51,18 +52,31 @@ const ClientCard = () => {
   ];
 
   const financeTableData = [
-    { property: "Депозит", value: "0 История" },
-    { property: "Бонусы", value: "0 История" },
-    { property: "Деп. абонемент", value: "0 Подробности" },
+    {
+      property: "Депозит",
+      value: "0",
+      link: "/clients/deposits/history",
+      linkLabel: "История",
+    },
+    {
+      property: "Бонусы",
+      value: "0",
+      link: "/clients/bonuses/history",
+      linkLabel: "История",
+    },
+    {
+      property: "Деп. абонемент",
+      value: "0",
+      link: "/clients/membership",
+      linkLabel: "Подробности",
+    },
   ];
 
   const contactsTableData = [
     { type: "Моб. телефон", contact: "+7 (777) 777-76-66", primary: true },
   ];
 
-  const commentsTableData = [
-    { property: "Комментарий", value: "Нет ни одного комментария" },
-  ];
+  const commentsTableData = [{ contact: "Нет ни одного комментария" }];
 
   const addressData = [{ property: "Адрес", value: "Нет данных." }];
 
@@ -77,7 +91,7 @@ const ClientCard = () => {
           flexDirection: { xs: "column", md: "row" },
         }}
         columnGap={3}
-        rowGap={{ xs: 3}}
+        rowGap={{ xs: 3 }}
         xs={9}
         md={12}
       >
@@ -89,7 +103,7 @@ const ClientCard = () => {
           sx={{ alignItems: "flex-start" }}
           rowGap={3}
         >
-          <TableVertical data={mainTableData} title="Главное" />
+          <TableVertical data={mainTableData} title="Главное" includeDropdown />
           <TableVertical
             data={additionalInfoTableData}
             title="Доп. информация"
@@ -105,7 +119,12 @@ const ClientCard = () => {
           <TableVertical data={discountsTableData} title="Скидки" />
           <TableVertical data={financeTableData} title="Финансы" />
           <TableHorizontal data={contactsTableData} title="Контакты" />
-          <TableVertical data={commentsTableData} title="Комментарии" />
+          <TableHorizontal
+            data={commentsTableData}
+            title="Комментарии"
+            hasTableHead={false}
+            showEyeIcon
+          />
         </Grid>
 
         <Grid container xl={3.8} sx={{ flexDirection: "column" }} rowGap={3}>
