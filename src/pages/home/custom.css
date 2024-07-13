@@ -6,13 +6,13 @@
 }
 .fc .fc-col-header-cell {
   background-color: white !important;
-  border-left: none; 
+  border-left: none;
   border-right: none;
   border-top: none;
 }
 
-.fc-scrollgrid  .fc-scrollgrid-liquid {
-  border-top: none !important; 
+.fc-scrollgrid .fc-scrollgrid-liquid {
+  border-top: none !important;
 }
 
 .fc .fc-timegrid-slot {
@@ -24,7 +24,15 @@
 }
 
 .fc .fc-event {
-  padding: 0 !important; 
+  padding: 0 !important;
   background-color: transparent !important;
   border: 1px solid var(--success-400);
+}
+
+.fc-col-header,
+.fc-daygrid-body,
+.fc-scrollgrid-sync-table,
+.fc-timegrid-body,
+.fc-timegrid-body table {
+  width: 100% !important;
 }

@@ -1,54 +1,63 @@
-import { useState } from "react";
+<<<<<<< Updated upstream
+import { useRef, useState } from "react";
 import classes from "./styles.module.scss";
 import BreadcrumbsCustom from "@/components/navigation/breadcrumbs/breadcrumbs";
 import classNames from "classnames";
 import { Autocomplete, Divider, TextField } from "@mui/material";
+=======
+import { useEffect, useRef, useState } from "react";
+import { Autocomplete, Divider, TextField, Avatar } from "@mui/material";
+>>>>>>> Stashed changes
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
-import dayjs, { Dayjs } from "dayjs";
 
-import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
-import "moment/locale/ru";
-import "react-big-calendar/lib/css/react-big-calendar.css";
+import { ResourceApi } from "@fullcalendar/resource/index.js";
 import FullCalendar from "@fullcalendar/react";
 import resourceTimeGridPlugin from "@fullcalendar/resource-timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
+import dayjs, { Dayjs } from "dayjs";
 
-import ArrowLeftIcon from "@/assets/icons/arrow-left.svg";
+import BreadcrumbsCustom from "@/components/navigation/breadcrumbs/breadcrumbs";
+import classNames from "classnames";
+
 import ArrowRightHideIcon from "@/assets/icons/arrow-right-hide.svg";
+import ArrowLeftIcon from "@/assets/icons/arrow-left.svg";
+import PanToolAltIcon from "@/assets/icons/pan_tool_alt.svg";
+import classes from "./styles.module.scss";
 import "./custom.css";
-import { ResourceApi } from "@fullcalendar/resource/index.js";
 
 const Home = () => {
   const [isHide, setIsHide] = useState<boolean>(false);
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(dayjs());
+  const calendarRef = useRef<FullCalendar | null>(null);
 
   const handleDateChange = (date: Dayjs | null) => {
     setSelectedDate(date);
+    if (calendarRef.current && date) {
+      const calendarApi = calendarRef.current.getApi();
+      calendarApi.gotoDate(date.toDate());
+    }
   };
 
   const handlePanelHide = () => {
     setIsHide(!isHide);
   };
 
-  // [
-  //   "scheduled", color-header: var(--primary-400), background: var(--primary-100)
-  //   "completed", color-header: var(--success-400), background: var(--success-300)
-  //   "underway", color-header: var(--deep-purple-050), background: var(--deep-purple-400)
-  //   "late", color-header: var(--danger-400), background: var(--danger-100)
-  //   "no_show", color-header: var(--neutral-400), background: var(--neutral-100)
-  //   "unconfirmed", color-header: var(--neutral-800), background: var(--neutral-800)
-  // ]
-
-  const statusInfo: Record<string, string> = {};
-
   const renderResource = (arg: ResourceApi) => (
     <div className={classes["fullcalendar__user"]}>
-      <div className={classes["fullcalendar__user--icon"]}></div>
-      <p>{arg.title}</p>
-      <p>profession</p>
-      <p>time</p>
+      <Avatar>H</Avatar>
+      <h5 className={classes["fullcalendar__user--name"]}>{arg.title}</h5>
+      <div
+        className={classNames(
+          classes["fullcalendar__user--profession"],
+          classes["fullcalendar__user--time"]
+        )}
+      >
+        <img src={PanToolAltIcon} alt="pan-tool" />
+        <p>профессия</p>
+      </div>
+      <p className={classes["fullcalendar__user--time"]}>08:00 - 22:00</p>
     </div>
   );
 
@@ -74,6 +83,7 @@ const Home = () => {
       <div className={classes["home__main"]}>
         <div className={classes["home__main__calendar"]}>
           <FullCalendar
+            ref={calendarRef}
             allDaySlot={false}
             nowIndicator={true}
             plugins={[resourceTimeGridPlugin, interactionPlugin]}
@@ -122,6 +132,12 @@ const Home = () => {
               { id: "a", title: "Nurik" },
               { id: "b", title: "Django" },
               { id: "c", title: "Yesset" },
+              { id: "d", title: "Yesset" },
+              { id: "e", title: "Yesset" },
+              { id: "f", title: "Yesset" },
+              { id: "g", title: "Yesset" },
+              { id: "h", title: "Yesset" },
+              { id: "i", title: "Yesset" },
             ]}
             resourceLabelContent={(arg) =>
               renderResource(arg.resource as ResourceApi)
