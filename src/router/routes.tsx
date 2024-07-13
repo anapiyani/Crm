@@ -1,10 +1,12 @@
 import React from "react";
 import {
   EmployeeAdd,
+  EmployeeSearch,
   Home,
   CashDesk,
   EmployeeCard,
   Clients,
+  ClientCard,
   Activity,
   WorkSchedule,
   Department,
@@ -14,8 +16,7 @@ import {
   ClientAdd,
   StorageSettings,
 } from "@/pages";
-import EmployeeSearch from "@/pages/employees/search/customer-search.page";
-import ClientCard from "@/pages/clients/client-card/client-card.page";
+
 // import { Role } from "@/ts/types";
 
 type IRoute = {

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Edit, Lock, } from "@mui/icons-material";
+import { Edit, Lock } from "@mui/icons-material";
 import {
   Box,
   Paper,
@@ -56,7 +56,7 @@ const TableVertical: React.FC<TableVerticalProps> = ({
   includeDropdown = false,
 }) => {
   const [dropdownValue, setDropdownValue] = useState(
-    data[data.length - 1].value // Assuming the last item is for the dropdown
+    data[data.length - 1].value
   );
 
   const handleDropdownChange = (event: SelectChangeEvent<string | number>) => {

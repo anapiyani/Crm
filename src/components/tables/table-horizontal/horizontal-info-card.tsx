@@ -137,7 +137,11 @@ const TableHorizontal: React.FC<ContactsTableProps> = ({
               )}
               <StyledTableCell
                 sx={{
-                  textAlign: isSingleData ? "left" : index % 2 === 0 ? "right" : "left",
+                  textAlign: isSingleData
+                    ? "left"
+                    : index % 2 === 0
+                    ? "right"
+                    : "left",
                 }}
               >
                 {row.contact}
