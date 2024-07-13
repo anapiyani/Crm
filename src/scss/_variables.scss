@@ -1,10 +1,10 @@
 :root {
   /* Danger Colors */
   --danger-050: #fef6f6;
-  --danger-100: #fde4da;
+  --danger-100: #fce4e4;
   --danger-200: #f7e5e5;
-  --danger-300: #f08998;
-  --danger-400: #e74774;
+  --danger-300: #f09898;
+  --danger-400: #e47474;
   --danger-500: #e41c1e;
   --danger-600: #a51818;
   --danger-700: #7c1212;
@@ -15,13 +15,18 @@
   /* Secondary */
   --secondary-main: #9c27b0;
 
+  // Purple
+  --deep-purple-050: #ede7f6;
+  --deep-purple-200: #b39ddb;
+  --deep-purple-400: #7e57c2;
+
   /* Neutral Colors */
   --neutral-050: #fbfcfe;
-  --neutral-100: #d0d4d8;
+  --neutral-100: #f0f4f8;
   --neutral-200: #dde7ee;
   --neutral-300: #cfd7e1;
-  --neutral-400: #9f9fad;
-  --neutral-500: #636b7a;
+  --neutral-400: #9fa6ad;
+  --neutral-500: #636b74;
   --neutral-600: #555e68;
   --neutral-700: #323a3e;
   --neutral-800: #171a1c;
@@ -29,7 +34,7 @@
 
   /* Primary Colors */
   --primary-050: #edf5fd;
-  --primary-100: #e3fffb;
+  --primary-100: #e3effb;
   --primary-200: #c7f1f7;
   --primary-300: #97c3f0;
   --primary-400: #4393e4;
@@ -44,8 +49,8 @@
   --success-050: #e6fef6;
   --success-100: #a7fee3;
   --success-200: #97facc;
-  --success-300: #61ae61;
-  --success-400: #51be51;
+  --success-300: #a1e8a1;
+  --success-400: #51bc51;
   --success-500: #17af11;
   --success-600: #13e613;
   --success-700: #0a470a;

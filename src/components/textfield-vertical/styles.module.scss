@@ -1,38 +1,38 @@
 .main {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: end;
+  gap: 1rem;
+  p {
+    font-size: 1.6rem;
+    color: var(--text-primary);
+  }
+  &__single {
+    &__input {
+      font-size: 1.6rem;
+      width: 30rem;
+      color: var(--text-primary);
+      &::placeholder {
+        color: var(--text-secondary);
+        font-size: 1.6rem;
+      }
+    }
+  }
+  &__double {
     display: flex;
     flex-direction: row;
-    align-items: center;
-    justify-content: end;
     gap: 1rem;
-    p {
+    width: 40rem;
+    align-items: center;
+    &__inputDouble {
+      font-size: 1.6rem;
+      width: 100%;
+      color: var(--text-primary);
+      &::placeholder {
+        color: var(--text-secondary);
         font-size: 1.6rem;
-        color: var(--text-primary);
+      }
     }
-    &__single {
-        &__input {
-            font-size: 1.6rem;
-            width: 30rem;
-            color: var(--text-primary);
-            &::placeholder {
-                color: var(--text-secondary);
-                font-size: 1.6rem;
-            }
-        }
-    }
-    &__double {
-        display: flex;
-        flex-direction: row;
-        gap: 1rem;
-        width: 40rem;
-        align-items: center;
-        &__inputDouble {
-            font-size: 1.6rem;
-            width: 100%;
-            color: var(--text-primary);
-            &::placeholder {
-                color: var(--text-secondary);
-                font-size: 1.6rem;
-            }
-        }
-    }
+  }
 }

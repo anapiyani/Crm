@@ -12,7 +12,7 @@ interface MonthProps {
   year: number;
 }
 
-const Calendar: React.FC<MonthProps> = ({ month, year }) => {
+const MonthlyCalendar: React.FC<MonthProps> = ({ month, year }) => {
   const today = new Date();
   const currentMonth = new Date(year, month);
 
@@ -37,7 +37,7 @@ const Calendar: React.FC<MonthProps> = ({ month, year }) => {
         date: new Date(
           prevMonth.getFullYear(),
           prevMonth.getMonth(),
-          daysInPrevMonth - firstDay + i,
+          daysInPrevMonth - firstDay + i
         ),
         isCurrentMonth: false,
         isToday: false,
@@ -97,4 +97,4 @@ const Calendar: React.FC<MonthProps> = ({ month, year }) => {
   );
 };
 
-export default Calendar;
+export default MonthlyCalendar;
