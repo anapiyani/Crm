@@ -1,10 +1,12 @@
 import React from "react";
 import {
   EmployeeAdd,
+  EmployeeSearch,
   Home,
   CashDesk,
   EmployeeCard,
   Clients,
+  ClientCard,
   Activity,
   WorkSchedule,
   Department,
@@ -14,7 +16,7 @@ import {
   ClientAdd,
   StorageSettings,
 } from "@/pages";
-import EmployeeSearch from "@/pages/employees/search/customer-search.page";
+
 // import { Role } from "@/ts/types";
 
 type IRoute = {
@@ -50,6 +52,11 @@ export const ROUTES: IRoute[] = [
     name: "Clients",
     path: "/clients",
     component: <Clients />,
+  },
+  {
+    name: "Client card",
+    path: "/clients/client-card",
+    component: <ClientCard />,
   },
   {
     name: "Activity",

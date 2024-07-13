@@ -50,6 +50,14 @@ const BreadcrumbsCustom: React.FC<IBreadcrumbsCustomProps> = ({
       path: "/storage/settings",
       breadcrumb: "Настройки",
     },
+    {
+      path: "/clients",
+      breadcrumb: "Клиенты",
+    },
+    {
+      path: "/clients/client-card",
+      breadcrumb: "Марина Владимировна",
+    },
   ];
 
   const breadcrumbs = useBreadcrumbs(routes);
@@ -88,7 +96,7 @@ const BreadcrumbsCustom: React.FC<IBreadcrumbsCustomProps> = ({
                 match.pathname === location.pathname
                   ? classes["breadcrumb__active"]
                   : classes["breadcrumb__not-active"],
-                className,
+                className
               )}
             >
               {breadcrumb}
