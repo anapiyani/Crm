@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import TableVertical from "@/components/tables/tableVertical/vertical-info-card";
 import TableHorizontal from "@/components/tables/table-horizontal/horizontal-info-card";
+import VisitHistory from "./components/visit-history-table";
 import Grid from "@mui/material/Unstable_Grid2";
 import classes from "./styles.module.scss";
 import InfoHeader from "@/components/navigation/header/info-header";
@@ -11,12 +12,22 @@ import {
   financeTableData,
   contactsTableData,
   commentsTableData,
-  addressData,
   clientNameData,
   clientTabsData,
+  sampleVisits,
 } from "./data";
 
 const ClientCard = () => {
+  const [page, setPage] = useState(1);
+  const pageCount = 10; // Example page count
+
+  const handlePageChange = (
+    event: React.ChangeEvent<unknown>,
+    value: number
+  ) => {
+    setPage(value);
+  };
+
   return (
     <div className={classes["main"]}>
       <InfoHeader tabsData={clientTabsData} nameData={clientNameData} />
@@ -65,7 +76,14 @@ const ClientCard = () => {
         </Grid>
 
         <Grid container xl={3.8} sx={{ flexDirection: "column" }} rowGap={3}>
-          <TableVertical data={addressData} title="Адрес проживания" />
+          <VisitHistory
+            visits={sampleVisits}
+            title="История посещений"
+            showEyeIcon={true}
+            page={page}
+            pageCount={pageCount}
+            onPageChange={handlePageChange}
+          />
         </Grid>
       </Grid>
     </div>
