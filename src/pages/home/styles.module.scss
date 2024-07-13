@@ -178,5 +178,28 @@
   &__user {
     display: flex;
     flex-direction: column;
+    align-items: center;
+    font-family: 'Roboto', sans-serif;
+
+    &--name {
+      font-size: 1.4rem; 
+      line-height: 2.4rem;
+      font-weight: 500; 
+      color: var(--primary-500);
+    }
+
+    &--profession {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    &--time {
+      font-weight: 400;
+      font-size: 1.2rem; 
+      line-height: 2rem;
+      
+    }
   }
 }
