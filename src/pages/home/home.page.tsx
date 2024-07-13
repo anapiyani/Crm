@@ -1,13 +1,5 @@
-<<<<<<< Updated upstream
-import { useRef, useState } from "react";
-import classes from "./styles.module.scss";
-import BreadcrumbsCustom from "@/components/navigation/breadcrumbs/breadcrumbs";
-import classNames from "classnames";
-import { Autocomplete, Divider, TextField } from "@mui/material";
-=======
 import { useEffect, useRef, useState } from "react";
 import { Autocomplete, Divider, TextField, Avatar } from "@mui/material";
->>>>>>> Stashed changes
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
