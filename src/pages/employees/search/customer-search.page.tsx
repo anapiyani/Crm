@@ -8,8 +8,10 @@ import {
   FormControlLabel,
   FormGroup,
   Table,
+  TableBody,
   TableCell,
   TableHead,
+  TableRow,
 } from "@mui/material";
 import classes from "./styles.module.scss";
 import SearchFilterCard from "./components/search-filter-card";
@@ -18,9 +20,20 @@ import {
   ChildCheckbox,
   TriStateCheckbox,
 } from "@/components/intermediate-checkbox/intermediate-checkbox";
-import Datatable from "@/components/datatable/datatable";
+import { useState } from "react";
 
 const EmployeeSearch = () => {
+  const [data, setData] = useState([
+    {
+      id: 1,
+      name: "Имя Фамилия",
+      contactInfo: "8 800 555 35 35",
+      age: 25,
+      dateOfBirth: "01.01.1996",
+      position: "Массажист",
+    },
+  ]);
+
   return (
     <div className={classes["main"]}>
       <div className={classes["main__wrapper"]}>
@@ -219,73 +232,36 @@ const EmployeeSearch = () => {
       </div>
       <Divider />
       <div className={classes["main__lower"]}>
-        <Datatable
-          header={
-            <div className={classes["main__lower__header"]}>
-              <h2>Результаты поиска</h2>
-            </div>
-          }
-          columns={
-            <>
-              <tr>
-                <th
-                  style={{
-                    width: "3%",
-                  }}
-                >
-                  N
-                </th>
-                <th>Calories</th>
-                <th>Fat&nbsp;(g)</th>
-                <th>Carbs&nbsp;(g)</th>
-                <th>Protein&nbsp;(g)</th>
-              </tr>
-            </>
-          }
-          children={
-            <tbody>
-              <tr>
-                <td>1</td>
-                <td>159</td>
-                <td>6</td>
-                <td>24</td>
-                <td></td>
-              </tr>
-              <tr>
-                <td>3</td>
-                <td>262</td>
-                <td style={{ padding: "0px" }}>
-                  <table>
-                    <tbody>
-                      <tr>
-                        <td>Name: John Doe</td>
-                      </tr>
-                      <tr>
-                        <td>Occupation: Developer</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </td>
-                <td>24</td>
-                <td>6</td>
-              </tr>
-              <tr>
-                <td>4</td>
-                <td>305</td>
-                <td>3.7</td>
-                <td>67</td>
-                <td>4.3</td>
-              </tr>
-              <tr>
-                <td>5</td>
-                <td>356</td>
-                <td>16</td>
-                <td>49</td>
-                <td>3.9</td>
-              </tr>
-            </tbody>
-          }
-        />
+        <div className={classes["main__lower__container"]}>
+          <Table className={classes.table}>
+            <TableHead>
+              <TableRow>
+                <TableCell>ID</TableCell>
+                <TableCell>Сотрудник</TableCell>
+                <TableCell>Контакты</TableCell>
+                <TableCell>Возраст</TableCell>
+                <TableCell>Дата рождения</TableCell>
+                <TableCell>Должность</TableCell>
+                <TableCell>Действия</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {data.map((row, index) => (
+                <TableRow key={row.id}>
+                  <TableCell>{index + 1}</TableCell>
+                  <TableCell>{row.name}</TableCell>
+                  <TableCell>{row.contactInfo}</TableCell>
+                  <TableCell>{row.age}</TableCell>
+                  <TableCell>{row.dateOfBirth}</TableCell>
+                  <TableCell>{row.position}</TableCell>
+                  <TableCell>
+                    <Button variant="contained">Подробнее</Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
       </div>
     </div>
   );
