@@ -7,11 +7,13 @@ import {
   Divider,
   FormControlLabel,
   FormGroup,
+  Pagination,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableRow,
+  TextField,
 } from "@mui/material";
 import classes from "./styles.module.scss";
 import SearchFilterCard from "./components/search-filter-card";
@@ -22,6 +24,7 @@ import {
   TriStateCheckbox,
 } from "@/components/intermediate-checkbox/intermediate-checkbox";
 import { useState } from "react";
+import CustomTextField from "@/components/textField/textField.component";
 
 const EmployeeSearch = () => {
   const [data, setData] = useState([
@@ -238,6 +241,48 @@ const EmployeeSearch = () => {
       <Divider />
       <div className={classes["main__lower"]}>
         <div className={classes["main__lower__container"]}>
+          <div className={classes["main__lower__container__row"]}>
+            <p className={classes["main__lower__container__label"]}>
+              Показано 10 из 15 записей
+            </p>
+            <div>
+              <p>
+                Показывать
+                <Autocomplete
+                  size="small"
+                  sx={{
+                    "& .MuiAutocomplete-inputRoot": {
+                      padding: "0px 0px 0px 0px",
+                      fontSize: "1.4rem",
+                    },
+                  }}
+                  options={[
+                    { label: "Option 1", value: "1" },
+                    { label: "Option 2", value: "2" },
+                    { label: "Option 3", value: "3" },
+                    { label: "Option 4", value: "4" },
+                    { label: "Option 5", value: "5" },
+                  ]}
+                  getOptionLabel={(option) => option.label}
+                  renderInput={(params) => (
+                    <TextField
+                      sx={{ height: "30px" }}
+                      {...params}
+                      className={"main__lower__auto__input"}
+                    ></TextField>
+                  )}
+                />
+                записей
+              </p>
+            </div>
+            <Pagination
+              count={11}
+              variant="outlined"
+              shape="rounded"
+              boundaryCount={1}
+              color="primary"
+            />
+          </div>
           <Table className={classes.table}>
             <TableHead>
               <TableRow>
