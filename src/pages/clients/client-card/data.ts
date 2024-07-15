@@ -74,3 +74,18 @@ export const contactsTableData = [
 export const commentsTableData = [{ contact: "Нет ни одного комментария" }];
 
 export const addressData = [{ property: "Адрес", value: "Нет данных." }];
+
+export const sampleVisits = [
+  {
+    description: "Операционный материал для сотрудников",
+    cost: "1000 руб.",
+    dateTime: "27 май 2020, 18:15",
+    link: "Посмотреть",
+  },
+  {
+    description: "Кофе для сотрудников",
+    cost: "200 руб.",
+    dateTime: "27 май 2020, 18:10",
+    link: "Посмотреть",
+  },
+];

@@ -192,7 +192,7 @@ const TableVertical: React.FC<TableVerticalProps> = ({
                     {row.value}{" "}
                     <a
                       href={row.link}
-                      style={{ color: "#2196F3", textDecoration: "none" }}
+                      style={{ color: "var(--link-500)", textDecoration: "none" }}
                     >
                       {row.linkLabel}
                     </a>
