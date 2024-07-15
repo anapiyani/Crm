@@ -11,6 +11,7 @@ export interface IDepartmentData {
   level: string;
   parent: number | null;
   children: IDepartmentsChild[];
+  role: IRoles[];
 }
 
 export interface IDepartmentsChild {
@@ -20,4 +21,9 @@ export interface IDepartmentsChild {
   parent: number;
   children: IDepartmentsChild[];
   services: any[];
+}
+
+export interface IRoles {
+  id: number;
+  name: string;
 }
