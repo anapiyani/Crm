@@ -8,7 +8,11 @@ import BreadcrumbsCustom from "@/components/navigation/breadcrumbs/breadcrumbs";
 import VerticalTextField from "@/components/textfield-vertical/textfield-vertical";
 import { getDepartment } from "@/service/department/department.service";
 import toast from "react-hot-toast";
-import { IDepartment, IRoles } from "@/ts/types";
+import {
+  IDepartmentData,
+  IDepartments,
+  IRoles,
+} from "@/ts/departments.interface";
 import {
   useUpdateRole,
   useDeleteRole,
@@ -27,7 +31,7 @@ const Department = () => {
   const createRoleMutation = useCreateRole();
 
   const [selectedDepartment, setSelectedDepartment] = useState<number | null>(
-    null,
+    null
   );
   const [selectedPosition, setSelectedPosition] = useState<number | null>(null);
   const [positionName, setPositionName] = useState<string>("");
@@ -46,23 +50,24 @@ const Department = () => {
 
   const handlePositionClick = (positionId: number) => {
     const department = data?.results.find(
-      (dept: IDepartment) => dept.id === selectedDepartment,
+      (dept: IDepartmentData) => dept.id === selectedDepartment
     );
-    const position = department?.roles.find(
-      (role: IRoles) => role.id === positionId,
+
+    const position = department?.role.find(
+      (role: IRoles) => role.id === positionId
     );
     setSelectedPosition(positionId);
     setPositionName(position ? position.name : "");
   };
 
   const handlePositionNameChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
+    event: React.ChangeEvent<HTMLInputElement>
   ) => {
     setPositionName(event.target.value);
   };
 
   const selectedDepartmentData = data?.results.find(
-    (dept: IDepartment) => dept.id === selectedDepartment,
+    (dept: IDepartmentData) => dept.id === selectedDepartment
   );
 
   const handleSaveClick = () => {
@@ -70,7 +75,6 @@ const Department = () => {
       updateRoleMutation.mutate({
         id: selectedPosition,
         name: positionName,
-        department: selectedDepartment,
       });
     }
   };
@@ -79,7 +83,8 @@ const Department = () => {
     if (positionName && selectedDepartment) {
       createRoleMutation.mutate({
         name: positionName,
-        department: selectedDepartment,
+        department_id: selectedDepartment,
+        id: null,
       });
       setModalOpen(false);
       setPositionName("");
@@ -91,6 +96,7 @@ const Department = () => {
   const handleDeleteClick = () => {
     if (selectedPosition !== null) {
       deleteRoleMutation.mutate(selectedPosition);
+      setPositionName("");
     }
   };
 
@@ -117,7 +123,7 @@ const Department = () => {
           <div className={classes["department__content__column__items"]}>
             {isPending ? <CircularProgress /> : ""}
             <ul>
-              {data?.results.map((item: IDepartment) => (
+              {data?.results.map((item: IDepartmentData) => (
                 <li key={item.id}>
                   <Button
                     onClick={() => handleDepartmentClick(item.id)}
@@ -141,7 +147,7 @@ const Department = () => {
           </div>
           <div className={classes["department__content__column__items"]}>
             <ul>
-              {selectedDepartmentData?.roles.map((position: IRoles) => (
+              {selectedDepartmentData?.role.map((position: IRoles) => (
                 <li key={position.id}>
                   <Button
                     onClick={() => handlePositionClick(position.id)}
@@ -182,6 +188,9 @@ const Department = () => {
                 onClick={handleDeleteClick}
                 variant="outlined"
                 startIcon={<DeleteIcon />}
+                disabled={
+                  selectedPosition === null || deleteRoleMutation.isPending
+                }
               >
                 Удалить
               </Button>
@@ -189,6 +198,9 @@ const Department = () => {
                 onClick={handleSaveClick}
                 variant="contained"
                 startIcon={<CheckIcon />}
+                disabled={
+                  selectedPosition === null || updateRoleMutation.isPending
+                }
               >
                 Сохранить
               </Button>

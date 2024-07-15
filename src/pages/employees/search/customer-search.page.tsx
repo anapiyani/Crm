@@ -24,19 +24,20 @@ import {
   TriStateCheckbox,
 } from "@/components/intermediate-checkbox/intermediate-checkbox";
 import { useState } from "react";
-import CustomTextField from "@/components/textField/textField.component";
+import { getDepartment } from "@/service/department/department.service";
+import { useQuery } from "@tanstack/react-query";
+import { IDepartmentData } from "@/ts/departments.interface";
 
 const EmployeeSearch = () => {
-  const [data, setData] = useState([
-    {
-      id: 1,
-      name: "Имя Фамилия",
-      contactInfo: "8 800 555 35 35",
-      age: 25,
-      dateOfBirth: "01.01.1996",
-      position: "Массажист",
-    },
-  ]);
+  const {
+    data: departmentData,
+    isPending: departmentPending,
+    isError: departmentError,
+  } = useQuery({
+    queryKey: ["departmentData"],
+    queryFn: getDepartment,
+    staleTime: 300,
+  });
 
   return (
     <div className={classes["main"]}>
@@ -146,62 +147,20 @@ const EmployeeSearch = () => {
             title={"Должность"}
             children={
               <div className={classes["main__upper__card"]}>
-                <TriStateCheckbox label="Parent Checkbox">
-                  <ChildCheckbox
-                    label="Child Checkbox 1"
-                    parentChecked={null}
-                    onChildChange={() => {}}
-                  />
-                  <ChildCheckbox
-                    label="Child Checkbox 2"
-                    parentChecked={null}
-                    onChildChange={() => {}}
-                  />
-                </TriStateCheckbox>
-                <TriStateCheckbox label="Parent Checkbox">
-                  <ChildCheckbox
-                    label="Child Checkbox 1"
-                    parentChecked={null}
-                    onChildChange={() => {}}
-                  />
-                  <ChildCheckbox
-                    label="Child Checkbox 2"
-                    parentChecked={null}
-                    onChildChange={() => {}}
-                  />
-                  <ChildCheckbox
-                    label="Child Checkbox 1"
-                    parentChecked={null}
-                    onChildChange={() => {}}
-                  />
-                  <ChildCheckbox
-                    label="Child Checkbox 2"
-                    parentChecked={null}
-                    onChildChange={() => {}}
-                  />
-                  <ChildCheckbox
-                    label="Child Checkbox 1"
-                    parentChecked={null}
-                    onChildChange={() => {}}
-                  />
-                  <ChildCheckbox
-                    label="Child Checkbox 2"
-                    parentChecked={null}
-                    onChildChange={() => {}}
-                  />
-                </TriStateCheckbox>
-                <TriStateCheckbox label="Parent Checkbox">
-                  <ChildCheckbox
-                    label="Child Checkbox 1"
-                    parentChecked={null}
-                    onChildChange={() => {}}
-                  />
-                  <ChildCheckbox
-                    label="Child Checkbox 2"
-                    parentChecked={null}
-                    onChildChange={() => {}}
-                  />
-                </TriStateCheckbox>
+                {departmentData?.results.map((item: IDepartmentData) =>
+                  item.role.length > 0 ? (
+                    <TriStateCheckbox key={item.name} label={item.name}>
+                      {item.role.map((position) => (
+                        <ChildCheckbox
+                          key={position.name}
+                          label={position.name}
+                          parentChecked={null}
+                          onChildChange={() => {}}
+                        />
+                      ))}
+                    </TriStateCheckbox>
+                  ) : null
+                )}
               </div>
             }
           ></SearchFilterCard>
@@ -296,7 +255,7 @@ const EmployeeSearch = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {data.map((row, index) => (
+              {/* {data.map((row, index) => (
                 <TableRow key={row.id}>
                   <TableCell>{index + 1}</TableCell>
                   <TableCell>{row.name}</TableCell>
@@ -310,7 +269,7 @@ const EmployeeSearch = () => {
                     </Button>
                   </TableCell>
                 </TableRow>
-              ))}
+              ))} */}
             </TableBody>
           </Table>
         </div>

@@ -47,13 +47,13 @@ export interface IDepartmentData {
 
 export interface IRoleChange {
   id: number;
-  department: number;
   name: string;
 }
 
 export interface IRoleCreate {
   name: string;
-  department: number;
+  department_id: number;
+  id: number | null;
 }
 
 export interface IService {
@@ -76,4 +76,3 @@ export interface IServiceCategory {
   children: IServiceCategory[];
   services: IService[];
 }
-
