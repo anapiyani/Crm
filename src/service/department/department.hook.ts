@@ -1,6 +1,11 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
-import { updateRole, deleteRole, createRole } from "./department.service";
+import {
+  updateRole,
+  deleteRole,
+  createRole,
+  associateRole,
+} from "./department.service";
 import { IRoleChange, IRoleCreate } from "@/ts/types";
 
 export const useUpdateRole = () => {
@@ -31,13 +36,32 @@ export const useDeleteRole = () => {
   });
 };
 
-export const useCreateRole = () => {
-  const queryClient = useQueryClient();
-  return useMutation<IRoleCreate, Error, IRoleCreate>({
-    mutationFn: createRole,
+const useAssociateRole = () => {
+  const QueryClient = useQueryClient();
+  return useMutation({
+    mutationFn: associateRole,
     onSuccess: () => {
       toast.success("Должность успешно добавлен.");
+      QueryClient.invalidateQueries({ queryKey: ["departmentData"] });
+    },
+    onError: () => {
+      toast.error("Ошибка при добавлении должности.");
+    },
+  });
+};
+
+export const useCreateRole = () => {
+  const queryClient = useQueryClient();
+  const associateRoleMutation = useAssociateRole();
+
+  return useMutation<IRoleCreate, Error, IRoleCreate>({
+    mutationFn: createRole,
+    onSuccess: (data, department_id) => {
       queryClient.invalidateQueries({ queryKey: ["departmentData"] });
+      associateRoleMutation.mutate({
+        department_id: department_id.department_id,
+        role_id: data.id!,
+      });
     },
     onError: (error: Error) => {
       toast.error(`Упс! ошибка при добовлении: ${error.message}`);
