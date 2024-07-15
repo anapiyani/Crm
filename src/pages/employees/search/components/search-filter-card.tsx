@@ -28,13 +28,9 @@ const SearchFilterCard: React.FC<ISearchFilterCardProps> = ({
       {...props}
       className={classNames(classes["container"], classNameUnique)}
     >
-      <div className={classes["container__top"]}>
+      <div onClick={handleFilterOpening} className={classes["container__top"]}>
         <h2 className={classes["container__title"]}>{title}</h2>
-        <button
-          type="button"
-          className={classes["container__btn"]}
-          onClick={handleFilterOpening}
-        >
+        <button type="button" className={classes["container__btn"]}>
           {!isOpen ? <ExpandMore /> : <ExpandLess />}
         </button>
       </div>
