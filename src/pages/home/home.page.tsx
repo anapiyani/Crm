@@ -1,5 +1,11 @@
 import { useEffect, useRef, useState } from "react";
-import { Autocomplete, Divider, TextField, Avatar } from "@mui/material";
+import {
+  Autocomplete,
+  Divider,
+  TextField,
+  Avatar,
+  Button,
+} from "@mui/material";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
@@ -10,8 +16,13 @@ import resourceTimeGridPlugin from "@fullcalendar/resource-timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import dayjs, { Dayjs } from "dayjs";
 
+import { Cached } from "@mui/icons-material";
 import BreadcrumbsCustom from "@/components/navigation/breadcrumbs/breadcrumbs";
+import CustomDatePicker from "@/components/date-picker/date-picker-custom";
+
 import classNames from "classnames";
+
+import { calendarStatuses } from "./data";
 
 import ArrowRightHideIcon from "@/assets/icons/arrow-right-hide.svg";
 import ArrowLeftIcon from "@/assets/icons/arrow-left.svg";
@@ -180,7 +191,8 @@ const Home = () => {
                   classes["u-flex-row"],
                   classes["u-rotate-270"],
                   classes["u-m-md"],
-                  classes["u-text-blue"]
+                  classes["u-text-blue"],
+                  classes["u-cursor-pointer"]
                 )}
               >
                 <span>Развернуть</span>
@@ -193,7 +205,8 @@ const Home = () => {
                 <div
                   className={classNames(
                     classes["u-flex-row"],
-                    classes["u-text-blue"]
+                    classes["u-text-blue"],
+                    classes["u-cursor-pointer"]
                   )}
                   onClick={handlePanelHide}
                 >
@@ -205,7 +218,7 @@ const Home = () => {
 
                 {/* sootridniki  */}
                 <div className={classes["panel__employees"]}>
-                  <h2>Сотрудники</h2>
+                  <h2 className={classes["u-h2"]}>Сотрудники</h2>
                   <Divider />
                   <Autocomplete
                     sx={{
@@ -234,15 +247,67 @@ const Home = () => {
                       value={selectedDate}
                       onChange={handleDateChange}
                       sx={{
-                        ".MuiDateCalendar-root": {
-                          fontSize: "1.5rem",
+                        button: {
+                          fontSize: "1.4rem",
+                        },
+                        span: {
+                          fontSize: "1.4rem",
+                        },
+                        ".MuiPickersArrowSwitcher-root": {
+                          gap: "0.4rem",
+                        },
+                        ".MuiPickersArrowSwitcher-button": {
+                          width: "3.5rem",
+                          height: "3.5rem",
+                          border: "1px solid rgba(0, 0, 0, 0.23)",
+                          borderRadius: "5px",
+                        },
+                        ".MuiPickersCalendarHeader-labelContainer": {
+                          fontSize: "1.4rem",
                         },
                       }}
                     />
                   </LocalizationProvider>
+                  <div className={classes["calendar--status"]}>
+                    {calendarStatuses.map((status) => (
+                      <div
+                        className={classes["calendar--status__item"]}
+                        key={status.value}
+                      >
+                        <div
+                          style={{
+                            backgroundColor: status.bgColor,
+                            height: "1.4rem",
+                            width: "1.4rem",
+                            border: `3px solid ${status.borderColor}`,
+                            borderRadius: "3px",
+                          }}
+                        ></div>
+                        <span>{status.label}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
 
                 {/* news */}
+                <div className={classes["prediction"]}>
+                  <h2 className={classes["u-h2"]}>Прогноз выручки</h2>
+                  <Divider />
+                  <div className={classes["prediction__date-picker"]}>
+                    <CustomDatePicker />
+                    <span className={classes["prediction__date-picker--dash"]}>-</span>
+                    <CustomDatePicker />
+                    <Button
+                      variant="contained"
+                      sx={{
+                        height: "4rem",
+                        borderRadius: "8px"
+                      }}
+                    >
+                      <Cached />
+                    </Button>
+                  </div>
+                </div>
               </div>
             )}
           </div>
