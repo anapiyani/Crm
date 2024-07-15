@@ -1,6 +1,6 @@
 import { IEmployeeAddForm } from "@/ts/types";
 import api from "../api";
-import { IDepartments } from "@/ts/employee.interface";
+import { IDepartments } from "@/ts/departments.interface";
 
 interface IUserDetails {
   user_id: number;
