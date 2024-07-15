@@ -1,5 +1,6 @@
 import { IEmployeeAddForm } from "@/ts/types";
 import api from "../api";
+import { IDepartments } from "@/ts/employee.interface";
 
 interface IUserDetails {
   user_id: number;
@@ -36,7 +37,11 @@ export interface IAddEmployeeInterface {
 }
 
 export const addEmployee = (
-  form: IEmployeeAddForm,
+  form: IEmployeeAddForm
 ): Promise<IAddEmployeeInterface> => {
   return api.post("/users/register-employee/", form).then((res) => res.data);
+};
+
+export const searchDepartment = (): Promise<IDepartments> => {
+  return api.get("/hierarchy/hierarchy-departments/").then((res) => res.data);
 };

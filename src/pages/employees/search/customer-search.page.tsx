@@ -16,6 +16,7 @@ import {
 import classes from "./styles.module.scss";
 import SearchFilterCard from "./components/search-filter-card";
 import VerticalTextField from "@/components/textfield-vertical/textfield-vertical";
+import TextsmsOutlinedIcon from "@mui/icons-material/TextsmsOutlined";
 import {
   ChildCheckbox,
   TriStateCheckbox,
@@ -230,6 +231,10 @@ const EmployeeSearch = () => {
           ></SearchFilterCard>
         </div>
       </div>
+      <div className={classes["main__upper__buttons"]}>
+        <Button variant="outlined">Сбросить</Button>
+        <Button variant="contained">Искать</Button>
+      </div>
       <Divider />
       <div className={classes["main__lower"]}>
         <div className={classes["main__lower__container"]}>
@@ -255,7 +260,9 @@ const EmployeeSearch = () => {
                   <TableCell>{row.dateOfBirth}</TableCell>
                   <TableCell>{row.position}</TableCell>
                   <TableCell>
-                    <Button variant="contained">Подробнее</Button>
+                    <Button>
+                      <TextsmsOutlinedIcon sx={{ fontSize: "1.6rem" }} />
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))}
