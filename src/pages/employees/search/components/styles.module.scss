@@ -3,6 +3,7 @@
   flex-direction: column;
   width: auto;
   gap: 1rem;
+  cursor: pointer;
   &__title {
     font-size: 2.4rem;
     color: var(--primary-500);
