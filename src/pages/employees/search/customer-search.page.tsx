@@ -24,9 +24,16 @@ import {
 } from "@/components/intermediate-checkbox/intermediate-checkbox";
 import { useEffect, useState } from "react";
 import { getDepartment } from "@/service/department/department.service";
+import { searchEmployee } from "@/service/employee/employee.service";
 import { useQuery } from "@tanstack/react-query";
 import { IDepartmentData } from "@/ts/departments.interface";
-import { ISearchFormData } from "@/ts/employee.interface";
+import { ISearchFormData, IUserDetails } from "@/ts/employee.interface";
+import TextsmsOutlinedIcon from "@mui/icons-material/TextsmsOutlined";
+
+interface IOption {
+  label: string;
+  value: number;
+}
 
 const EmployeeSearch = () => {
   const [formData, setFormData] = useState<ISearchFormData>({
@@ -49,11 +56,32 @@ const EmployeeSearch = () => {
     reviewDateFrom: "",
     reviewDateTo: "",
     page: 1,
-    pageSize: 10,
+    page_size: 10,
   });
   const [selectedRoles, setSelectedRoles] = useState(
     formData.roleEmployee.split(", ").filter(Boolean)
   );
+  const [pageSize, setPageSize] = useState<IOption>({ label: "10", value: 10 });
+  const [page, setPage] = useState(1);
+
+  const pageSizeOptions: IOption[] = [
+    { label: "10", value: 10 },
+    { label: "20", value: 20 },
+    { label: "50", value: 50 },
+    { label: "100", value: 100 },
+  ];
+
+  useEffect(() => {
+    const defaultSize = pageSizeOptions.find((o) => o.value === pageSize.value);
+    if (defaultSize) setPageSize(defaultSize);
+  }, [pageSizeOptions]);
+
+  const handleFormDataChange = (field: keyof ISearchFormData, value: any) => {
+    setFormData((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
 
   const {
     data: departmentData,
@@ -65,8 +93,21 @@ const EmployeeSearch = () => {
     staleTime: 300,
   });
 
+  const {
+    data: employeeData,
+    refetch: refetchEmployeeData,
+    isPending: employeePending,
+    isError: employeeError,
+  } = useQuery({
+    queryKey: ["employeeData", page, pageSize],
+    queryFn: () => searchEmployee(formData),
+    enabled: false,
+  });
+
   const handleSubmit = () => {
-    console.log(formData);
+    searchEmployee(formData);
+    refetchEmployeeData();
+    console.log(employeeData);
   };
 
   const handleAutocompleteChange = (value: any, fieldName: string) => {
@@ -105,6 +146,10 @@ const EmployeeSearch = () => {
       roleEmployee: selectedRoles.join(", "),
     }));
   }, [selectedRoles]);
+
+  useEffect(() => {
+    refetchEmployeeData();
+  }, [formData.page_size]);
 
   return (
     <div className={classes["main"]}>
@@ -268,8 +313,6 @@ const EmployeeSearch = () => {
               </div>
             }
           ></SearchFilterCard>
-          {/* page?: number = 1; 
-           perPage?: number = 10; */}
         </div>
         <div className={classes["main__upper__position"]}>
           <SearchFilterCard
@@ -335,11 +378,12 @@ const EmployeeSearch = () => {
         </Button>
       </div>
       <Divider />
-      {/* <div className={classes["main__lower"]}>
+      <div className={classes["main__lower"]}>
         <div className={classes["main__lower__container"]}>
           <div className={classes["main__lower__container__row"]}>
             <p className={classes["main__lower__container__label"]}>
-              Показано 10 из 15 записей
+              Показано {employeeData?.results.length} из {employeeData?.count}{" "}
+              записей
             </p>
             <div>
               <p>
@@ -352,19 +396,22 @@ const EmployeeSearch = () => {
                       fontSize: "1.4rem",
                     },
                   }}
-                  options={[
-                    { label: "10", value: "10" },
-                    { label: "20", value: "20" },
-                    { label: "50", value: "50" },
-                    { label: "100", value: "100" },
-                  ]}
+                  options={pageSizeOptions}
                   getOptionLabel={(option) => option.label}
+                  value={pageSizeOptions.find(
+                    (option) => option.value === formData.page_size
+                  )}
+                  onChange={(event, newValue) => {
+                    if (newValue) {
+                      handleFormDataChange("page_size", newValue.value);
+                    }
+                  }}
                   renderInput={(params) => (
                     <TextField
                       sx={{ height: "30px" }}
                       {...params}
                       className={"main__lower__auto__input"}
-                    ></TextField>
+                    />
                   )}
                 />
                 записей
@@ -391,14 +438,18 @@ const EmployeeSearch = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {data.map((row, index) => (
+              {employeeData?.results.map((row, index) => (
                 <TableRow key={row.id}>
                   <TableCell>{index + 1}</TableCell>
-                  <TableCell>{row.name}</TableCell>
-                  <TableCell>{row.contactInfo}</TableCell>
-                  <TableCell>{row.age}</TableCell>
-                  <TableCell>{row.dateOfBirth}</TableCell>
-                  <TableCell>{row.position}</TableCell>
+                  <TableCell>
+                    {row.first_name} {row.last_name}
+                  </TableCell>
+                  <TableCell>
+                    {row.phone_number} <br /> {row.email}
+                  </TableCell>
+                  <TableCell>-</TableCell>
+                  <TableCell>{row.date_of_birth}</TableCell>
+                  <TableCell>{row.role}</TableCell>
                   <TableCell>
                     <Button>
                       <TextsmsOutlinedIcon sx={{ fontSize: "1.6rem" }} />
@@ -409,7 +460,7 @@ const EmployeeSearch = () => {
             </TableBody>
           </Table>
         </div>
-      </div> */}
+      </div>
     </div>
   );
 };
