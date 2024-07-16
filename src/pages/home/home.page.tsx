@@ -32,11 +32,33 @@ import PanToolAltIcon from "@/assets/icons/pan_tool_alt.svg";
 import classes from "./styles.module.scss";
 import "./custom.css";
 
+import { CreateAppointmentModal } from "@/modals";
+import NiceModal from "@ebay/nice-modal-react";
+import ResourceDropdownMenu from "./_components/resource-dropdown-menu";
+
 const Home = () => {
   const [isHide, setIsHide] = useState<boolean>(false);
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(dayjs());
   const calendarRef = useRef<FullCalendar | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
+
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [selectedResourceId, setSelectedResourceId] = useState<string | null>(
+    null
+  );
+
+  const handleResourceClick = (
+    resourceId: string,
+    event: React.MouseEvent<HTMLElement>
+  ) => {
+    setSelectedResourceId(resourceId);
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleCloseDropdownMenu = () => {
+    setAnchorEl(null);
+    setSelectedResourceId(null);
+  };
 
   const handleDateChange = (date: Dayjs | null) => {
     setSelectedDate(date);
@@ -51,7 +73,12 @@ const Home = () => {
   };
 
   const renderResource = (arg: ResourceApi) => (
-    <div className={classes["fullcalendar__user"]}>
+    <div
+      className={classes["fullcalendar__user"]}
+      onClick={(e) => {
+        handleResourceClick(arg.id, e);
+      }}
+    >
       <Avatar>H</Avatar>
       <h5 className={classes["fullcalendar__user--name"]}>{arg.title}</h5>
       <div
@@ -79,6 +106,13 @@ const Home = () => {
     return statuses[2];
   };
 
+  const handleCalendarDateSelect = (selectInfo: any) => {
+    const start = dayjs(selectInfo.start).format("YYYY-MM-DD HH:mm:ss");
+    const end = dayjs(selectInfo.end).format("YYYY-MM-DD HH:mm:ss");
+    console.log(selectInfo);
+    NiceModal.show(CreateAppointmentModal, { start, end });
+  };
+
   return (
     <div className={classes["home"]}>
       <div className={classes["home__top"]}>
@@ -100,6 +134,7 @@ const Home = () => {
             selectable={true}
             selectMirror={true}
             droppable={true}
+            select={handleCalendarDateSelect}
             headerToolbar={{
               left: "prev,next today",
               center: "title",
@@ -171,6 +206,11 @@ const Home = () => {
                 end: "2024-07-10T18:00:00",
               },
             ]}
+          />
+          <ResourceDropdownMenu
+            anchorEl={anchorEl}
+            onClose={handleCloseDropdownMenu}
+            resourceId={selectedResourceId || ""}
           />
         </div>
         <div
