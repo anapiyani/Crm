@@ -1,9 +1,11 @@
 import BreadcrumbsCustom from "@/components/navigation/breadcrumbs/breadcrumbs";
 
 import {
+  Alert,
   Autocomplete,
   Button,
   Checkbox,
+  CircularProgress,
   Divider,
   FormControlLabel,
   FormGroup,
@@ -83,6 +85,13 @@ const EmployeeSearch = () => {
     }));
   };
 
+  const handlePageChange = (
+    event: React.ChangeEvent<unknown>,
+    value: number
+  ) => {
+    handleFormDataChange("page", value);
+  };
+
   const {
     data: departmentData,
     isPending: departmentPending,
@@ -149,7 +158,7 @@ const EmployeeSearch = () => {
 
   useEffect(() => {
     refetchEmployeeData();
-  }, [formData.page_size]);
+  }, [formData.page_size, formData.page]);
 
   return (
     <div className={classes["main"]}>
@@ -378,89 +387,110 @@ const EmployeeSearch = () => {
         </Button>
       </div>
       <Divider />
-      <div className={classes["main__lower"]}>
-        <div className={classes["main__lower__container"]}>
-          <div className={classes["main__lower__container__row"]}>
-            <p className={classes["main__lower__container__label"]}>
-              Показано {employeeData?.results.length} из {employeeData?.count}{" "}
-              записей
-            </p>
-            <div>
-              <p>
-                Показывать
-                <Autocomplete
-                  size="small"
-                  sx={{
-                    "& .MuiAutocomplete-inputRoot": {
-                      padding: "0px 0px 0px 0px",
-                      fontSize: "1.4rem",
-                    },
-                  }}
-                  options={pageSizeOptions}
-                  getOptionLabel={(option) => option.label}
-                  value={pageSizeOptions.find(
-                    (option) => option.value === formData.page_size
-                  )}
-                  onChange={(event, newValue) => {
-                    if (newValue) {
-                      handleFormDataChange("page_size", newValue.value);
-                    }
-                  }}
-                  renderInput={(params) => (
-                    <TextField
-                      sx={{ height: "30px" }}
-                      {...params}
-                      className={"main__lower__auto__input"}
-                    />
-                  )}
-                />
+      {employeeError ? (
+        <Alert severity="error">Ошибка при получении данных!</Alert>
+      ) : null}
+      {employeePending ? (
+        <CircularProgress className={classes.loading} />
+      ) : (
+        <div className={classes["main__lower"]}>
+          <div className={classes["main__lower__container"]}>
+            <div className={classes["main__lower__container__row"]}>
+              <p className={classes["main__lower__container__label"]}>
+                Показано {employeeData?.results.length} из {employeeData?.count}{" "}
                 записей
               </p>
+              <div>
+                <p>
+                  Показывать
+                  <Autocomplete
+                    size="small"
+                    sx={{
+                      "& .MuiAutocomplete-inputRoot": {
+                        padding: "0px 0px 0px 0px",
+                        fontSize: "1.4rem",
+                      },
+                    }}
+                    options={pageSizeOptions}
+                    getOptionLabel={(option) => option.label}
+                    value={pageSizeOptions.find(
+                      (option) => option.value === formData.page_size
+                    )}
+                    onChange={(event, newValue) => {
+                      if (newValue) {
+                        handleFormDataChange("page_size", newValue.value);
+                      }
+                    }}
+                    renderInput={(params) => (
+                      <TextField
+                        sx={{ height: "30px" }}
+                        {...params}
+                        className={"main__lower__auto__input"}
+                      />
+                    )}
+                  />
+                  записей
+                </p>
+              </div>
+              <Pagination
+                count={
+                  employeeData
+                    ? Math.ceil(employeeData.count / formData.page_size)
+                    : 1
+                }
+                page={formData.page}
+                onChange={handlePageChange}
+                variant="outlined"
+                shape="rounded"
+                boundaryCount={1}
+                color="primary"
+              />
             </div>
-            <Pagination
-              count={11}
-              variant="outlined"
-              shape="rounded"
-              boundaryCount={1}
-              color="primary"
-            />
-          </div>
-          <Table className={classes.table}>
-            <TableHead>
-              <TableRow>
-                <TableCell>ID</TableCell>
-                <TableCell>Сотрудник</TableCell>
-                <TableCell>Контакты</TableCell>
-                <TableCell>Возраст</TableCell>
-                <TableCell>Дата рождения</TableCell>
-                <TableCell>Должность</TableCell>
-                <TableCell>Действия</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {employeeData?.results.map((row, index) => (
-                <TableRow key={row.id}>
-                  <TableCell>{index + 1}</TableCell>
-                  <TableCell>
-                    {row.first_name} {row.last_name}
-                  </TableCell>
-                  <TableCell>
-                    {row.phone_number} <br /> {row.email}
-                  </TableCell>
-                  <TableCell>-</TableCell>
-                  <TableCell>{row.date_of_birth}</TableCell>
-                  <TableCell>{row.role}</TableCell>
-                  <TableCell>
-                    <Button>
-                      <TextsmsOutlinedIcon sx={{ fontSize: "1.6rem" }} />
-                    </Button>
-                  </TableCell>
+            <Table className={classes.table}>
+              <TableHead>
+                <TableRow>
+                  <TableCell>ID</TableCell>
+                  <TableCell>Сотрудник</TableCell>
+                  <TableCell>Контакты</TableCell>
+                  <TableCell>Возраст</TableCell>
+                  <TableCell>Дата рождения</TableCell>
+                  <TableCell>Должность</TableCell>
+                  <TableCell>Действия</TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHead>
+              <TableBody>
+                {employeeData!.results?.length > 0 ? (
+                  employeeData!.results.map((row, index) => (
+                    <TableRow key={row.id}>
+                      <TableCell>{index + 1}</TableCell>
+                      <TableCell>
+                        {row.first_name} {row.last_name}
+                      </TableCell>
+                      <TableCell>
+                        {row.phone_number} <br /> {row.email}
+                      </TableCell>
+                      <TableCell>-</TableCell>
+                      <TableCell>{row.date_of_birth}</TableCell>
+                      <TableCell>{row.role}</TableCell>
+                      <TableCell>
+                        <Button>
+                          <TextsmsOutlinedIcon sx={{ fontSize: "1.6rem" }} />
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={7} style={{ textAlign: "center" }}>
+                      Нет данных по вашему запросу
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };
