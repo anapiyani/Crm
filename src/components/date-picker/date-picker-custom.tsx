@@ -11,6 +11,7 @@ const CustomDatePicker: React.FC<ICustomDatePickerProps> = ({ ...props }) => {
       {...props}
       className={classes["date-picker"]}
       placeholder={"DD.MM.YYYY"}
+      lang="ru"
     />
   );
 };

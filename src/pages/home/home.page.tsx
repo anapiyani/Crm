@@ -6,6 +6,7 @@ import {
   Avatar,
   Button,
 } from "@mui/material";
+import InputMask from "react-input-mask";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
@@ -16,9 +17,10 @@ import resourceTimeGridPlugin from "@fullcalendar/resource-timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import dayjs, { Dayjs } from "dayjs";
 
-import { Cached } from "@mui/icons-material";
+import { Cached, Search, AddCircle, Help } from "@mui/icons-material";
 import BreadcrumbsCustom from "@/components/navigation/breadcrumbs/breadcrumbs";
 import CustomDatePicker from "@/components/date-picker/date-picker-custom";
+import CustomTextField from "@/components/textField/textField.component";
 
 import classNames from "classnames";
 
@@ -34,6 +36,7 @@ const Home = () => {
   const [isHide, setIsHide] = useState<boolean>(false);
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(dayjs());
   const calendarRef = useRef<FullCalendar | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
   const handleDateChange = (date: Dayjs | null) => {
     setSelectedDate(date);
@@ -84,7 +87,7 @@ const Home = () => {
       </div>
 
       <div className={classes["home__main"]}>
-        <div className={classes["home__main__calendar"]}>
+        <div className={classes["home__main__calendar"]} ref={containerRef}>
           <FullCalendar
             ref={calendarRef}
             allDaySlot={false}
@@ -295,18 +298,91 @@ const Home = () => {
                   <Divider />
                   <div className={classes["prediction__date-picker"]}>
                     <CustomDatePicker />
-                    <span className={classes["prediction__date-picker--dash"]}>-</span>
+                    <span className={classes["prediction__date-picker--dash"]}>
+                      -
+                    </span>
                     <CustomDatePicker />
                     <Button
                       variant="contained"
                       sx={{
                         height: "4rem",
-                        borderRadius: "8px"
+                        borderRadius: "8px",
                       }}
                     >
                       <Cached />
                     </Button>
                   </div>
+                </div>
+
+                <div className={classes["client"]}>
+                  <h2 className={classes["u-h2"]}>Клиент</h2>
+                  <Divider />
+                  <div className={classes["client__id"]}>
+                    <CustomTextField
+                      label={""}
+                      placeholder="Имя / ID / номер карты"
+                      size="small"
+                      sx={{
+                        width: "100%",
+                      }}
+                    />
+                    <Button
+                      variant="contained"
+                      sx={{ height: "4rem", minWidth: "8.5rem", width: "8rem" }}
+                    >
+                      <Search />
+                    </Button>
+                  </div>
+                  <div className={classes["client__id"]}>
+                    <InputMask mask="+7 (999) 999 9999" maskChar=" ">
+                      {() => (
+                        <CustomTextField
+                          label={""}
+                          placeholder="Телефон"
+                          size="small"
+                          sx={{
+                            width: "100%",
+                          }}
+                        />
+                      )}
+                    </InputMask>
+                    <div className={classes["client__id--buttons"]}>
+                      <Button
+                        variant="outlined"
+                        sx={{
+                          width: "4rem",
+                          minWidth: "4rem",
+                          padding: "0",
+                          height: "4rem",
+                        }}
+                      >
+                        <Help />
+                      </Button>
+                      <Button
+                        variant="outlined"
+                        sx={{
+                          width: "4rem",
+                          minWidth: "4rem",
+                          padding: 0,
+                          height: "4rem",
+                        }}
+                      >
+                        <AddCircle />
+                      </Button>
+                    </div>
+                  </div>
+                  <Button
+                    variant="outlined"
+                    sx={{
+                      marginTop: "1rem",
+                      width: "100%",
+                      height: "4rem",
+                      fontWeight: 600,
+                      fontSize: "1.4rem",
+                    }}
+                  >
+                    Быстрая продажа
+                  </Button>
                 </div>
               </div>
             )}
