@@ -18,17 +18,43 @@ import {
 import classes from "./styles.module.scss";
 import SearchFilterCard from "./components/search-filter-card";
 import VerticalTextField from "@/components/textfield-vertical/textfield-vertical";
-import TextsmsOutlinedIcon from "@mui/icons-material/TextsmsOutlined";
 import {
   ChildCheckbox,
   TriStateCheckbox,
 } from "@/components/intermediate-checkbox/intermediate-checkbox";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getDepartment } from "@/service/department/department.service";
 import { useQuery } from "@tanstack/react-query";
 import { IDepartmentData } from "@/ts/departments.interface";
+import { ISearchFormData } from "@/ts/employee.interface";
 
 const EmployeeSearch = () => {
+  const [formData, setFormData] = useState<ISearchFormData>({
+    search: "",
+    phoneNumber: "",
+    userId: "",
+    email: "",
+    isActive: null,
+    employmentDateFrom: "",
+    employmentDateTo: "",
+    birthDateFrom: "",
+    birthDateTo: "",
+    ageFrom: "",
+    ageTo: "",
+    gender: "",
+    role: "employee",
+    roleEmployee: "",
+    reviewFrom: "",
+    reviewAbout: "",
+    reviewDateFrom: "",
+    reviewDateTo: "",
+    page: 1,
+    pageSize: 10,
+  });
+  const [selectedRoles, setSelectedRoles] = useState(
+    formData.roleEmployee.split(", ").filter(Boolean)
+  );
+
   const {
     data: departmentData,
     isPending: departmentPending,
@@ -38,6 +64,47 @@ const EmployeeSearch = () => {
     queryFn: getDepartment,
     staleTime: 300,
   });
+
+  const handleSubmit = () => {
+    console.log(formData);
+  };
+
+  const handleAutocompleteChange = (value: any, fieldName: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      [fieldName]: value,
+    }));
+  };
+
+  const handleRangeChange = (
+    fieldPrefix: string,
+    value: string,
+    boundary: "From" | "To"
+  ) => {
+    setFormData((prev) => ({
+      ...prev,
+      [`${fieldPrefix}${boundary}`]: value,
+    }));
+  };
+
+  const handleCheckboxChange = (role: string, isChecked: boolean) => {
+    setSelectedRoles((prev) => {
+      const set = new Set(prev);
+      if (isChecked) {
+        set.add(role);
+      } else {
+        set.delete(role);
+      }
+      return Array.from(set);
+    });
+  };
+
+  useEffect(() => {
+    setFormData((prev) => ({
+      ...prev,
+      roleEmployee: selectedRoles.join(", "),
+    }));
+  }, [selectedRoles]);
 
   return (
     <div className={classes["main"]}>
@@ -52,14 +119,43 @@ const EmployeeSearch = () => {
             title={"Основные данные"}
             children={
               <div className={classes["main__upper__card"]}>
-                <VerticalTextField label={"ФИО"} placeholder="Введите имя" />
                 <VerticalTextField
-                  label={"Телефон"}
-                  placeholder="Введите номер"
+                  label="ФИО"
+                  name="search"
+                  placeholder="Введите имя"
+                  value={formData.search}
+                  onChange={(event) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      search: event.target.value,
+                    }))
+                  }
                 />
+
                 <VerticalTextField
-                  label={"ID сотрудника"}
+                  label="Телефон"
+                  name="phoneNumber"
+                  placeholder="Введите номер"
+                  value={formData.phoneNumber}
+                  onChange={(event) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      phoneNumber: event.target.value,
+                    }))
+                  }
+                />
+
+                <VerticalTextField
+                  label="ID сотрудника"
+                  name="userId"
                   placeholder="Введите ID"
+                  value={formData.userId}
+                  onChange={(event) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      userId: event.target.value,
+                    }))
+                  }
                 />
               </div>
             }
@@ -69,51 +165,85 @@ const EmployeeSearch = () => {
             children={
               <div className={classes["main__upper__card"]}>
                 <VerticalTextField
-                  label={"Email"}
-                  placeholder="Введите email "
+                  label="Email"
+                  name="email"
+                  placeholder="Введите email"
+                  value={formData.email}
+                  onChange={(event) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      email: event.target.value,
+                    }))
+                  }
                 />
+
                 <VerticalTextField
-                  label={"Работает"}
+                  label="Работает"
                   placeholder="С"
                   placeholderOptional="По"
                   type="double"
-                  doubleDivier="-"
+                  onChangeFrom={(e) =>
+                    handleRangeChange("employmentDate", e.target.value, "From")
+                  }
+                  onChangeTo={(e) =>
+                    handleRangeChange("employmentDate", e.target.value, "To")
+                  }
                 />
+
                 <VerticalTextField
-                  label={"Дата рождения"}
+                  label="Дата рождения"
                   placeholder="С"
                   placeholderOptional="По"
                   type="double"
-                  doubleDivier="-"
+                  onChangeFrom={(e) =>
+                    handleRangeChange("birthDate", e.target.value, "From")
+                  }
+                  onChangeTo={(e) =>
+                    handleRangeChange("birthDate", e.target.value, "To")
+                  }
                 />
+
                 <VerticalTextField
-                  label={"Возраст"}
+                  label="Возраст"
                   placeholder="С"
                   placeholderOptional="По"
                   type="double"
-                  doubleDivier="-"
+                  onChangeFrom={(e) =>
+                    handleRangeChange("age", e.target.value, "From")
+                  }
+                  onChangeTo={(e) =>
+                    handleRangeChange("age", e.target.value, "To")
+                  }
                 />
                 <div className={classes["main__upper__checkboxes"]}>
                   <p>Пол</p>
                   <FormGroup sx={{ flexDirection: "row" }}>
                     <FormControlLabel
-                      sx={{
-                        fontSize: "1.6rem",
-                        "& .MuiTypography-root": {
-                          fontSize: "1.6rem",
-                        },
-                      }}
-                      control={<Checkbox />}
+                      control={
+                        <Checkbox
+                          checked={formData.gender === "male"}
+                          onChange={() =>
+                            setFormData((prev) => ({
+                              ...prev,
+                              gender: prev.gender === "male" ? "" : "male",
+                            }))
+                          }
+                        />
+                      }
                       label="Муж"
                     />
                     <FormControlLabel
-                      sx={{
-                        fontSize: "1.6rem",
-                        "& .MuiTypography-root": {
-                          fontSize: "1.6rem",
-                        },
-                      }}
-                      control={<Checkbox />}
+                      control={
+                        <Checkbox
+                          checked={formData.gender === "female"}
+                          onChange={() =>
+                            setFormData((prev) => ({
+                              ...prev,
+                              gender: prev.gender === "female" ? "" : "female",
+                            }))
+                          }
+                        />
+                      }
                       label="Жен"
                     />
                   </FormGroup>
@@ -125,22 +255,21 @@ const EmployeeSearch = () => {
                       { label: "Option 1", value: "1" },
                       { label: "Option 2", value: "2" },
                       { label: "Option 3", value: "3" },
-                      { label: "Option 4", value: "4" },
-                      { label: "Option 5", value: "5" },
                     ]}
                     getOptionLabel={(option) => option.label}
+                    onChange={(event, newValue) =>
+                      handleAutocompleteChange(newValue?.value, "role")
+                    }
                     renderInput={(params) => (
-                      <VerticalTextField
-                        label={"Статус"}
-                        placeholder="Выберите"
-                        {...params}
-                      />
+                      <TextField {...params} label="Статус" />
                     )}
                   />
                 </div>
               </div>
             }
           ></SearchFilterCard>
+          {/* page?: number = 1; 
+           perPage?: number = 10; */}
         </div>
         <div className={classes["main__upper__position"]}>
           <SearchFilterCard
@@ -154,8 +283,14 @@ const EmployeeSearch = () => {
                         <ChildCheckbox
                           key={position.name}
                           label={position.name}
-                          parentChecked={null}
-                          onChildChange={() => {}}
+                          parentChecked={selectedRoles.includes(position.name)}
+                          onChildChange={(isChecked) => console.log(isChecked)}
+                          onInputChange={(isChecked) =>
+                            handleCheckboxChange(
+                              position.name,
+                              isChecked ? true : false
+                            )
+                          }
                         />
                       ))}
                     </TriStateCheckbox>
@@ -195,10 +330,12 @@ const EmployeeSearch = () => {
       </div>
       <div className={classes["main__upper__buttons"]}>
         <Button variant="outlined">Сбросить</Button>
-        <Button variant="contained">Искать</Button>
+        <Button onClick={handleSubmit} variant="contained">
+          Искать
+        </Button>
       </div>
       <Divider />
-      <div className={classes["main__lower"]}>
+      {/* <div className={classes["main__lower"]}>
         <div className={classes["main__lower__container"]}>
           <div className={classes["main__lower__container__row"]}>
             <p className={classes["main__lower__container__label"]}>
@@ -216,11 +353,10 @@ const EmployeeSearch = () => {
                     },
                   }}
                   options={[
-                    { label: "Option 1", value: "1" },
-                    { label: "Option 2", value: "2" },
-                    { label: "Option 3", value: "3" },
-                    { label: "Option 4", value: "4" },
-                    { label: "Option 5", value: "5" },
+                    { label: "10", value: "10" },
+                    { label: "20", value: "20" },
+                    { label: "50", value: "50" },
+                    { label: "100", value: "100" },
                   ]}
                   getOptionLabel={(option) => option.label}
                   renderInput={(params) => (
@@ -255,7 +391,7 @@ const EmployeeSearch = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {/* {data.map((row, index) => (
+              {data.map((row, index) => (
                 <TableRow key={row.id}>
                   <TableCell>{index + 1}</TableCell>
                   <TableCell>{row.name}</TableCell>
@@ -269,11 +405,11 @@ const EmployeeSearch = () => {
                     </Button>
                   </TableCell>
                 </TableRow>
-              ))} */}
+              ))}
             </TableBody>
           </Table>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

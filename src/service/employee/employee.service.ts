@@ -45,3 +45,5 @@ export const addEmployee = (
 export const searchDepartment = (): Promise<IDepartments> => {
   return api.get("/hierarchy/hierarchy-departments/").then((res) => res.data);
 };
+
+// Search

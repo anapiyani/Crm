@@ -9,6 +9,8 @@ interface IProps extends Omit<TextFieldProps, "ref" | "variant"> {
   placeholder: string;
   placeholderOptional?: string;
   doubleDivier?: string;
+  onChangeFrom?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChangeTo?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const VerticalTextField: React.FC<IProps> = ({
@@ -17,6 +19,8 @@ const VerticalTextField: React.FC<IProps> = ({
   placeholderOptional,
   addClassName,
   doubleDivier,
+  onChangeFrom,
+  onChangeTo,
   type = "text", // Default type is text
   ...props
 }) => {
@@ -36,6 +40,7 @@ const VerticalTextField: React.FC<IProps> = ({
                 classes["main__double__inputDouble"],
                 addClassName
               )}
+              onChange={onChangeFrom}
             />
             <p>{doubleDivier}</p>
             <TextField
@@ -47,6 +52,7 @@ const VerticalTextField: React.FC<IProps> = ({
                 classes["main__double__inputDouble"],
                 addClassName
               )}
+              onChange={onChangeTo}
             />
           </div>
         );
