@@ -1,27 +1,11 @@
 import { IEmployeeAddForm } from "@/ts/types";
 import api from "../api";
 import { IDepartments } from "@/ts/departments.interface";
-
-interface IUserDetails {
-  user_id: number;
-  id: number;
-  email: string;
-  first_name: string;
-  last_name: string;
-  role: string;
-  gender: string;
-  date_of_birth: string;
-  phone_number: string;
-  phone_number_whatsapp: string;
-  position: string;
-  start_date: string;
-  city: string;
-  city_index: string;
-  street: string;
-  house: string;
-  apartment: string;
-  comment: string;
-}
+import {
+  IEmployeesData,
+  ISearchFormData,
+  IUserDetails,
+} from "@/ts/employee.interface";
 
 export interface IAddEmployeeInterface {
   id: number;
@@ -44,4 +28,17 @@ export const addEmployee = (
 
 export const searchDepartment = (): Promise<IDepartments> => {
   return api.get("/hierarchy/hierarchy-departments/").then((res) => res.data);
+};
+
+export const searchEmployee = (
+  formData: ISearchFormData
+): Promise<void | IEmployeesData> => {
+  const params = new URLSearchParams();
+  Object.entries(formData).forEach(([key, value]) => {
+    if (value) {
+      params.append(key, value.toString());
+    }
+  });
+  const url = `/users/?${params.toString()}`;
+  return api.get(url).then((res) => res.data);
 };

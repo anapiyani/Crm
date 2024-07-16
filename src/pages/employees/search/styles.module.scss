@@ -190,3 +190,10 @@
     border-right: 0px solid #ddd; /* Add border only at the left of the first cell in tbody */
   }
 }
+
+.loading {
+  position: absolute;
+  top: 50%;
+  left: 53%;
+  transform: translate(-50%, -50%);
+}

@@ -48,12 +48,14 @@ interface ChildCheckboxProps {
   label: string;
   parentChecked: boolean | null;
   onChildChange: (state: boolean | null) => void;
+  onInputChange: (state: boolean) => void;
 }
 
 const ChildCheckbox: React.FC<ChildCheckboxProps> = ({
   label,
   parentChecked,
   onChildChange,
+  onInputChange,
 }) => {
   const [checked, setChecked] = useState<boolean>(false);
 
@@ -67,6 +69,7 @@ const ChildCheckbox: React.FC<ChildCheckboxProps> = ({
     const newChecked = !checked;
     setChecked(newChecked);
     onChildChange(newChecked ? null : parentChecked);
+    onInputChange(newChecked);
   };
 
   return (
