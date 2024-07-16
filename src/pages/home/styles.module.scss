@@ -190,6 +190,8 @@
     flex-direction: column;
     align-items: center;
     font-family: "Roboto", sans-serif;
+    padding: 2rem 1rem 1rem 1rem;
+    cursor: pointer;
 
     &--name {
       font-size: 1.4rem;
@@ -241,6 +243,26 @@
     &--dash {
       width: 5px;
       font-size: 1.6rem;
+    }
+  }
+}
+
+.client {
+  margin-top: 3rem;
+
+  &__id {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 0.5rem;
+    align-items: center;
+
+    &--buttons {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 0.5rem;
     }
   }
 }
