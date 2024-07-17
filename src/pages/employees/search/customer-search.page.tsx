@@ -31,6 +31,7 @@ import { useQuery } from "@tanstack/react-query";
 import { IDepartmentData } from "@/ts/departments.interface";
 import { ISearchFormData, IUserDetails } from "@/ts/employee.interface";
 import TextsmsOutlinedIcon from "@mui/icons-material/TextsmsOutlined";
+import { Link } from "react-router-dom";
 
 interface IOption {
   label: string;
@@ -464,7 +465,9 @@ const EmployeeSearch = () => {
                     <TableRow key={row.id}>
                       <TableCell>{index + 1}</TableCell>
                       <TableCell>
-                        {row.first_name} {row.last_name}
+                        <Link className={classes.name_link} to="/">
+                          {row.first_name} {row.last_name}
+                        </Link>
                       </TableCell>
                       <TableCell>
                         {row.phone_number} <br /> {row.email}
