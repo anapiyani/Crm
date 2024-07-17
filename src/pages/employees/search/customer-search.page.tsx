@@ -117,7 +117,6 @@ const EmployeeSearch = () => {
   const handleSubmit = () => {
     searchEmployee(formData);
     refetchEmployeeData();
-    console.log(employeeData);
   };
 
   const handleAutocompleteChange = (value: any, fieldName: string) => {
