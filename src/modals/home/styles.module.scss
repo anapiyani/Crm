@@ -1,0 +1,14 @@
+.break-modal {
+  &__time {
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    gap: 3rem;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+}
+
+.u-p-0 {
+  padding: 2rem 0;
+}

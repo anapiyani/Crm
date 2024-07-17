@@ -2,6 +2,7 @@ import React from "react";
 import { Backdrop, Button, Divider } from "@mui/material";
 import { Clear, Done } from "@mui/icons-material";
 import classes from "./styles.module.scss";
+import classNames from "classnames";
 
 interface ModalWindowProps {
   title: string;
@@ -9,6 +10,7 @@ interface ModalWindowProps {
   handleClose: () => void;
   handleSave?: () => void;
   children: React.ReactNode;
+  className?: string;
 }
 
 const ModalWindow: React.FC<ModalWindowProps> = ({
@@ -17,6 +19,7 @@ const ModalWindow: React.FC<ModalWindowProps> = ({
   handleClose,
   handleSave,
   children,
+  className,
 }) => {
   return (
     <Backdrop
@@ -30,7 +33,11 @@ const ModalWindow: React.FC<ModalWindowProps> = ({
             <h2 className={classes["modal__window__title"]}>{title}</h2>
           </div>
           <Divider />
-          <div className={classes["modal__window__content"]}>{children}</div>
+          <div
+            className={classNames(classes["modal__window__content"], className)}
+          >
+            {children}
+          </div>
           <div className={classes["modal__window__bottom"]}>
             <Button
               variant="outlined"

@@ -1,6 +1,7 @@
 import React from "react";
 import NiceModal, { useModal } from "@ebay/nice-modal-react";
 import ModalWindow from "@/components/modal-window/modal-window";
+import classes from "./styles.module.scss";
 
 interface ICreateAppointmentModalProps {
   start: string;
@@ -18,6 +19,7 @@ const CreateAppointmentModal: React.FC<ICreateAppointmentModalProps> = ({
       title={"Запись клиента"}
       open={modal.visible}
       handleClose={() => modal.hide()}
+      className={classes["u-p-0"]}
     >
       <div>
         <h1>Modal</h1>
