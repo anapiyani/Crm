@@ -32,8 +32,8 @@ export const contactsData = [
 export const addressData = [{ property: "Адрес", value: "Нет данных." }];
 
 export const employeeTabsData = [
-  { to: "/employees", icon: HomeOutlined, label: "Обзор" },
-  { to: "/employees/visit", icon: ExitToAppOutlined, label: "Посещения" },
+  { to: "/employees/employee-card", icon: HomeOutlined, label: "Обзор" },
+  { to: "/employees/visits", icon: ExitToAppOutlined, label: "Посещения" },
   {
     to: "/employees/balance",
     icon: AccountBalanceWalletOutlined,

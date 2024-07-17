@@ -19,7 +19,7 @@ import {
 
 const ClientCard = () => {
   const [page, setPage] = useState(1);
-  const pageCount = 10; // Example page count
+  const pageCount = 10;
 
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,

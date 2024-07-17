@@ -1,8 +1,7 @@
 import React from "react";
 import { Box, Paper, Typography, IconButton, Pagination } from "@mui/material";
 import { RemoveRedEyeOutlined } from "@mui/icons-material";
-import VisitRow from "./visit-history-row/visit-history-row"; // Assuming VisitRow is in the same directory
-
+import VisitRow from "./visit-history-row/visit-history-row";
 interface Visit {
   description: string;
   cost: string;

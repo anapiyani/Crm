@@ -5,7 +5,8 @@ import CashDesk from "./cash-desk/cash-desk.page";
 //Customers
 import EmployeeCard from "./employees/employee-card/employee-card.page";
 import EmployeeAdd from "./employees/add/customer-add.page";
-import EmployeeSearch from "@/pages/employees/search/customer-search.page";
+import EmployeeSearch from "./employees/search/customer-search.page";
+import EmployeeVisits from "./employees/employee-visits/employee-visits.page";
 import Clients from "./clients/clients.page";
 import ClientCard from "@/pages/clients/client-card/client-card.page";
 import Activity from "./activity/activity.page";
@@ -41,4 +42,5 @@ export {
   ClientAdd,
   StorageSettings,
   EmployeeCabinet,
+  EmployeeVisits
 };
