@@ -21,7 +21,7 @@ const EmailLogin = ({ loginWPhone }: TProps) => {
   const mutation = useLoginMutation();
 
   const onLoginSubmit = (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
   ) => {
     e.preventDefault();
     if (email === "" || password === "") {
@@ -109,8 +109,8 @@ const EmailLogin = ({ loginWPhone }: TProps) => {
               }}
             />
             {mutation.isError ? (
-              <Alert sx={{ marginTop: 1, fontSize: 16 }} severity="error">
-                Неправильный номер, попробуйте еще раз
+              <Alert sx={{ fontSize: 14 }} severity="error">
+                Неправильный email или пароль, попробуйте еще раз
               </Alert>
             ) : (
               ""
@@ -119,7 +119,7 @@ const EmailLogin = ({ loginWPhone }: TProps) => {
               variant="contained"
               sx={{ marginTop: "20px" }}
               className={classNames(
-                classes["email__content__form__send__button"],
+                classes["email__content__form__send__button"]
               )}
               onClick={onLoginSubmit}
               disabled={mutation.status === "pending"}
