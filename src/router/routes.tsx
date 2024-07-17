@@ -16,6 +16,7 @@ import {
   ClientAdd,
   StorageSettings,
   EmployeeCabinet,
+  EmployeeVisits
 } from "@/pages";
 
 // import { Role } from "@/ts/types";
@@ -108,5 +109,10 @@ export const ROUTES: IRoute[] = [
     name: "Add client",
     path: "/clients/add",
     component: <ClientAdd />,
+  },
+  {
+    name: "Employee Visits",
+    path: "/employees/visits",
+    component: <EmployeeVisits />,
   },
 ];

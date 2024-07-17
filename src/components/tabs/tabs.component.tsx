@@ -26,13 +26,13 @@ const ResponsiveTabs = ({ tabsData }: ResponsiveTabsProps) => {
         }
         className={classes["dropdown"]}
         displayEmpty
-        sx={{ width: "100%" }}
+        sx={{ width: "100%", borderColor: "rgba(0, 0, 0, 0.23)", fontSize: "1.6rem" }}
       >
-        <MenuItem value="" disabled>
+        <MenuItem value="" disabled sx={{fontSize: "1.4rem"}}>
           Select Tab
         </MenuItem>
         {tabsData.map(({ to, icon: Icon, label }) => (
-          <MenuItem key={to} value={to}>
+          <MenuItem key={to} value={to} sx={{fontSize: "1.4rem"}}>
             <Icon style={{ marginRight: 8 }} />
             {label}
           </MenuItem>
