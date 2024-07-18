@@ -462,9 +462,12 @@ const EmployeeSearch = () => {
                 {employeeData!.results?.length > 0 ? (
                   employeeData!.results.map((row, index) => (
                     <TableRow key={row.id}>
-                      <TableCell>{index + 1}</TableCell>
+                      <TableCell>{row.user_id}</TableCell>
                       <TableCell>
-                        <Link className={classes.name_link} to="/">
+                        <Link
+                          className={classes.name_link}
+                          to={`/employees/${row.user_id}/${row.first_name} ${row.last_name}`}
+                        >
                           {row.first_name} {row.last_name}
                         </Link>
                       </TableCell>

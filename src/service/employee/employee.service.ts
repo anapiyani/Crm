@@ -2,6 +2,7 @@ import { IEmployeeAddForm } from "@/ts/types";
 import api from "../api";
 import { IDepartments } from "@/ts/departments.interface";
 import {
+  ICardInfoEmployee,
   IEmployeesData,
   ISearchFormData,
   IUserDetails,
@@ -41,4 +42,14 @@ export const searchEmployee = (
   });
   const url = `/users/?${params.toString()}`;
   return api.get(url).then((res) => res.data);
+};
+
+export const cardInfoEmplpyee = (
+  user_id: number
+): Promise<ICardInfoEmployee> => {
+  return api.get(`/information-card/${user_id}/`).then((res) => res.data);
+};
+
+export const mainInfoEmployee = (user_id: number): Promise<IUserDetails> => {
+  return api.get(`/users/${user_id}/`).then((res) => res.data);
 };

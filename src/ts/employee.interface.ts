@@ -40,6 +40,7 @@ export interface IUserDetails {
   house: string;
   apartment: string;
   comment: string;
+  is_active?: boolean;
 }
 
 export interface IEmployeesData {
@@ -47,4 +48,12 @@ export interface IEmployeesData {
   next: string | null;
   previous: string | null;
   results: IUserDetails[];
+}
+export interface ICardInfoEmployee {
+  id: number;
+  user: number;
+  appointments_count: number;
+  last_appointment: string;
+  revenue: string;
+  services_count: number;
 }

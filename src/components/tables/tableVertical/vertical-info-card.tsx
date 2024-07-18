@@ -34,8 +34,8 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 type DataRow = {
-  property: string;
-  value: string | number;
+  property?: string;
+  value?: string | number;
   link?: string;
   linkLabel?: string;
 };
@@ -168,7 +168,7 @@ const TableVertical: React.FC<TableVerticalProps> = ({
                 sx={{
                   textAlign: "left",
                   fontWeight: ["Фамилия", "Имя", "Отчество"].includes(
-                    row.property
+                    row.property!
                   )
                     ? "bold"
                     : "normal",
@@ -192,7 +192,10 @@ const TableVertical: React.FC<TableVerticalProps> = ({
                     {row.value}{" "}
                     <a
                       href={row.link}
-                      style={{ color: "var(--link-500)", textDecoration: "none" }}
+                      style={{
+                        color: "var(--link-500)",
+                        textDecoration: "none",
+                      }}
                     >
                       {row.linkLabel}
                     </a>
