@@ -31,6 +31,7 @@ import { useQuery } from "@tanstack/react-query";
 import { IDepartmentData } from "@/ts/departments.interface";
 import { ISearchFormData, IUserDetails } from "@/ts/employee.interface";
 import TextsmsOutlinedIcon from "@mui/icons-material/TextsmsOutlined";
+import { Link } from "react-router-dom";
 
 interface IOption {
   label: string;
@@ -116,7 +117,6 @@ const EmployeeSearch = () => {
   const handleSubmit = () => {
     searchEmployee(formData);
     refetchEmployeeData();
-    console.log(employeeData);
   };
 
   const handleAutocompleteChange = (value: any, fieldName: string) => {
@@ -462,9 +462,14 @@ const EmployeeSearch = () => {
                 {employeeData!.results?.length > 0 ? (
                   employeeData!.results.map((row, index) => (
                     <TableRow key={row.id}>
-                      <TableCell>{index + 1}</TableCell>
+                      <TableCell>{row.user_id}</TableCell>
                       <TableCell>
-                        {row.first_name} {row.last_name}
+                        <Link
+                          className={classes.name_link}
+                          to={`/employees/${row.user_id}/${row.first_name} ${row.last_name}`}
+                        >
+                          {row.first_name} {row.last_name}
+                        </Link>
                       </TableCell>
                       <TableCell>
                         {row.phone_number} <br /> {row.email}

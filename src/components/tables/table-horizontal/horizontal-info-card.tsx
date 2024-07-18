@@ -35,7 +35,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 type ContactRow = {
   type?: string;
-  contact: string;
+  contact?: string;
   primary?: boolean;
 };
 

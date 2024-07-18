@@ -77,7 +77,7 @@ export const ROUTES: IRoute[] = [
   },
   {
     name: "Employee card",
-    path: "employees/employee-card",
+    path: "employees/:id/:username",
     component: <EmployeeCard />,
   },
   {
