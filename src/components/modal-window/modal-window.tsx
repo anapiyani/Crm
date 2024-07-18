@@ -11,6 +11,7 @@ interface ModalWindowProps {
   handleSave?: () => void;
   children: React.ReactNode;
   className?: string;
+  withButtons?: boolean;
 }
 
 const ModalWindow: React.FC<ModalWindowProps> = ({
@@ -20,6 +21,7 @@ const ModalWindow: React.FC<ModalWindowProps> = ({
   handleSave,
   children,
   className,
+  withButtons = true,
 }) => {
   return (
     <Backdrop
@@ -38,23 +40,25 @@ const ModalWindow: React.FC<ModalWindowProps> = ({
           >
             {children}
           </div>
-          <div className={classes["modal__window__bottom"]}>
-            <Button
-              variant="outlined"
-              onClick={handleClose}
-              startIcon={<Clear />}
-            >
-              Отменить
-            </Button>
-            <Button
-              variant="contained"
-              disableElevation
-              startIcon={<Done />}
-              onClick={handleSave}
-            >
-              Сохранить
-            </Button>
-          </div>
+          {withButtons && (
+            <div className={classes["modal__window__bottom"]}>
+              <Button
+                variant="outlined"
+                onClick={handleClose}
+                startIcon={<Clear />}
+              >
+                Отменить
+              </Button>
+              <Button
+                variant="contained"
+                disableElevation
+                startIcon={<Done />}
+                onClick={handleSave}
+              >
+                Сохранить
+              </Button>
+            </div>
+          )}
         </div>
       </div>
     </Backdrop>
