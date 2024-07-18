@@ -21,7 +21,7 @@ interface NameData {
 interface InfoHeaderProps {
   tabsData: TabData[];
   nameData: NameData;
-  counterCardData: ICardInfoEmployee;
+  counterCardData?: ICardInfoEmployee;
 }
 
 const InfoHeader: React.FC<InfoHeaderProps> = ({
@@ -48,7 +48,7 @@ const InfoHeader: React.FC<InfoHeaderProps> = ({
                   iconColor="var(--success-main)"
                   textTitle="Выручка за все время"
                   valueText={
-                    counterCardData.revenue ? counterCardData.revenue : "0"
+                    counterCardData?.revenue ? counterCardData.revenue : "0"
                   }
                 />
                 <CounterCard
@@ -56,8 +56,8 @@ const InfoHeader: React.FC<InfoHeaderProps> = ({
                   iconColor="var(--primary-main)"
                   textTitle="Обслуженные посещения"
                   valueText={
-                    counterCardData.services_count
-                      ? counterCardData.services_count.toString()
+                    counterCardData?.services_count
+                      ? counterCardData?.services_count.toString()
                       : "0"
                   }
                 />
