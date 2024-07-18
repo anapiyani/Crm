@@ -4,7 +4,6 @@ import {
   Man3,
   Restore,
 } from "@mui/icons-material";
-import { Adjust, Inventory, CardGiftcard } from "@mui/icons-material";
 
 export const eventTabs = [
   { to: "/tab1", icon: Info, label: "Запись" },
