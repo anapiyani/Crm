@@ -16,7 +16,7 @@ import {
   HelpOutline,
 } from "@mui/icons-material";
 import classes from "./styles.module.scss";
-import CustomDatePicker from "./_components/datepicker";
+import CustomDatePicker from "./components/datepicker";
 
 const AppointmentForm: React.FC = () => {
   return (
