@@ -2,7 +2,7 @@
   padding: 3rem 7rem;
   &__content {
     display: flex;
-    &__storages {
+    &__cabinets {
       padding: 3rem 0;
       width: 60rem;
       margin-right: 5rem;
@@ -30,7 +30,7 @@
             list-style: none;
             font-size: 1.6rem;
             font-weight: 400;
-            margin-top: 1rem;
+
             button {
               display: flex;
               flex-direction: column;
@@ -39,6 +39,9 @@
               width: 50%;
               padding: 1.5rem;
               justify-content: center;
+              &.selected {
+                background-color: #2196f314;
+              }
               p {
                 font-size: 1.6rem;
                 font-weight: 400;
