@@ -48,8 +48,7 @@ interface ChildCheckboxProps {
   label: string;
   parentChecked: boolean | null;
   onChildChange: (state: boolean | null) => void;
-  onInputChange: (newChecked: boolean) => void;
-  selected: boolean | boolean[];
+  onInputChange: (state: boolean) => void;
 }
 
 const ChildCheckbox: React.FC<ChildCheckboxProps> = ({
@@ -57,7 +56,6 @@ const ChildCheckbox: React.FC<ChildCheckboxProps> = ({
   parentChecked,
   onChildChange,
   onInputChange,
-  selected,
 }) => {
   const [checked, setChecked] = useState<boolean>(false);
 
@@ -78,11 +76,7 @@ const ChildCheckbox: React.FC<ChildCheckboxProps> = ({
     <div className={classes["row"]}>
       <input
         type="checkbox"
-        checked={
-          checked ||
-          (typeof selected === "boolean" && selected) ||
-          (Array.isArray(selected) && selected.includes(true))
-        }
+        checked={checked}
         onChange={handleCheckboxChange}
       />
       <label className={classes["row__label"]}>{label}</label>
@@ -91,7 +85,3 @@ const ChildCheckbox: React.FC<ChildCheckboxProps> = ({
 };
 
 export { TriStateCheckbox, ChildCheckbox };
-
-function onInputChange(newChecked: boolean) {
-  throw new Error("Function not implemented.");
-}
