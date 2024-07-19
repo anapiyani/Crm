@@ -76,3 +76,9 @@ export interface IServiceCategory {
   children: IServiceCategory[];
   services: IService[];
 }
+export interface IRoom {
+  id: number;
+  name: string;
+  available_online: boolean;
+  services: number[];
+}
