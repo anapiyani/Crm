@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import NiceModal from "@ebay/nice-modal-react";
 import toast from "react-hot-toast";
 
@@ -44,6 +44,7 @@ import {
   getSchedules,
 } from "@/service/schedule/schedule.service";
 import { transformSchedulesToFullCalendar } from "@/utils/transform-data";
+import { useAddBreakToSchedule } from "@/service/schedule/schedule.hook";
 
 const Home = () => {
   const queryClient = useQueryClient();
@@ -59,10 +60,9 @@ const Home = () => {
   const [resources, setResources] = useState<any[]>([]);
 
   const { data: schedulesData, isPending: scheduesDataPending } = useQuery({
-    queryKey: ["schedules", selectedDate?.format("YYYY-MM-DD")],
+    queryKey: ["schedules", selectedDate],
     queryFn: () => getScheduleByDate(dayjs(selectedDate).format("YYYY-MM-DD")),
     staleTime: 1000 * 60 * 5,
-    refetchOnMount: false,
     refetchOnWindowFocus: false,
   });
 
@@ -72,16 +72,20 @@ const Home = () => {
         transformSchedulesToFullCalendar(schedulesData);
       setEvents(events);
       setResources(resources);
+
+      if (calendarRef.current) {
+        calendarRef.current.render();
+      }
     }
   }, [schedulesData]);
 
-  if (scheduesDataPending) {
-    return (
-      <div className="">
-        <CircularProgress />
-      </div>
-    );
-  }
+  const handleDateChange = useCallback((date: Dayjs | null) => {
+    setSelectedDate(date);
+    if (calendarRef.current) {
+      const calendarApi = calendarRef.current.getApi();
+      calendarApi.gotoDate(date!.toDate());
+    }
+  }, []);
 
   const handleResourceClick = (
     resourceId: string,
@@ -95,22 +99,15 @@ const Home = () => {
     NiceModal.show(EventDetailsModal);
   };
 
+  const handleDatesSet = (arg: any) => {
+    const calendarApi = calendarRef.current?.getApi();
+    const currentDate = calendarApi?.getDate();
+    setSelectedDate(dayjs(currentDate));
+  };
+
   const handleCloseDropdownMenu = () => {
     setAnchorEl(null);
     setSelectedResourceId(null);
-  };
-
-  const handleDateChange = (date: Dayjs | null) => {
-    setSelectedDate(date);
-    console.log("calendar ref", calendarRef.current);
-    if (calendarRef.current) {
-      const calendarApi = calendarRef.current.getApi();
-      calendarApi.gotoDate(date!.toDate());
-
-      queryClient.invalidateQueries({
-        queryKey: ["schedules", selectedDate?.format("YYYY-MM-DD")],
-      });
-    }
   };
 
   const handlePanelHide = () => {
@@ -144,18 +141,6 @@ const Home = () => {
     </div>
   );
 
-  const getStatus = () => {
-    const statuses = [
-      "scheduled",
-      "completed",
-      "underway",
-      "late",
-      "no_show",
-      "unconfirmed",
-    ];
-    return statuses[2];
-  };
-
   const handleCalendarDateSelect = (selectInfo: any) => {
     const start = dayjs(selectInfo.start).format("YYYY-MM-DD HH:mm:ss");
     const end = dayjs(selectInfo.end).format("YYYY-MM-DD HH:mm:ss");
@@ -186,10 +171,35 @@ const Home = () => {
               selectMirror={true}
               droppable={true}
               select={handleCalendarDateSelect}
+              datesSet={handleDatesSet}
+              customButtons={{
+                shiftReport: {
+                  text: "Отчет смены",
+                  click: function () {
+                    toast.success("Отчет смены");
+                  },
+                },
+                weekButton: {
+                  text: "Неделя",
+                  click: function () {
+                    toast.success("Неделя");
+                  },
+                },
+                menuButton: {
+                  text: "Меню",
+                  click: function () {
+                    toast.success("Menu");
+                  },
+                },
+                settingsButton: {
+                  text: "Настройки",
+                  click: function () {},
+                },
+              }}
               headerToolbar={{
-                left: "prev,next today",
+                left: "prev next today shiftReport",
                 center: "title",
-                right: "resourceTimeGridDay",
+                right: "weekButton menuButton settingsButton",
               }}
               slotLabelFormat={{
                 hour: "numeric",

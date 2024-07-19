@@ -12,7 +12,9 @@ import EmployeeVisitsTable from "./visits-table/employee-visits-table";
 const EmployeeVisits = () => {
   return (
     <div className={classes["main"]}>
-      <InfoHeader tabsData={employeeTabsData} nameData={employeeNameData} />
+      <InfoHeader tabsData={employeeTabsData} nameData={{
+        name: "123"
+      }} />
       <Grid
         container
         sx={{
