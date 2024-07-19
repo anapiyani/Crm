@@ -1,15 +1,20 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import NiceModal from "@ebay/nice-modal-react";
+import toast from "react-hot-toast";
+
 import {
   Autocomplete,
   Divider,
   TextField,
   Avatar,
   Button,
+  CircularProgress,
 } from "@mui/material";
 import InputMask from "react-input-mask";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
+import { Cached, Search, AddCircle, Help } from "@mui/icons-material";
 
 import { ResourceApi } from "@fullcalendar/resource/index.js";
 import FullCalendar from "@fullcalendar/react";
@@ -17,10 +22,11 @@ import resourceTimeGridPlugin from "@fullcalendar/resource-timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
 import dayjs, { Dayjs } from "dayjs";
 
-import { Cached, Search, AddCircle, Help } from "@mui/icons-material";
 import BreadcrumbsCustom from "@/components/navigation/breadcrumbs/breadcrumbs";
 import CustomDatePicker from "@/components/date-picker/date-picker-custom";
 import CustomTextField from "@/components/textField/textField.component";
+import ResourceDropdownMenu from "./_components/resource-dropdown-menu";
+import { CreateAppointmentModal, EventDetailsModal } from "@/modals";
 
 import classNames from "classnames";
 
@@ -29,15 +35,19 @@ import { calendarStatuses } from "./data";
 import ArrowRightHideIcon from "@/assets/icons/arrow-right-hide.svg";
 import ArrowLeftIcon from "@/assets/icons/arrow-left.svg";
 import PanToolAltIcon from "@/assets/icons/pan_tool_alt.svg";
+
 import classes from "./styles.module.scss";
 import "./custom.css";
-
-import { CreateAppointmentModal, EventDetailsModal } from "@/modals";
-import NiceModal from "@ebay/nice-modal-react";
-import ResourceDropdownMenu from "./_components/resource-dropdown-menu";
-import toast from "react-hot-toast";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  getScheduleByDate,
+  getSchedules,
+} from "@/service/schedule/schedule.service";
+import { transformSchedulesToFullCalendar } from "@/utils/transform-data";
+import { useAddBreakToSchedule } from "@/service/schedule/schedule.hook";
 
 const Home = () => {
+  const queryClient = useQueryClient();
   const [isHide, setIsHide] = useState<boolean>(false);
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(dayjs());
   const calendarRef = useRef<FullCalendar | null>(null);
@@ -46,6 +56,36 @@ const Home = () => {
   const [selectedResourceId, setSelectedResourceId] = useState<string | null>(
     null
   );
+  const [events, setEvents] = useState<any[]>([]);
+  const [resources, setResources] = useState<any[]>([]);
+
+  const { data: schedulesData, isPending: scheduesDataPending } = useQuery({
+    queryKey: ["schedules", selectedDate],
+    queryFn: () => getScheduleByDate(dayjs(selectedDate).format("YYYY-MM-DD")),
+    staleTime: 1000 * 60 * 5,
+    refetchOnWindowFocus: false,
+  });
+
+  useEffect(() => {
+    if (schedulesData) {
+      const { events, resources } =
+        transformSchedulesToFullCalendar(schedulesData);
+      setEvents(events);
+      setResources(resources);
+
+      if (calendarRef.current) {
+        calendarRef.current.render();
+      }
+    }
+  }, [schedulesData]);
+
+  const handleDateChange = useCallback((date: Dayjs | null) => {
+    setSelectedDate(date);
+    if (calendarRef.current) {
+      const calendarApi = calendarRef.current.getApi();
+      calendarApi.gotoDate(date!.toDate());
+    }
+  }, []);
 
   const handleResourceClick = (
     resourceId: string,
@@ -56,21 +96,18 @@ const Home = () => {
   };
 
   const handleEventClick = (clickInfo: any) => {
-    console.log(clickInfo);
     NiceModal.show(EventDetailsModal);
+  };
+
+  const handleDatesSet = (arg: any) => {
+    const calendarApi = calendarRef.current?.getApi();
+    const currentDate = calendarApi?.getDate();
+    setSelectedDate(dayjs(currentDate));
   };
 
   const handleCloseDropdownMenu = () => {
     setAnchorEl(null);
     setSelectedResourceId(null);
-  };
-
-  const handleDateChange = (date: Dayjs | null) => {
-    setSelectedDate(date);
-    if (calendarRef.current && date) {
-      const calendarApi = calendarRef.current.getApi();
-      calendarApi.gotoDate(date.toDate());
-    }
   };
 
   const handlePanelHide = () => {
@@ -84,7 +121,12 @@ const Home = () => {
         handleResourceClick(arg.id, e);
       }}
     >
-      <Avatar>H</Avatar>
+      <Avatar>
+        {arg.title
+          .split(" ")
+          .map((word) => word[0])
+          .join("")}
+      </Avatar>
       <h5 className={classes["fullcalendar__user--name"]}>{arg.title}</h5>
       <div
         className={classNames(
@@ -93,23 +135,11 @@ const Home = () => {
         )}
       >
         <img src={PanToolAltIcon} alt="pan-tool" />
-        <p>профессия</p>
+        <p>{arg._resource.extendedProps.role}</p>
       </div>
       <p className={classes["fullcalendar__user--time"]}>08:00 - 22:00</p>
     </div>
   );
-
-  const getStatus = () => {
-    const statuses = [
-      "scheduled",
-      "completed",
-      "underway",
-      "late",
-      "no_show",
-      "unconfirmed",
-    ];
-    return statuses[2];
-  };
 
   const handleCalendarDateSelect = (selectInfo: any) => {
     const start = dayjs(selectInfo.start).format("YYYY-MM-DD HH:mm:ss");
@@ -141,10 +171,35 @@ const Home = () => {
               selectMirror={true}
               droppable={true}
               select={handleCalendarDateSelect}
+              datesSet={handleDatesSet}
+              customButtons={{
+                shiftReport: {
+                  text: "Отчет смены",
+                  click: function () {
+                    toast.success("Отчет смены");
+                  },
+                },
+                weekButton: {
+                  text: "Неделя",
+                  click: function () {
+                    toast.success("Неделя");
+                  },
+                },
+                menuButton: {
+                  text: "Меню",
+                  click: function () {
+                    toast.success("Menu");
+                  },
+                },
+                settingsButton: {
+                  text: "Настройки",
+                  click: function () {},
+                },
+              }}
               headerToolbar={{
-                left: "prev,next today",
+                left: "prev next today shiftReport",
                 center: "title",
-                right: "resourceTimeGridDay",
+                right: "weekButton menuButton settingsButton",
               }}
               slotLabelFormat={{
                 hour: "numeric",
@@ -157,62 +212,33 @@ const Home = () => {
                   <div
                     className={classNames(
                       classes["fullcalendar__event"],
-                      classes[`fullcalendar__event--${getStatus()}`]
+                      classes[
+                        `fullcalendar__event--${eventInfo.event.extendedProps.status}`
+                      ]
                     )}
                   >
                     <div
                       className={classNames(
                         classes["fullcalendar__event--header"],
-                        classes[`fullcalendar__event--${getStatus()}--header`]
+                        classes[
+                          `fullcalendar__event--${eventInfo.event.extendedProps.status}--header`
+                        ]
                       )}
                     >
                       {eventInfo.timeText}
                     </div>
                     <div className={classes["fullcalendar__event--body"]}>
                       <p>{eventInfo.event.title}</p>
-                      <p>location</p>
                     </div>
                   </div>
                 );
               }}
               eventClick={handleEventClick}
-              resources={[
-                { id: "a", title: "Nurik" },
-                { id: "b", title: "Django" },
-                { id: "c", title: "Yesset" },
-                { id: "d", title: "Yesset" },
-                { id: "e", title: "Yesset" },
-                { id: "f", title: "Yesset" },
-                { id: "g", title: "Yesset" },
-                { id: "h", title: "Yesset" },
-                { id: "i", title: "Yesset" },
-              ]}
+              resources={resources}
               resourceLabelContent={(arg) =>
                 renderResource(arg.resource as ResourceApi)
               }
-              events={[
-                {
-                  id: "1",
-                  resourceId: "a",
-                  title: "event 1",
-                  start: "2024-07-12T14:00:00",
-                  end: "2024-07-12T18:00:00",
-                },
-                {
-                  id: "2",
-                  resourceId: "b",
-                  title: "event 2",
-                  start: "2024-07-12T14:00:00",
-                  end: "2024-07-12T18:00:00",
-                },
-                {
-                  id: "3",
-                  resourceId: "c",
-                  title: "event 3",
-                  start: "2024-07-10T14:00:00",
-                  end: "2024-07-10T18:00:00",
-                },
-              ]}
+              events={events}
             />
             <ResourceDropdownMenu
               anchorEl={anchorEl}

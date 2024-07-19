@@ -17,6 +17,20 @@ export interface IBreaks {
   end_time: string;
 }
 
+export interface IAppointment {
+  id: number;
+  client: number;
+  employee: number;
+  status: string;
+  date: string;
+  start_time: string;
+  end_time: string;
+  discount_custom: number | null;
+  notes: string;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface ISchedule {
   id: number;
   employee: IEmployee;
@@ -27,5 +41,5 @@ export interface ISchedule {
   };
   notes: string;
   breaks: IBreaks[];
-  appointments: [];
+  appointments: IAppointment[];
 }

@@ -1,6 +1,18 @@
 .fc-license-message {
   display: none;
 }
+
+.fc {
+  height: 97% !important;
+}
+
+.fc .fc-toolbar .fc-toolbar-title {
+  font-size: 1.6rem !important;
+  color: rgba(0, 0, 0, 0.6) !important;
+  font-weight: 500 !important;
+  font-family: "Roboto", sans-serif !important;
+}
+
 .fc .fc-timegrid-axis {
   border-right: none;
 }
@@ -35,4 +47,39 @@
 .fc-timegrid-body,
 .fc-timegrid-body table {
   width: 100% !important;
+}
+
+.fc-today-button {
+  border: 1px solid #97c3f0 !important;
+  font-weight: 600 !important;
+  font-size: 1.2rem !important;
+  color: var(--brand-500) !important;
+}
+
+.fc-shiftReport-button {
+  border: 1px solid #97c3f0 !important;
+  font-weight: 600 !important;
+  font-size: 1.2rem !important;
+  color: var(--brand-500) !important;
+}
+
+.fc-weekButton-button {
+  border: 1px solid #97c3f0 !important;
+  font-weight: 600 !important;
+  font-size: 1.2rem !important;
+  color: var(--brand-500) !important;
+}
+
+.fc-prev-button {
+  width: 2.95rem;
+  height: 2.95rem;
+}
+
+.fc-next-button {
+  width: 2.95rem;
+  height: 2.95rem;
+}
+
+.fc .fc-view-harness {
+  height: 110rem !important;
 }

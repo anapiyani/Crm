@@ -9,6 +9,41 @@
   }
 }
 
+.create-appointment {
+  &__params-text {
+    font-size: 1.6rem;
+    font-weight: 400;
+    line-height: 2.4rem;
+    color: var(--brand-500);
+  }
+
+  &__services {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__buttons {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 4rem;
+
+    &--right {
+      gap: 0.5rem;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+    }
+  }
+}
+
 .u-p-0 {
   padding: 2rem 0;
+}
+
+.u-full-zero {
+  padding: 0;
 }
