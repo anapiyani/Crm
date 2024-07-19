@@ -343,6 +343,7 @@ const EmployeeSearch = () => {
                               isChecked ? true : false
                             )
                           }
+                          selected={false}
                         />
                       ))}
                     </TriStateCheckbox>
