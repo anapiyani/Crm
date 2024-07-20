@@ -7,10 +7,6 @@ import { data } from "@/pages/employees/employee-visits/data";
 import EmployeeVisitsTable from "./visits-table/employee-visits-table";
 
 const EmployeeVisits = () => {
-  const employeeNameData = {
-    name: `Карта сотрудника - Alex Smith`,
-  };
-
   return (
     <div className={classes["main"]}>
       <InfoHeader
