@@ -41,7 +41,7 @@ const InfoHeader: React.FC<InfoHeaderProps> = ({
           </div>
           <ResponsiveTabs tabsData={tabsData} />
           <div className={classes["main__header__upper__row"]}>
-            <Grid container xl={12} md={12} xs={9} sx={{ gap: "0.8rem" }}>
+            <Grid container xl={12} sx={{ gap: "0.8rem" }}>
               <div className={classes["main__header__upper__row__cards"]}>
                 <CounterCard
                   backgroundColor="rgba(76, 175, 80, 0.3)"

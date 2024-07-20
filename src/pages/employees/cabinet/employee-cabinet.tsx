@@ -13,6 +13,7 @@ import CreateCabinetModal from "@/modals/employees/create-cabinet.modal";
 import { useUpdateRoom } from "@/service/rooms/rooms.hook";
 
 const EmployeeCabinet = () => {
+  const updateRoom = useUpdateRoom();
   const [selectedRoom, setSelectedRoom] = useState<number | null>(null);
   const [selectedItems, setSelectedItems] = useState<
     { id: number; type: "service" | "category" }[]
@@ -46,7 +47,7 @@ const EmployeeCabinet = () => {
       .filter((item) => item.type === "service")
       .map((item) => item.id);
 
-    useUpdateRoom().mutate(room);
+    updateRoom.mutate(room);
   };
 
   const { data: roomData } = useQuery({

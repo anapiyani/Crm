@@ -430,32 +430,22 @@ const EmployeeSearch = () => {
               <div>
                 <div className={classes["tableSettings"]}>
                   Показывать
-                  <Autocomplete
-                    size="small"
-                    sx={{
-                      "& .MuiAutocomplete-inputRoot": {
-                        padding: "0px 0px 0px 0px",
-                        fontSize: "1.4rem",
-                      },
-                    }}
-                    options={pageSizeOptions}
-                    getOptionLabel={(option) => option.label}
-                    value={pageSizeOptions.find(
-                      (option) => option.value === formData.page_size
-                    )}
-                    onChange={(event, newValue) => {
-                      if (newValue) {
-                        handleFormDataChange("page_size", newValue.value);
-                      }
-                    }}
-                    renderInput={(params) => (
-                      <TextField
-                        sx={{ height: "30px" }}
-                        {...params}
-                        className={"main__lower__auto__input"}
-                      />
-                    )}
-                  />
+                  <select
+                    name="pageSize"
+                    id="pageSize"
+                    value={formData.page_size}
+                    onChange={(event) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        page_size: parseInt(event.target.value),
+                      }))
+                    }
+                  >
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                  </select>
                   записей
                 </div>
               </div>

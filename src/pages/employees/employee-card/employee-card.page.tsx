@@ -101,13 +101,7 @@ const EmployeeCard = () => {
         xs={9}
         md={12}
       >
-        <Grid
-          container
-          lg={5}
-          md={5}
-          xl={3.5}
-          sx={{ alignItems: "flex-start" }}
-        >
+        <Grid container lg={5} xl={3.5} sx={{ alignItems: "flex-start" }}>
           <TableVertical data={mainTableData} title="Главное" showLockIcon />
         </Grid>
 
