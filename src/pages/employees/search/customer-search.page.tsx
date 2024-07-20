@@ -85,7 +85,7 @@ const EmployeeSearch = () => {
       [field]: value,
     }));
   };
-
+  
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
     value: number
@@ -401,7 +401,7 @@ const EmployeeSearch = () => {
                 записей
               </p>
               <div>
-                <div>
+                <p>
                   Показывать
                   <Autocomplete
                     size="small"
@@ -430,7 +430,7 @@ const EmployeeSearch = () => {
                     )}
                   />
                   записей
-                </div>
+                </p>
               </div>
               <Pagination
                 count={
@@ -466,10 +466,7 @@ const EmployeeSearch = () => {
                       <TableCell>
                         <Link
                           className={classes.name_link}
-                          to={`/employees/${row.user_id}`}
-                          state={{
-                            username: `${row.first_name} ${row.last_name}`,
-                          }}
+                          to={`/employees/${row.user_id}/${row.first_name} ${row.last_name}`}
                         >
                           {row.first_name} {row.last_name}
                         </Link>
