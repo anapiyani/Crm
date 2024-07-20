@@ -85,7 +85,7 @@ const EmployeeSearch = () => {
       [field]: value,
     }));
   };
-  
+
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
     value: number
@@ -146,6 +146,31 @@ const EmployeeSearch = () => {
         set.delete(role);
       }
       return Array.from(set);
+    });
+  };
+
+  const handleClear = () => {
+    setFormData({
+      search: "",
+      phoneNumber: "",
+      userId: "",
+      email: "",
+      isActive: null,
+      employmentDateFrom: "",
+      employmentDateTo: "",
+      birthDateFrom: "",
+      birthDateTo: "",
+      ageFrom: "",
+      ageTo: "",
+      gender: "",
+      role: "employee",
+      roleEmployee: "",
+      reviewFrom: "",
+      reviewAbout: "",
+      reviewDateFrom: "",
+      reviewDateTo: "",
+      page: 1,
+      page_size: 10,
     });
   };
 
@@ -381,7 +406,9 @@ const EmployeeSearch = () => {
         </div>
       </div>
       <div className={classes["main__upper__buttons"]}>
-        <Button variant="outlined">Сбросить</Button>
+        <Button onClick={handleClear} variant="outlined">
+          Сбросить
+        </Button>
         <Button onClick={handleSubmit} variant="contained">
           Искать
         </Button>
@@ -401,7 +428,7 @@ const EmployeeSearch = () => {
                 записей
               </p>
               <div>
-                <div>
+                <div className={classes["tableSettings"]}>
                   Показывать
                   <Autocomplete
                     size="small"

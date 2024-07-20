@@ -23,11 +23,11 @@ const ClientsAdd = () => {
       <div className={classes["main__upper"]}>
         <BreadcrumbsCustom />
         <h1 className={classes["main__upper__title"]}>
-          Создание карты сотрудника
+          Создание карты клиента
         </h1>
         <p className={classes["main__upper__subtitle"]}>
           Вы можете добавить дополнительную информацию здесь либо внести ее
-          позже, зайдя в карту сотрудника.
+          позже, зайдя в карту клиента.
         </p>
       </div>
       <form className={classes["main__lower"]}>
@@ -225,7 +225,7 @@ const ClientsAdd = () => {
               }
             ></InputCard>
             <InputCard
-              title={"Главное"}
+              title={"Привелечение клиента"}
               children={
                 <div className={classes["main__lower__container__card"]}>
                   <Autocomplete
