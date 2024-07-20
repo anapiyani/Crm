@@ -2,8 +2,16 @@ import {
   Autocomplete,
   Button,
   Checkbox,
+  Divider,
   FormControlLabel,
   FormGroup,
+  Link,
+  Pagination,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
   TextField,
 } from "@mui/material";
 import classes from "./styles.module.scss";
@@ -146,6 +154,74 @@ const ClientSearch = () => {
       <div className={classes["main__upper__buttons"]}>
         <Button variant="outlined">Сбросить</Button>
         <Button variant="contained">Искать</Button>
+      </div>
+      <Divider />
+      <div className={classes["main__lower"]}>
+        <div className={classes["main__lower__container"]}>
+          <div className={classes["main__lower__container__row"]}>
+            <p className={classes["main__lower__container__label"]}>
+              Показано 10 из 10 записей
+            </p>
+            <div>
+              <div className={classes["tableSettings"]}>
+                Показывать
+                <Autocomplete
+                  size="small"
+                  sx={{
+                    "& .MuiAutocomplete-inputRoot": {
+                      padding: "0px 0px 0px 0px",
+                      fontSize: "1.4rem",
+                    },
+                  }}
+                  options={[10, 20, 50, 100]}
+                  renderInput={(params) => (
+                    <TextField
+                      sx={{ height: "30px" }}
+                      {...params}
+                      className={"main__lower__auto__input"}
+                    />
+                  )}
+                />
+                записей
+              </div>
+            </div>
+            <Pagination
+              page={10}
+              variant="outlined"
+              shape="rounded"
+              boundaryCount={1}
+              color="primary"
+            />
+          </div>
+          <Table className={classes.table}>
+            <TableHead>
+              <TableRow>
+                <TableCell>ID</TableCell>
+                <TableCell>ФИО</TableCell>
+                <TableCell>№ карты</TableCell>
+                <TableCell>Телефон</TableCell>
+                <TableCell>Категория</TableCell>
+                <TableCell>Возраст</TableCell>
+                <TableCell>Дата рождения</TableCell>
+                <TableCell>Пол</TableCell>
+                <TableCell>Род занятий</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              <TableRow>
+                <TableCell>1</TableCell>
+                <TableCell>Иванов Иван Иванович</TableCell>
+                <TableCell>123456789</TableCell>
+                <TableCell>8-800-555-35-35</TableCell>
+                <TableCell>Категория</TableCell>
+                <TableCell>25</TableCell>
+                <TableCell>01.01.1996</TableCell>
+                <TableCell>Male</TableCell>
+                <TableCell>Не указано</TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </div>
       </div>
     </div>
   );
