@@ -67,9 +67,12 @@ const EmailLogin = ({ loginWPhone }: TProps) => {
               name="email"
               label="Электронная почта"
               value={email}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setEmail(e.target.value)
-              }
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                setEmail(e.target.value);
+                if (mutation.isError) {
+                  mutation.reset();
+                }
+              }}
             />
             <TextField
               id="outlined-basic"
@@ -87,7 +90,12 @@ const EmailLogin = ({ loginWPhone }: TProps) => {
               className={classes["email__content__form__send__input"]}
               value={password}
               type={showPassword ? "text" : "password"}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                if (mutation.isError) {
+                  mutation.reset();
+                }
+              }}
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
@@ -142,3 +150,6 @@ const EmailLogin = ({ loginWPhone }: TProps) => {
 };
 
 export default EmailLogin;
+function useEffect(arg0: () => void) {
+  throw new Error("Function not implemented.");
+}
