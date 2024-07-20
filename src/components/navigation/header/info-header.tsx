@@ -34,7 +34,7 @@ const InfoHeader: React.FC<InfoHeaderProps> = ({
       <Box sx={{ ml: { xs: "2rem", xl: "7.6rem" } }}>
         <div className={classes["main__header__upper"]}>
           <div>
-            <BreadcrumbsCustom />
+            <BreadcrumbsCustom name={nameData.name} />
             <h1 className={classes["main__header__upper__title"]}>
               {nameData.name}
             </h1>
