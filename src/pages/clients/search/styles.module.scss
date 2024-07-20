@@ -126,15 +126,16 @@
     font-weight: 600;
   }
   thead tr th {
-    padding: 1rem;
     text-align: start;
     font-size: 1.4rem;
     font-weight: 600;
   }
   td {
-    padding: 2rem;
     text-align: start;
     font-size: 1.4rem;
+    &:first-child {
+      text-align: center;
+    }
     table {
       width: 100%;
       border: none;
@@ -145,7 +146,7 @@
       }
       td {
         border: none;
-        text-align: left; /* Align text to the left in nested table */
+        text-align: left;
       }
     }
   }
@@ -155,7 +156,7 @@
   }
 
   th {
-    border-bottom: 2px solid #ddd; /* Add border only at the bottom of the header */
+    border-bottom: 2px solid #ddd;
   }
 
   tbody tr:nth-child(odd) {
@@ -163,13 +164,12 @@
       width: 100%;
       border: none;
       border-collapse: collapse;
-      text-align: left;
       tr {
         background-color: #f9f9f9 !important;
       }
       td {
         border: none;
-        text-align: left; /* Align text to the left in nested table */
+        text-align: center;
       }
     }
   }
@@ -178,10 +178,10 @@
   }
 
   tbody td:first-child {
-    border-left: 0px solid #ddd; /* Add border only at the left of the first cell in tbody */
+    border-left: 0px solid #ddd;
   }
   tbody td:last-child {
-    border-right: 0px solid #ddd; /* Add border only at the left of the first cell in tbody */
+    border-right: 0px solid #ddd;
   }
 }
 
