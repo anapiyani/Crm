@@ -17,8 +17,8 @@ export interface TableData {
     }[];
     grandTotal: number;
     grandTotalCash: number;
-    grandTotalCard: number;
-  }
+    grandTotalCard?: number;
+    }
 
 export const data: TableData[] = [
   {

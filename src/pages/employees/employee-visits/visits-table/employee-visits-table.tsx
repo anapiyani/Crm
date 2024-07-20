@@ -260,7 +260,7 @@ const EmployeeTable: React.FC<TableDataProps> = ({ data }) => {
                             {row.grandTotalCash}
                           </Typography>
                         </Box>
-                        <Box
+                        {row.grandTotalCard && (<Box
                           sx={{
                             display: "flex",
                             alignItems: "center",
@@ -279,7 +279,8 @@ const EmployeeTable: React.FC<TableDataProps> = ({ data }) => {
                           >
                             {row.grandTotalCard}
                           </Typography>
-                        </Box>
+                        </Box>)}
+                        
                       </Box>
                     </TableCell>
                   )}

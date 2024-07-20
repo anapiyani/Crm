@@ -3,7 +3,7 @@ import ModalWindow from "@/components/modal-window/modal-window";
 import NiceModal, { useModal } from "@ebay/nice-modal-react";
 import classes from "@/modals/home/styles.module.scss";
 import EventTabs from "@/modals/home/event-details/components/event-tabs";
-import { eventTabs } from "./data";
+import { eventTabs, tableData } from "./data";
 import Grid from "@mui/material/Unstable_Grid2";
 import TableVertical from "@/components/tables/tableVertical/vertical-info-card";
 import TableHorizontal from "@/components/tables/table-horizontal/horizontal-info-card";
@@ -15,6 +15,7 @@ import {
   contactsTableData,
   commentsTableData,
 } from "@/pages/clients/client-card/data";
+import EmployeeVisitsTable from "@/pages/employees/employee-visits/visits-table/employee-visits-table";
 
 const EventDetailsModal = () => {
   const modal = useModal();
@@ -87,7 +88,7 @@ const EventDetailsModal = () => {
           </div>
         );
       case "/tab3":
-        return <div>Content for Tab 3</div>;
+        return <div><EmployeeVisitsTable data={tableData} /></div>;
       case "/tab4":
         return <div>Content for Tab 4</div>;
       default:
