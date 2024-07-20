@@ -3,18 +3,18 @@
   flex-direction: column;
   height: 100%;
   &__wrapper {
-    padding: 4rem 7rem 0rem 7rem;
+    padding: 3rem 7rem 0rem 7rem;
   }
   &__title {
     font-size: 3.4rem;
     font-weight: 400;
     color: var(--text-primary);
+    padding-top: 2rem;
   }
   &__upper {
-    padding: 0rem 7rem 4rem 7rem;
+    padding: 3rem 7rem 4rem 7rem;
     display: flex;
     flex-wrap: wrap;
-
     gap: 2rem;
     justify-items: right;
     &__main {
@@ -38,6 +38,7 @@
       width: 45rem;
       gap: 2rem;
       align-items: center;
+      justify-content: end;
       p {
         font-size: 1.6rem;
         color: var(--text-primary);
@@ -54,7 +55,7 @@
       display: flex;
       flex-direction: column;
       gap: 1rem;
-      height: 20rem;
+      //   height: 20rem;
       overflow-y: scroll;
       -ms-overflow-style: none;
       scrollbar-width: none;
@@ -125,15 +126,16 @@
     font-weight: 600;
   }
   thead tr th {
-    padding: 1rem;
     text-align: start;
     font-size: 1.4rem;
     font-weight: 600;
   }
   td {
-    padding: 2rem;
     text-align: start;
     font-size: 1.4rem;
+    &:first-child {
+      text-align: center;
+    }
     table {
       width: 100%;
       border: none;
@@ -144,7 +146,7 @@
       }
       td {
         border: none;
-        text-align: left; /* Align text to the left in nested table */
+        text-align: left;
       }
     }
   }
@@ -154,52 +156,33 @@
   }
 
   th {
-    border-bottom: 2px solid #ddd; /* Add border only at the bottom of the header */
+    border-bottom: 2px solid #ddd;
   }
 
   tbody tr:nth-child(odd) {
-    background-color: #f9f9f9;
     table {
       width: 100%;
       border: none;
       border-collapse: collapse;
-      text-align: left;
       tr {
         background-color: #f9f9f9 !important;
       }
       td {
         border: none;
-        text-align: left; /* Align text to the left in nested table */
+        text-align: center;
       }
     }
   }
   tbody tr:last-child td {
     border-bottom: 0px;
   }
-  tbody tr:hover {
-    background-color: #f1f1f1;
-  }
 
-  tbody td {
-    border: 1px solid #cdd7e1; /* Add border only at the top of each cell in tbody */
-  }
   tbody td:first-child {
-    border-left: 0px solid #ddd; /* Add border only at the left of the first cell in tbody */
+    border-left: 0px solid #ddd;
   }
   tbody td:last-child {
-    border-right: 0px solid #ddd; /* Add border only at the left of the first cell in tbody */
+    border-right: 0px solid #ddd;
   }
-}
-
-.loading {
-  position: absolute;
-  top: 50%;
-  left: 53%;
-  transform: translate(-50%, -50%);
-}
-.name_link {
-  color: var(--primary-500);
-  text-decoration: none;
 }
 
 .tableSettings {

@@ -11,7 +11,6 @@ import {
   mainInfoEmployee,
 } from "@/service/employee/employee.service";
 import { CircularProgress } from "@mui/material";
-import { userInfo } from "os";
 
 const EmployeeCard = () => {
   const params = useParams<{ id: string }>();
@@ -82,7 +81,7 @@ const EmployeeCard = () => {
   ];
 
   return counterCardLoading && userInfoLoading ? (
-    <CircularProgress />
+    <CircularProgress className={classes.loading} />
   ) : (
     <div className={classes["main"]}>
       <InfoHeader

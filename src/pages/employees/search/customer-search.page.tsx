@@ -149,6 +149,31 @@ const EmployeeSearch = () => {
     });
   };
 
+  const handleClear = () => {
+    setFormData({
+      search: "",
+      phoneNumber: "",
+      userId: "",
+      email: "",
+      isActive: null,
+      employmentDateFrom: "",
+      employmentDateTo: "",
+      birthDateFrom: "",
+      birthDateTo: "",
+      ageFrom: "",
+      ageTo: "",
+      gender: "",
+      role: "employee",
+      roleEmployee: "",
+      reviewFrom: "",
+      reviewAbout: "",
+      reviewDateFrom: "",
+      reviewDateTo: "",
+      page: 1,
+      page_size: 10,
+    });
+  };
+
   useEffect(() => {
     setFormData((prev) => ({
       ...prev,
@@ -381,7 +406,9 @@ const EmployeeSearch = () => {
         </div>
       </div>
       <div className={classes["main__upper__buttons"]}>
-        <Button variant="outlined">Сбросить</Button>
+        <Button onClick={handleClear} variant="outlined">
+          Сбросить
+        </Button>
         <Button onClick={handleSubmit} variant="contained">
           Искать
         </Button>
@@ -401,7 +428,7 @@ const EmployeeSearch = () => {
                 записей
               </p>
               <div>
-                <div>
+                <div className={classes["tableSettings"]}>
                   Показывать
                   <Autocomplete
                     size="small"
