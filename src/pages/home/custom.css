@@ -83,3 +83,7 @@
 .fc .fc-view-harness {
   height: 110rem !important;
 }
+
+.fc-timegrid-col-events {
+  margin: 0px 3px 0px 3px !important;
+}

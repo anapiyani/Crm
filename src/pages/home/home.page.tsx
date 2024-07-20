@@ -26,7 +26,11 @@ import BreadcrumbsCustom from "@/components/navigation/breadcrumbs/breadcrumbs";
 import CustomDatePicker from "@/components/date-picker/date-picker-custom";
 import CustomTextField from "@/components/textField/textField.component";
 import ResourceDropdownMenu from "./_components/resource-dropdown-menu";
-import { CreateAppointmentModal, EventDetailsModal } from "@/modals";
+import {
+  CreateAppointmentModal,
+  DeleteBreakModal,
+  EventDetailsModal,
+} from "@/modals";
 
 import classNames from "classnames";
 
@@ -60,7 +64,7 @@ const Home = () => {
   const [resources, setResources] = useState<any[]>([]);
 
   const { data: schedulesData, isPending: scheduesDataPending } = useQuery({
-    queryKey: ["schedules", selectedDate],
+    queryKey: ["schedules", selectedDate?.format("YYYY-MM-DD")],
     queryFn: () => getScheduleByDate(dayjs(selectedDate).format("YYYY-MM-DD")),
     staleTime: 1000 * 60 * 5,
     refetchOnWindowFocus: false,
@@ -72,10 +76,6 @@ const Home = () => {
         transformSchedulesToFullCalendar(schedulesData);
       setEvents(events);
       setResources(resources);
-
-      if (calendarRef.current) {
-        calendarRef.current.render();
-      }
     }
   }, [schedulesData]);
 
@@ -96,7 +96,11 @@ const Home = () => {
   };
 
   const handleEventClick = (clickInfo: any) => {
-    NiceModal.show(EventDetailsModal);
+    if (clickInfo.event.extendedProps.type === "break") {
+      NiceModal.show(DeleteBreakModal, { breakId: clickInfo.event.id });
+    } else {
+      NiceModal.show(EventDetailsModal);
+    }
   };
 
   const handleDatesSet = (arg: any) => {
@@ -172,6 +176,9 @@ const Home = () => {
               droppable={true}
               select={handleCalendarDateSelect}
               datesSet={handleDatesSet}
+              eventAllow={(_, draggedEvent) =>
+                draggedEvent?.extendedProps.type !== "break"
+              }
               customButtons={{
                 shiftReport: {
                   text: "Отчет смены",
@@ -210,12 +217,13 @@ const Home = () => {
               eventContent={(eventInfo) => {
                 return (
                   <div
-                    className={classNames(
-                      classes["fullcalendar__event"],
-                      classes[
+                    className={classNames(classes["fullcalendar__event"], {
+                      [classes["fullcalendar__event--break"]]:
+                        eventInfo.event.extendedProps.type === "break",
+                      [classes[
                         `fullcalendar__event--${eventInfo.event.extendedProps.status}`
-                      ]
-                    )}
+                      ]]: eventInfo.event.extendedProps.type === "appointment",
+                    })}
                   >
                     <div
                       className={classNames(

@@ -21,3 +21,7 @@ export const getScheduleByDate = async (date: string): Promise<ISchedule[]> => {
 export const addBreakToSchedule = (data: Omit<IBreaks, "id">) => {
   return api.post(`/schedule/breaks/`, data).then((res) => res.data);
 };
+
+export const deleteBreakFromSchedule = (id: number) => {
+  return api.delete(`/schedule/breaks/${id}/`).then((res) => res.data);
+};
