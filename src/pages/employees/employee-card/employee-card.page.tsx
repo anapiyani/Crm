@@ -4,7 +4,7 @@ import Grid from "@mui/material/Unstable_Grid2";
 import classes from "./styles.module.scss";
 import InfoHeader from "@/components/navigation/header/info-header";
 import { employeeTabsData } from "./data";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import {
   cardInfoEmplpyee,
@@ -14,7 +14,8 @@ import { CircularProgress } from "@mui/material";
 import { userInfo } from "os";
 
 const EmployeeCard = () => {
-  const params = useParams<{ id: string; username: string }>();
+  const params = useParams<{ id: string }>();
+  const location = useLocation();
 
   const {
     data: counterCardData,
@@ -35,7 +36,7 @@ const EmployeeCard = () => {
   });
 
   const employeeNameData = {
-    name: `Карта сотрудника - ${params.username}`,
+    name: `Карта сотрудника - ${location.state.username}`,
   };
 
   const mainTableData = [

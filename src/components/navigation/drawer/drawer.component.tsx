@@ -59,10 +59,10 @@ const ResponsiveDrawer = (props: IProps) => {
   const location = useLocation();
   const [open, setOpen] = useState<string | null>(null);
   const [selectedParentIndex, setSelectedParentIndex] = useState<string | null>(
-    null,
+    null
   );
   const [selectedChildIndex, setSelectedChildIndex] = useState<string | null>(
-    null,
+    null
   );
 
   useEffect(() => {
@@ -195,7 +195,7 @@ const ResponsiveDrawer = (props: IProps) => {
 
   const renderListItems = (
     items: Item[],
-    parentIndex: number | null = null,
+    parentIndex: number | null = null
   ) => {
     return items.map((item, index) => {
       const uniqueIndex =
@@ -302,8 +302,8 @@ const ResponsiveDrawer = (props: IProps) => {
       >
         <LogoImage src={logo} alt="SuperWise" />
 
-        <IconButton sx={{ color: "#fff" }}>
-          <Close sx={{ display: { sm: "none" } }} onClick={handleCloseMenu} />
+        <IconButton sx={{ color: "#fff" }} onClick={handleCloseMenu}>
+          <Close sx={{ display: { sm: "none" } }} />
         </IconButton>
       </LogoContainer>
       <List sx={{ padding: "0.8rem" }}>{renderListItems(items)}</List>

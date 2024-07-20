@@ -16,7 +16,7 @@ import {
   ClientAdd,
   StorageSettings,
   EmployeeCabinet,
-  EmployeeVisits
+  EmployeeVisits,
 } from "@/pages";
 
 // import { Role } from "@/ts/types";
@@ -77,7 +77,7 @@ export const ROUTES: IRoute[] = [
   },
   {
     name: "Employee card",
-    path: "employees/:id/:username",
+    path: "employees/:id",
     component: <EmployeeCard />,
   },
   {

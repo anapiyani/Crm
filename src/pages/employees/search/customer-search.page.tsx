@@ -77,7 +77,7 @@ const EmployeeSearch = () => {
   useEffect(() => {
     const defaultSize = pageSizeOptions.find((o) => o.value === pageSize.value);
     if (defaultSize) setPageSize(defaultSize);
-  }, [pageSizeOptions]);
+  }, [pageSize.value]);
 
   const handleFormDataChange = (field: keyof ISearchFormData, value: any) => {
     setFormData((prev) => ({
@@ -401,7 +401,7 @@ const EmployeeSearch = () => {
                 записей
               </p>
               <div>
-                <p>
+                <div>
                   Показывать
                   <Autocomplete
                     size="small"
@@ -430,7 +430,7 @@ const EmployeeSearch = () => {
                     )}
                   />
                   записей
-                </p>
+                </div>
               </div>
               <Pagination
                 count={
@@ -466,7 +466,10 @@ const EmployeeSearch = () => {
                       <TableCell>
                         <Link
                           className={classes.name_link}
-                          to={`/employees/${row.user_id}/${row.first_name} ${row.last_name}`}
+                          to={`/employees/${row.user_id}`}
+                          state={{
+                            username: `${row.first_name} ${row.last_name}`,
+                          }}
                         >
                           {row.first_name} {row.last_name}
                         </Link>
