@@ -1,24 +1,26 @@
 import { Adjust, Inventory, CardGiftcard } from "@mui/icons-material";
 
 export interface TableData {
-    id: number;
-    visit: string;
-    visitTime: string;
-    client: string;
-    clientNote: string;
-    services: {
-      icon: typeof Adjust;
-      name: string;
-      employee: string;
-      employeeRole: string;
-      amount: number;
-      discount: number;
-      total: number;
-    }[];
-    grandTotal: number;
-    grandTotalCash: number;
-    grandTotalCard?: number;
-    }
+  id: number;
+  visit: string;
+  visitTime: string;
+  client?: string;
+  clientNote?: string;
+  services: {
+    icon: typeof Adjust;
+    name: string;
+    employee: string;
+    employeeRole: string;
+    amount: number;
+    discount: number;
+    total: number;
+    discountText?: string;
+    paymentStatus?: string;
+  }[];
+  grandTotal: number;
+  grandTotalCash: number;
+  grandTotalCard?: number;
+}
 
 export const data: TableData[] = [
   {
@@ -114,6 +116,8 @@ export const data: TableData[] = [
         amount: 2000,
         discount: 0,
         total: 2000,
+        discountText: "Персональная скидка 10%",
+        paymentStatus: "Не оплачено",
       },
       {
         icon: Inventory,
@@ -123,6 +127,7 @@ export const data: TableData[] = [
         amount: 300,
         discount: 0,
         total: 300,
+        paymentStatus: "Не оплачено",
       },
       {
         icon: CardGiftcard,
@@ -216,5 +221,4 @@ export const data: TableData[] = [
     grandTotalCash: 3300,
     grandTotalCard: 2000,
   },
-  
 ];

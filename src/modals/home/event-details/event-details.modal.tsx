@@ -3,8 +3,9 @@ import ModalWindow from "@/components/modal-window/modal-window";
 import NiceModal, { useModal } from "@ebay/nice-modal-react";
 import classes from "@/modals/home/styles.module.scss";
 import EventTabs from "@/modals/home/event-details/components/event-tabs";
-import { eventTabs, tableData } from "./data";
+import { eventTabs, eventTableData } from "./data";
 import Grid from "@mui/material/Unstable_Grid2";
+import { createTheme, Divider } from "@mui/material";
 import TableVertical from "@/components/tables/tableVertical/vertical-info-card";
 import TableHorizontal from "@/components/tables/table-horizontal/horizontal-info-card";
 import {
@@ -40,10 +41,9 @@ const EventDetailsModal = () => {
               container
               sx={{
                 flexDirection: { xs: "column" },
-                mt: "1.6rem",
+                
               }}
-              xs={9}
-              md={12}
+
               rowSpacing={3}
             >
               <Grid container columnSpacing={3}>
@@ -88,7 +88,34 @@ const EventDetailsModal = () => {
           </div>
         );
       case "/tab3":
-        return <div><EmployeeVisitsTable data={tableData} /></div>;
+        return (
+          <div
+            style={{ display: "flex", flexDirection: "column", gap: "1.6rem" }}
+          >
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "0.8rem",
+              }}
+            >
+              <p
+                style={{
+                  fontSize: "1.6rem",
+                  color: "var(--brand-500)",
+                  letterSpacing: 0.15,
+                }}
+              >
+                Запланированные посещения
+              </p>
+
+              <Divider />
+            </div>
+
+            <EmployeeVisitsTable data={eventTableData} />
+            <div style={{ display: "flex", flexDirection: "column" }}></div>
+          </div>
+        );
       case "/tab4":
         return <div>Content for Tab 4</div>;
       default:
@@ -103,7 +130,7 @@ const EventDetailsModal = () => {
       handleClose={() => modal.hide()}
       className={classes["u-p-0"]}
     >
-      <div>
+      <div style={{ display: "flex", flexDirection: "column", gap: "1.6rem" }}>
         <EventTabs
           tabsData={eventTabs}
           currentTab={currentTab}
