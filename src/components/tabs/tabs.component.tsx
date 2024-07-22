@@ -18,8 +18,8 @@ interface TabData {
 
 interface ResponsiveTabsProps {
   tabsData: TabData[];
-  activeTab: number;
-  onTabChange: (index: number) => void;
+  activeTab?: number;
+  onTabChange?: (index: number) => void;
 }
 
 const ResponsiveTabs = ({
@@ -70,7 +70,7 @@ const ResponsiveTabs = ({
                 activeTab === index ? classes["active"] : ""
               }`}
               to={to}
-              onClick={() => onTabChange(index)}
+              onClick={() => onTabChange && onTabChange(index)}
             >
               <Icon
                 className={classes["tabs__content__tab__link__icon"]}
