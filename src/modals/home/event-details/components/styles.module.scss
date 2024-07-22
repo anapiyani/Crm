@@ -1,9 +1,11 @@
 .tabs {
+  width: fit-content;
   &__content {
+    display: flex;
     &__tab {
       display: flex;
       cursor: pointer;
-
+      
       &__link {
         display: flex;
         height: auto;
@@ -28,6 +30,7 @@
         }
       }
     }
+   
   }
 }
 
