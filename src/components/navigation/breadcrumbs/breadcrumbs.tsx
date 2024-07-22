@@ -29,7 +29,7 @@ const BreadcrumbsCustom: React.FC<IBreadcrumbsCustomProps> = ({
       breadcrumb: "Домой",
       icon: <Person sx={{ fontSize: 16, color: "var(--primary-500)" }} />,
     },
-    { path: "/cashdesk", breadcrumb: "Касса" },
+    { path: "/cashdesk", breadcrumb: "Виртуальная касса" },
     { path: "/employees", breadcrumb: "Сотрудники" },
     { path: "/employees/add", breadcrumb: "Создание карты сотрудника" },
     { path: "/employees/work-schedule", breadcrumb: "График работы" },

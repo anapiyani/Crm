@@ -1,6 +1,6 @@
 import Home from "./home/home.page";
 import LoginPage from "./login/login.page";
-import CashDesk from "./cash-desk/cash-desk.page";
+import CashDesk from "./cash-desk/cash-desk/cash-desk.page";
 
 //Customers
 import EmployeeCard from "./employees/employee-card/employee-card.page";
