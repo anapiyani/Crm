@@ -25,8 +25,8 @@ export interface TableData {
   id: number;
   visit: string;
   visitTime: string;
-  client: string;
-  clientNote: string;
+  client?: string;
+  clientNote?: string;
   services: {
     icon: typeof Adjust;
     name: string;
@@ -35,19 +35,19 @@ export interface TableData {
     amount: number;
     discount: number;
     total: number;
+    discountText?: string;
+    paymentStatus?: string;
   }[];
   grandTotal: number;
   grandTotalCash: number;
   grandTotalCard?: number;
 }
 
-export const tableData: TableData[] = [
+export const eventTableData: TableData[] = [
   {
     id: 1,
     visit: "Посещение №721",
     visitTime: "Сегодня, 11:27",
-    client: "Имя клиента, ID 24",
-    clientNote: "Любит чай",
     services: [
       {
         icon: Adjust,
@@ -57,6 +57,8 @@ export const tableData: TableData[] = [
         amount: 2200,
         discount: 0,
         total: 2200,
+        discountText: "Персональная скидка 10%",
+        paymentStatus: "Не оплачено",
       },
     ],
     grandTotal: 5200,
@@ -66,8 +68,6 @@ export const tableData: TableData[] = [
     id: 2,
     visit: "Посещение №722",
     visitTime: "Сегодня, 12:00",
-    client: "Имя клиента, ID 25",
-    clientNote: "Любит кофе",
     services: [
       {
         icon: Adjust,
