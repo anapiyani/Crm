@@ -1,23 +1,25 @@
 import BreadcrumbsCustom from "@/components/navigation/breadcrumbs/breadcrumbs";
 import classes from "./style.module.scss";
 import ResponsiveTabs from "@/components/tabs/tabs.component";
-import { HomeOutlined, CalendarMonth } from "@mui/icons-material";
+import {
+  HomeOutlined,
+  CalendarMonth,
+  ImportExport,
+  MenuBook,
+  LocalActivity,
+  CreditCard,
+  Payments,
+} from "@mui/icons-material";
 import SouthIcon from "@mui/icons-material/South";
 import NorthIcon from "@mui/icons-material/North";
 import { useState } from "react";
 import { Button, TextField } from "@mui/material";
 import PublicIcon from "@mui/icons-material/Public";
-import PaymentsIcon from "@mui/icons-material/Payments";
-import CreditCardIcon from "@mui/icons-material/CreditCard";
-import LocalActivityIcon from "@mui/icons-material/LocalActivity";
-import MenuBookIcon from "@mui/icons-material/MenuBook";
-import ImportExportIcon from "@mui/icons-material/ImportExport";
-import VerticalTextField from "@/components/textfield-vertical/textfield-vertical";
 
 const CashDesk = () => {
   const tabsData = [
     { to: "/cashdesk/", icon: HomeOutlined, label: "Обзор" },
-    { to: "/cashdesk/", icon: CalendarMonth, label: "Посещения" },
+    { to: "/cashdesk", icon: CalendarMonth, label: "Посещения" },
   ];
   const [activeTab, setActiveTab] = useState(0);
 
@@ -67,17 +69,17 @@ const CashDesk = () => {
                   <PublicIcon /> 25 000 руб.
                 </p>
                 <p>
-                  <PaymentsIcon />0 руб.
+                  <Payments />0 руб.
                 </p>
                 <p>
-                  <CreditCardIcon />
+                  <CreditCard />
                   25 000 руб.
                 </p>
                 <p>
-                  <LocalActivityIcon />0 руб.
+                  <LocalActivity />0 руб.
                 </p>
                 <p>
-                  <MenuBookIcon />0 руб.
+                  <MenuBook />0 руб.
                 </p>
               </div>
             </div>
@@ -95,23 +97,23 @@ const CashDesk = () => {
                   <PublicIcon /> 0 руб.
                 </p>
                 <p>
-                  <PaymentsIcon />0 руб.
+                  <Payments />0 руб.
                 </p>
                 <p>
-                  <CreditCardIcon />0 руб.
+                  <CreditCard />0 руб.
                 </p>
                 <p>
-                  <LocalActivityIcon />0 руб.
+                  <LocalActivity />0 руб.
                 </p>
                 <p>
-                  <MenuBookIcon />0 руб.
+                  <MenuBook />0 руб.
                 </p>
               </div>
             </div>
             <div className={classes.main__day__info__infoBox}>
               <div className={classes.main__day__info__infoBox__header}>
                 <p>
-                  <ImportExportIcon
+                  <ImportExport
                     style={{ backgroundColor: "#E3EFFB", color: "#0B6BCB" }}
                   />{" "}
                   Снято за сегодня
@@ -122,17 +124,17 @@ const CashDesk = () => {
                   <PublicIcon /> 25 000 руб.
                 </p>
                 <p>
-                  <PaymentsIcon />0 руб.
+                  <Payments />0 руб.
                 </p>
                 <p>
-                  <CreditCardIcon />
+                  <CreditCard />
                   25 000 руб.
                 </p>
                 <p>
-                  <LocalActivityIcon />0 руб.
+                  <LocalActivity />0 руб.
                 </p>
                 <p>
-                  <MenuBookIcon />0 руб.
+                  <MenuBook />0 руб.
                 </p>
               </div>
             </div>
@@ -172,17 +174,17 @@ const CashDesk = () => {
                   <PublicIcon /> 25 000 руб.
                 </p>
                 <p>
-                  <PaymentsIcon />0 руб.
+                  <Payments />0 руб.
                 </p>
                 <p>
-                  <CreditCardIcon />
+                  <CreditCard />
                   25 000 руб.
                 </p>
                 <p>
-                  <LocalActivityIcon />0 руб.
+                  <LocalActivity />0 руб.
                 </p>
                 <p>
-                  <MenuBookIcon />0 руб.
+                  <MenuBook />0 руб.
                 </p>
               </div>
             </div>
@@ -200,23 +202,23 @@ const CashDesk = () => {
                   <PublicIcon /> 0 руб.
                 </p>
                 <p>
-                  <PaymentsIcon />0 руб.
+                  <Payments />0 руб.
                 </p>
                 <p>
-                  <CreditCardIcon />0 руб.
+                  <CreditCard />0 руб.
                 </p>
                 <p>
-                  <LocalActivityIcon />0 руб.
+                  <LocalActivity />0 руб.
                 </p>
                 <p>
-                  <MenuBookIcon />0 руб.
+                  <MenuBook />0 руб.
                 </p>
               </div>
             </div>
             <div className={classes.main__day__info__infoBox}>
               <div className={classes.main__day__info__infoBox__header}>
                 <p>
-                  <ImportExportIcon
+                  <ImportExport
                     style={{ backgroundColor: "#E3EFFB", color: "#0B6BCB" }}
                   />{" "}
                   Итого за период
@@ -227,17 +229,17 @@ const CashDesk = () => {
                   <PublicIcon /> 25 000 руб.
                 </p>
                 <p>
-                  <PaymentsIcon />0 руб.
+                  <Payments />0 руб.
                 </p>
                 <p>
-                  <CreditCardIcon />
+                  <CreditCard />
                   25 000 руб.
                 </p>
                 <p>
-                  <LocalActivityIcon />0 руб.
+                  <LocalActivity />0 руб.
                 </p>
                 <p>
-                  <MenuBookIcon />0 руб.
+                  <MenuBook />0 руб.
                 </p>
               </div>
             </div>
