@@ -7,7 +7,7 @@ import {
 } from "@mui/icons-material";
 
 export const employeeTabsData = [
-  { to: "/employees/employee-card", icon: HomeOutlined, label: "Обзор" },
+  { to: "/employees/:id", icon: HomeOutlined, label: "Обзор" },
   { to: "/employees/visits", icon: ExitToAppOutlined, label: "Посещения" },
   {
     to: "/employees/balance",

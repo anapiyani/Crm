@@ -3,7 +3,7 @@ import classNames from "classnames";
 import classes from "./styles.module.scss";
 
 interface IProps extends Omit<TextFieldProps, "ref" | "variant"> {
-  label: string;
+  label?: string;
   addClassName?: string;
   type?: string;
   placeholder: string;
