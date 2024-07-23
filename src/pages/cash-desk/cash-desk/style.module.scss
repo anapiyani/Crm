@@ -131,4 +131,115 @@
       }
     }
   }
+  &__searchForm {
+    width: 100%;
+    margin-top: 2.4rem;
+    &__header {
+      margin-bottom: 1rem;
+      h2 {
+        font-size: 2.4rem;
+        font-weight: 500;
+        color: var(--text-primary);
+      }
+    }
+    &__body {
+      display: flex;
+      flex-wrap: wrap;
+      width: 100%;
+      &__items {
+        margin-right: 3rem;
+        height: 20rem;
+        margin-top: 1rem;
+        &__methods {
+          display: flex;
+          align-items: center;
+          margin-bottom: 1rem;
+          margin-top: 1rem;
+          span {
+            font-size: 1.6rem;
+            font-weight: 400;
+            color: var(--text-primary);
+            margin-right: 1rem;
+          }
+          input {
+            width: 1.5rem;
+            height: 1.5rem;
+            margin-right: 1rem;
+          }
+        }
+        &:nth-child(1) {
+          width: 20rem;
+          h3 {
+            color: var(--neutral-700);
+            font-size: 2rem;
+            font-weight: 500;
+          }
+        }
+        &:nth-child(2) {
+          h3 {
+            color: var(--neutral-700);
+            font-size: 2rem;
+            font-weight: 500;
+          }
+          div {
+            display: flex;
+            justify-content: start;
+            margin-top: 0.4rem;
+            input {
+              font-size: 1.4rem;
+            }
+            p {
+              display: flex;
+              align-items: center;
+              font-size: 1.4rem;
+            }
+          }
+        }
+        &:nth-child(3) {
+          width: 36rem;
+          width: 36rem;
+          h3 {
+            color: var(--neutral-700);
+            font-size: 2rem;
+            font-weight: 500;
+            margin-left: 1rem;
+          }
+          div {
+            display: flex;
+            align-items: center;
+            margin: 0.3rem;
+            justify-content: start;
+            input {
+              font-size: 1.4rem;
+            }
+            p {
+              font-size: 1.4rem;
+            }
+          }
+        }
+        &:nth-child(4) {
+          width: 22rem;
+          h3 {
+            color: var(--neutral-700);
+            font-size: 2rem;
+            font-weight: 500;
+          }
+          div {
+            button {
+              width: 100%;
+              padding: 0.7rem 2.3rem;
+              font-size: 1.2rem;
+              font-weight: 700;
+              margin-top: 1rem;
+              text-align: center;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              margin-right: 1rem;
+            }
+          }
+        }
+      }
+    }
+  }
 }

@@ -13,8 +13,9 @@ import {
 import SouthIcon from "@mui/icons-material/South";
 import NorthIcon from "@mui/icons-material/North";
 import { useState } from "react";
-import { Button, TextField } from "@mui/material";
+import { Autocomplete, Button, Divider, TextField } from "@mui/material";
 import PublicIcon from "@mui/icons-material/Public";
+import CustomTextField from "@/components/textField/textField.component";
 
 const CashDesk = () => {
   const tabsData = [
@@ -246,6 +247,94 @@ const CashDesk = () => {
           </div>
         </div>
       )}
+      <div className={classes.main__searchForm}>
+        <div className={classes.main__searchForm__header}>
+          <h2>Поиск по кассе</h2>
+          <Divider />
+        </div>
+        <div className={classes.main__searchForm__body}>
+          <div className={classes.main__searchForm__body__items}>
+            <h3>Способ оплаты</h3>
+            <div className={classes.main__searchForm__body__items__methods}>
+              <input type="checkbox" />
+              <span className={classes["tree__label"]}>Оплата наличными</span>
+            </div>
+            <div className={classes.main__searchForm__body__items__methods}>
+              <input type="checkbox" />
+              <span className={classes["tree__label"]}>Оплата по карте</span>
+            </div>
+            <div className={classes.main__searchForm__body__items__methods}>
+              <input type="checkbox" />
+              <span className={classes["tree__label"]}>Оплата чеками</span>
+            </div>
+            <div className={classes.main__searchForm__body__items__methods}>
+              <input type="checkbox" />
+              <span className={classes["tree__label"]}>С расчетного счета</span>
+            </div>
+          </div>
+          <div className={classes.main__searchForm__body__items}>
+            <h3>Дата операции</h3>
+            <div style={{ display: "flex" }}>
+              <TextField
+                variant="outlined"
+                size="small"
+                placeholder="Начиная с"
+                style={{ width: "42%" }}
+              />
+              <p style={{ marginRight: "1rem", marginLeft: "1rem" }}>-</p>
+              <TextField
+                variant="outlined"
+                size="small"
+                placeholder="Заканчивая"
+                style={{ width: "41%" }}
+              />
+            </div>
+            <Autocomplete
+              sx={{ width: 330 }}
+              options={[
+                { label: "Option 1", value: "1" },
+                { label: "Option 2", value: "2" },
+                { label: "Option 3", value: "3" },
+                { label: "Option 4", value: "4" },
+                { label: "Option 5", value: "5" },
+              ]}
+              getOptionLabel={(option) => option.label}
+              renderInput={(params) => (
+                <CustomTextField {...params} label={"Выберите опцию"} />
+              )}
+            />
+          </div>
+          <div className={classes.main__searchForm__body__items}>
+            <h3>Сумма</h3>
+            <div style={{ display: "flex" }}>
+              <div style={{ display: "flex" }}>
+                <TextField
+                  variant="outlined"
+                  size="small"
+                  placeholder="От, руб."
+                  style={{ width: "42%" }}
+                />
+                <p style={{ marginRight: "1rem", marginLeft: "1rem" }}>-</p>
+                <TextField
+                  variant="outlined"
+                  size="small"
+                  placeholder="До, руб."
+                  style={{ width: "41%" }}
+                />
+              </div>
+            </div>
+          </div>
+          <div className={classes.main__searchForm__body__items}>
+            <h3>Сумма</h3>
+            <div style={{ display: "flex" }}>
+              <div style={{ display: "flex" }}>
+                <Button variant="outlined">Сбросить</Button>
+                <Button variant="contained">Поиск</Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
