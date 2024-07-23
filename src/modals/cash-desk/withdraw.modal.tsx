@@ -3,7 +3,10 @@ import NiceModal, { useModal } from "@ebay/nice-modal-react";
 import classes from "./styles.module.scss";
 import {
   Autocomplete,
+<<<<<<< HEAD
   Button,
+=======
+>>>>>>> 3c7938a (Feat: Added modal for withdraw money from cash reg)
   Divider,
   FormControl,
   FormControlLabel,
@@ -57,6 +60,7 @@ const WithdrawModal = () => {
         <div className={classes.modalContent__content}>
           <div className={classes.modalContent__content__item}>
             <p>Сумма</p>
+<<<<<<< HEAD
             <TextField variant="outlined" label="Введите сумму" />
             <Button
               sx={{
@@ -78,6 +82,13 @@ const WithdrawModal = () => {
             >
               -
             </Button>
+=======
+            <TextField
+              variant="outlined"
+              style={{ marginRight: 20 }}
+              label="Введите сумму"
+            />
+>>>>>>> 3c7938a (Feat: Added modal for withdraw money from cash reg)
             <span>руб.</span>
           </div>
           <div className={classes.modalContent__content__item}>
