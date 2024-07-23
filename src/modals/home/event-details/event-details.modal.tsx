@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import ModalWindow from "@/components/modal-window/modal-window";
 import NiceModal, { useModal } from "@ebay/nice-modal-react";
 import classes from "@/modals/home/styles.module.scss";
-import EventTabs from "@/modals/home/event-details/components/event-tabs";
+import ResponsiveTabs from "@/components/tabs/tabs.component";
 import { eventTabs, eventTableData } from "./data";
 import Grid from "@mui/material/Unstable_Grid2";
-import { createTheme, Divider } from "@mui/material";
+import { Divider } from "@mui/material";
 import TableVertical from "@/components/tables/tableVertical/vertical-info-card";
 import TableHorizontal from "@/components/tables/table-horizontal/horizontal-info-card";
 import {
@@ -17,6 +17,7 @@ import {
   commentsTableData,
 } from "@/pages/clients/client-card/data";
 import EmployeeVisitsTable from "@/pages/employees/employee-visits/visits-table/employee-visits-table";
+
 
 const EventDetailsModal = () => {
   const modal = useModal();
@@ -41,9 +42,7 @@ const EventDetailsModal = () => {
               container
               sx={{
                 flexDirection: { xs: "column" },
-                
               }}
-
               rowSpacing={3}
             >
               <Grid container columnSpacing={3}>
@@ -131,10 +130,12 @@ const EventDetailsModal = () => {
       className={classes["u-p-0"]}
     >
       <div style={{ display: "flex", flexDirection: "column", gap: "1.6rem" }}>
-        <EventTabs
+        <ResponsiveTabs
           tabsData={eventTabs}
           currentTab={currentTab}
           onTabChange={handleTabChange}
+          isWithLink={false}
+          className={classes["tabs-modal"]}
         />
         {renderContent()}
       </div>
