@@ -30,6 +30,7 @@ import CustomTextField from "@/components/textField/textField.component";
 import classes from "./style.module.scss";
 import NiceModal from "@ebay/nice-modal-react";
 import salaryModal from "@/modals/cash-desk/salary.modal";
+import withdrawModal from "@/modals/cash-desk/withdraw.modal";
 
 const CashDesk = () => {
   const tabsData = [
@@ -44,6 +45,10 @@ const CashDesk = () => {
 
   const handleSalaryModal = () => {
     NiceModal.show(salaryModal);
+  };
+
+  const handleWithdrawModal = () => {
+    NiceModal.show(withdrawModal);
   };
 
   return (
@@ -67,7 +72,12 @@ const CashDesk = () => {
               <Button startIcon={<South />} variant="outlined" color="success">
                 Внести деньги
               </Button>
-              <Button startIcon={<North />} variant="outlined" color="error">
+              <Button
+                onClick={handleWithdrawModal}
+                startIcon={<North />}
+                variant="outlined"
+                color="error"
+              >
                 Снять деньги
               </Button>
             </div>
