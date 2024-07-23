@@ -1,7 +1,4 @@
 import { Link } from "react-router-dom";
-import BreadcrumbsCustom from "@/components/navigation/breadcrumbs/breadcrumbs";
-import ResponsiveTabs from "@/components/tabs/tabs.component";
-import CustomTextField from "@/components/textField/textField.component";
 import {
   HomeOutlined,
   CalendarMonth,
@@ -27,7 +24,12 @@ import {
   TableRow,
   TextField,
 } from "@mui/material";
+import BreadcrumbsCustom from "@/components/navigation/breadcrumbs/breadcrumbs";
+import ResponsiveTabs from "@/components/tabs/tabs.component";
+import CustomTextField from "@/components/textField/textField.component";
 import classes from "./style.module.scss";
+import NiceModal from "@ebay/nice-modal-react";
+import salaryModal from "@/modals/cash-desk/salary.modal";
 
 const CashDesk = () => {
   const tabsData = [
@@ -38,6 +40,10 @@ const CashDesk = () => {
 
   const handleTabChange = (index: number) => {
     setActiveTab(index);
+  };
+
+  const handleSalaryModal = () => {
+    NiceModal.show(salaryModal);
   };
 
   return (
@@ -55,7 +61,9 @@ const CashDesk = () => {
         <div className={classes.main__day}>
           <div className={classes.main__day__info}>
             <div className={classes.main__day__info__buttons}>
-              <Button variant="contained">Выплатить зарплату</Button>
+              <Button onClick={handleSalaryModal} variant="contained">
+                Выплатить зарплату
+              </Button>
               <Button startIcon={<South />} variant="outlined" color="success">
                 Внести деньги
               </Button>
