@@ -6,7 +6,6 @@ import {
   Autocomplete,
   Divider,
   TextField,
-  Avatar,
   Button,
   CircularProgress,
 } from "@mui/material";
@@ -31,27 +30,22 @@ import {
   DeleteBreakModal,
   EventDetailsModal,
 } from "@/modals";
+import Icons from "@/assets/icons/icons";
 
 import classNames from "classnames";
 
 import { calendarStatuses } from "./data";
 
-import ArrowRightHideIcon from "@/assets/icons/arrow-right-hide.svg";
-import ArrowLeftIcon from "@/assets/icons/arrow-left.svg";
-import PanToolAltIcon from "@/assets/icons/pan_tool_alt.svg";
-
 import classes from "./styles.module.scss";
 import "./custom.css";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  getScheduleByDate,
-  getSchedules,
-} from "@/service/schedule/schedule.service";
+import { useQuery } from "@tanstack/react-query";
+import { getScheduleByDate } from "@/service/schedule/schedule.service";
 import { transformSchedulesToFullCalendar } from "@/utils/transform-data";
-import { useAddBreakToSchedule } from "@/service/schedule/schedule.hook";
+import EventContent from "./_components/event-content";
+import { DateSelectArg, DatesSetArg, EventClickArg } from "@fullcalendar/core";
+import ResourceCard from "./_components/resource-card";
 
 const Home = () => {
-  const queryClient = useQueryClient();
   const [isHide, setIsHide] = useState<boolean>(false);
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(dayjs());
   const calendarRef = useRef<FullCalendar | null>(null);
@@ -95,15 +89,15 @@ const Home = () => {
     setAnchorEl(event.currentTarget);
   };
 
-  const handleEventClick = (clickInfo: any) => {
+  const handleEventClick = (clickInfo: EventClickArg) => {
     if (clickInfo.event.extendedProps.type === "break") {
-      NiceModal.show(DeleteBreakModal, { breakId: clickInfo.event.id });
+      NiceModal.show(DeleteBreakModal, { breakId: Number(clickInfo.event.id) });
     } else {
       NiceModal.show(EventDetailsModal);
     }
   };
 
-  const handleDatesSet = (arg: any) => {
+  const handleDatesSet = (arg: DatesSetArg) => {
     const calendarApi = calendarRef.current?.getApi();
     const currentDate = calendarApi?.getDate();
     setSelectedDate(dayjs(currentDate));
@@ -118,34 +112,7 @@ const Home = () => {
     setIsHide(!isHide);
   };
 
-  const renderResource = (arg: ResourceApi) => (
-    <div
-      className={classes["fullcalendar__user"]}
-      onClick={(e) => {
-        handleResourceClick(arg.id, e);
-      }}
-    >
-      <Avatar>
-        {arg.title
-          .split(" ")
-          .map((word) => word[0])
-          .join("")}
-      </Avatar>
-      <h5 className={classes["fullcalendar__user--name"]}>{arg.title}</h5>
-      <div
-        className={classNames(
-          classes["fullcalendar__user--profession"],
-          classes["fullcalendar__user--time"]
-        )}
-      >
-        <img src={PanToolAltIcon} alt="pan-tool" />
-        <p>{arg._resource.extendedProps.role}</p>
-      </div>
-      <p className={classes["fullcalendar__user--time"]}>08:00 - 22:00</p>
-    </div>
-  );
-
-  const handleCalendarDateSelect = (selectInfo: any) => {
+  const handleCalendarDateSelect = (selectInfo: DateSelectArg) => {
     const start = dayjs(selectInfo.start).format("YYYY-MM-DD HH:mm:ss");
     const end = dayjs(selectInfo.end).format("YYYY-MM-DD HH:mm:ss");
     console.log(selectInfo);
@@ -214,38 +181,17 @@ const Home = () => {
                 omitZeroMinute: false,
                 meridiem: false,
               }}
-              eventContent={(eventInfo) => {
-                return (
-                  <div
-                    className={classNames(classes["fullcalendar__event"], {
-                      [classes["fullcalendar__event--break"]]:
-                        eventInfo.event.extendedProps.type === "break",
-                      [classes[
-                        `fullcalendar__event--${eventInfo.event.extendedProps.status}`
-                      ]]: eventInfo.event.extendedProps.type === "appointment",
-                    })}
-                  >
-                    <div
-                      className={classNames(
-                        classes["fullcalendar__event--header"],
-                        classes[
-                          `fullcalendar__event--${eventInfo.event.extendedProps.status}--header`
-                        ]
-                      )}
-                    >
-                      {eventInfo.timeText}
-                    </div>
-                    <div className={classes["fullcalendar__event--body"]}>
-                      <p>{eventInfo.event.title}</p>
-                    </div>
-                  </div>
-                );
-              }}
+              eventContent={(eventInfo) => (
+                <EventContent eventInfo={eventInfo} />
+              )}
               eventClick={handleEventClick}
               resources={resources}
-              resourceLabelContent={(arg) =>
-                renderResource(arg.resource as ResourceApi)
-              }
+              resourceLabelContent={(arg) => (
+                <ResourceCard
+                  arg={arg.resource as ResourceApi}
+                  handleResourceClick={handleResourceClick}
+                />
+              )}
               events={events}
             />
             <ResourceDropdownMenu
@@ -283,7 +229,7 @@ const Home = () => {
                   <div
                     className={classes["home__main__panel__icon--container"]}
                   >
-                    <img src={ArrowLeftIcon} alt="arrow-left" />
+                    <img src={Icons["arrow-left"]} alt="arrow-left" />
                   </div>
                 </div>
               ) : (
@@ -298,7 +244,10 @@ const Home = () => {
                   >
                     <span>Свернуть панель</span>
                     <div>
-                      <img src={ArrowRightHideIcon} alt="arrow-right-hide" />
+                      <img
+                        src={Icons["arrow-right-hide"]}
+                        alt="arrow-right-hide"
+                      />
                     </div>
                   </div>
 
