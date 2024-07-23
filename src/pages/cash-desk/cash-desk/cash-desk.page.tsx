@@ -13,9 +13,21 @@ import {
 import SouthIcon from "@mui/icons-material/South";
 import NorthIcon from "@mui/icons-material/North";
 import { useState } from "react";
-import { Autocomplete, Button, Divider, TextField } from "@mui/material";
+import {
+  Autocomplete,
+  Button,
+  Divider,
+  Pagination,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  TextField,
+} from "@mui/material";
 import PublicIcon from "@mui/icons-material/Public";
 import CustomTextField from "@/components/textField/textField.component";
+import { Link } from "react-router-dom";
 
 const CashDesk = () => {
   const tabsData = [
@@ -331,6 +343,88 @@ const CashDesk = () => {
                 <Button variant="outlined">Сбросить</Button>
                 <Button variant="contained">Поиск</Button>
               </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className={classes.main__cashDesk}>
+        <div className={classes.main__cashDesk__header}>
+          <h2>Касса</h2>
+          <Divider />
+        </div>
+        <div className={classes["main__cashDesk__lower"]}>
+          <Table className={classes.table}>
+            <TableHead>
+              <TableRow>
+                <TableCell>№</TableCell>
+                <TableCell>Операция</TableCell>
+                <TableCell>Касса</TableCell>
+                <TableCell>Сумма</TableCell>
+                <TableCell>Оплачено</TableCell>
+                <TableCell>Сдача</TableCell>
+                <TableCell>Депозит</TableCell>
+                <TableCell>Клиент</TableCell>
+                <TableCell>Сотрудник</TableCell>
+                <TableCell>Комментарий</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              <TableRow>
+                <TableCell>1</TableCell>
+                <TableCell>
+                  <Link to="/" className={classes.name_link}>
+                    Посещение №721 <br /> 11.07.2024 12:00
+                  </Link>
+                </TableCell>
+                <TableCell>По умолчанию</TableCell>
+                <TableCell>
+                  <p className={classes.money}>25 000 руб.</p>
+                </TableCell>
+                <TableCell>25 000 руб.</TableCell>
+                <TableCell>0 руб.</TableCell>
+                <TableCell>0 руб.</TableCell>
+                <TableCell>
+                  {" "}
+                  <Link to="/" className={classes.name_link}>
+                    {" "}
+                    Иванов Иван Иванович{" "}
+                  </Link>
+                </TableCell>
+                <TableCell>
+                  <Link to="/" className={classes.name_link}>
+                    {" "}
+                    Иванов Иван Иванович{" "}
+                  </Link>
+                </TableCell>
+                <TableCell>Комментарий</TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+          <div className={classes["main__cashDesk__lower__container"]}>
+            <div className={classes["main__cashDesk__lower__container__row"]}>
+              <p className={classes["main__cashDesk__lower__container__label"]}>
+                Показано 2 из 2 записей
+              </p>
+              <div>
+                <div className={classes["tableSettings"]}>
+                  Показывать
+                  <select name="pageSize" id="pageSize">
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="50">50</option>
+                    <option value="100">100</option>
+                  </select>
+                  записей
+                </div>
+              </div>
+              <Pagination
+                count={2}
+                page={1}
+                variant="outlined"
+                shape="rounded"
+                boundaryCount={1}
+                color="primary"
+              />
             </div>
           </div>
         </div>
