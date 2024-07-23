@@ -20,8 +20,8 @@ interface TabData {
 
 interface ResponsiveTabsProps {
   tabsData: TabData[];
-  currentTab: string;
-  onTabChange: (tab: string) => void;
+  currentTab?: string;
+  onTabChange?: (tab: string) => void;
   isWithLink?: boolean;
   className?: string;
 }
@@ -37,7 +37,9 @@ const ResponsiveTabs = ({
   const isSmallScreen = useMediaQuery(theme.breakpoints.down("md"));
 
   const handleTabChange = (event: SelectChangeEvent<string>) => {
-    onTabChange(event.target.value);
+    if (onTabChange) {
+      onTabChange(event.target.value);
+    }
   };
 
   return isSmallScreen ? (
@@ -96,7 +98,7 @@ const ResponsiveTabs = ({
                 className={classNames(classes["tabs__content__tab__link"], {
                   [classes["active"]]: currentTab === to,
                 })}
-                onClick={() => onTabChange(to)}
+                onClick={() => onTabChange && onTabChange(to)}
               >
                 <Icon
                   className={classNames(
