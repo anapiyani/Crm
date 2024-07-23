@@ -1,6 +1,7 @@
+import { Link } from "react-router-dom";
 import BreadcrumbsCustom from "@/components/navigation/breadcrumbs/breadcrumbs";
-import classes from "./style.module.scss";
 import ResponsiveTabs from "@/components/tabs/tabs.component";
+import CustomTextField from "@/components/textField/textField.component";
 import {
   HomeOutlined,
   CalendarMonth,
@@ -9,9 +10,10 @@ import {
   LocalActivity,
   CreditCard,
   Payments,
+  Public,
+  South,
+  North,
 } from "@mui/icons-material";
-import SouthIcon from "@mui/icons-material/South";
-import NorthIcon from "@mui/icons-material/North";
 import { useState } from "react";
 import {
   Autocomplete,
@@ -25,9 +27,7 @@ import {
   TableRow,
   TextField,
 } from "@mui/material";
-import PublicIcon from "@mui/icons-material/Public";
-import CustomTextField from "@/components/textField/textField.component";
-import { Link } from "react-router-dom";
+import classes from "./style.module.scss";
 
 const CashDesk = () => {
   const tabsData = [
@@ -56,30 +56,22 @@ const CashDesk = () => {
           <div className={classes.main__day__info}>
             <div className={classes.main__day__info__buttons}>
               <Button variant="contained">Выплатить зарплату</Button>
-              <Button
-                startIcon={<SouthIcon />}
-                variant="outlined"
-                color="success"
-              >
+              <Button startIcon={<South />} variant="outlined" color="success">
                 Внести деньги
               </Button>
-              <Button
-                startIcon={<NorthIcon />}
-                variant="outlined"
-                color="error"
-              >
+              <Button startIcon={<North />} variant="outlined" color="error">
                 Снять деньги
               </Button>
             </div>
             <div className={classes.main__day__info__infoBox}>
               <div className={classes.main__day__info__infoBox__header}>
                 <p>
-                  <SouthIcon /> Внесено за сегодня
+                  <South /> Внесено за сегодня
                 </p>
               </div>
               <div className={classes.main__day__info__infoBox__content}>
                 <p>
-                  <PublicIcon /> 25 000 руб.
+                  <Public /> 25 000 руб.
                 </p>
                 <p>
                   <Payments />0 руб.
@@ -99,7 +91,7 @@ const CashDesk = () => {
             <div className={classes.main__day__info__infoBox}>
               <div className={classes.main__day__info__infoBox__header}>
                 <p>
-                  <NorthIcon
+                  <North
                     style={{ backgroundColor: "#FCE4E4", color: "#C41C1C" }}
                   />{" "}
                   Снято за сегодня
@@ -107,7 +99,7 @@ const CashDesk = () => {
               </div>
               <div className={classes.main__day__info__infoBox__content}>
                 <p>
-                  <PublicIcon /> 0 руб.
+                  <Public /> 0 руб.
                 </p>
                 <p>
                   <Payments />0 руб.
@@ -134,7 +126,7 @@ const CashDesk = () => {
               </div>
               <div className={classes.main__day__info__infoBox__content}>
                 <p>
-                  <PublicIcon /> 25 000 руб.
+                  <Public /> 25 000 руб.
                 </p>
                 <p>
                   <Payments />0 руб.
@@ -179,12 +171,12 @@ const CashDesk = () => {
             <div className={classes.main__day__info__infoBox}>
               <div className={classes.main__day__info__infoBox__header}>
                 <p>
-                  <SouthIcon /> Внесено за период
+                  <South /> Внесено за период
                 </p>
               </div>
               <div className={classes.main__day__info__infoBox__content}>
                 <p>
-                  <PublicIcon /> 25 000 руб.
+                  <Public /> 25 000 руб.
                 </p>
                 <p>
                   <Payments />0 руб.
@@ -204,7 +196,7 @@ const CashDesk = () => {
             <div className={classes.main__day__info__infoBox}>
               <div className={classes.main__day__info__infoBox__header}>
                 <p>
-                  <NorthIcon
+                  <North
                     style={{ backgroundColor: "#FCE4E4", color: "#C41C1C" }}
                   />{" "}
                   Снято за период
@@ -212,7 +204,7 @@ const CashDesk = () => {
               </div>
               <div className={classes.main__day__info__infoBox__content}>
                 <p>
-                  <PublicIcon /> 0 руб.
+                  <Public /> 0 руб.
                 </p>
                 <p>
                   <Payments />0 руб.
@@ -239,7 +231,7 @@ const CashDesk = () => {
               </div>
               <div className={classes.main__day__info__infoBox__content}>
                 <p>
-                  <PublicIcon /> 25 000 руб.
+                  <Public /> 25 000 руб.
                 </p>
                 <p>
                   <Payments />0 руб.
