@@ -47,7 +47,7 @@ const CashDesk = () => {
         <h1>Виртуальная касса за текущий день</h1>
         <ResponsiveTabs
           tabsData={tabsData}
-          activeTab={activeTab}
+          currentTab={activeTab}
           onTabChange={handleTabChange}
         />
       </div>
