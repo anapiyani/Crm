@@ -81,12 +81,11 @@ const ResponsiveTabs = ({
             isWithLink ? (
               <NavLink
                 key={tab.to}
-                className={({ isActive }) =>
-                  classNames(classes["tabs__content__tab__link"], {
-                    [classes["active"]]: isActive,
-                  })
-                }
+                className={`${classes["tabs__content__tab__link"]} ${
+                  currentTab === index ? classes["active"] : ""
+                }`}
                 to={tab.to}
+                onClick={() => onTabChange && onTabChange(index)}
               >
                 <tab.icon
                   className={classNames(

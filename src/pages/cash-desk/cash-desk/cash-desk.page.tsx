@@ -52,6 +52,10 @@ const CashDesk = () => {
   ];
   const [activeTab, setActiveTab] = useState(0);
 
+  const handleTabChange = (index: number) => {
+    setActiveTab(index);
+  };
+
   const processOperationsData = (
     operations: IKassaOperations[]
   ): { label: string; value: string; isParent: boolean }[] => {
@@ -83,10 +87,6 @@ const CashDesk = () => {
     return result;
   };
   const options = operationsData ? processOperationsData(operationsData) : [];
-
-  const handleTabChange = (index: number) => {
-    setActiveTab(index);
-  };
 
   const handleSalaryModal = () => {
     NiceModal.show(salaryModal);
