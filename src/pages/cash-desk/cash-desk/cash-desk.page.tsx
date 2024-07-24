@@ -1,7 +1,4 @@
 import { Link } from "react-router-dom";
-import BreadcrumbsCustom from "@/components/navigation/breadcrumbs/breadcrumbs";
-import ResponsiveTabs from "@/components/tabs/tabs.component";
-import CustomTextField from "@/components/textField/textField.component";
 import {
   HomeOutlined,
   CalendarMonth,
@@ -27,7 +24,15 @@ import {
   TableRow,
   TextField,
 } from "@mui/material";
+import BreadcrumbsCustom from "@/components/navigation/breadcrumbs/breadcrumbs";
+import ResponsiveTabs from "@/components/tabs/tabs.component";
+import CustomTextField from "@/components/textField/textField.component";
 import classes from "./style.module.scss";
+import NiceModal from "@ebay/nice-modal-react";
+import salaryModal from "@/modals/cash-desk/salary.modal";
+import withdrawModal from "@/modals/cash-desk/withdraw.modal";
+import endureModal from "@/modals/cash-desk/endure.modal";
+import CashCard from "../_components/cash-card/cash-card";
 
 const CashDesk = () => {
   const tabsData = [
@@ -38,6 +43,18 @@ const CashDesk = () => {
 
   const handleTabChange = (index: number) => {
     setActiveTab(index);
+  };
+
+  const handleSalaryModal = () => {
+    NiceModal.show(salaryModal);
+  };
+
+  const handleWithdrawModal = () => {
+    NiceModal.show(withdrawModal);
+  };
+
+  const handleEndureModal = () => {
+    NiceModal.show(endureModal);
   };
 
   return (
@@ -55,94 +72,74 @@ const CashDesk = () => {
         <div className={classes.main__day}>
           <div className={classes.main__day__info}>
             <div className={classes.main__day__info__buttons}>
-              <Button variant="contained">Выплатить зарплату</Button>
-              <Button startIcon={<South />} variant="outlined" color="success">
+              <Button onClick={handleSalaryModal} variant="contained">
+                Выплатить зарплату
+              </Button>
+              <Button
+                onClick={handleEndureModal}
+                startIcon={<South />}
+                variant="outlined"
+                color="success"
+              >
                 Внести деньги
               </Button>
-              <Button startIcon={<North />} variant="outlined" color="error">
+              <Button
+                onClick={handleWithdrawModal}
+                startIcon={<North />}
+                variant="outlined"
+                color="error"
+              >
                 Снять деньги
               </Button>
             </div>
-            <div className={classes.main__day__info__infoBox}>
-              <div className={classes.main__day__info__infoBox__header}>
-                <p>
+            <CashCard
+              header={
+                <>
                   <South /> Внесено за сегодня
-                </p>
-              </div>
-              <div className={classes.main__day__info__infoBox__content}>
-                <p>
-                  <Public /> 25 000 руб.
-                </p>
-                <p>
-                  <Payments />0 руб.
-                </p>
-                <p>
-                  <CreditCard />
-                  25 000 руб.
-                </p>
-                <p>
-                  <LocalActivity />0 руб.
-                </p>
-                <p>
-                  <MenuBook />0 руб.
-                </p>
-              </div>
-            </div>
-            <div className={classes.main__day__info__infoBox}>
-              <div className={classes.main__day__info__infoBox__header}>
-                <p>
+                </>
+              }
+              content={[
+                { icon: <Public />, text: "25 000 руб." },
+                { icon: <Payments />, text: "0 руб." },
+                { icon: <CreditCard />, text: "25 000 руб." },
+                { icon: <LocalActivity />, text: "0 руб." },
+                { icon: <MenuBook />, text: "0 руб." },
+              ]}
+            />
+            <CashCard
+              header={
+                <>
                   <North
                     style={{ backgroundColor: "#FCE4E4", color: "#C41C1C" }}
                   />{" "}
                   Снято за сегодня
-                </p>
-              </div>
-              <div className={classes.main__day__info__infoBox__content}>
-                <p>
-                  <Public /> 0 руб.
-                </p>
-                <p>
-                  <Payments />0 руб.
-                </p>
-                <p>
-                  <CreditCard />0 руб.
-                </p>
-                <p>
-                  <LocalActivity />0 руб.
-                </p>
-                <p>
-                  <MenuBook />0 руб.
-                </p>
-              </div>
-            </div>
-            <div className={classes.main__day__info__infoBox}>
-              <div className={classes.main__day__info__infoBox__header}>
-                <p>
+                </>
+              }
+              content={[
+                { icon: <Public />, text: "0 руб." },
+                { icon: <Payments />, text: "0 руб." },
+                { icon: <CreditCard />, text: "0 руб." },
+                { icon: <LocalActivity />, text: "0 руб." },
+                { icon: <MenuBook />, text: "0 руб." },
+              ]}
+            />
+            <CashCard
+              header={
+                <>
                   <ImportExport
                     style={{ backgroundColor: "#E3EFFB", color: "#0B6BCB" }}
-                  />{" "}
-                  Снято за сегодня
-                </p>
-              </div>
-              <div className={classes.main__day__info__infoBox__content}>
-                <p>
-                  <Public /> 25 000 руб.
-                </p>
-                <p>
-                  <Payments />0 руб.
-                </p>
-                <p>
-                  <CreditCard />
-                  25 000 руб.
-                </p>
-                <p>
-                  <LocalActivity />0 руб.
-                </p>
-                <p>
-                  <MenuBook />0 руб.
-                </p>
-              </div>
-            </div>
+                  />
+                  Итого за сегодня
+                </>
+              }
+              content={[
+                { icon: <Public />, text: "25 000 руб." },
+                { icon: <Payments />, text: "0 руб." },
+                { icon: <CreditCard />, text: "25 000 руб." },
+                { icon: <LocalActivity />, text: "0 руб." },
+                { icon: <MenuBook />, text: "0 руб." },
+              ]}
+            />
           </div>
         </div>
       ) : (
@@ -168,86 +165,54 @@ const CashDesk = () => {
               </div>
               <Button variant="contained">Показать</Button>
             </div>
-            <div className={classes.main__day__info__infoBox}>
-              <div className={classes.main__day__info__infoBox__header}>
-                <p>
+            <CashCard
+              header={
+                <>
                   <South /> Внесено за период
-                </p>
-              </div>
-              <div className={classes.main__day__info__infoBox__content}>
-                <p>
-                  <Public /> 25 000 руб.
-                </p>
-                <p>
-                  <Payments />0 руб.
-                </p>
-                <p>
-                  <CreditCard />
-                  25 000 руб.
-                </p>
-                <p>
-                  <LocalActivity />0 руб.
-                </p>
-                <p>
-                  <MenuBook />0 руб.
-                </p>
-              </div>
-            </div>
-            <div className={classes.main__day__info__infoBox}>
-              <div className={classes.main__day__info__infoBox__header}>
-                <p>
+                </>
+              }
+              content={[
+                { icon: <Public />, text: "25 000 руб." },
+                { icon: <Payments />, text: "0 руб." },
+                { icon: <CreditCard />, text: "25 000 руб." },
+                { icon: <LocalActivity />, text: "0 руб." },
+                { icon: <MenuBook />, text: "0 руб." },
+              ]}
+            />
+            <CashCard
+              header={
+                <>
                   <North
                     style={{ backgroundColor: "#FCE4E4", color: "#C41C1C" }}
                   />{" "}
                   Снято за период
-                </p>
-              </div>
-              <div className={classes.main__day__info__infoBox__content}>
-                <p>
-                  <Public /> 0 руб.
-                </p>
-                <p>
-                  <Payments />0 руб.
-                </p>
-                <p>
-                  <CreditCard />0 руб.
-                </p>
-                <p>
-                  <LocalActivity />0 руб.
-                </p>
-                <p>
-                  <MenuBook />0 руб.
-                </p>
-              </div>
-            </div>
-            <div className={classes.main__day__info__infoBox}>
-              <div className={classes.main__day__info__infoBox__header}>
-                <p>
+                </>
+              }
+              content={[
+                { icon: <Public />, text: "0 руб." },
+                { icon: <Payments />, text: "0 руб." },
+                { icon: <CreditCard />, text: "0 руб." },
+                { icon: <LocalActivity />, text: "0 руб." },
+                { icon: <MenuBook />, text: "0 руб." },
+              ]}
+            />
+            <CashCard
+              header={
+                <>
                   <ImportExport
                     style={{ backgroundColor: "#E3EFFB", color: "#0B6BCB" }}
                   />{" "}
                   Итого за период
-                </p>
-              </div>
-              <div className={classes.main__day__info__infoBox__content}>
-                <p>
-                  <Public /> 25 000 руб.
-                </p>
-                <p>
-                  <Payments />0 руб.
-                </p>
-                <p>
-                  <CreditCard />
-                  25 000 руб.
-                </p>
-                <p>
-                  <LocalActivity />0 руб.
-                </p>
-                <p>
-                  <MenuBook />0 руб.
-                </p>
-              </div>
-            </div>
+                </>
+              }
+              content={[
+                { icon: <Public />, text: "25 000 руб." },
+                { icon: <Payments />, text: "0 руб." },
+                { icon: <CreditCard />, text: "25 000 руб." },
+                { icon: <LocalActivity />, text: "0 руб." },
+                { icon: <MenuBook />, text: "0 руб." },
+              ]}
+            />
           </div>
         </div>
       )}
