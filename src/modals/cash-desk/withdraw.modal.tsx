@@ -19,6 +19,7 @@ import {
   TextField,
 } from "@mui/material";
 import { Link } from "react-router-dom";
+import CustomAutoComplete from "@/components/autocomplete/custom-autocomplete.component";
 
 const WithdrawModal = () => {
   const modal = useModal();
@@ -33,30 +34,35 @@ const WithdrawModal = () => {
       <div className={classes.modalContent}>
         <div className={classes.modalContent__content}>
           <div className={classes.modalContent__content__item}>
-            <p>Назначение платежа</p>
-            <Autocomplete
-              sx={{ width: "280px" }}
+            <CustomAutoComplete
+              name="service"
+              selectValue={"label"}
+              placeholder="Сервис клиента"
+              size="small"
+              label="Назначение платежа"
               options={[
                 { label: "Option 1", value: "1" },
                 { label: "Option 2", value: "2" },
                 { label: "Option 3", value: "3" },
               ]}
-              getOptionLabel={(option) => option.label}
-              renderInput={(params) => (
-                <TextField
-                  variant="outlined"
-                  {...params}
-                  label="Сервис клиента"
-                />
-              )}
             />
           </div>
           <div className={classes.modalContent__content__item}>
             <p>Комментарий</p>
             <TextField
               variant="outlined"
-              sx={{ width: "280px" }}
+              sx={{
+                width: "290px",
+                fontSize: "1.4rem",
+                "& .MuiFormLabel-root": {
+                  fontSize: "1.4rem",
+                },
+                "& .MuiOutlinedInput-root": {
+                  fontSize: "1.4rem",
+                },
+              }}
               label="Введите комментарий"
+              size="small"
             />
           </div>
         </div>
@@ -66,9 +72,26 @@ const WithdrawModal = () => {
             <p>Сумма</p>
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 2328448 (Feat: Added endure money modal from cash desk)
             <TextField variant="outlined" label="Введите сумму" />
+=======
+            <TextField
+              variant="outlined"
+              label="Введите сумму"
+              size="small"
+              sx={{
+                fontSize: "1.4rem",
+                "& .MuiFormLabel-root": {
+                  fontSize: "1.4rem",
+                },
+                "& .MuiOutlinedInput-root": {
+                  fontSize: "1.4rem",
+                },
+              }}
+            />
+>>>>>>> 1ebbff2 (Fix: fixed autocpmlete)
             <Button
               sx={{
                 minWidth: "40px",
@@ -116,18 +139,18 @@ const WithdrawModal = () => {
             <span>руб.</span>
           </div>
           <div className={classes.modalContent__content__item}>
-            <p>Метод снятия</p>
-            <Autocomplete
+            <CustomAutoComplete
               sx={{ width: "280px" }}
+              name="method"
+              selectValue={"label"}
+              placeholder="Наличными"
+              size="small"
+              label="Метод снятия"
               options={[
                 { label: "Option 1", value: "1" },
                 { label: "Option 2", value: "2" },
                 { label: "Option 3", value: "3" },
               ]}
-              getOptionLabel={(option) => option.label}
-              renderInput={(params) => (
-                <TextField variant="outlined" {...params} label="Наличными" />
-              )}
             />
           </div>
         </div>

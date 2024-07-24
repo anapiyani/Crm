@@ -1,5 +1,5 @@
 import React from "react";
-import { Autocomplete, Paper, TextField } from "@mui/material";
+import { Autocomplete, Paper, SxProps, TextField } from "@mui/material";
 import classes from "./styles.module.scss";
 import classNames from "classnames";
 
@@ -18,6 +18,7 @@ interface ICustomAutoCompleteProps<T extends IOption> {
   placeholder?: string;
   className?: string;
   size?: "small" | "medium";
+  sx?: SxProps;
 }
 
 const isString = (item: unknown): item is string => {
@@ -34,6 +35,7 @@ const CustomAutoComplete = <T extends IOption>({
   placeholder,
   className,
   size = "medium",
+  sx,
 }: ICustomAutoCompleteProps<T>): React.ReactElement => {
   return (
     <div className={classNames(classes["autocomplete"], className)}>
@@ -58,6 +60,7 @@ const CustomAutoComplete = <T extends IOption>({
           "& .MuiAutocomplete-inputRoot": {
             fontSize: "1.4rem",
           },
+          ...sx,
         }}
         onChange={(_, newValue) => {
           if (onChange) {

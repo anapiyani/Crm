@@ -11,6 +11,7 @@ import {
   RadioGroup,
   TextField,
 } from "@mui/material";
+import CustomAutoComplete from "@/components/autocomplete/custom-autocomplete.component";
 
 const EndureModal = () => {
   const modal = useModal();
@@ -25,30 +26,35 @@ const EndureModal = () => {
       <div className={classes.modalContent}>
         <div className={classes.modalContent__content}>
           <div className={classes.modalContent__content__item}>
-            <p>Назначение платежа</p>
-            <Autocomplete
-              sx={{ width: "280px" }}
+            <CustomAutoComplete
+              name="service"
+              selectValue={"label"}
+              placeholder="Внести средства из прибыли"
+              size="small"
+              label="Назначение платежа"
               options={[
                 { label: "Option 1", value: "1" },
                 { label: "Option 2", value: "2" },
                 { label: "Option 3", value: "3" },
               ]}
-              getOptionLabel={(option) => option.label}
-              renderInput={(params) => (
-                <TextField
-                  variant="outlined"
-                  {...params}
-                  label="Сервис клиента"
-                />
-              )}
             />
           </div>
           <div className={classes.modalContent__content__item}>
             <p>Комментарий</p>
             <TextField
               variant="outlined"
-              sx={{ width: "280px" }}
+              sx={{
+                width: "290px",
+                fontSize: "1.4rem",
+                "& .MuiFormLabel-root": {
+                  fontSize: "1.4rem",
+                },
+                "& .MuiOutlinedInput-root": {
+                  fontSize: "1.4rem",
+                },
+              }}
               label="Введите комментарий"
+              size="small"
             />
           </div>
         </div>
@@ -56,7 +62,20 @@ const EndureModal = () => {
         <div className={classes.modalContent__content}>
           <div className={classes.modalContent__content__item}>
             <p>Сумма</p>
-            <TextField variant="outlined" label="Введите сумму" />
+            <TextField
+              variant="outlined"
+              label="Введите сумму"
+              size="small"
+              sx={{
+                fontSize: "1.4rem",
+                "& .MuiFormLabel-root": {
+                  fontSize: "1.4rem",
+                },
+                "& .MuiOutlinedInput-root": {
+                  fontSize: "1.4rem",
+                },
+              }}
+            />
             <Button
               sx={{
                 minWidth: "40px",
@@ -80,18 +99,18 @@ const EndureModal = () => {
             <span>руб.</span>
           </div>
           <div className={classes.modalContent__content__item}>
-            <p>Метод снятия</p>
-            <Autocomplete
+            <CustomAutoComplete
               sx={{ width: "280px" }}
+              name="method"
+              selectValue={"label"}
+              placeholder="Наличными"
+              size="small"
+              label="Метод внесения"
               options={[
                 { label: "Option 1", value: "1" },
                 { label: "Option 2", value: "2" },
                 { label: "Option 3", value: "3" },
               ]}
-              getOptionLabel={(option) => option.label}
-              renderInput={(params) => (
-                <TextField variant="outlined" {...params} label="Наличными" />
-              )}
             />
           </div>
         </div>
