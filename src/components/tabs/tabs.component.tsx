@@ -20,8 +20,8 @@ interface TabData {
 
 interface ResponsiveTabsProps {
   tabsData: TabData[];
-  currentTab?: string;
-  onTabChange?: (tab: string) => void;
+  currentTab?: number;
+  onTabChange?: (tab: number) => void;
   isWithLink?: boolean;
   className?: string;
 }
@@ -38,14 +38,14 @@ const ResponsiveTabs = ({
 
   const handleTabChange = (event: SelectChangeEvent<string>) => {
     if (onTabChange) {
-      onTabChange(event.target.value);
+      onTabChange(parseInt(event.target.value));
     }
   };
 
   return isSmallScreen ? (
     <Grid container xs={9}>
       <Select
-        value={currentTab}
+        value={currentTab?.toString()}
         onChange={handleTabChange}
         className={classes["dropdown"]}
         displayEmpty
@@ -58,10 +58,10 @@ const ResponsiveTabs = ({
         <MenuItem value="" disabled sx={{ fontSize: "1.4rem" }}>
           Select Tab
         </MenuItem>
-        {tabsData.map(({ to, icon: Icon, label }) => (
-          <MenuItem key={to} value={to} sx={{ fontSize: "1.4rem" }}>
-            <Icon style={{ marginRight: 8 }} />
-            {label}
+        {tabsData.map((tab, index) => (
+          <MenuItem key={tab.to} value={index.toString()} sx={{ fontSize: "1.4rem" }}>
+            <tab.icon style={{ marginRight: 8 }} />
+            {tab.label}
           </MenuItem>
         ))}
       </Select>
@@ -73,40 +73,40 @@ const ResponsiveTabs = ({
         className={classNames(classes["tabs__content"])}
       >
         <div className={classNames(classes["tabs__content__tab"])}>
-          {tabsData.map(({ to, icon: Icon, label }) =>
+          {tabsData.map((tab, index) =>
             isWithLink ? (
               <NavLink
-                key={to}
+                key={tab.to}
                 className={({ isActive }) =>
                   classNames(classes["tabs__content__tab__link"], {
                     [classes["active"]]: isActive,
                   })
                 }
-                to={to}
+                to={tab.to}
               >
-                <Icon
+                <tab.icon
                   className={classNames(
                     classes["tabs__content__tab__link__icon"]
                   )}
                   style={{ width: 22, height: 22 }}
                 />
-                <p>{label}</p>
+                <p>{tab.label}</p>
               </NavLink>
             ) : (
               <div
-                key={to}
+                key={tab.to}
                 className={classNames(classes["tabs__content__tab__link"], {
-                  [classes["active"]]: currentTab === to,
+                  [classes["active"]]: currentTab === index,
                 })}
-                onClick={() => onTabChange && onTabChange(to)}
+                onClick={() => onTabChange && onTabChange(index)}
               >
-                <Icon
+                <tab.icon
                   className={classNames(
                     classes["tabs__content__tab__link__icon"]
                   )}
                   style={{ width: 22, height: 22 }}
                 />
-                <p>{label}</p>
+                <p>{tab.label}</p>
               </div>
             )
           )}

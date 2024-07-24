@@ -21,21 +21,21 @@ import EmployeeVisitsTable from "@/pages/employees/employee-visits/visits-table/
 
 const EventDetailsModal = () => {
   const modal = useModal();
-  const [currentTab, setCurrentTab] = useState(eventTabs[0].to);
+  const [currentTab, setCurrentTab] = useState(0);
 
-  const handleTabChange = (tab: string) => {
-    setCurrentTab(tab);
+  const handleTabChange = (tabIndex: number) => {
+    setCurrentTab(tabIndex);
   };
 
   const renderContent = () => {
     switch (currentTab) {
-      case "/tab1":
+      case 0:
         return (
           <div>
             <h1>hello</h1>
           </div>
         );
-      case "/tab2":
+      case 1:
         return (
           <div>
             <Grid
@@ -86,7 +86,7 @@ const EventDetailsModal = () => {
             </Grid>
           </div>
         );
-      case "/tab3":
+      case 2:
         return (
           <div
             style={{ display: "flex", flexDirection: "column", gap: "1.6rem" }}
@@ -115,7 +115,7 @@ const EventDetailsModal = () => {
             <div style={{ display: "flex", flexDirection: "column" }}></div>
           </div>
         );
-      case "/tab4":
+      case 3:
         return <div>Content for Tab 4</div>;
       default:
         return <div>Default Content</div>;
