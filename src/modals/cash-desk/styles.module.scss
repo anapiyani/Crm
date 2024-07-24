@@ -80,6 +80,13 @@
       span {
         font-size: 1.6rem;
       }
+      button {
+        background: none;
+        font-size: 1.6rem;
+        font-weight: 400;
+        cursor: pointer;
+        margin-right: 1rem;
+      }
       &:first-child {
         margin-top: 0;
       }

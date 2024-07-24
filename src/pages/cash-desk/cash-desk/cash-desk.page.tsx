@@ -31,6 +31,7 @@ import classes from "./style.module.scss";
 import NiceModal from "@ebay/nice-modal-react";
 import salaryModal from "@/modals/cash-desk/salary.modal";
 import withdrawModal from "@/modals/cash-desk/withdraw.modal";
+import endureModal from "@/modals/cash-desk/endure.modal";
 
 const CashDesk = () => {
   const tabsData = [
@@ -51,6 +52,10 @@ const CashDesk = () => {
     NiceModal.show(withdrawModal);
   };
 
+  const handleEndureModal = () => {
+    NiceModal.show(endureModal);
+  };
+
   return (
     <div className={classes.main}>
       <BreadcrumbsCustom />
@@ -69,7 +74,12 @@ const CashDesk = () => {
               <Button onClick={handleSalaryModal} variant="contained">
                 Выплатить зарплату
               </Button>
-              <Button startIcon={<South />} variant="outlined" color="success">
+              <Button
+                onClick={handleEndureModal}
+                startIcon={<South />}
+                variant="outlined"
+                color="success"
+              >
                 Внести деньги
               </Button>
               <Button

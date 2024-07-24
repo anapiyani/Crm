@@ -11,17 +11,16 @@ import {
   RadioGroup,
   TextField,
 } from "@mui/material";
-import { Link } from "react-router-dom";
 
-const WithdrawModal = () => {
+const EndureModal = () => {
   const modal = useModal();
   return (
     <ModalWindow
-      title={"Снять деньги из кассы"}
+      title={"Внести деньги в кассу"}
       open={modal.visible}
       handleClose={() => modal.hide()}
       className={classes["u-p-0"]}
-      titleStyles={{ fontSize: "2.4rem", color: "#C41C1C" }}
+      titleStyles={{ fontSize: "2.4rem", color: "#2E7D32" }}
     >
       <div className={classes.modalContent}>
         <div className={classes.modalContent__content}>
@@ -101,4 +100,4 @@ const WithdrawModal = () => {
   );
 };
 
-export default NiceModal.create(WithdrawModal);
+export default NiceModal.create(EndureModal);
