@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getRooms } from "@/service/rooms/rooms.service";
-import { getServices } from "@/service/services/services.service";
+import { getHierarchy } from "@/service/hierarchy/hierarchy.service";
 import { IRoom } from "@/ts/types";
 import RecursiveCheckbox from "@/components/recursive-checkbox/recursive-checkbox";
 import BreadcrumbsCustom from "@/components/navigation/breadcrumbs/breadcrumbs";
@@ -59,7 +59,7 @@ const EmployeeCabinet = () => {
 
   const { data: serviceData } = useQuery({
     queryKey: ["serviceData"],
-    queryFn: getServices,
+    queryFn: getHierarchy,
     staleTime: Infinity,
     refetchOnWindowFocus: false,
   });

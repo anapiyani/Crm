@@ -1,6 +1,6 @@
 import BreadcrumbsCustom from "@/components/navigation/breadcrumbs/breadcrumbs";
 import TreeItem from "@/components/treeItem/treeItem";
-import { getServices } from "@/service/services/services.service";
+import { getHierarchy } from "@/service/hierarchy/hierarchy.service"
 import { IServiceCategory } from "@/ts/types";
 import { Button, CircularProgress, Divider } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
@@ -12,7 +12,7 @@ import CustomTextField from "@/components/textField/textField.component";
 const ServiceCatalog = () => {
   const { data, isPending, isError } = useQuery({
     queryKey: ["serviceData"],
-    queryFn: getServices,
+    queryFn: getHierarchy,
     staleTime: Infinity,
     refetchOnWindowFocus: false,
   });

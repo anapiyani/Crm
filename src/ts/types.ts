@@ -82,3 +82,10 @@ export interface IRoom {
   available_online: boolean;
   services: number[];
 }
+
+export interface IResponseData<T> {
+  count: number;
+  next: string;
+  previous: string;
+  results: T;
+}
