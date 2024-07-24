@@ -4,9 +4,13 @@ import classes from "./styles.module.scss";
 import {
   Autocomplete,
 <<<<<<< HEAD
+<<<<<<< HEAD
   Button,
 =======
 >>>>>>> 3c7938a (Feat: Added modal for withdraw money from cash reg)
+=======
+  Button,
+>>>>>>> 2328448 (Feat: Added endure money modal from cash desk)
   Divider,
   FormControl,
   FormControlLabel,
@@ -61,6 +65,9 @@ const WithdrawModal = () => {
           <div className={classes.modalContent__content__item}>
             <p>Сумма</p>
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 2328448 (Feat: Added endure money modal from cash desk)
             <TextField variant="outlined" label="Введите сумму" />
             <Button
               sx={{
@@ -68,6 +75,7 @@ const WithdrawModal = () => {
                 width: "40px",
                 marginLeft: "10px",
               }}
+<<<<<<< HEAD
               variant="outlined"
             >
               +
@@ -89,6 +97,22 @@ const WithdrawModal = () => {
               label="Введите сумму"
             />
 >>>>>>> 3c7938a (Feat: Added modal for withdraw money from cash reg)
+=======
+              variant="outlined"
+            >
+              +
+            </Button>
+            <Button
+              sx={{
+                minWidth: "40px",
+                width: "40px",
+              }}
+              variant="outlined"
+              color="error"
+            >
+              -
+            </Button>
+>>>>>>> 2328448 (Feat: Added endure money modal from cash desk)
             <span>руб.</span>
           </div>
           <div className={classes.modalContent__content__item}>
