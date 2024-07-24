@@ -15,7 +15,7 @@ import {
 } from "@mui/material";
 import classes from "./styles.module.scss";
 import BreadcrumbsCustom from "@/components/navigation/breadcrumbs/breadcrumbs";
-import SearchFilterCard from "@/pages/employees/search/components/search-filter-card";
+import SearchFilterCard from "@/components/search-filter-card/search-filter-card";
 import VerticalTextField from "@/components/textfield-vertical/textfield-vertical";
 
 const ClientSearch = () => {

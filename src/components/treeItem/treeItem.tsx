@@ -9,13 +9,22 @@ import classes from "./styles.module.scss";
 
 interface IServiceProps {
   service: IService;
+  isSelected: boolean;
+  onSelect: (service: IService) => void;
 }
 
-const ServiceItem: React.FC<IServiceProps> = ({ service }) => {
+const ServiceItem: React.FC<IServiceProps> = ({
+  service,
+  isSelected,
+  onSelect,
+}) => {
   return (
     <li
-      className={classes["tree__service"]}
+      className={`${classes["tree__service"]} ${
+        isSelected ? classes["selected"] : ""
+      }`}
       style={{ listStyle: "none", gap: "1.6rem" }}
+      onClick={() => onSelect(service)}
     >
       <ContentCutIcon style={{ color: "#388E3C", fontSize: "24px" }} />{" "}
       {service.name}
@@ -25,6 +34,8 @@ const ServiceItem: React.FC<IServiceProps> = ({ service }) => {
 
 interface ICategoryProps {
   category: IServiceCategory;
+  selectedServiceId: number | null;
+  onSelectService: (service: IService, parent: string[]) => void;
 }
 
 const levelsIcon: Record<string, JSX.Element> = {
@@ -60,8 +71,13 @@ const levelsIcon: Record<string, JSX.Element> = {
   ),
 };
 
-const TreeItem = ({ category }: ICategoryProps) => {
+const TreeItem: React.FC<ICategoryProps> = ({
+  category,
+  selectedServiceId,
+  onSelectService,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [parent, setParent] = useState<string[]>([]);
   const toggle = () => setIsOpen(!isOpen);
 
   return (
@@ -82,12 +98,24 @@ const TreeItem = ({ category }: ICategoryProps) => {
       {isOpen && (
         <div className={classes["tree__open"]}>
           {category.children.map((child) => (
-            <TreeItem key={child.id} category={child} />
+            <TreeItem
+              key={child.id}
+              category={child}
+              selectedServiceId={selectedServiceId}
+              onSelectService={onSelectService}
+            />
           ))}
           {category.services.length > 0 && (
             <ul>
               {category.services.map((service) => (
-                <ServiceItem key={service.id} service={service} />
+                <ServiceItem
+                  key={service.id}
+                  service={service}
+                  isSelected={service.id === selectedServiceId}
+                  onSelect={(service) => {
+                    onSelectService(service, parent);
+                  }}
+                />
               ))}
             </ul>
           )}
@@ -97,4 +125,33 @@ const TreeItem = ({ category }: ICategoryProps) => {
   );
 };
 
-export default TreeItem;
+interface TreeViewProps {
+  categories: IServiceCategory[];
+  onServiceSelect: (service: IService, parent: string[]) => void;
+}
+
+const TreeView: React.FC<TreeViewProps> = ({ categories, onServiceSelect }) => {
+  const [selectedServiceId, setSelectedServiceId] = useState<number | null>(
+    null
+  );
+
+  const handleSelectService = (service: IService, parent: string[]) => {
+    setSelectedServiceId(service.id);
+    onServiceSelect(service, parent);
+  };
+
+  return (
+    <div>
+      {categories.map((category) => (
+        <TreeItem
+          key={category.id}
+          category={category}
+          selectedServiceId={selectedServiceId}
+          onSelectService={handleSelectService}
+        />
+      ))}
+    </div>
+  );
+};
+
+export default TreeView;

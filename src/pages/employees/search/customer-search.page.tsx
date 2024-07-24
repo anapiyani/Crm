@@ -18,7 +18,7 @@ import {
   TextField,
 } from "@mui/material";
 import classes from "./styles.module.scss";
-import SearchFilterCard from "./components/search-filter-card";
+import SearchFilterCard from "@/components/search-filter-card/search-filter-card";
 import VerticalTextField from "@/components/textfield-vertical/textfield-vertical";
 import {
   ChildCheckbox,

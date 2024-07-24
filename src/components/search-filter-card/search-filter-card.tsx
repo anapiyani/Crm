@@ -9,6 +9,7 @@ interface ISearchFilterCardProps {
   children: React.ReactNode;
   classNameUnique?: string;
   open?: boolean;
+  openEnabled?: boolean;
 }
 
 const SearchFilterCard: React.FC<ISearchFilterCardProps> = ({
@@ -16,9 +17,11 @@ const SearchFilterCard: React.FC<ISearchFilterCardProps> = ({
   children,
   classNameUnique,
   open,
+  openEnabled,
   ...props
 }) => {
   const [isOpen, setIsOpen] = useState(open);
+  const [isEnable] = useState(openEnabled);
 
   const handleFilterOpening = () => {
     setIsOpen((prev) => !prev);
@@ -30,13 +33,26 @@ const SearchFilterCard: React.FC<ISearchFilterCardProps> = ({
     >
       <div onClick={handleFilterOpening} className={classes["container__top"]}>
         <h2 className={classes["container__title"]}>{title}</h2>
-        <button type="button" className={classes["container__btn"]}>
-          {!isOpen ? <ExpandMore /> : <ExpandLess />}
-        </button>
+
+        {isEnable ? (
+          <button
+            disabled={isEnable}
+            type="button"
+            className={classes["container__btn"]}
+          >
+            {!isOpen ? <ExpandMore /> : <ExpandLess />}
+          </button>
+        ) : (
+          <></>
+        )}
       </div>
 
       <Divider />
-      <div>{isOpen && <div className="p-3">{children}</div>}</div>
+      {isEnable ? (
+        <div>{isOpen && <div className="p-3">{children}</div>}</div>
+      ) : (
+        <div className="p-3">{children}</div>
+      )}
     </div>
   );
 };
