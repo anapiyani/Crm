@@ -32,7 +32,7 @@ export const searchDepartment = (): Promise<IDepartments> => {
 };
 
 export const searchEmployee = (
-  formData: ISearchFormData
+  formData: Partial<ISearchFormData>
 ): Promise<void | IEmployeesData> => {
   const params = new URLSearchParams();
   Object.entries(formData).forEach(([key, value]) => {

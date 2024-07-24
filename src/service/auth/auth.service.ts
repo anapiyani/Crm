@@ -21,5 +21,14 @@ export const phoneLogin = (phone_number: string): Promise<any> => {
 export const getToken = (
   refresh: string
 ): Promise<Omit<ILoginResponse, "refresh">> => {
-  return api.post("/api/token/refresh/", { refresh }).then((res) => res.data);
+  return api
+    .post("/api/token/refresh/", { refresh })
+    .then((res) => {
+      console.log("Token refresh response:", res.data);
+      return res.data;
+    })
+    .catch((error) => {
+      console.error("Token refresh error:", error);
+      throw error; // Re-throw the error to be caught in the interceptor's catch block
+    });
 };
