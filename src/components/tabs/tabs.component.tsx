@@ -59,7 +59,11 @@ const ResponsiveTabs = ({
           Select Tab
         </MenuItem>
         {tabsData.map((tab, index) => (
-          <MenuItem key={tab.to} value={index.toString()} sx={{ fontSize: "1.4rem" }}>
+          <MenuItem
+            key={tab.to}
+            value={index.toString()}
+            sx={{ fontSize: "1.4rem" }}
+          >
             <tab.icon style={{ marginRight: 8 }} />
             {tab.label}
           </MenuItem>

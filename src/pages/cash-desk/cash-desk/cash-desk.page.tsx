@@ -26,20 +26,63 @@ import {
 } from "@mui/material";
 import BreadcrumbsCustom from "@/components/navigation/breadcrumbs/breadcrumbs";
 import ResponsiveTabs from "@/components/tabs/tabs.component";
-import CustomTextField from "@/components/textField/textField.component";
 import classes from "./style.module.scss";
 import NiceModal from "@ebay/nice-modal-react";
 import salaryModal from "@/modals/cash-desk/salary.modal";
 import withdrawModal from "@/modals/cash-desk/withdraw.modal";
 import endureModal from "@/modals/cash-desk/endure.modal";
 import CashCard from "../_components/cash-card/cash-card";
+import { getOperations } from "@/service/kassa/kassa.service";
+import { useQuery } from "@tanstack/react-query";
+import { IKassaOperations } from "@/ts/kassa.interface";
 
 const CashDesk = () => {
+  const {
+    data: operationsData,
+    isPending: operationsPending,
+    isError: operationsError,
+  } = useQuery({
+    queryKey: ["kassaService"],
+    queryFn: () => getOperations(),
+  });
+
   const tabsData = [
     { to: "/cashdesk/", icon: HomeOutlined, label: "Обзор" },
     { to: "/cashdesk", icon: CalendarMonth, label: "Посещения" },
   ];
   const [activeTab, setActiveTab] = useState(0);
+
+  const processOperationsData = (
+    operations: IKassaOperations[]
+  ): { label: string; value: string; isParent: boolean }[] => {
+    const result: { label: string; value: string; isParent: boolean }[] = [];
+
+    const traverse = (
+      nodes: IKassaOperations[],
+      parent: IKassaOperations | null
+    ) => {
+      nodes.forEach((node) => {
+        if (node.children && node.children.length > 0) {
+          result.push({
+            label: node.name,
+            value: node.id.toString(),
+            isParent: true,
+          });
+          traverse(node.children, node);
+        } else {
+          result.push({
+            label: node.name,
+            value: node.id.toString(),
+            isParent: false,
+          });
+        }
+      });
+    };
+
+    traverse(operations, null);
+    return result;
+  };
+  const options = operationsData ? processOperationsData(operationsData) : [];
 
   const handleTabChange = (index: number) => {
     setActiveTab(index);
@@ -260,16 +303,31 @@ const CashDesk = () => {
             </div>
             <Autocomplete
               sx={{ width: 330 }}
-              options={[
-                { label: "Option 1", value: "1" },
-                { label: "Option 2", value: "2" },
-                { label: "Option 3", value: "3" },
-                { label: "Option 4", value: "4" },
-                { label: "Option 5", value: "5" },
-              ]}
+              options={options}
               getOptionLabel={(option) => option.label}
+              renderOption={(props, option) => (
+                <li
+                  {...props}
+                  key={option.value}
+                  style={{ pointerEvents: option.isParent ? "none" : "auto" }}
+                >
+                  <p
+                    style={{
+                      fontSize: "1.4rem",
+                      fontWeight: option.isParent ? "bold" : "normal",
+                      marginLeft: option.isParent ? "0" : "1rem",
+                    }}
+                  >
+                    {option.label}
+                  </p>
+                </li>
+              )}
               renderInput={(params) => (
-                <CustomTextField {...params} label={"Выберите опцию"} />
+                <TextField
+                  {...params}
+                  label={"Выберите операцию"}
+                  variant="outlined"
+                />
               )}
             />
           </div>
