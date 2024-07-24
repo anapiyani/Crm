@@ -1,12 +1,7 @@
 import api from "../api";
 import { IBreaks, ISchedule } from "@/ts/schedule.interface";
+import { IResponseData } from "@/ts/types";
 
-interface IResponseData<T> {
-  count: number;
-  next: string;
-  previous: string;
-  results: T;
-}
 
 export const getSchedules = (): Promise<IResponseData<ISchedule[]>> => {
   return api.get(`/schedule/schedules/`).then((res) => res.data);
