@@ -11,7 +11,7 @@ export const api = axios.create({
   baseURL: "https://crm-beauty-salon-94a93ffd62e6.herokuapp.com/",
 });
 
-let refreshTokenPromise: Promise<any> | null;
+let refreshTokenPromise: Promise<any> | null = null;
 
 api.interceptors.request.use(
   (config) => {
@@ -31,27 +31,27 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
     const refreshToken = getRefreshToken();
-    if (error.response?.status === 401) {
+    if ([401].includes(error.response?.status)) {
       if (refreshToken) {
         if (!refreshTokenPromise) {
-          refreshTokenPromise = getToken(refreshToken)
-            .then((data) => {
-              refreshTokenPromise = null;
-              return data;
-            })
-            .catch(() => {
-              removeTokens();
-              window.location.href = "/login";
-              return Promise.reject(error);
-            });
+          refreshTokenPromise = getToken(refreshToken).then((data) => {
+            refreshTokenPromise = null;
+            return data;
+          });
         }
 
-        return refreshTokenPromise.then((res) => {
-          const { access, refresh } = res;
-          setTokens(access, refresh);
-          originalRequest.headers.common["Authorization"] = `Bearer ${access}`;
-          return api(originalRequest);
-        });
+        return refreshTokenPromise
+          .then((res) => {
+            const { access, refresh } = res;
+            setTokens(access, refresh);
+            api.defaults.headers.common["Authorization"] = `Bearer ${access}`;
+            return api(originalRequest);
+          })
+          .catch(() => {
+            removeTokens();
+            window.location.href = "/login";
+            return Promise.reject(error);
+          });
       } else {
         window.location.href = "/login";
       }

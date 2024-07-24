@@ -21,5 +21,7 @@ export const phoneLogin = (phone_number: string): Promise<any> => {
 export const getToken = (
   refresh: string
 ): Promise<Omit<ILoginResponse, "refresh">> => {
-  return api.post("/api/token/refresh/", { refresh }).then((res) => res.data);
+  return api.post("/api/token/refresh/", { refresh }).then((res) => {
+    return res.data;
+  });
 };
