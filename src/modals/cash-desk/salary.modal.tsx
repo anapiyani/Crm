@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import CustomAutoComplete from "@/components/autocomplete/custom-autocomplete.component";
+import CustomDatePicker from "@/components/date-picker/date-picker-custom";
 
 const SalaryModal = () => {
   const modal = useModal();
@@ -90,13 +91,9 @@ const SalaryModal = () => {
             <span>руб.</span>
           </div>
           <div className={classes.modalContent__content__item}>
-            <p>Дата выплаты</p>
+            <p style={{ marginRight: "2rem" }}>Дата выплаты</p>
             <div style={{ display: "flex" }}>
-              <TextField
-                variant="outlined"
-                size="small"
-                placeholder="11.07.2024"
-              />
+              <CustomDatePicker />
               <p
                 style={{
                   width: "20px",
@@ -107,11 +104,7 @@ const SalaryModal = () => {
               >
                 -
               </p>
-              <TextField
-                variant="outlined"
-                size="small"
-                placeholder="11.07.2024"
-              />
+              <CustomDatePicker />
             </div>
           </div>
           <div className={classes.modalContent__content__item}>
@@ -122,9 +115,9 @@ const SalaryModal = () => {
               size="small"
               label="Метод снятия"
               options={[
-                { label: "Option 1", value: "1" },
-                { label: "Option 2", value: "2" },
-                { label: "Option 3", value: "3" },
+                { label: "Оплата наличными", value: "cash" },
+                { label: "Оплата по карте", value: "card" },
+                { label: "Оплата чеками", value: "check" },
               ]}
             />
           </div>

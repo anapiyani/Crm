@@ -3,7 +3,7 @@ import classes from "./style.module.scss";
 
 interface InfoBoxProps {
   header: React.ReactNode;
-  content: Array<{ icon: React.ReactNode; text: string }>;
+  content: Array<{ icon: React.ReactNode; text?: string }>;
 }
 
 const CashCard: React.FC<InfoBoxProps> = ({ header, content }) => {

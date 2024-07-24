@@ -11,10 +11,11 @@ import {
   South,
   North,
 } from "@mui/icons-material";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Autocomplete,
   Button,
+  CircularProgress,
   Divider,
   Pagination,
   Table,
@@ -32,16 +33,13 @@ import salaryModal from "@/modals/cash-desk/salary.modal";
 import withdrawModal from "@/modals/cash-desk/withdraw.modal";
 import endureModal from "@/modals/cash-desk/endure.modal";
 import CashCard from "../_components/cash-card/cash-card";
-import { getOperations } from "@/service/kassa/kassa.service";
+import { getCashRegister, getOperations } from "@/service/kassa/kassa.service";
 import { useQuery } from "@tanstack/react-query";
-import { IKassaOperations } from "@/ts/kassa.interface";
+import { ICashRegister, IKassaOperations } from "@/ts/kassa.interface";
+import CustomDatePicker from "@/components/date-picker/date-picker-custom";
 
 const CashDesk = () => {
-  const {
-    data: operationsData,
-    isPending: operationsPending,
-    isError: operationsError,
-  } = useQuery({
+  const { data: operationsData } = useQuery({
     queryKey: ["kassaService"],
     queryFn: () => getOperations(),
   });
@@ -51,9 +49,32 @@ const CashDesk = () => {
     { to: "/cashdesk", icon: CalendarMonth, label: "Посещения" },
   ];
   const [activeTab, setActiveTab] = useState(0);
+  const [today, setToday] = useState(true);
+  const [fromDate, setFromDate] = useState<string>("");
+  const [toDate, setToDate] = useState<string>("");
 
-  const handleTabChange = (index: number) => {
-    setActiveTab(index);
+  const cashRegister: ICashRegister = {
+    from_date: fromDate,
+    to_date: toDate,
+    today: today,
+  };
+
+  const {
+    data: cashRegisterData,
+    isPending: cashRegisterLoading,
+    refetch: refetchCashRegister,
+  } = useQuery({
+    queryKey: ["cashregister"],
+    queryFn: () => getCashRegister(cashRegister),
+  });
+
+  useEffect(() => {
+    refetchCashRegister();
+  }, [activeTab]);
+
+  const onRefetchCashRegister = async () => {
+    await setToday(false);
+    refetchCashRegister();
   };
 
   const processOperationsData = (
@@ -100,6 +121,21 @@ const CashDesk = () => {
     NiceModal.show(endureModal);
   };
 
+  const handleTabChange = (index: number) => {
+    setActiveTab(index);
+    if (index === 0) {
+      setToday(true);
+    }
+  };
+
+  if (cashRegisterLoading) {
+    return (
+      <div className={classes.loading}>
+        <CircularProgress />
+      </div>
+    );
+  }
+
   return (
     <div className={classes.main}>
       <BreadcrumbsCustom />
@@ -142,11 +178,23 @@ const CashDesk = () => {
                 </>
               }
               content={[
-                { icon: <Public />, text: "25 000 руб." },
-                { icon: <Payments />, text: "0 руб." },
-                { icon: <CreditCard />, text: "25 000 руб." },
-                { icon: <LocalActivity />, text: "0 руб." },
-                { icon: <MenuBook />, text: "0 руб." },
+                { icon: <Public />, text: cashRegisterData?.income_cash_money },
+                {
+                  icon: <Payments />,
+                  text: cashRegisterData?.income_check_money,
+                },
+                {
+                  icon: <CreditCard />,
+                  text: cashRegisterData?.income_card_money,
+                },
+                {
+                  icon: <LocalActivity />,
+                  text: cashRegisterData?.income_checking_account_money,
+                },
+                {
+                  icon: <MenuBook />,
+                  text: cashRegisterData?.overall_cash_money,
+                },
               ]}
             />
             <CashCard
@@ -159,11 +207,26 @@ const CashDesk = () => {
                 </>
               }
               content={[
-                { icon: <Public />, text: "0 руб." },
-                { icon: <Payments />, text: "0 руб." },
-                { icon: <CreditCard />, text: "0 руб." },
-                { icon: <LocalActivity />, text: "0 руб." },
-                { icon: <MenuBook />, text: "0 руб." },
+                {
+                  icon: <Public />,
+                  text: cashRegisterData?.expense_cash_money,
+                },
+                {
+                  icon: <Payments />,
+                  text: cashRegisterData?.expense_check_money,
+                },
+                {
+                  icon: <CreditCard />,
+                  text: cashRegisterData?.expense_card_money,
+                },
+                {
+                  icon: <LocalActivity />,
+                  text: cashRegisterData?.expense_checking_account_money,
+                },
+                {
+                  icon: <MenuBook />,
+                  text: cashRegisterData?.overall_card_money,
+                },
               ]}
             />
             <CashCard
@@ -176,11 +239,26 @@ const CashDesk = () => {
                 </>
               }
               content={[
-                { icon: <Public />, text: "25 000 руб." },
-                { icon: <Payments />, text: "0 руб." },
-                { icon: <CreditCard />, text: "25 000 руб." },
-                { icon: <LocalActivity />, text: "0 руб." },
-                { icon: <MenuBook />, text: "0 руб." },
+                {
+                  icon: <Public />,
+                  text: cashRegisterData?.overall_cash_money,
+                },
+                {
+                  icon: <Payments />,
+                  text: cashRegisterData?.overall_check_money,
+                },
+                {
+                  icon: <CreditCard />,
+                  text: cashRegisterData?.overall_card_money,
+                },
+                {
+                  icon: <LocalActivity />,
+                  text: cashRegisterData?.overall_checking_account_money,
+                },
+                {
+                  icon: <MenuBook />,
+                  text: cashRegisterData?.overall_card_money,
+                },
               ]}
             />
           </div>
@@ -191,22 +269,22 @@ const CashDesk = () => {
             <div className={classes.main__day__info__period}>
               <h2>Укажите период</h2>
               <p>Будут показаны данные за выбранный период.</p>
-              <div style={{ display: "flex" }}>
-                <TextField
-                  variant="outlined"
-                  size="small"
-                  placeholder="11.07.2024"
-                  style={{ width: "42%" }}
+              <div style={{ display: "flex", width: "90%" }}>
+                <CustomDatePicker
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setFromDate(e.target.value)
+                  }
                 />
                 <p style={{ marginRight: "1rem", marginLeft: "1rem" }}>-</p>
-                <TextField
-                  variant="outlined"
-                  size="small"
-                  placeholder="11.07.2024"
-                  style={{ width: "41%" }}
+                <CustomDatePicker
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setToDate(e.target.value)
+                  }
                 />
               </div>
-              <Button variant="contained">Показать</Button>
+              <Button onClick={onRefetchCashRegister} variant="contained">
+                Показать
+              </Button>
             </div>
             <CashCard
               header={
@@ -215,11 +293,23 @@ const CashDesk = () => {
                 </>
               }
               content={[
-                { icon: <Public />, text: "25 000 руб." },
-                { icon: <Payments />, text: "0 руб." },
-                { icon: <CreditCard />, text: "25 000 руб." },
-                { icon: <LocalActivity />, text: "0 руб." },
-                { icon: <MenuBook />, text: "0 руб." },
+                { icon: <Public />, text: cashRegisterData?.income_cash_money },
+                {
+                  icon: <Payments />,
+                  text: cashRegisterData?.income_check_money,
+                },
+                {
+                  icon: <CreditCard />,
+                  text: cashRegisterData?.income_card_money,
+                },
+                {
+                  icon: <LocalActivity />,
+                  text: cashRegisterData?.income_checking_account_money,
+                },
+                {
+                  icon: <MenuBook />,
+                  text: cashRegisterData?.overall_cash_money,
+                },
               ]}
             />
             <CashCard
@@ -232,11 +322,26 @@ const CashDesk = () => {
                 </>
               }
               content={[
-                { icon: <Public />, text: "0 руб." },
-                { icon: <Payments />, text: "0 руб." },
-                { icon: <CreditCard />, text: "0 руб." },
-                { icon: <LocalActivity />, text: "0 руб." },
-                { icon: <MenuBook />, text: "0 руб." },
+                {
+                  icon: <Public />,
+                  text: cashRegisterData?.expense_cash_money,
+                },
+                {
+                  icon: <Payments />,
+                  text: cashRegisterData?.expense_check_money,
+                },
+                {
+                  icon: <CreditCard />,
+                  text: cashRegisterData?.expense_card_money,
+                },
+                {
+                  icon: <LocalActivity />,
+                  text: cashRegisterData?.expense_checking_account_money,
+                },
+                {
+                  icon: <MenuBook />,
+                  text: cashRegisterData?.overall_card_money,
+                },
               ]}
             />
             <CashCard
@@ -249,11 +354,26 @@ const CashDesk = () => {
                 </>
               }
               content={[
-                { icon: <Public />, text: "25 000 руб." },
-                { icon: <Payments />, text: "0 руб." },
-                { icon: <CreditCard />, text: "25 000 руб." },
-                { icon: <LocalActivity />, text: "0 руб." },
-                { icon: <MenuBook />, text: "0 руб." },
+                {
+                  icon: <Public />,
+                  text: cashRegisterData?.overall_cash_money,
+                },
+                {
+                  icon: <Payments />,
+                  text: cashRegisterData?.overall_check_money,
+                },
+                {
+                  icon: <CreditCard />,
+                  text: cashRegisterData?.overall_card_money,
+                },
+                {
+                  icon: <LocalActivity />,
+                  text: cashRegisterData?.overall_checking_account_money,
+                },
+                {
+                  icon: <MenuBook />,
+                  text: cashRegisterData?.overall_card_money,
+                },
               ]}
             />
           </div>
@@ -264,7 +384,7 @@ const CashDesk = () => {
           <h2>Поиск по кассе</h2>
           <Divider />
         </div>
-        <div className={classes.main__searchForm__body}>
+        <form className={classes.main__searchForm__body}>
           <div className={classes.main__searchForm__body__items}>
             <h3>Способ оплаты</h3>
             <div className={classes.main__searchForm__body__items__methods}>
@@ -360,7 +480,7 @@ const CashDesk = () => {
               </div>
             </div>
           </div>
-        </div>
+        </form>
       </div>
       <div className={classes.main__cashDesk}>
         <div className={classes.main__cashDesk__header}>

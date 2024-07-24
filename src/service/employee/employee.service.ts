@@ -32,10 +32,10 @@ export const searchDepartment = (): Promise<IDepartments> => {
 };
 
 export const searchEmployee = (
-  formData: Partial<ISearchFormData>
+  formData?: Partial<ISearchFormData>
 ): Promise<void | IEmployeesData> => {
   const params = new URLSearchParams();
-  Object.entries(formData).forEach(([key, value]) => {
+  Object.entries(formData!).forEach(([key, value]) => {
     if (value) {
       params.append(key, value.toString());
     }
