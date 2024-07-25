@@ -3,14 +3,19 @@ import {
   IAppointmentReturn,
 } from "@/ts/appointments.interface";
 import { createAppointments } from "./appointments.service";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
+import { useModal } from "@ebay/nice-modal-react";
 
 export const useCreateAppointment = () => {
-  return useMutation<IAppointmentCreateForm, Error, IAppointmentReturn>({
+  const queryClinent = useQueryClient();
+  const modal = useModal();
+  return useMutation<IAppointmentReturn, Error, IAppointmentCreateForm>({
     mutationFn: createAppointments,
     onSuccess: (data) => {
       toast.success("Запись успешно добавлена!");
+      queryClinent.invalidateQueries({ queryKey: ["schedules"] });
+      modal.hide();
       return data;
     },
     onError: (error) => {
