@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import ModalWindow from "@/components/modal-window/modal-window";
 import NiceModal, { useModal } from "@ebay/nice-modal-react";
 import classes from "./styles.module.scss";
@@ -22,24 +23,33 @@ import {
 import { Link } from "react-router-dom";
 =======
 import { Autocomplete, Button, Divider, TextField } from "@mui/material";
+<<<<<<< HEAD
 >>>>>>> 3ec3367 (Feat: Withdraw money function)
 import CustomAutoComplete from "@/components/autocomplete/custom-autocomplete.component";
+=======
+>>>>>>> f26aefa (Fix: Now after withdrawl and endure modal closes and changes the today's card info. And added functional for withdrawl and endure and validation)
 import { useQuery } from "@tanstack/react-query";
 import { getOperations } from "@/service/kassa/kassa.service";
 import { IKassaOperations, IWithdrawal } from "@/ts/kassa.interface";
-import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { Clear, Done } from "@mui/icons-material";
 import { useWithdrawl } from "@/service/kassa/kassa.hook";
 import toast from "react-hot-toast";
 
-const WithdrawModal = () => {
+interface WithdrawModalProps {
+  refetchCashRegister: () => void;
+}
+
+const WithdrawModal: React.FC<WithdrawModalProps> = ({
+  refetchCashRegister,
+}) => {
   const { register, handleSubmit, control } = useForm<IWithdrawal>();
   const { data: operationsData } = useQuery({
     queryKey: ["kassaService"],
     queryFn: () => getOperations(),
   });
-  const mutation = useWithdrawl();
+
+  const mutation = useWithdrawl(refetchCashRegister);
   const [summ, setSumm] = useState<number>(0);
   const [selectedOperationId, setSelectedOperationId] = useState<string | null>(
     null
@@ -48,14 +58,15 @@ const WithdrawModal = () => {
     null
   );
 
-  const onSubmit: SubmitHandler<IWithdrawal> = (data: IWithdrawal) => {
+  const onSubmit: SubmitHandler<IWithdrawal> = async (data: IWithdrawal) => {
     const formData = {
       ...data,
       operation_type: Number(selectedOperationId),
       money_type: selectedMoneyType!,
     };
     if ((selectedOperationId && selectedMoneyType) || summ === 0) {
-      mutation.mutate(formData);
+      await mutation.mutate(formData);
+      modal.hide();
     } else {
       toast.error("Заполните все поля");
     }
@@ -70,7 +81,6 @@ const WithdrawModal = () => {
       isParent: boolean;
       id: number;
     }[] = [];
-
     const traverse = (
       nodes: IKassaOperations[],
       parent: IKassaOperations | null
@@ -94,10 +104,10 @@ const WithdrawModal = () => {
         }
       });
     };
-
     traverse(operations, null);
     return result;
   };
+
   const options = operationsData ? processOperationsData(operationsData) : [];
 
   const handleCloseModal = () => {

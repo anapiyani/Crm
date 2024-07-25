@@ -31,6 +31,10 @@ export const getCashRegister = (
   return api.get(url).then((res) => res.data);
 };
 
-export const kassaWithdraw = (formData: IWithdrawal): Promise<any> => {
+export const kassaWithdraw = (formData: IWithdrawal): Promise<IWithdrawal> => {
   return api.post("/kassa_withdrawal/", formData).then((res) => res.data);
+};
+
+export const kassaDeposit = (formData: IWithdrawal): Promise<IWithdrawal> => {
+  return api.post("/kassa_deposit/", formData).then((res) => res.data);
 };

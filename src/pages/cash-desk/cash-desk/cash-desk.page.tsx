@@ -114,11 +114,11 @@ const CashDesk = () => {
   };
 
   const handleWithdrawModal = () => {
-    NiceModal.show(withdrawModal);
+    NiceModal.show(withdrawModal, { refetchCashRegister });
   };
 
   const handleEndureModal = () => {
-    NiceModal.show(endureModal);
+    NiceModal.show(endureModal, { refetchCashRegister });
   };
 
   const handleTabChange = (index: number) => {
