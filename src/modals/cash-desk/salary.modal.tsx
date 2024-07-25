@@ -11,6 +11,8 @@ import {
   TextField,
 } from "@mui/material";
 import { Link } from "react-router-dom";
+import CustomAutoComplete from "@/components/autocomplete/custom-autocomplete.component";
+import CustomDatePicker from "@/components/date-picker/date-picker-custom";
 
 const SalaryModal = () => {
   const modal = useModal();
@@ -25,30 +27,25 @@ const SalaryModal = () => {
       <div className={classes.modalContent}>
         <div className={classes.modalContent__content}>
           <div className={classes.modalContent__content__item}>
-            <p>Сотрудник</p>
-            <Autocomplete
-              sx={{ width: "280px" }}
+            <CustomAutoComplete
+              name="service"
+              selectValue={"label"}
+              placeholder="Имя Фамилия, Администратор"
+              size="small"
+              label="Сотрудник"
               options={[
                 { label: "Option 1", value: "1" },
                 { label: "Option 2", value: "2" },
                 { label: "Option 3", value: "3" },
               ]}
-              getOptionLabel={(option) => option.label}
-              renderInput={(params) => (
-                <TextField
-                  variant="outlined"
-                  {...params}
-                  label="Имя Фамилия, Администратор"
-                />
-              )}
             />
           </div>
           <div className={classes.modalContent__content__item}>
-            <p>Дата последней выплаты</p>
+            <p style={{ marginRight: "3rem" }}>Дата последней выплаты</p>
             <p style={{ color: "#636B74" }}>Отсутствует</p>
           </div>
           <div className={classes.modalContent__content__item}>
-            <p>Детали, штрафы, премии</p>
+            <p style={{ marginRight: "3rem" }}>Детали, штрафы, премии</p>
             <p>
               <Link to="/">Посмотреть</Link>
             </p>
@@ -78,33 +75,25 @@ const SalaryModal = () => {
             </FormControl>
           </div>
           <div className={classes.modalContent__content__item}>
-            <p>Нужно выплатить</p>
-            <Autocomplete
-              sx={{ width: "230px", marginRight: "2rem" }}
+            <CustomAutoComplete
+              name="service"
+              selectValue={"label"}
+              placeholder="Все начисления"
+              size="small"
+              label="Нужно выплатить"
+              sx={{ marginRight: "2rem" }}
               options={[
                 { label: "Option 1", value: "1" },
                 { label: "Option 2", value: "2" },
                 { label: "Option 3", value: "3" },
               ]}
-              getOptionLabel={(option) => option.label}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Все начисления"
-                  variant="outlined"
-                />
-              )}
             />
             <span>руб.</span>
           </div>
           <div className={classes.modalContent__content__item}>
-            <p>Дата выплаты</p>
+            <p style={{ marginRight: "2rem" }}>Дата выплаты</p>
             <div style={{ display: "flex" }}>
-              <TextField
-                variant="outlined"
-                size="small"
-                placeholder="11.07.2024"
-              />
+              <CustomDatePicker />
               <p
                 style={{
                   width: "20px",
@@ -115,45 +104,36 @@ const SalaryModal = () => {
               >
                 -
               </p>
-              <TextField
-                variant="outlined"
-                size="small"
-                placeholder="11.07.2024"
-              />
+              <CustomDatePicker />
             </div>
           </div>
           <div className={classes.modalContent__content__item}>
-            <p>Метод снятия</p>
-            <Autocomplete
-              sx={{ width: "280px" }}
+            <CustomAutoComplete
+              name="service"
+              selectValue={"label"}
+              placeholder="Наличными"
+              size="small"
+              label="Метод снятия"
               options={[
-                { label: "Option 1", value: "1" },
-                { label: "Option 2", value: "2" },
-                { label: "Option 3", value: "3" },
+                { label: "Оплата наличными", value: "cash" },
+                { label: "Оплата по карте", value: "card" },
+                { label: "Оплата чеками", value: "check" },
+                { label: "Оплата чеками", value: "checking_account" },
               ]}
-              getOptionLabel={(option) => option.label}
-              renderInput={(params) => (
-                <TextField variant="outlined" {...params} label="Наличными" />
-              )}
             />
           </div>
           <div className={classes.modalContent__content__item}>
-            <p>Юр. лицо</p>
-            <Autocomplete
-              sx={{ width: "280px" }}
+            <CustomAutoComplete
+              name="service"
+              selectValue={"label"}
+              placeholder="Выберите вариант"
+              size="small"
+              label="Юр. лицо"
               options={[
                 { label: "Option 1", value: "1" },
                 { label: "Option 2", value: "2" },
                 { label: "Option 3", value: "3" },
               ]}
-              getOptionLabel={(option) => option.label}
-              renderInput={(params) => (
-                <TextField
-                  variant="outlined"
-                  {...params}
-                  label="Выберите вариант"
-                />
-              )}
             />
           </div>
         </div>

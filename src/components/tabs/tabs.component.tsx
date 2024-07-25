@@ -59,7 +59,11 @@ const ResponsiveTabs = ({
           Select Tab
         </MenuItem>
         {tabsData.map((tab, index) => (
-          <MenuItem key={tab.to} value={index.toString()} sx={{ fontSize: "1.4rem" }}>
+          <MenuItem
+            key={tab.to}
+            value={index.toString()}
+            sx={{ fontSize: "1.4rem" }}
+          >
             <tab.icon style={{ marginRight: 8 }} />
             {tab.label}
           </MenuItem>
@@ -77,12 +81,11 @@ const ResponsiveTabs = ({
             isWithLink ? (
               <NavLink
                 key={tab.to}
-                className={({ isActive }) =>
-                  classNames(classes["tabs__content__tab__link"], {
-                    [classes["active"]]: isActive,
-                  })
-                }
+                className={`${classes["tabs__content__tab__link"]} ${
+                  currentTab === index ? classes["active"] : ""
+                }`}
                 to={tab.to}
+                onClick={() => onTabChange && onTabChange(index)}
               >
                 <tab.icon
                   className={classNames(
