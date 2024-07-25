@@ -19,7 +19,7 @@ const EndureModal: React.FC<EndureModalProps> = ({ refetchCashRegister }) => {
   const { register, handleSubmit, control } = useForm<IWithdrawal>();
   const { data: operationsData } = useQuery({
     queryKey: ["kassaService"],
-    queryFn: () => getOperations(),
+    queryFn: () => getOperations(true),
   });
 
   const mutation = useDepositKassa(refetchCashRegister);

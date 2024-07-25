@@ -7,8 +7,13 @@ import {
 import api from "../api";
 import { IEmployeesData } from "@/ts/employee.interface";
 
-export const getOperations = (): Promise<IKassaOperations[]> => {
-  return api.get("/operations/").then((res) => res.data);
+export const getOperations = (
+  kassa_transaction?: boolean
+): Promise<IKassaOperations[]> => {
+  const url = kassa_transaction
+    ? "/operations/?kassa_transaction=true"
+    : "/operations/";
+  return api.get(url).then((res) => res.data);
 };
 
 export const getCashRegister = (
