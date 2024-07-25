@@ -2,17 +2,9 @@ import React, { useState } from "react";
 import ModalWindow from "@/components/modal-window/modal-window";
 import NiceModal, { useModal } from "@ebay/nice-modal-react";
 import classes from "./styles.module.scss";
-<<<<<<< HEAD
 import {
   Autocomplete,
-<<<<<<< HEAD
-<<<<<<< HEAD
   Button,
-=======
->>>>>>> 3c7938a (Feat: Added modal for withdraw money from cash reg)
-=======
-  Button,
->>>>>>> 2328448 (Feat: Added endure money modal from cash desk)
   Divider,
   FormControl,
   FormControlLabel,
@@ -21,13 +13,7 @@ import {
   TextField,
 } from "@mui/material";
 import { Link } from "react-router-dom";
-=======
-import { Autocomplete, Button, Divider, TextField } from "@mui/material";
-<<<<<<< HEAD
->>>>>>> 3ec3367 (Feat: Withdraw money function)
 import CustomAutoComplete from "@/components/autocomplete/custom-autocomplete.component";
-=======
->>>>>>> f26aefa (Fix: Now after withdrawl and endure modal closes and changes the today's card info. And added functional for withdrawl and endure and validation)
 import { useQuery } from "@tanstack/react-query";
 import { getOperations } from "@/service/kassa/kassa.service";
 import { IKassaOperations, IWithdrawal } from "@/ts/kassa.interface";
@@ -185,13 +171,6 @@ const WithdrawModal: React.FC<WithdrawModalProps> = ({
         <div className={classes.modalContent__content}>
           <div className={classes.modalContent__content__item}>
             <p>Сумма</p>
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> 2328448 (Feat: Added endure money modal from cash desk)
-            <TextField variant="outlined" label="Введите сумму" />
-=======
             <TextField
               variant="outlined"
               label="Введите сумму"
@@ -210,14 +189,12 @@ const WithdrawModal: React.FC<WithdrawModalProps> = ({
                 onChange: (e) => setSumm(Number(e.target.value)),
               })}
             />
->>>>>>> 1ebbff2 (Fix: fixed autocpmlete)
             <Button
               sx={{
                 minWidth: "40px",
                 width: "40px",
                 marginLeft: "10px",
               }}
-<<<<<<< HEAD
               variant="outlined"
               onClick={() => setSumm(summ + 1)}
             >
@@ -234,29 +211,6 @@ const WithdrawModal: React.FC<WithdrawModalProps> = ({
             >
               -
             </Button>
-=======
-            <TextField
-              variant="outlined"
-              style={{ marginRight: 20 }}
-              label="Введите сумму"
-            />
->>>>>>> 3c7938a (Feat: Added modal for withdraw money from cash reg)
-=======
-              variant="outlined"
-            >
-              +
-            </Button>
-            <Button
-              sx={{
-                minWidth: "40px",
-                width: "40px",
-              }}
-              variant="outlined"
-              color="error"
-            >
-              -
-            </Button>
->>>>>>> 2328448 (Feat: Added endure money modal from cash desk)
             <span>руб.</span>
           </div>
           <div className={classes.modalContent__content__item}>
