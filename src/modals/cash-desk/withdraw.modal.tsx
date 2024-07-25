@@ -1,6 +1,7 @@
 import ModalWindow from "@/components/modal-window/modal-window";
 import NiceModal, { useModal } from "@ebay/nice-modal-react";
 import classes from "./styles.module.scss";
+<<<<<<< HEAD
 import {
   Autocomplete,
 <<<<<<< HEAD
@@ -19,37 +20,141 @@ import {
   TextField,
 } from "@mui/material";
 import { Link } from "react-router-dom";
+=======
+import { Autocomplete, Button, Divider, TextField } from "@mui/material";
+>>>>>>> 3ec3367 (Feat: Withdraw money function)
 import CustomAutoComplete from "@/components/autocomplete/custom-autocomplete.component";
+import { useQuery } from "@tanstack/react-query";
+import { getOperations } from "@/service/kassa/kassa.service";
+import { IKassaOperations, IWithdrawal } from "@/ts/kassa.interface";
+import { useState } from "react";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { Clear, Done } from "@mui/icons-material";
+import { useWithdrawl } from "@/service/kassa/kassa.hook";
+import toast from "react-hot-toast";
 
 const WithdrawModal = () => {
+  const { register, handleSubmit, control } = useForm<IWithdrawal>();
+  const { data: operationsData } = useQuery({
+    queryKey: ["kassaService"],
+    queryFn: () => getOperations(),
+  });
+  const mutation = useWithdrawl();
+  const [summ, setSumm] = useState<number>(0);
+  const [selectedOperationId, setSelectedOperationId] = useState<string | null>(
+    null
+  );
+  const [selectedMoneyType, setSelectedMoneyType] = useState<string | null>(
+    null
+  );
+
+  const onSubmit: SubmitHandler<IWithdrawal> = (data: IWithdrawal) => {
+    const formData = {
+      ...data,
+      operation_type: Number(selectedOperationId),
+      money_type: selectedMoneyType!,
+    };
+    if ((selectedOperationId && selectedMoneyType) || summ === 0) {
+      mutation.mutate(formData);
+    } else {
+      toast.error("Заполните все поля");
+    }
+  };
+
+  const processOperationsData = (
+    operations: IKassaOperations[]
+  ): { label: string; value: string; isParent: boolean; id: number }[] => {
+    const result: {
+      label: string;
+      value: string;
+      isParent: boolean;
+      id: number;
+    }[] = [];
+
+    const traverse = (
+      nodes: IKassaOperations[],
+      parent: IKassaOperations | null
+    ) => {
+      nodes.forEach((node) => {
+        if (node.children && node.children.length > 0) {
+          result.push({
+            label: node.name,
+            value: node.id.toString(),
+            isParent: true,
+            id: node.id,
+          });
+          traverse(node.children, node);
+        } else {
+          result.push({
+            label: node.name,
+            value: node.id.toString(),
+            isParent: false,
+            id: node.id,
+          });
+        }
+      });
+    };
+
+    traverse(operations, null);
+    return result;
+  };
+  const options = operationsData ? processOperationsData(operationsData) : [];
+
+  const handleCloseModal = () => {
+    modal.hide();
+  };
+
   const modal = useModal();
   return (
     <ModalWindow
       title={"Снять деньги из кассы"}
       open={modal.visible}
-      handleClose={() => modal.hide()}
+      handleClose={handleCloseModal}
       className={classes["u-p-0"]}
       titleStyles={{ fontSize: "2.4rem", color: "#C41C1C" }}
+      withButtons={false}
     >
-      <div className={classes.modalContent}>
+      <form onSubmit={handleSubmit(onSubmit)} className={classes.modalContent}>
         <div className={classes.modalContent__content}>
           <div className={classes.modalContent__content__item}>
-            <CustomAutoComplete
-              name="service"
-              selectValue={"label"}
-              placeholder="Сервис клиента"
-              size="small"
-              label="Назначение платежа"
-              options={[
-                { label: "Option 1", value: "1" },
-                { label: "Option 2", value: "2" },
-                { label: "Option 3", value: "3" },
-              ]}
+            <p>Назначение платежа</p>
+            <Autocomplete
+              sx={{ width: 330, marginLeft: 1 }}
+              options={options}
+              getOptionLabel={(option) => option.label}
+              onChange={(event, value) => {
+                setSelectedOperationId(value ? value.value : null);
+              }}
+              renderOption={(props, option) => (
+                <li
+                  {...props}
+                  key={option.value}
+                  style={{ pointerEvents: option.isParent ? "none" : "auto" }}
+                >
+                  <p
+                    style={{
+                      fontSize: "1.4rem",
+                      fontWeight: option.isParent ? "bold" : "normal",
+                      marginLeft: option.isParent ? "0" : "1rem",
+                    }}
+                  >
+                    {option.label}
+                  </p>
+                </li>
+              )}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label={"Выберите операцию"}
+                  variant="outlined"
+                />
+              )}
             />
           </div>
           <div className={classes.modalContent__content__item}>
             <p>Комментарий</p>
             <TextField
+              {...register("comment")}
               variant="outlined"
               sx={{
                 width: "290px",
@@ -81,6 +186,7 @@ const WithdrawModal = () => {
               variant="outlined"
               label="Введите сумму"
               size="small"
+              value={summ}
               sx={{
                 fontSize: "1.4rem",
                 "& .MuiFormLabel-root": {
@@ -90,6 +196,9 @@ const WithdrawModal = () => {
                   fontSize: "1.4rem",
                 },
               }}
+              {...register("amount", {
+                onChange: (e) => setSumm(Number(e.target.value)),
+              })}
             />
 >>>>>>> 1ebbff2 (Fix: fixed autocpmlete)
             <Button
@@ -100,6 +209,7 @@ const WithdrawModal = () => {
               }}
 <<<<<<< HEAD
               variant="outlined"
+              onClick={() => setSumm(summ + 1)}
             >
               +
             </Button>
@@ -110,6 +220,7 @@ const WithdrawModal = () => {
               }}
               variant="outlined"
               color="error"
+              onClick={() => setSumm(summ - 1)}
             >
               -
             </Button>
@@ -139,22 +250,46 @@ const WithdrawModal = () => {
             <span>руб.</span>
           </div>
           <div className={classes.modalContent__content__item}>
-            <CustomAutoComplete
-              sx={{ width: "280px" }}
-              name="method"
-              selectValue={"label"}
-              placeholder="Наличными"
-              size="small"
-              label="Метод снятия"
+            <p>Назначение платежа</p>
+            <Autocomplete
+              sx={{ width: 330, marginLeft: 1 }}
+              onChange={(event, value) => {
+                setSelectedMoneyType(value ? value.value : null);
+              }}
               options={[
-                { label: "Option 1", value: "1" },
-                { label: "Option 2", value: "2" },
-                { label: "Option 3", value: "3" },
+                { label: "Оплата наличными", value: "cash" },
+                { label: "Оплата по карте", value: "card" },
+                { label: "Оплата чеками", value: "check" },
+                { label: "С расчетного счета", value: "checking_account" },
               ]}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Выберите операцию"
+                  variant="outlined"
+                />
+              )}
             />
           </div>
         </div>
-      </div>
+        <div className={classes["buttons"]}>
+          <Button
+            variant="outlined"
+            onClick={handleCloseModal}
+            startIcon={<Clear />}
+          >
+            Отменить
+          </Button>
+          <Button
+            variant="contained"
+            disableElevation
+            startIcon={<Done />}
+            type="submit"
+          >
+            Снять деньги
+          </Button>
+        </div>
+      </form>
     </ModalWindow>
   );
 };

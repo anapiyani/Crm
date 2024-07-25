@@ -25,3 +25,10 @@ export interface IPeriodCashRegister {
   overall_check_money: string;
   overall_checking_account_money: string;
 }
+
+export interface IWithdrawal {
+  operation_type: number;
+  comment?: string;
+  amount: string;
+  money_type: string;
+}

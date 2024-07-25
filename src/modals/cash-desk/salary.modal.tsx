@@ -118,6 +118,7 @@ const SalaryModal = () => {
                 { label: "Оплата наличными", value: "cash" },
                 { label: "Оплата по карте", value: "card" },
                 { label: "Оплата чеками", value: "check" },
+                { label: "Оплата чеками", value: "checking_account" },
               ]}
             />
           </div>

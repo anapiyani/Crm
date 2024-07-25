@@ -2,6 +2,7 @@ import {
   ICashRegister,
   IKassaOperations,
   IPeriodCashRegister,
+  IWithdrawal,
 } from "@/ts/kassa.interface";
 import api from "../api";
 import { IEmployeesData } from "@/ts/employee.interface";
@@ -28,4 +29,8 @@ export const getCashRegister = (
 
   const url = `/period_cash_register/?${params.toString()}`;
   return api.get(url).then((res) => res.data);
+};
+
+export const kassaWithdraw = (formData: IWithdrawal): Promise<any> => {
+  return api.post("/kassa_withdrawal/", formData).then((res) => res.data);
 };
