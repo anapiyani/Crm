@@ -2,18 +2,7 @@ import React, { useState } from "react";
 import ModalWindow from "@/components/modal-window/modal-window";
 import NiceModal, { useModal } from "@ebay/nice-modal-react";
 import classes from "./styles.module.scss";
-import {
-  Autocomplete,
-  Button,
-  Divider,
-  FormControl,
-  FormControlLabel,
-  Radio,
-  RadioGroup,
-  TextField,
-} from "@mui/material";
-import { Link } from "react-router-dom";
-import CustomAutoComplete from "@/components/autocomplete/custom-autocomplete.component";
+import { Autocomplete, Button, Divider, TextField } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { getOperations } from "@/service/kassa/kassa.service";
 import { IKassaOperations, IWithdrawal } from "@/ts/kassa.interface";

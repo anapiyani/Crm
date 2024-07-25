@@ -2,13 +2,11 @@ import ModalWindow from "@/components/modal-window/modal-window";
 import NiceModal, { useModal } from "@ebay/nice-modal-react";
 import classes from "./styles.module.scss";
 import {
-  Autocomplete,
   Divider,
   FormControl,
   FormControlLabel,
   Radio,
   RadioGroup,
-  TextField,
 } from "@mui/material";
 import { Link } from "react-router-dom";
 import CustomAutoComplete from "@/components/autocomplete/custom-autocomplete.component";
@@ -118,7 +116,7 @@ const SalaryModal = () => {
                 { label: "Оплата наличными", value: "cash" },
                 { label: "Оплата по карте", value: "card" },
                 { label: "Оплата чеками", value: "check" },
-                { label: "Оплата чеками", value: "checking_account" },
+                { label: "С расчетного счета", value: "checking_account" },
               ]}
             />
           </div>
