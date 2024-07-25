@@ -35,7 +35,15 @@ const EventContent: React.FC<IEventContentProps> = ({ eventInfo }) => {
         {eventInfo.timeText}
       </div>
       <div className={classes["fullcalendar__event--body"]}>
-        <p>{eventInfo.event.title}</p>
+        {eventInfo.event.extendedProps.type === "break" ? (
+          <div className={classes["u-ml-1"]}>
+            <p>{eventInfo.event.extendedProps.break_note}</p>
+          </div>
+        ) : (
+          <div className={classes["u-ml-1"]}>
+            <p>{eventInfo.event.title}</p>
+          </div>
+        )}
       </div>
     </div>
   );

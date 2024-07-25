@@ -56,26 +56,6 @@ export interface IRoleCreate {
   id: number | null;
 }
 
-export interface IService {
-  id: number;
-  name: string;
-  active: boolean;
-  discount: number;
-  is_deleted: boolean;
-  duration: number;
-  unit_mes: string;
-  min_volume: number;
-  department: number;
-}
-
-export interface IServiceCategory {
-  id: number;
-  name: string;
-  level: string;
-  parent: number | null;
-  children: IServiceCategory[];
-  services: IService[];
-}
 export interface IRoom {
   id: number;
   name: string;

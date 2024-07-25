@@ -1,7 +1,7 @@
 import React from "react";
 import NiceModal from "@ebay/nice-modal-react";
 import { AddBreakModal } from "@/modals";
-import { Menu, MenuItem } from "@mui/material";
+import { Divider, Menu, MenuItem } from "@mui/material";
 import {
   CalendarMonth,
   Event,
@@ -10,20 +10,25 @@ import {
   DoNotDisturb,
   Warning,
   Delete,
+  OpenInNew,
 } from "@mui/icons-material";
 import classes from "./styles.module.scss";
+import { useNavigate } from "react-router-dom";
 
 interface IResourceDropdownMenuProps {
   anchorEl: null | HTMLElement;
   onClose: () => void;
   resourceId: string;
+  username?: string;
 }
 
 const ResourceDropdownMenu: React.FC<IResourceDropdownMenuProps> = ({
   anchorEl,
   onClose,
   resourceId,
+  username,
 }) => {
+  const navigate = useNavigate();
   const handleAddBreak = () => {
     NiceModal.show(AddBreakModal, {
       resourceId,
@@ -75,6 +80,22 @@ const ResourceDropdownMenu: React.FC<IResourceDropdownMenuProps> = ({
           </div>
         </MenuItem>
       ))}
+      <Divider />
+      <MenuItem
+        onClick={() => {
+          navigate(`/employees/${resourceId}`, {
+            state: { username: username || "" },
+          });
+          onClose;
+        }}
+      >
+        <div className={classes["menu__item"]}>
+          <div className={classes["menu__item--icon"]}>
+            <OpenInNew />
+          </div>
+          <span>Карта соотрудника</span>
+        </div>
+      </MenuItem>
     </Menu>
   );
 };

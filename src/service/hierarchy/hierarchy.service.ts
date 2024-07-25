@@ -1,4 +1,4 @@
-import { IServiceCategory } from "@/ts/types";
+import { IServiceCategory } from "@/ts/service.interface";
 import api from "../api";
 
 export const getHierarchy = (): Promise<IServiceCategory[]> => {

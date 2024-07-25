@@ -12,8 +12,8 @@ interface ICustomAutoCompleteProps<T extends IOption> {
   name: string;
   selectValue: keyof T;
   options: T[];
-  onChange?: (value: T) => void;
-  value?: T;
+  onChange?: (value: T | null) => void;
+  value?: T | null;
   label?: string;
   placeholder?: string;
   className?: string;
@@ -63,7 +63,7 @@ const CustomAutoComplete = <T extends IOption>({
           ...sx,
         }}
         onChange={(_, newValue) => {
-          if (onChange) {
+          if (onChange && newValue !== null) {
             onChange(newValue as T);
           }
         }}

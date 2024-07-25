@@ -4,7 +4,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import LanOutlinedIcon from "@mui/icons-material/LanOutlined";
 import FolderIcon from "@mui/icons-material/Folder";
 import ContentCutIcon from "@mui/icons-material/ContentCut";
-import { IServiceCategory, IService } from "@/ts/types";
+import { IServiceCategory, IService } from "@/ts/service.interface";
 import classes from "./styles.module.scss";
 
 interface IServiceProps {

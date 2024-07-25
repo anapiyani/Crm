@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import classes from "./styles.module.scss";
-import { IServiceCategory } from "@/ts/types";
+import { IServiceCategory } from "@/ts/service.interface";
 
 interface ITreeItemProps {
   category: IServiceCategory;

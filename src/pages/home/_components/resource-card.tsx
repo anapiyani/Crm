@@ -7,7 +7,11 @@ import { Avatar } from "@mui/material";
 
 interface IResourceCardProps {
   arg: ResourceApi;
-  handleResourceClick: (id: string, e: React.MouseEvent<HTMLElement>) => void;
+  handleResourceClick: (
+    id: string,
+    username: string,
+    e: React.MouseEvent<HTMLElement>
+  ) => void;
 }
 
 const ResourceCard: React.FC<IResourceCardProps> = ({
@@ -18,7 +22,7 @@ const ResourceCard: React.FC<IResourceCardProps> = ({
     <div
       className={classes["fullcalendar__user"]}
       onClick={(e) => {
-        handleResourceClick(arg.id, e);
+        handleResourceClick(arg.id, arg.title, e);
       }}
     >
       <Avatar>
