@@ -192,6 +192,7 @@ const CashDesk = () => {
           onTabChange={handleTabChange}
         />
       </div>
+
       {activeTab === 0 ? (
         <div className={classes.main__day}>
           <div className={classes.main__day__info}>
