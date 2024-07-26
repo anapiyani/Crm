@@ -43,11 +43,12 @@ import {
   ICashRegister,
   IKassaOperations,
   ISearchKassa,
-  ISearchKassaResponse,
+  KassaResponse,
 } from "@/ts/kassa.interface";
 import CustomDatePicker from "@/components/date-picker/date-picker-custom";
 import { SubmitHandler, useForm } from "react-hook-form";
 import dayjs from "dayjs";
+import { IResponseData } from "@/ts/types";
 
 interface IOption {
   label: string;
@@ -74,9 +75,9 @@ const CashDesk = () => {
   const [selectedOperationId, setSelectedOperationId] = useState<string | null>(
     null
   );
-  const [searchResult, setSearchResult] = useState<ISearchKassaResponse | null>(
-    null
-  );
+  const [searchResult, setSearchResult] = useState<IResponseData<
+    KassaResponse[]
+  > | null>(null);
 
   const [pageSize, setPageSize] = useState<IOption>({ label: "10", value: 10 });
   const [page, setPage] = useState(1);
@@ -607,7 +608,7 @@ const CashDesk = () => {
           </div>
         </form>
       </div>
-      {searchResult ? (
+      {searchResult && (
         <div className={classes.main__cashDesk}>
           <div className={classes.main__cashDesk__header}>
             <h2>Касса</h2>
@@ -767,8 +768,6 @@ const CashDesk = () => {
             </div>
           </div>
         </div>
-      ) : (
-        ""
       )}
     </div>
   );

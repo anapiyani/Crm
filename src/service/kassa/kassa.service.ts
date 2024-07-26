@@ -3,10 +3,11 @@ import {
   IKassaOperations,
   IPeriodCashRegister,
   ISearchKassa,
-  ISearchKassaResponse,
   IWithdrawal,
+  KassaResponse,
 } from "@/ts/kassa.interface";
 import api from "../api";
+import { IResponseData } from "@/ts/types";
 
 export const getOperations = (
   kassa_transaction?: boolean
@@ -47,7 +48,7 @@ export const kassaDeposit = (formData: IWithdrawal): Promise<IWithdrawal> => {
 
 export const searchKassaData = (
   formData: ISearchKassa
-): Promise<ISearchKassaResponse> => {
+): Promise<IResponseData<KassaResponse[]>> => {
   const params = new URLSearchParams();
   if (formData.operation_type) {
     params.append("operation_type", formData.operation_type.toString());
