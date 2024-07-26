@@ -1,7 +1,19 @@
 import BreadcrumbsCustom from "@/components/navigation/breadcrumbs/breadcrumbs";
-import { getHierarchy } from "@/service/hierarchy/hierarchy.service";
-import { IService, IServiceCategory } from "@/ts/service.interface";
-import { Button, CircularProgress, Divider, TextField } from "@mui/material";
+import {
+  getHierarchy,
+  getHierarchySearchOption,
+  getSearchResults,
+} from "@/service/hierarchy/hierarchy.service";
+import { IService } from "@/ts/service.interface";
+import {
+  Autocomplete,
+  Button,
+  CircularProgress,
+  Divider,
+  TextField,
+} from "@mui/material";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 import { useQuery } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { LanOutlined, Folder, ContentCut } from "@mui/icons-material";
@@ -10,11 +22,29 @@ import CustomTextField from "@/components/textField/textField.component";
 import TreeView from "@/components/treeItem/treeItem";
 
 import SearchFilterCard from "@/components/search-filter-card/search-filter-card";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+import { IfiltersResponse, ISearchResult } from "@/ts/hierarchy.inteface";
 
 const ServiceCatalog = () => {
   const [service, setService] = useState<IService | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [formData, setFormData] = useState({
+    category: "",
+    department: "",
+    group: "",
+    keyword: "",
+    role: "",
+    section: "",
+    service_type: "",
+    subcategory: "",
+  });
+
+  const [searchResults, setSearchResults] = useState<ISearchResult>();
+  const handleOptionLoad = () => {
+    getHierarchySearchOption().then((data) => setFilterOptions(data));
+  };
+  const [filterOptions, setFilterOptions] = useState<IfiltersResponse>();
   const { data, isPending, isError } = useQuery({
     queryKey: ["hierarchyData"],
     queryFn: getHierarchy,
@@ -22,7 +52,7 @@ const ServiceCatalog = () => {
     refetchOnWindowFocus: false,
   });
 
-  const handleServiceSelect = (service: IService, parent: string[]) => {
+  const handleServiceSelect = (service: IService) => {
     setService(service);
     console.log(service);
     console.log(parent);
@@ -31,10 +61,21 @@ const ServiceCatalog = () => {
       setIsLoading(false);
     }, 10);
   };
-  const handleParentInfo = (parentCategory: IServiceCategory) => {
-    console.log("Parent Category:", parentCategory);
-    // Handle the parent category information here
+
+  const handleSearch = () => {
+    console.log(formData);
+    getSearchResults(formData).then((data) => setSearchResults(data));
+    console.log({
+      id: 2,
+      name: "Service 2",
+    });
+    console.log(searchResults);
+    console.log(searchResults?.services.some((service) => service.id === 2));
   };
+
+  useEffect(() => {
+    handleOptionLoad();
+  }, []);
 
   const rows = [
     { IconComponent: LanOutlined, color: "#0B6BCB", label: "Отдел" },
@@ -50,6 +91,10 @@ const ServiceCatalog = () => {
     toast.error("Произошла ошибка при получении данных.");
   }
 
+  function handleAutocompleteChange(value: any, fieldName: string): void {
+    setFormData((prev) => ({ ...prev, [fieldName]: value }));
+  }
+
   return (
     <div className={classes.catalog}>
       <BreadcrumbsCustom />
@@ -62,10 +107,13 @@ const ServiceCatalog = () => {
             <Divider />
             <div className={classes.catalog__upper__content__items}>
               {isPending ? <CircularProgress /> : ""}
-              <TreeView
-                categories={data || []}
-                onServiceSelect={handleServiceSelect}
-              />
+              <DndProvider backend={HTML5Backend}>
+                <TreeView
+                  categories={data || []}
+                  searchResults={searchResults}
+                  onServiceSelect={handleServiceSelect}
+                />
+              </DndProvider>
             </div>
             <Divider />
             <div className={classes.catalog__upper__content__hint}>
@@ -86,48 +134,115 @@ const ServiceCatalog = () => {
           </h5>
           <Divider />
           <div className={classes.catalog__upper__search__content}>
+            {/* <Form onSubmit={handleSearch}> */}
             <div className={classes.catalog__upper__search__content__row}>
               <p className={classes.catalog__upper__search__content__label}>
                 Услуга
               </p>
-              <CustomTextField label={"Введите Услугу"} />
+
+              <CustomTextField
+                label={"Введите Услугу"}
+                onChange={(e) =>
+                  setFormData({ ...formData, keyword: e.target.value })
+                }
+              />
             </div>
             <div className={classes.catalog__upper__search__content__row}>
               <p className={classes.catalog__upper__search__content__label}>
                 {" "}
                 Отдел
               </p>
-              <CustomTextField label={"Введите Отдел"} />
+              <Autocomplete
+                sx={{ width: "100%" }}
+                options={filterOptions?.departments || []}
+                getOptionLabel={(option) => option.name}
+                onChange={(event, newValue) =>
+                  handleAutocompleteChange(newValue?.name, "department")
+                }
+                renderInput={(params) => (
+                  <CustomTextField {...params} label={"Введите Отдел"} />
+                )}
+              />
             </div>
             <div className={classes.catalog__upper__search__content__row}>
               <p className={classes.catalog__upper__search__content__label}>
                 Секция
               </p>
-              <CustomTextField label={"Введите Секцию"} />
+              <Autocomplete
+                sx={{ width: "100%" }}
+                options={filterOptions?.sections || []}
+                getOptionLabel={(option) => option.name}
+                onChange={(event, newValue) =>
+                  handleAutocompleteChange(newValue?.name, "section")
+                }
+                renderInput={(params) => (
+                  <CustomTextField {...params} label={"Введите Секцию"} />
+                )}
+              />
             </div>
             <div className={classes.catalog__upper__search__content__row}>
               <p className={classes.catalog__upper__search__content__label}>
                 Тип
               </p>
-              <CustomTextField label={"Введите Тип"} />
+              <Autocomplete
+                sx={{ width: "100%" }}
+                options={filterOptions?.service_types || []}
+                getOptionLabel={(option) => option.name}
+                onChange={(event, newValue) =>
+                  handleAutocompleteChange(newValue?.name, "service_type")
+                }
+                renderInput={(params) => (
+                  <CustomTextField {...params} label={"Введите Тип"} />
+                )}
+              />
             </div>
             <div className={classes.catalog__upper__search__content__row}>
               <p className={classes.catalog__upper__search__content__label}>
                 Категория
               </p>
-              <CustomTextField label={"Введите Категорию"} />
+              <Autocomplete
+                sx={{ width: "100%" }}
+                options={filterOptions?.categories || []}
+                getOptionLabel={(option) => option.name}
+                onChange={(event, newValue) =>
+                  handleAutocompleteChange(newValue?.name, "category")
+                }
+                renderInput={(params) => (
+                  <CustomTextField {...params} label={"Введите Категорию"} />
+                )}
+              />
             </div>
             <div className={classes.catalog__upper__search__content__row}>
               <p className={classes.catalog__upper__search__content__label}>
                 Подкатегория
               </p>
-              <CustomTextField label={"Введите Подкатегорию"} />
+              <Autocomplete
+                sx={{ width: "100%" }}
+                options={filterOptions?.subcategories || []}
+                getOptionLabel={(option) => option.name}
+                onChange={(event, newValue) =>
+                  handleAutocompleteChange(newValue?.name, "subcategory")
+                }
+                renderInput={(params) => (
+                  <CustomTextField {...params} label={"Введите Подкатегорию"} />
+                )}
+              />
             </div>
             <div className={classes.catalog__upper__search__content__row}>
               <p className={classes.catalog__upper__search__content__label}>
-                Профессия
+                Должность
               </p>
-              <CustomTextField label={"Введите Профессию"} />
+              <Autocomplete
+                sx={{ width: "100%" }}
+                options={filterOptions?.roles || []}
+                getOptionLabel={(option) => option.name}
+                onChange={(event, newValue) =>
+                  handleAutocompleteChange(newValue?.name, "role")
+                }
+                renderInput={(params) => (
+                  <CustomTextField {...params} label={"Введите должность"} />
+                )}
+              />
             </div>
             <div className={classes.catalog__upper__search__content__row}>
               <Button
@@ -144,10 +259,13 @@ const ServiceCatalog = () => {
                 disableElevation
                 size="medium"
                 sx={{ fontSize: "1.6rem", fontWeight: "400" }}
+                type="submit"
+                onClick={handleSearch}
               >
                 Искать
               </Button>
             </div>
+            {/* </Form> */}
           </div>
         </div>
       </div>

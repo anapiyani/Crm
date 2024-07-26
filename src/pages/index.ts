@@ -22,6 +22,7 @@ import Rating from "./employees/rating/rating-page";
 import NotFound from "./not-found/not-found-page";
 import Unauthorized from "./unauthorized/unauthorized.page";
 import EmployeeCabinet from "./employees/cabinet/employee-cabinet";
+import IndirectCostsPage from "./cash-desk/indirect-costs/indirect-costs.page";
 
 export {
   Home,
@@ -45,4 +46,5 @@ export {
   EmployeeCabinet,
   EmployeeVisits,
   ClientSearch,
+  IndirectCostsPage,
 };

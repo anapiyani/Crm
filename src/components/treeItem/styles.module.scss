@@ -26,3 +26,23 @@
 .selected {
   background-color: #2196f314;
 }
+
+.window {
+  &__header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    p {
+      font-size: 1.6rem;
+      font-weight: 400;
+    }
+  }
+  &__content {
+    height: 50rem;
+    overflow: auto;
+
+    scrollbar-width: thin;
+    scroll-behavior: smooth;
+  }
+}

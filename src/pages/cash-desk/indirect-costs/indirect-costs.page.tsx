@@ -1,0 +1,277 @@
+import classes from "./style.module.scss";
+import BreadcrumbsCustom from "@/components/navigation/breadcrumbs/breadcrumbs";
+import CounterCard from "@/components/counter-card/counter-card";
+import { Edit, Add, ExpandLess, ExpandMore } from "@mui/icons-material";
+import {
+  Button,
+  FormControl,
+  FormControlLabel,
+  Pagination,
+  PaginationItem,
+  Radio,
+  RadioGroup,
+  Tab,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+} from "@mui/material";
+import VerticalTextField from "@/components/textfield-vertical/textfield-vertical";
+import { useState } from "react";
+
+const IndirectCostsPage: React.FC = () => {
+  const [openTables, setOpenTables] = useState<{ [key: string]: boolean }>({
+    table1: true,
+  });
+
+  const toggleTable = (tableKey: string) => {
+    setOpenTables((prevState) => ({
+      ...prevState,
+      [tableKey]: !prevState[tableKey],
+    }));
+  };
+  return (
+    <div className={classes.main}>
+      <div className={classes.main__upper}>
+        <BreadcrumbsCustom />
+        <div className={classes.main__header}>
+          <h1> Косвенные расчеты</h1>
+          <div className={classes.main__header__row}>
+            <CounterCard
+              backgroundColor={"#2196F34D"}
+              iconColor={"var(--primary-main)"}
+              textTitle={"Разходы за отчетный период"}
+              valueText={"200 000 руб"}
+            />
+            <CounterCard
+              backgroundColor={"#2E7D324D"}
+              iconColor={"var(--success-main)"}
+              textTitle={"Накопленная статистика доходов"}
+              valueText={"100 мес."}
+            />
+            <CounterCard
+              backgroundColor={"#FCE4E4"}
+              iconColor={"#C41C1C"}
+              textTitle={"Средняя сумма расходов в месяц"}
+              valueText={"1 000 000 руб."}
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className={classes.main__content}>
+        <div className={classes.main__content__control}>
+          <div className={classes.main__content__control__item}>
+            <label>Создать отчет за</label>
+
+            <FormControl>
+              <RadioGroup>
+                <FormControlLabel
+                  sx={{
+                    padding: "0 10px",
+                    "& .MuiFormControlLabel-label": {
+                      fontSize: "1.6rem",
+                    },
+                  }}
+                  value="day"
+                  control={
+                    <Radio
+                      sx={{
+                        "& .MuiSvgIcon-root": {
+                          fontSize: 18,
+                        },
+                      }}
+                    />
+                  }
+                  label="День"
+                />
+                <FormControlLabel
+                  sx={{
+                    padding: "0 10px",
+                    "& .MuiFormControlLabel-label": {
+                      fontSize: "1.6rem",
+                    },
+                  }}
+                  value="week"
+                  control={
+                    <Radio
+                      sx={{
+                        "& .MuiSvgIcon-root": {
+                          fontSize: 18,
+                        },
+                      }}
+                    />
+                  }
+                  label="Неделя"
+                />
+                <FormControlLabel
+                  sx={{
+                    padding: "0 10px",
+                    "& .MuiFormControlLabel-label": {
+                      fontSize: "1.6rem",
+                    },
+                  }}
+                  value="month"
+                  control={
+                    <Radio
+                      sx={{
+                        "& .MuiSvgIcon-root": {
+                          fontSize: 18,
+                        },
+                      }}
+                    />
+                  }
+                  label="Месяц"
+                />
+                <FormControlLabel
+                  sx={{
+                    padding: "0 10px",
+                    "& .MuiFormControlLabel-label": {
+                      fontSize: "1.6rem",
+                    },
+                  }}
+                  value={"quarter"}
+                  control={
+                    <Radio
+                      sx={{
+                        "& .MuiSvgIcon-root": {
+                          fontSize: 18,
+                        },
+                      }}
+                    />
+                  }
+                  label={"Квартал"}
+                />
+                <FormControlLabel
+                  sx={{
+                    padding: "0 10px",
+                    "& .MuiFormControlLabel-label": {
+                      fontSize: "1.6rem",
+                    },
+                  }}
+                  value="year"
+                  control={
+                    <Radio
+                      sx={{
+                        "& .MuiSvgIcon-root": {
+                          fontSize: 18,
+                        },
+                      }}
+                    />
+                  }
+                  label="Год"
+                />
+                <FormControlLabel
+                  sx={{
+                    padding: "0 10px",
+                    "& .MuiFormControlLabel-label": {
+                      fontSize: "1.6rem",
+                    },
+                  }}
+                  value={"custom"}
+                  control={
+                    <Radio
+                      sx={{
+                        "& .MuiSvgIcon-root": {
+                          fontSize: 18,
+                        },
+                      }}
+                    />
+                  }
+                  label={"Заданный период"}
+                />
+              </RadioGroup>
+              <VerticalTextField
+                placeholder={"C"}
+                placeholderOptional="По"
+                type={"double"}
+                doubleDivier="-"
+              />
+              <Button variant="contained"> Создать отчет</Button>
+              <Button variant="outlined"> Сбросить</Button>
+            </FormControl>
+          </div>
+        </div>
+        <div className={classes.main__content__result}>
+          <div className={classes.main__content__result__item}>
+            <div className={classes.main__content__result__header}>
+              <div className={classes.main__content__result__header__row}>
+                <label>Июль 2024</label>
+                <Pagination
+                  count={0}
+                  variant="outlined"
+                  shape="rounded"
+                  color="primary"
+                  sx={{
+                    "& .MuiPaginationItem-root": {
+                      fontSize: "2.6rem",
+                      opacity: 1,
+                    },
+                  }}
+                />
+              </div>
+              <div className={classes.main__content__result__header__row}>
+                <Button startIcon={<Edit />} variant="outlined">
+                  Редактивровать
+                </Button>
+                <Button startIcon={<Add />} variant="outlined">
+                  Добавить Категорию
+                </Button>
+              </div>
+            </div>
+            <div className={classes.main__content__result__wrap}>
+              <div
+                onClick={() => toggleTable("table1")}
+                className={classes.main__content__result__wrap__header}
+              >
+                <h1>Производственные разходы</h1>
+
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "center",
+                  }}
+                >
+                  <h1>-6 000 руб</h1>
+                  <span style={{ paddingTop: "8px" }}>
+                    {openTables.table1 ? (
+                      <ExpandLess style={{ fontSize: "24px" }} />
+                    ) : (
+                      <ExpandMore style={{ fontSize: "24px" }} />
+                    )}
+                  </span>
+                </div>
+              </div>
+              {openTables.table1 && (
+                <Table className={classes.table}>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>Категория</TableCell>
+                      <TableCell>Дата</TableCell>
+                      <TableCell>Сумма</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    <TableRow>
+                      <TableCell>Категория</TableCell>
+                      <TableCell>Дата</TableCell>
+                      <TableCell>Сумма</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell>Категория</TableCell>
+                      <TableCell>Дата</TableCell>
+                      <TableCell>Сумма</TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+export default IndirectCostsPage;
