@@ -2,10 +2,12 @@ import {
   ICashRegister,
   IKassaOperations,
   IPeriodCashRegister,
+  ISearchKassa,
   IWithdrawal,
+  KassaResponse,
 } from "@/ts/kassa.interface";
 import api from "../api";
-import { IEmployeesData } from "@/ts/employee.interface";
+import { IResponseData } from "@/ts/types";
 
 export const getOperations = (
   kassa_transaction?: boolean
@@ -43,3 +45,38 @@ export const kassaWithdraw = (formData: IWithdrawal): Promise<IWithdrawal> => {
 export const kassaDeposit = (formData: IWithdrawal): Promise<IWithdrawal> => {
   return api.post("/kassa_deposit/", formData).then((res) => res.data);
 };
+
+export const searchKassaData = (
+  formData: ISearchKassa
+): Promise<IResponseData<KassaResponse[]>> => {
+  const params = new URLSearchParams();
+  if (formData.operation_type) {
+    params.append("operation_type", formData.operation_type.toString());
+  }
+  if (formData.from_amount) {
+    params.append("from_amount", formData.from_amount.toString());
+  }
+  if (formData.to_amount) {
+    params.append("to_amount", formData.to_amount.toString());
+  }
+  if (formData.from_date) {
+    params.append("from_date", formData.from_date);
+  }
+  if (formData.to_date) {
+    params.append("to_date", formData.to_date);
+  }
+  if (formData.money_type) {
+    formData.money_type.forEach((type) => {
+      params.append("money_type", type);
+    });
+  }
+  if (formData.page) {
+    params.append("page", formData.page.toString());
+  }
+  if (formData.page_size) {
+    params.append("page_size", formData.page_size.toString());
+  }
+  const url = `/transactions/list/?${params.toString()}`;
+  return api.get(url).then((res) => res.data);
+};
+

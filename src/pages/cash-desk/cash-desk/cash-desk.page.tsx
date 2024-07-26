@@ -33,10 +33,27 @@ import salaryModal from "@/modals/cash-desk/salary.modal";
 import withdrawModal from "@/modals/cash-desk/withdraw.modal";
 import endureModal from "@/modals/cash-desk/endure.modal";
 import CashCard from "../_components/cash-card/cash-card";
-import { getCashRegister, getOperations } from "@/service/kassa/kassa.service";
+import {
+  getCashRegister,
+  getOperations,
+  searchKassaData,
+} from "@/service/kassa/kassa.service";
 import { useQuery } from "@tanstack/react-query";
-import { ICashRegister, IKassaOperations } from "@/ts/kassa.interface";
+import {
+  ICashRegister,
+  IKassaOperations,
+  ISearchKassa,
+  KassaResponse,
+} from "@/ts/kassa.interface";
 import CustomDatePicker from "@/components/date-picker/date-picker-custom";
+import { SubmitHandler, useForm } from "react-hook-form";
+import dayjs from "dayjs";
+import { IResponseData } from "@/ts/types";
+
+interface IOption {
+  label: string;
+  value: number;
+}
 
 const CashDesk = () => {
   const { data: operationsData } = useQuery({
@@ -53,6 +70,38 @@ const CashDesk = () => {
   const [fromDate, setFromDate] = useState<string>("");
   const [toDate, setToDate] = useState<string>("");
 
+  const { register, handleSubmit, reset } = useForm<ISearchKassa>();
+  const [money_type, setMoney_type] = useState<string[]>([]);
+  const [selectedOperationId, setSelectedOperationId] = useState<string | null>(
+    null
+  );
+  const [searchResult, setSearchResult] = useState<IResponseData<
+    KassaResponse[]
+  > | null>(null);
+
+  const [pageSize, setPageSize] = useState<IOption>({ label: "10", value: 10 });
+  const [page, setPage] = useState(1);
+
+  const pageSizeOptions: IOption[] = [
+    { label: "10", value: 10 },
+    { label: "20", value: 20 },
+    { label: "50", value: 50 },
+    { label: "100", value: 100 },
+  ];
+
+  const onSearchSubmit: SubmitHandler<ISearchKassa> = async (
+    data: ISearchKassa
+  ) => {
+    const formData = {
+      ...data,
+      operation_type: Number(selectedOperationId),
+      money_type: money_type,
+      page: page,
+      page_size: pageSize.value,
+    };
+    const result = await searchKassaData(formData);
+    setSearchResult(result);
+  };
   const cashRegister: ICashRegister = {
     from_date: fromDate,
     to_date: toDate,
@@ -107,6 +156,13 @@ const CashDesk = () => {
     traverse(operations, null);
     return result;
   };
+
+  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { value, checked } = event.target;
+    setMoney_type((prev) =>
+      checked ? [...prev, value] : prev.filter((type) => type !== value)
+    );
+  };
   const options = operationsData ? processOperationsData(operationsData) : [];
 
   const handleSalaryModal = () => {
@@ -128,6 +184,39 @@ const CashDesk = () => {
     }
   };
 
+  const handleShowClick = async () => {
+    await refetchCashRegister();
+  };
+
+  const handlePageChange = (
+    event: React.ChangeEvent<unknown>,
+    value: number
+  ) => {
+    setPage(value);
+  };
+
+  const handlePageSizeChange = (
+    event: React.ChangeEvent<{ value: unknown }>
+  ) => {
+    const selectedOption = pageSizeOptions.find(
+      (option) => option.value === Number(event.target.value)
+    ) || { label: "10", value: 10 };
+    setPageSize(selectedOption);
+  };
+
+  useEffect(() => {
+    onSearchSubmit({
+      from_date: "",
+      to_date: "",
+      from_amount: 0,
+      to_amount: 0,
+      operation_type: 0,
+      money_type: [],
+      page,
+      page_size: pageSize.value,
+    });
+  }, [page, pageSize]);
+
   if (cashRegisterLoading) {
     return (
       <div className={classes.loading}>
@@ -147,6 +236,7 @@ const CashDesk = () => {
           onTabChange={handleTabChange}
         />
       </div>
+
       {activeTab === 0 ? (
         <div className={classes.main__day}>
           <div className={classes.main__day__info}>
@@ -384,23 +474,42 @@ const CashDesk = () => {
           <h2>Поиск по кассе</h2>
           <Divider />
         </div>
-        <form className={classes.main__searchForm__body}>
+        <form
+          onSubmit={handleSubmit(onSearchSubmit)}
+          className={classes.main__searchForm__body}
+        >
           <div className={classes.main__searchForm__body__items}>
             <h3>Способ оплаты</h3>
             <div className={classes.main__searchForm__body__items__methods}>
-              <input type="checkbox" />
+              <input
+                type="checkbox"
+                value="cash"
+                onChange={handleCheckboxChange}
+              />
               <span className={classes["tree__label"]}>Оплата наличными</span>
             </div>
             <div className={classes.main__searchForm__body__items__methods}>
-              <input type="checkbox" />
+              <input
+                type="checkbox"
+                value="card"
+                onChange={handleCheckboxChange}
+              />
               <span className={classes["tree__label"]}>Оплата по карте</span>
             </div>
             <div className={classes.main__searchForm__body__items__methods}>
-              <input type="checkbox" />
+              <input
+                type="checkbox"
+                value="check"
+                onChange={handleCheckboxChange}
+              />
               <span className={classes["tree__label"]}>Оплата чеками</span>
             </div>
             <div className={classes.main__searchForm__body__items__methods}>
-              <input type="checkbox" />
+              <input
+                type="checkbox"
+                value="checking_account"
+                onChange={handleCheckboxChange}
+              />
               <span className={classes["tree__label"]}>С расчетного счета</span>
             </div>
           </div>
@@ -410,8 +519,9 @@ const CashDesk = () => {
               <TextField
                 variant="outlined"
                 size="small"
-                placeholder="Начиная с"
+                placeholder="01.01.2024"
                 style={{ width: "42%" }}
+                {...register("from_date")}
               />
               <p style={{ marginRight: "1rem", marginLeft: "1rem" }}>-</p>
               <TextField
@@ -419,12 +529,16 @@ const CashDesk = () => {
                 size="small"
                 placeholder="Заканчивая"
                 style={{ width: "41%" }}
+                {...register("to_date")}
               />
             </div>
             <Autocomplete
               sx={{ width: 330 }}
               options={options}
               getOptionLabel={(option) => option.label}
+              onChange={(event, value) => {
+                setSelectedOperationId(value ? value.value : null);
+              }}
               renderOption={(props, option) => (
                 <li
                   {...props}
@@ -460,6 +574,7 @@ const CashDesk = () => {
                   size="small"
                   placeholder="От, руб."
                   style={{ width: "42%" }}
+                  {...register("from_amount")}
                 />
                 <p style={{ marginRight: "1rem", marginLeft: "1rem" }}>-</p>
                 <TextField
@@ -467,6 +582,7 @@ const CashDesk = () => {
                   size="small"
                   placeholder="До, руб."
                   style={{ width: "41%" }}
+                  {...register("to_amount")}
                 />
               </div>
             </div>
@@ -475,95 +591,182 @@ const CashDesk = () => {
             <h3>Сумма</h3>
             <div style={{ display: "flex" }}>
               <div style={{ display: "flex" }}>
-                <Button variant="outlined">Сбросить</Button>
-                <Button variant="contained">Поиск</Button>
+                <Button onClick={() => reset()} variant="outlined">
+                  Сбросить
+                </Button>
+                <Button
+                  onClick={handleShowClick}
+                  type="submit"
+                  variant="contained"
+                >
+                  Поиск
+                </Button>
               </div>
             </div>
           </div>
         </form>
       </div>
-      <div className={classes.main__cashDesk}>
-        <div className={classes.main__cashDesk__header}>
-          <h2>Касса</h2>
-          <Divider />
-        </div>
-        <div className={classes["main__cashDesk__lower"]}>
-          <Table className={classes.table}>
-            <TableHead>
-              <TableRow>
-                <TableCell>№</TableCell>
-                <TableCell>Операция</TableCell>
-                <TableCell>Касса</TableCell>
-                <TableCell>Сумма</TableCell>
-                <TableCell>Оплачено</TableCell>
-                <TableCell>Сдача</TableCell>
-                <TableCell>Депозит</TableCell>
-                <TableCell>Клиент</TableCell>
-                <TableCell>Сотрудник</TableCell>
-                <TableCell>Комментарий</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              <TableRow>
-                <TableCell>1</TableCell>
-                <TableCell>
-                  <Link to="/" className={classes.name_link}>
-                    Посещение №721 <br /> 11.07.2024 12:00
-                  </Link>
-                </TableCell>
-                <TableCell>По умолчанию</TableCell>
-                <TableCell>
-                  <p className={classes.money}>25 000 руб.</p>
-                </TableCell>
-                <TableCell>25 000 руб.</TableCell>
-                <TableCell>0 руб.</TableCell>
-                <TableCell>0 руб.</TableCell>
-                <TableCell>
-                  {" "}
-                  <Link to="/" className={classes.name_link}>
-                    {" "}
-                    Иванов Иван Иванович{" "}
-                  </Link>
-                </TableCell>
-                <TableCell>
-                  <Link to="/" className={classes.name_link}>
-                    {" "}
-                    Иванов Иван Иванович{" "}
-                  </Link>
-                </TableCell>
-                <TableCell>Комментарий</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-          <div className={classes["main__cashDesk__lower__container"]}>
-            <div className={classes["main__cashDesk__lower__container__row"]}>
-              <p className={classes["main__cashDesk__lower__container__label"]}>
-                Показано 2 из 2 записей
-              </p>
-              <div>
-                <div className={classes["tableSettings"]}>
-                  Показывать
-                  <select name="pageSize" id="pageSize">
-                    <option value="10">10</option>
-                    <option value="20">20</option>
-                    <option value="50">50</option>
-                    <option value="100">100</option>
-                  </select>
-                  записей
+      {searchResult && (
+        <div className={classes.main__cashDesk}>
+          <div className={classes.main__cashDesk__header}>
+            <h2>Касса</h2>
+            <Divider />
+          </div>
+          <div className={classes["main__cashDesk__lower"]}>
+            <Table className={classes.table}>
+              <TableHead>
+                <TableRow>
+                  <TableCell>№</TableCell>
+                  <TableCell>Операция</TableCell>
+                  <TableCell>Касса</TableCell>
+                  <TableCell>Сумма</TableCell>
+                  <TableCell>Оплачено</TableCell>
+                  <TableCell>Сдача</TableCell>
+                  <TableCell>Депозит</TableCell>
+                  <TableCell>Клиент</TableCell>
+                  <TableCell>Сотрудник</TableCell>
+                  <TableCell>Комментарий</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {searchResult?.results.map((result, index) => (
+                  <TableRow key={result.id}>
+                    <TableCell>{index + 1}</TableCell>
+                    <TableCell>
+                      <Link to="/" className={classes.name_link}>
+                        {result.operation_name} №{result.id} <br />{" "}
+                        {dayjs(result.operation_date).format("DD.MM.YYYY")}
+                      </Link>
+                    </TableCell>
+                    <TableCell>По умолчанию</TableCell>
+                    <TableCell>
+                      <p className={classes.money}>{result.amount} руб.</p>
+                    </TableCell>
+                    <TableCell>
+                      {result.overall_change_in_cash_register?.card !==
+                        "0.00" && (
+                        <p
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "0.5rem",
+                          }}
+                        >
+                          {result.overall_change_in_cash_register.card} руб.
+                          <CreditCard />
+                        </p>
+                      )}
+                      {result.overall_change_in_cash_register?.cash !==
+                        "0.00" && (
+                        <p
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "0.5rem",
+                          }}
+                        >
+                          {result.overall_change_in_cash_register.cash} руб.{" "}
+                          <Public />
+                        </p>
+                      )}
+                      {result.overall_change_in_cash_register?.check !==
+                        "0.00" && (
+                        <p
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "0.5rem",
+                          }}
+                        >
+                          {result.overall_change_in_cash_register.check} руб.{" "}
+                          <LocalActivity />
+                        </p>
+                      )}
+                      {result.overall_change_in_cash_register
+                        ?.checking_account !== "0.00" && (
+                        <p
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "0.5rem",
+                          }}
+                        >
+                          {
+                            result.overall_change_in_cash_register
+                              .checking_account
+                          }
+                          руб. <MenuBook />
+                        </p>
+                      )}
+                    </TableCell>
+                    <TableCell>{result.change}</TableCell>
+                    <TableCell>{result.deposit} </TableCell>
+                    <TableCell>
+                      {" "}
+                      {result.customer ? (
+                        <Link to="/" className={classes.name_link}>
+                          {result.customer_name}
+                        </Link>
+                      ) : (
+                        <p>Нет данных</p>
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      {result.employee ? (
+                        <Link
+                          to={"/employees/" + result.employee}
+                          className={classes.name_link}
+                        >
+                          {result.employee_name}
+                        </Link>
+                      ) : (
+                        <p>Нет данных</p>
+                      )}
+                    </TableCell>
+                    <TableCell>{result.comment}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+            <div className={classes["main__cashDesk__lower__container"]}>
+              <div className={classes["main__cashDesk__lower__container__row"]}>
+                <p
+                  className={classes["main__cashDesk__lower__container__label"]}
+                >
+                  Показано {searchResult?.results.length} из{" "}
+                  {searchResult?.count} записей
+                </p>
+                <div>
+                  <div className={classes["tableSettings"]}>
+                    Показывать
+                    <select
+                      name="pageSize"
+                      id="pageSize"
+                      onChange={handlePageSizeChange}
+                    >
+                      {pageSizeOptions.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </select>
+                    записей
+                  </div>
                 </div>
+                <Pagination
+                  count={Math.ceil(searchResult?.count / pageSize.value)}
+                  page={page}
+                  variant="outlined"
+                  shape="rounded"
+                  boundaryCount={1}
+                  color="primary"
+                  onChange={handlePageChange}
+                />
               </div>
-              <Pagination
-                count={2}
-                page={1}
-                variant="outlined"
-                shape="rounded"
-                boundaryCount={1}
-                color="primary"
-              />
             </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

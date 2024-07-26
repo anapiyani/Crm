@@ -2,18 +2,7 @@ import React, { useState } from "react";
 import ModalWindow from "@/components/modal-window/modal-window";
 import NiceModal, { useModal } from "@ebay/nice-modal-react";
 import classes from "./styles.module.scss";
-import {
-  Autocomplete,
-  Button,
-  Divider,
-  FormControl,
-  FormControlLabel,
-  Radio,
-  RadioGroup,
-  TextField,
-} from "@mui/material";
-import { Link } from "react-router-dom";
-import CustomAutoComplete from "@/components/autocomplete/custom-autocomplete.component";
+import { Autocomplete, Button, Divider, TextField } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { getOperations } from "@/service/kassa/kassa.service";
 import { IKassaOperations, IWithdrawal } from "@/ts/kassa.interface";
@@ -29,7 +18,7 @@ interface WithdrawModalProps {
 const WithdrawModal: React.FC<WithdrawModalProps> = ({
   refetchCashRegister,
 }) => {
-  const { register, handleSubmit, control } = useForm<IWithdrawal>();
+  const { register, handleSubmit, reset } = useForm<IWithdrawal>();
   const { data: operationsData } = useQuery({
     queryKey: ["kassaService"],
     queryFn: () => getOperations(),
@@ -53,6 +42,7 @@ const WithdrawModal: React.FC<WithdrawModalProps> = ({
     if ((selectedOperationId && selectedMoneyType) || summ === 0) {
       await mutation.mutate(formData);
       modal.hide();
+      reset();
     } else {
       toast.error("Заполните все поля");
     }

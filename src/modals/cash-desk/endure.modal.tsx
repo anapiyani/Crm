@@ -16,7 +16,7 @@ interface EndureModalProps {
 }
 
 const EndureModal: React.FC<EndureModalProps> = ({ refetchCashRegister }) => {
-  const { register, handleSubmit, control } = useForm<IWithdrawal>();
+  const { register, handleSubmit, reset } = useForm<IWithdrawal>();
   const { data: operationsData } = useQuery({
     queryKey: ["kassaService"],
     queryFn: () => getOperations(true),
@@ -40,6 +40,7 @@ const EndureModal: React.FC<EndureModalProps> = ({ refetchCashRegister }) => {
     if ((selectedOperationId && selectedMoneyType) || summ === 0) {
       await mutation.mutate(formData);
       modal.hide();
+      reset();
     } else {
       toast.error("Заполните все поля");
     }
