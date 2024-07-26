@@ -14,31 +14,42 @@
     padding: 0rem 7rem 4rem 7rem;
     display: flex;
     flex-wrap: wrap;
-
     gap: 2rem;
-    justify-items: right;
+    justify-content: right;
+    max-width: 80vw;
+    max-height: 60vh;
+    overflow-y: auto;
+    -ms-overflow-style: none;
+      scrollbar-width: none;
+
     &__main {
       display: flex;
       flex: 2;
       flex-direction: column;
-      gap: 2rem;
+      gap: 3.2rem;
     }
     &__position {
       display: flex;
       flex: 1;
       flex-direction: column;
       gap: 2rem;
+      height: auto;
     }
     &__reviews {
       flex: 2;
+      
     }
     &__checkboxes {
       display: flex;
       flex-direction: row;
       width: 45rem;
-      gap: 2rem;
+      gap: 1.6rem;
       align-items: center;
-      p {
+      
+      svg {
+        font-size: 2.4rem;
+      }
+      span, p {
         font-size: 1.6rem;
         color: var(--text-primary);
       }
@@ -46,18 +57,44 @@
     &__autocomplete {
       display: flex;
       flex-direction: row;
-      width: 46rem;
-      gap: 2rem;
+      width: 100%;
       align-items: center;
+      justify-content: right;
+      &__container {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        width: 40rem;
+      }
+     
     }
     &__card {
       display: flex;
       flex-direction: column;
       gap: 1rem;
-      height: 20rem;
-      overflow-y: scroll;
+      height: auto;
+      overflow-y: auto;
+      max-height: 45vh;
       -ms-overflow-style: none;
       scrollbar-width: none;
+
+      &__field {
+        width: 100%;
+      }
+      &__doubleField {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5rem;
+
+        .MuiTextField-root {
+          flex: 1;
+        }
+
+        &__divider {
+          margin: 0 0.5rem;
+        }
+      }
     }
     &__buttons {
       display: flex;

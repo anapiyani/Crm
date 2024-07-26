@@ -41,6 +41,9 @@ const VerticalTextField: React.FC<IProps> = ({
                 addClassName
               )}
               onChange={onChangeFrom}
+              InputProps={{
+                style: { fontSize: "16px" },
+              }}
             />
             <p>{doubleDivier}</p>
             <TextField
@@ -53,6 +56,9 @@ const VerticalTextField: React.FC<IProps> = ({
                 addClassName
               )}
               onChange={onChangeTo}
+              InputProps={{
+                style: { fontSize: "16px" },
+              }}
             />
           </div>
         );

@@ -261,6 +261,7 @@ const EmployeeSearch = () => {
                   placeholder="С"
                   placeholderOptional="По"
                   type="double"
+                  doubleDivier="-"
                   onChangeFrom={(e) =>
                     handleRangeChange("employmentDate", e.target.value, "From")
                   }
@@ -274,6 +275,7 @@ const EmployeeSearch = () => {
                   placeholder="С"
                   placeholderOptional="По"
                   type="double"
+                  doubleDivier="-"
                   onChangeFrom={(e) =>
                     handleRangeChange("birthDate", e.target.value, "From")
                   }
@@ -287,6 +289,7 @@ const EmployeeSearch = () => {
                   placeholder="С"
                   placeholderOptional="По"
                   type="double"
+                  doubleDivier="-"
                   onChangeFrom={(e) =>
                     handleRangeChange("age", e.target.value, "From")
                   }
@@ -328,21 +331,28 @@ const EmployeeSearch = () => {
                   </FormGroup>
                 </div>
                 <div className={classes["main__upper__autocomplete"]}>
-                  <Autocomplete
-                    sx={{ width: "100%" }}
-                    options={[
-                      { label: "Option 1", value: "1" },
-                      { label: "Option 2", value: "2" },
-                      { label: "Option 3", value: "3" },
-                    ]}
-                    getOptionLabel={(option) => option.label}
-                    onChange={(event, newValue) =>
-                      handleAutocompleteChange(newValue?.value, "role")
-                    }
-                    renderInput={(params) => (
-                      <TextField {...params} label="Статус" />
-                    )}
-                  />
+                  <div
+                    className={classes["main__upper__autocomplete__container"]}
+                  >
+                    <Autocomplete
+                      sx={{
+                        width: "100%",
+                      }}
+                      options={[
+                        { label: "Option 1", value: "1" },
+                        { label: "Option 2", value: "2" },
+                        { label: "Option 3", value: "3" },
+                      ]}
+                      getOptionLabel={(option) => option.label}
+                      onChange={(event, newValue) =>
+                        handleAutocompleteChange(newValue?.value, "role")
+                      }
+                      renderInput={(params) => (
+                        <TextField {...params} label="Статус"/>
+                      )}
+                      size="medium"
+                    />
+                  </div>
                 </div>
               </div>
             }
