@@ -69,6 +69,12 @@ export const searchKassaData = (
       params.append("money_type", type);
     });
   }
+  if (formData.page) {
+    params.append("page", formData.page.toString());
+  }
+  if (formData.page_size) {
+    params.append("page_size", formData.page_size.toString());
+  }
   const url = `/transactions/list/?${params.toString()}`;
   return api.get(url).then((res) => res.data);
 };

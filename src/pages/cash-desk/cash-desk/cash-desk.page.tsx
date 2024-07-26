@@ -47,9 +47,12 @@ import {
 } from "@/ts/kassa.interface";
 import CustomDatePicker from "@/components/date-picker/date-picker-custom";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { format } from "path";
 import dayjs from "dayjs";
-import { DatePicker } from "@mui/x-date-pickers";
+
+interface IOption {
+  label: string;
+  value: number;
+}
 
 const CashDesk = () => {
   const { data: operationsData } = useQuery({
@@ -75,6 +78,16 @@ const CashDesk = () => {
     null
   );
 
+  const [pageSize, setPageSize] = useState<IOption>({ label: "10", value: 10 });
+  const [page, setPage] = useState(1);
+
+  const pageSizeOptions: IOption[] = [
+    { label: "10", value: 10 },
+    { label: "20", value: 20 },
+    { label: "50", value: 50 },
+    { label: "100", value: 100 },
+  ];
+
   const onSearchSubmit: SubmitHandler<ISearchKassa> = async (
     data: ISearchKassa
   ) => {
@@ -82,10 +95,13 @@ const CashDesk = () => {
       ...data,
       operation_type: Number(selectedOperationId),
       money_type: money_type,
+      page: page,
+      page_size: pageSize.value,
     };
     const result = await searchKassaData(formData);
     setSearchResult(result);
   };
+
   const cashRegister: ICashRegister = {
     from_date: fromDate,
     to_date: toDate,
@@ -172,6 +188,35 @@ const CashDesk = () => {
   const handleShowClick = async () => {
     await refetchCashRegister();
   };
+
+  const handlePageChange = (
+    event: React.ChangeEvent<unknown>,
+    value: number
+  ) => {
+    setPage(value);
+  };
+
+  const handlePageSizeChange = (
+    event: React.ChangeEvent<{ value: unknown }>
+  ) => {
+    const selectedOption = pageSizeOptions.find(
+      (option) => option.value === Number(event.target.value)
+    ) || { label: "10", value: 10 };
+    setPageSize(selectedOption);
+  };
+
+  useEffect(() => {
+    onSearchSubmit({
+      from_date: "",
+      to_date: "",
+      from_amount: 0,
+      to_amount: 0,
+      operation_type: 0,
+      money_type: [],
+      page,
+      page_size: pageSize.value,
+    });
+  }, [page, pageSize]);
 
   if (cashRegisterLoading) {
     return (
@@ -695,22 +740,28 @@ const CashDesk = () => {
                 <div>
                   <div className={classes["tableSettings"]}>
                     Показывать
-                    <select name="pageSize" id="pageSize">
-                      <option value="10">10</option>
-                      <option value="20">20</option>
-                      <option value="50">50</option>
-                      <option value="100">100</option>
+                    <select
+                      name="pageSize"
+                      id="pageSize"
+                      onChange={handlePageSizeChange}
+                    >
+                      {pageSizeOptions.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
                     </select>
                     записей
                   </div>
                 </div>
                 <Pagination
-                  count={2}
-                  page={1}
+                  count={Math.ceil(searchResult?.count / pageSize.value)}
+                  page={page}
                   variant="outlined"
                   shape="rounded"
                   boundaryCount={1}
                   color="primary"
+                  onChange={handlePageChange}
                 />
               </div>
             </div>

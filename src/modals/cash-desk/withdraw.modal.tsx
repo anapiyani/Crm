@@ -18,7 +18,7 @@ interface WithdrawModalProps {
 const WithdrawModal: React.FC<WithdrawModalProps> = ({
   refetchCashRegister,
 }) => {
-  const { register, handleSubmit, control } = useForm<IWithdrawal>();
+  const { register, handleSubmit, reset } = useForm<IWithdrawal>();
   const { data: operationsData } = useQuery({
     queryKey: ["kassaService"],
     queryFn: () => getOperations(),
@@ -42,6 +42,7 @@ const WithdrawModal: React.FC<WithdrawModalProps> = ({
     if ((selectedOperationId && selectedMoneyType) || summ === 0) {
       await mutation.mutate(formData);
       modal.hide();
+      reset();
     } else {
       toast.error("Заполните все поля");
     }

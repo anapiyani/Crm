@@ -40,6 +40,8 @@ export interface ISearchKassa {
   to_amount: number;
   operation_type: number;
   money_type: string[];
+  page: number;
+  page_size: number;
 }
 
 export interface ISearchKassaResponse {
