@@ -1,6 +1,6 @@
 import BreadcrumbsCustom from "@/components/navigation/breadcrumbs/breadcrumbs";
 import { getHierarchy } from "@/service/hierarchy/hierarchy.service";
-import { IService, IServiceCategory } from "@/ts/types";
+import { IService, IServiceCategory } from "@/ts/service.interface";
 import { Button, CircularProgress, Divider, TextField } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import toast from "react-hot-toast";

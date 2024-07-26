@@ -54,6 +54,7 @@ const Home = () => {
   const [selectedResourceId, setSelectedResourceId] = useState<string | null>(
     null
   );
+  const [selectedTitle, setSelectedTitle] = useState<string | null>(null);
   const [events, setEvents] = useState<any[]>([]);
   const [resources, setResources] = useState<any[]>([]);
 
@@ -83,9 +84,11 @@ const Home = () => {
 
   const handleResourceClick = (
     resourceId: string,
+    resourceTitle: string,
     event: React.MouseEvent<HTMLElement>
   ) => {
     setSelectedResourceId(resourceId);
+    setSelectedTitle(resourceTitle);
     setAnchorEl(event.currentTarget);
   };
 
@@ -204,6 +207,7 @@ const Home = () => {
               anchorEl={anchorEl}
               onClose={handleCloseDropdownMenu}
               resourceId={selectedResourceId || ""}
+              username={selectedTitle || ""}
             />
           </div>
           <div

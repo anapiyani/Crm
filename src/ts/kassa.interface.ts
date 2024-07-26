@@ -82,3 +82,4 @@ export interface KassaResponse {
   services: null;
   type: string;
 }
+

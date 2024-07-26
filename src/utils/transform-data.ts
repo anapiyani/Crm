@@ -25,6 +25,7 @@ interface IBreakReturn {
   start: string;
   end: string;
   resourceId: number;
+  break_note: string;
   extendedProps: {
     type: string;
   };
@@ -70,6 +71,7 @@ export const transformSchedulesToFullCalendar = (schedules: ISchedule[]) => {
         start: `${date}T${breakItem.start_time}`,
         end: `${date}T${breakItem.end_time}`,
         resourceId: schedule.employee.id,
+        break_note: breakItem.break_note,
         extendedProps: {
           type: "break",
         },

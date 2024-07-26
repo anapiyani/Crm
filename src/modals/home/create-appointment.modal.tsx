@@ -1,8 +1,8 @@
 import React, { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import NiceModal, { useModal } from "@ebay/nice-modal-react";
-import ModalWindow from "@/components/modal-window/modal-window";
+import toast from "react-hot-toast";
 import {
-  Autocomplete,
   Button,
   Divider,
   Table,
@@ -23,12 +23,30 @@ import {
   DeleteOutline,
   Close,
 } from "@mui/icons-material";
+
+import ModalWindow from "@/components/modal-window/modal-window";
+import { ChooseServiceModal } from "..";
 import CustomAutoComplete from "@/components/autocomplete/custom-autocomplete.component";
-import classes from "./styles.module.scss";
-import classNames from "classnames";
-import { useQuery } from "@tanstack/react-query";
 import { searchEmployee } from "@/service/employee/employee.service";
-import { IAppointmentCreateForm } from "@/ts/appointments.interface";
+import {
+  IAppointmentCreateForm,
+  IAppointmentService,
+} from "@/ts/appointments.interface";
+import {
+  getServiceForEmployeeById,
+  getServiceParametersById,
+} from "@/service/services/services.service";
+import { useCreateAppointment } from "@/service/appointments/appointments.hook";
+import classNames from "classnames";
+import classes from "./styles.module.scss";
+
+import {
+  DatePicker,
+  LocalizationProvider,
+  TimeField,
+} from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs, { Dayjs } from "dayjs";
 
 interface ICreateAppointmentModalProps {
   start: string;
@@ -37,31 +55,22 @@ interface ICreateAppointmentModalProps {
 }
 
 const initialAppointmentForm: IAppointmentCreateForm = {
-  client: 0,
-  employee: 0,
-  status: "",
-  date: "",
-  start_time: "",
-  end_time: "",
+  client_id: 0,
+  employee_id: 0,
+  dates: [],
+  start_times: [],
+  end_times: [],
   discount_custom: "",
   notes: "",
-  type: "",
-  appointment_services: [
-    {
-      service: 0,
-      price: "12312",
-      quantity: 0,
-      materials: [],
-    },
-    {
-      service: 0,
-      price: "12312",
-      quantity: 0,
-      materials: [],
-    },
-  ],
+  type: "service",
+  appointment_services: [],
   material_purchases: [],
 };
+
+interface IOption {
+  label: string;
+  value: number;
+}
 
 const CreateAppointmentModal: React.FC<ICreateAppointmentModalProps> = ({
   start,
@@ -71,13 +80,44 @@ const CreateAppointmentModal: React.FC<ICreateAppointmentModalProps> = ({
   const modal = useModal();
   const [appointmentForm, setAppointmentForm] =
     useState<IAppointmentCreateForm>(initialAppointmentForm);
-  const [selectedClient, setSelectedClient] = useState<{
-    label: string;
-    value: number;
-  }>({
-    label: "",
-    value: 0,
-  });
+  const [selectedEmployee, setSelectedEmployee] = useState<IOption | null>(
+    null
+  );
+  const [selectedServices, setSelectedServices] = useState<IOption | null>(
+    null
+  );
+  const [selectedParameters, setSelectedParameters] = useState<IOption | null>(
+    null
+  );
+  const [serviceTableData, setServiceTableData] = useState<
+    {
+      id: number;
+      service: string;
+      service_id: number;
+      price?: string;
+      quantity: number;
+      parameter: string;
+      parameter_id: number;
+    }[]
+  >();
+  const [isNotesOpen, setIsNotesOpen] = useState<boolean>(false);
+  const [appointmentDates, setAppointmentDates] = useState<
+    {
+      id: number;
+      date: Dayjs;
+      start_time: Dayjs;
+      end_time: Dayjs;
+    }[]
+  >([
+    {
+      id: Date.now(),
+      date: dayjs(start.split(" ")[0]),
+      start_time: dayjs(`${start.split(" ")[0]} ${start.split(" ")[1]}`),
+      end_time: dayjs(`${start.split(" ")[0]} ${end.split(" ")[1]}`),
+    },
+  ]);
+  const AppointmentMutation = useCreateAppointment();
+
   const { data: clientsData } = useQuery({
     queryKey: ["employeeData"],
     queryFn: () =>
@@ -89,6 +129,21 @@ const CreateAppointmentModal: React.FC<ICreateAppointmentModalProps> = ({
     refetchOnWindowFocus: false,
   });
 
+  const { data: servicesDataByEmployee } = useQuery({
+    queryKey: ["servicesData", employee],
+    queryFn: () => getServiceForEmployeeById(employee),
+    staleTime: Infinity,
+    refetchOnWindowFocus: false,
+  });
+
+  const { data: parametersData } = useQuery({
+    queryKey: ["parametersData", selectedServices?.value],
+    queryFn: () => getServiceParametersById(selectedServices?.value as number),
+    enabled: selectedServices !== null && selectedServices?.value !== 0,
+    staleTime: Infinity,
+    refetchOnWindowFocus: false,
+  });
+
   const buttonClass = {
     fontSize: "1.1rem",
     fontWeight: 600,
@@ -96,8 +151,84 @@ const CreateAppointmentModal: React.FC<ICreateAppointmentModalProps> = ({
   };
 
   const handleSubmit = (appointmentForm: IAppointmentCreateForm) => {
-    console.log(appointmentForm);
-    console.log("submit");
+    if (!selectedEmployee) {
+      toast.error("Выберите клиента");
+      return;
+    }
+    if (!serviceTableData) {
+      toast.error("Выберите услуги");
+      return;
+    }
+
+    const services: IAppointmentService[] = serviceTableData.map((service) => ({
+      service: service.service_id,
+      price: service.price,
+      quantity: service.quantity,
+      materials: [],
+      parameter_id: service.parameter_id,
+    }));
+
+    const dates = appointmentDates.map((date) =>
+      date.date.format("YYYY-MM-DD")
+    );
+    const start_times = appointmentDates.map((date) =>
+      date.start_time.format("HH:mm")
+    );
+    const end_times = appointmentDates.map((date) =>
+      date.end_time.format("HH:mm")
+    );
+
+    const updatedForm: IAppointmentCreateForm = {
+      ...appointmentForm,
+      client_id: selectedEmployee.value,
+      employee_id: +employee,
+      dates,
+      start_times,
+      end_times,
+      appointment_services: services,
+      material_purchases: [],
+    };
+
+    AppointmentMutation.mutate(updatedForm);
+  };
+
+  const handleAddService = () => {
+    if (selectedServices && selectedParameters) {
+      setServiceTableData([
+        ...(serviceTableData || []),
+        {
+          id: Date.now(),
+          service: selectedServices.label,
+          service_id: selectedServices.value,
+          quantity: 1,
+          parameter: selectedParameters.label,
+          parameter_id: selectedParameters.value,
+        },
+      ]);
+    }
+    setSelectedParameters(null);
+    setSelectedServices(null);
+  };
+
+  const handleDeleteServiceTableData = (id: number) => {
+    serviceTableData &&
+      setServiceTableData(serviceTableData.filter((item) => item.id !== id));
+  };
+
+  const handleAddDate = () => {
+    setAppointmentDates([
+      ...appointmentDates,
+      {
+        id: Date.now(),
+        date: dayjs(),
+        start_time: dayjs().hour(9).minute(0),
+        end_time: dayjs().hour(10).minute(0),
+      },
+    ]);
+  };
+
+  const handleDeleteDate = (id: number) => {
+    setAppointmentDates(appointmentDates.filter((item) => item.id !== id));
   };
 
   return (
@@ -108,184 +239,359 @@ const CreateAppointmentModal: React.FC<ICreateAppointmentModalProps> = ({
       className={classes["u-full-zero"]}
       withButtons={false}
     >
-      <div className={classes["create-appointment"]}>
-        <p
-          className={classNames(
-            classes["create-appointment__params-text"],
-            classes["u-mt-2"]
-          )}
-        >
-          Основные параметры
-        </p>
-        <Divider />
-        <div>
-          <div className={classes["create-appointment__params"]}>
-            <CustomAutoComplete
-              name="client"
-              selectValue={"label"}
-              label="Клиент"
-              value={selectedClient}
-              onChange={(value) => setSelectedClient(value)}
-              options={
-                clientsData?.results
-                  ? clientsData.results.map((client) => ({
-                      label: `${client.first_name} ${client.last_name}`,
-                      value: client.user_id,
-                    }))
-                  : []
-              }
-              placeholder="Фамилия Имя"
-            />
-            <div className={classes["create-appointment__params--icon"]}>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <div className={classes["create-appointment"]}>
+          <p
+            className={classNames(
+              classes["create-appointment__params-text"],
+              classes["u-mt-2"]
+            )}
+          >
+            Основные параметры
+          </p>
+          <Divider />
+          <div>
+            <div className={classes["create-appointment__params"]}>
+              <CustomAutoComplete
+                name="client"
+                selectValue={"label"}
+                label="Клиент"
+                value={selectedEmployee}
+                onChange={(value) => setSelectedEmployee(value)}
+                options={
+                  clientsData?.results
+                    ? clientsData.results.map((client) => ({
+                        label: `${client.first_name} ${client.last_name}`,
+                        value: client.user_id,
+                      }))
+                    : []
+                }
+                placeholder="Фамилия Имя"
+              />
+              <div className={classes["create-appointment__params--icon"]}>
+                <Button
+                  sx={{
+                    padding: "0",
+                    minWidth: "3rem",
+                  }}
+                >
+                  <Help />
+                </Button>
+                <Button
+                  sx={{
+                    padding: "0",
+                    minWidth: "3rem",
+                  }}
+                  onClick={() => console.log(employee)}
+                >
+                  <AddCircle />
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            {appointmentDates.map((dateEntry, index) => (
+              <div
+                key={dateEntry.id}
+                className={classes["create-appointment__calendar"]}
+              >
+                <DatePicker
+                  value={dateEntry.date}
+                  onChange={(date) =>
+                    setAppointmentDates(
+                      appointmentDates.map((item) =>
+                        item.id === dateEntry.id
+                          ? { ...item, date: date as Dayjs }
+                          : item
+                      )
+                    )
+                  }
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      height: "4rem",
+                      fontSize: "1.4rem",
+                    },
+                  }}
+                />
+                <TimeField
+                  value={dateEntry.start_time}
+                  format="HH:mm"
+                  onChange={(newValue) =>
+                    setAppointmentDates(
+                      appointmentDates.map((item) =>
+                        item.id === dateEntry.id
+                          ? { ...item, start_time: newValue as Dayjs }
+                          : item
+                      )
+                    )
+                  }
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      height: "4rem",
+                      fontSize: "1.4rem",
+                    },
+                  }}
+                />
+                <TimeField
+                  value={dateEntry.end_time}
+                  format="HH:mm"
+                  onChange={(newValue) =>
+                    setAppointmentDates(
+                      appointmentDates.map((item) =>
+                        item.id === dateEntry.id
+                          ? { ...item, end_time: newValue as Dayjs }
+                          : item
+                      )
+                    )
+                  }
+                  sx={{
+                    "& .MuiOutlinedInput-root": {
+                      height: "4rem",
+                      fontSize: "1.4rem",
+                    },
+                  }}
+                />
+                {index === 0 ? (
+                  <Button
+                    variant="outlined"
+                    sx={{
+                      minWidth: "4rem",
+                      padding: "0",
+                      height: "4rem",
+                    }}
+                    onClick={handleAddDate}
+                  >
+                    <Add />
+                  </Button>
+                ) : (
+                  <Button
+                    variant="outlined"
+                    sx={{
+                      minWidth: "4rem",
+                      padding: "0",
+                      height: "4rem",
+                    }}
+                    onClick={() => handleDeleteDate(dateEntry.id)}
+                  >
+                    <Close />
+                  </Button>
+                )}
+              </div>
+            ))}
+          </div>
+
+          <div className={classes["u-mt-1"]}>
+            <div className={classes["create-appointment__services"]}>
+              <p className={classes["create-appointment__params-text"]}>
+                Услуги
+              </p>
+              <Divider />
               <Button
+                variant="text"
+                startIcon={<Add />}
                 sx={{
-                  padding: "0",
-                  minWidth: "3rem",
+                  display: "flex",
+                  flexDirection: "row",
+                  alignItems: "center",
+                  fontSize: "14px",
+                  fontWeight: 600,
+                }}
+                onClick={() => {
+                  NiceModal.show(ChooseServiceModal);
                 }}
               >
-                <Help />
+                Выбрать услуги
               </Button>
+            </div>
+            <Divider />
+            <div className={classes["create-appointment__services--select"]}>
+              <CustomAutoComplete
+                name="service"
+                selectValue={"label"}
+                size="small"
+                value={selectedServices}
+                onChange={(value) => setSelectedServices(value)}
+                options={
+                  servicesDataByEmployee?.results
+                    ? servicesDataByEmployee.results.map((service) => ({
+                        label: service.parameter.split(":")[0],
+                        value: service.service,
+                      }))
+                    : []
+                }
+                placeholder="Выберите услугу"
+              />
+              <CustomAutoComplete
+                name="parameter"
+                selectValue={"label"}
+                size="small"
+                value={selectedParameters}
+                onChange={(value) => setSelectedParameters(value)}
+                options={
+                  parametersData
+                    ? parametersData.map((parameter) => ({
+                        label: parameter.name,
+                        value: parameter.id,
+                      }))
+                    : []
+                }
+                placeholder="Параметр"
+              />
               <Button
+                variant="outlined"
                 sx={{
+                  minWidth: "4rem",
                   padding: "0",
-                  minWidth: "3rem",
                 }}
-                onClick={() => console.log(employee)}
+                onClick={handleAddService}
               >
-                <AddCircle />
+                <Add />
               </Button>
             </div>
           </div>
-          <div className={classes["create-appointment__params"]}></div>
-        </div>
 
-        <div className={classes["u-mt-1"]}>
-          <div className={classes["create-appointment__services"]}>
-            <p className={classes["create-appointment__params-text"]}>Услуги</p>
-            <Divider />
-            <Button
-              variant="text"
-              startIcon={<Add />}
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-                fontSize: "14px",
-                fontWeight: 600,
-              }}
-            >
-              Выбрать услуги
-            </Button>
-          </div>
-          <Divider />
-          <div className={classes["create-appointment__services--select"]}>
-            <CustomAutoComplete
-              name="service"
-              selectValue={"label"}
-              size="small"
-              options={[
-                { label: "John", value: 1 },
-                { label: "Doe", value: 2 },
-              ]}
-              placeholder="Выберите услугу"
-            />
-            <CustomAutoComplete
-              name="parameter"
-              selectValue={"label"}
-              size="small"
-              options={[
-                { label: "John", value: 1 },
-                { label: "Doe", value: 2 },
-              ]}
-              placeholder="Параметр"
-            />
-            <Button
-              variant="outlined"
-              sx={{
-                minWidth: "4rem",
-                padding: "0",
-              }}
-            >
-              <Add />
-            </Button>
-          </div>
-        </div>
-
-        {appointmentForm.appointment_services.length > 0 && (
-          <div className={classes["create-appointment__services--table"]}>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Услуга</TableCell>
-                  <TableCell>Параметр</TableCell>
-                  <TableCell>Кол-во</TableCell>
-                  <TableCell>Цена</TableCell>
-                  <TableCell>
-                    <DeleteOutline />
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {appointmentForm.appointment_services.map((service, index) => (
-                  <TableRow key={index}>
-                    <TableCell>service</TableCell>
-                    <TableCell>parameter</TableCell>
-                    <TableCell>{service.quantity}</TableCell>
-                    <TableCell>{service.price}</TableCell>
+          {serviceTableData && serviceTableData.length > 0 && (
+            <div className={classes["create-appointment__services--table"]}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Услуга</TableCell>
+                    <TableCell>Параметр</TableCell>
+                    <TableCell>Кол-во</TableCell>
+                    <TableCell>Цена</TableCell>
                     <TableCell>
-                      <Close />
+                      <DeleteOutline />
                     </TableCell>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </div>
-        )}
+                </TableHead>
+                <TableBody>
+                  {serviceTableData.map((service, index) => (
+                    <TableRow key={index}>
+                      <TableCell>{service.service}</TableCell>
+                      <TableCell>{service.parameter}</TableCell>
+                      <TableCell>
+                        <TextField
+                          value={service.quantity}
+                          onChange={(e) => {
+                            setServiceTableData(
+                              serviceTableData.map((item) =>
+                                item.id === service.id
+                                  ? { ...item, quantity: +e.target.value }
+                                  : item
+                              )
+                            );
+                          }}
+                          sx={{
+                            width: "5rem",
+                            "& .MuiOutlinedInput-root": {
+                              fontSize: "1.4rem",
+                              padding: 0,
+                            },
 
-        <div className={classes["create-appointment__buttons"]}>
-          <Button
-            variant="outlined"
-            startIcon={<Clear />}
-            sx={buttonClass}
-            onClick={() => modal.hide()}
-          >
-            Отменить
-          </Button>
-          <div className={classes["create-appointment__buttons--right"]}>
+                            "& .MuiOutlinedInput-input": {
+                              padding: "1rem 0.5rem",
+                            },
+                          }}
+                        />
+                      </TableCell>
+                      <TableCell>{service.price}</TableCell>
+                      <TableCell>
+                        <div
+                          onClick={() =>
+                            handleDeleteServiceTableData(service.id)
+                          }
+                        >
+                          <Close />
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+          )}
+
+          {isNotesOpen && (
+            <div className={classes["create-appointment__notes"]}>
+              <p
+                className={classNames(
+                  classes["create-appointment__params-text"],
+                  classes["u-mt-2"]
+                )}
+              >
+                Комментарий
+              </p>
+              <Divider />
+              <TextField
+                multiline
+                rows={3}
+                fullWidth
+                placeholder="Комментарий"
+                value={appointmentForm.notes}
+                onChange={(e) =>
+                  setAppointmentForm({
+                    ...appointmentForm,
+                    notes: e.target.value,
+                  })
+                }
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    fontSize: "1.4rem",
+                    borderRadius: "4px",
+                    marginTop: "1rem",
+                  },
+                }}
+              />
+            </div>
+          )}
+
+          <div className={classes["create-appointment__buttons"]}>
             <Button
               variant="outlined"
-              sx={{
-                ...buttonClass,
-                minWidth: "4rem",
-                padding: "0",
-              }}
-            >
-              <Chat />
-            </Button>
-            <Button
-              variant="outlined"
-              sx={{
-                ...buttonClass,
-                minWidth: "4rem",
-                padding: "0",
-              }}
-            >
-              <AttachMoney />
-            </Button>
-            <Button variant="outlined" sx={buttonClass}>
-              Продажа товаров
-            </Button>
-            <Button
-              variant="contained"
-              startIcon={<Done />}
+              startIcon={<Clear />}
               sx={buttonClass}
-              onClick={() => handleSubmit(appointmentForm)}
+              onClick={() => modal.hide()}
             >
-              Сохранить
+              Отменить
             </Button>
+            <div className={classes["create-appointment__buttons--right"]}>
+              <Button
+                variant="outlined"
+                sx={{
+                  ...buttonClass,
+                  minWidth: "4rem",
+                  padding: "0",
+                }}
+                onClick={() => setIsNotesOpen(!isNotesOpen)}
+              >
+                <Chat />
+              </Button>
+              <Button
+                variant="outlined"
+                sx={{
+                  ...buttonClass,
+                  minWidth: "4rem",
+                  padding: "0",
+                }}
+              >
+                <AttachMoney />
+              </Button>
+              <Button variant="outlined" sx={buttonClass}>
+                Продажа товаров
+              </Button>
+              <Button
+                variant="contained"
+                startIcon={<Done />}
+                sx={buttonClass}
+                onClick={() => handleSubmit(appointmentForm)}
+              >
+                Сохранить
+              </Button>
+            </div>
           </div>
         </div>
-      </div>
+      </LocalizationProvider>
     </ModalWindow>
   );
 };

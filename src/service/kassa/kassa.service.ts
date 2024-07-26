@@ -79,3 +79,4 @@ export const searchKassaData = (
   const url = `/transactions/list/?${params.toString()}`;
   return api.get(url).then((res) => res.data);
 };
+

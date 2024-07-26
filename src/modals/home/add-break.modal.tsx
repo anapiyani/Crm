@@ -18,12 +18,14 @@ const AddBreakModal: React.FC<IAddBreakModalProps> = ({ resourceId }) => {
   const addBreakToScheduleMutation = useAddBreakToSchedule();
   const [startTime, setStartTime] = useState<Dayjs | null>(null);
   const [endTime, setEndTime] = useState<Dayjs | null>(null);
+  const [comment, setComment] = useState<string>("");
 
   const handleSaveClick = () => {
     addBreakToScheduleMutation.mutate({
       employee: parseInt(resourceId),
       start_time: startTime?.format("HH:mm") || "",
       end_time: endTime?.format("HH:mm") || "",
+      break_note: comment,
     });
   };
 
@@ -51,6 +53,7 @@ const AddBreakModal: React.FC<IAddBreakModalProps> = ({ resourceId }) => {
               }}
               value={startTime}
               onChange={(newValue) => setStartTime(newValue)}
+              format="HH:mm"
             />
             <TimePicker
               label="basic time picker"
@@ -62,6 +65,7 @@ const AddBreakModal: React.FC<IAddBreakModalProps> = ({ resourceId }) => {
               }}
               value={endTime}
               onChange={(newValue) => setEndTime(newValue)}
+              format="HH:mm"
             />
           </div>
           <div>
@@ -69,6 +73,8 @@ const AddBreakModal: React.FC<IAddBreakModalProps> = ({ resourceId }) => {
               variant="outlined"
               sx={{ height: "6.4rem", borderRadius: "4px", fontSize: "1.6rem" }}
               placeholder="Комментарий"
+              value={comment}
+              onChange={(e) => setComment(e.target.value)}
             />
           </div>
         </div>

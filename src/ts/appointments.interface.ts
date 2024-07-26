@@ -12,20 +12,21 @@ export interface IMaterialPurchases {
 
 export interface IAppointmentService {
   service: number;
-  price: string;
+  price?: string;
   quantity: number;
   materials: IMaterial[];
+  parameter_id: number;
 }
 
 export interface IAppointmentCreateForm {
-  client: number;
-  employee: number;
-  status: string;
-  date: string;
-  start_time: string;
-  end_time: string;
-  discount_custom: string;
-  notes: string;
+  client_id: number;
+  employee_id: number;
+  status?: string;
+  dates: string[], 
+  start_times: string[],
+  end_times: string[],
+  discount_custom?: string;
+  notes?: string;
   type: string;
   appointment_services: IAppointmentService[];
   material_purchases: IMaterialPurchases[];

@@ -102,7 +102,6 @@ const CashDesk = () => {
     const result = await searchKassaData(formData);
     setSearchResult(result);
   };
-
   const cashRegister: ICashRegister = {
     from_date: fromDate,
     to_date: toDate,
@@ -164,7 +163,6 @@ const CashDesk = () => {
       checked ? [...prev, value] : prev.filter((type) => type !== value)
     );
   };
-
   const options = operationsData ? processOperationsData(operationsData) : [];
 
   const handleSalaryModal = () => {
