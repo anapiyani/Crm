@@ -96,7 +96,9 @@ const Home = () => {
     if (clickInfo.event.extendedProps.type === "break") {
       NiceModal.show(DeleteBreakModal, { breakId: Number(clickInfo.event.id) });
     } else {
-      NiceModal.show(EventDetailsModal);
+      NiceModal.show(EventDetailsModal, {
+        appointmentId: Number(clickInfo.event.id),
+      });
     }
   };
 
@@ -119,8 +121,6 @@ const Home = () => {
     const start = dayjs(selectInfo.start).format("YYYY-MM-DD HH:mm:ss");
     const end = dayjs(selectInfo.end).format("YYYY-MM-DD HH:mm:ss");
     const resourceId = selectInfo.resource?._resource.id;
-    console.log(resourceId);
-    console.log(selectInfo);
     NiceModal.show(CreateAppointmentModal, {
       start,
       end,
