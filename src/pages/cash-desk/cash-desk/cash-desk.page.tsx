@@ -38,7 +38,7 @@ import {
   getOperations,
   searchKassaData,
 } from "@/service/kassa/kassa.service";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   ICashRegister,
   IKassaOperations,
@@ -48,7 +48,6 @@ import {
 import CustomDatePicker from "@/components/date-picker/date-picker-custom";
 import { SubmitHandler, useForm } from "react-hook-form";
 import dayjs from "dayjs";
-import { IResponseData } from "@/ts/types";
 
 interface IOption {
   label: string;
@@ -70,14 +69,12 @@ const CashDesk = () => {
   const [fromDate, setFromDate] = useState<string>("");
   const [toDate, setToDate] = useState<string>("");
 
-  const { register, handleSubmit, reset } = useForm<ISearchKassa>();
+  const { register, handleSubmit, reset, getValues } = useForm<ISearchKassa>();
   const [money_type, setMoney_type] = useState<string[]>([]);
   const [selectedOperationId, setSelectedOperationId] = useState<string | null>(
     null
   );
-  const [searchResult, setSearchResult] = useState<IResponseData<
-    KassaResponse[]
-  > | null>(null);
+  const queryClient = useQueryClient();
 
   const [pageSize, setPageSize] = useState<IOption>({ label: "10", value: 10 });
   const [page, setPage] = useState(1);
@@ -89,6 +86,31 @@ const CashDesk = () => {
     { label: "100", value: 100 },
   ];
 
+  const {
+    data: searchResult,
+    isPending: searchResultLoading,
+    refetch: refetchSearchResult,
+  } = useQuery({
+    queryKey: [
+      "searchResult",
+      getValues("money_type"),
+      selectedOperationId,
+      pageSize.value,
+      page,
+    ],
+    queryFn: () =>
+      searchKassaData({
+        from_date: getValues("from_date"),
+        to_date: getValues("to_date"),
+        from_amount: getValues("from_amount"),
+        to_amount: getValues("to_amount"),
+        operation_type: Number(selectedOperationId),
+        money_type: money_type,
+        page: page,
+        page_size: pageSize.value,
+      }),
+  });
+
   const onSearchSubmit: SubmitHandler<ISearchKassa> = async (
     data: ISearchKassa
   ) => {
@@ -99,9 +121,20 @@ const CashDesk = () => {
       page: page,
       page_size: pageSize.value,
     };
-    const result = await searchKassaData(formData);
-    setSearchResult(result);
+
+    queryClient.setQueryData(
+      [
+        "searchResult",
+        formData.money_type,
+        formData.operation_type,
+        formData.page_size,
+        formData.page,
+      ],
+      formData
+    );
+    refetchSearchResult();
   };
+
   const cashRegister: ICashRegister = {
     from_date: fromDate,
     to_date: toDate,
@@ -640,7 +673,15 @@ const CashDesk = () => {
                     </TableCell>
                     <TableCell>По умолчанию</TableCell>
                     <TableCell>
-                      <p className={classes.money}>{result.amount} руб.</p>
+                      <p
+                        className={
+                          result.type === "income"
+                            ? classes.income
+                            : classes.expense
+                        }
+                      >
+                        {result.amount} руб.
+                      </p>
                     </TableCell>
                     <TableCell>
                       {result.overall_change_in_cash_register?.card !==

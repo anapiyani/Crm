@@ -328,8 +328,11 @@
   color: var(--primary-500);
   text-decoration: none;
 }
-.money {
+.income {
   color: var(--success-main);
+}
+.expense {
+  color: var(--danger-500);
 }
 
 .tableSettings {
