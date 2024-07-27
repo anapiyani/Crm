@@ -83,3 +83,11 @@ export interface KassaResponse {
   type: string;
 }
 
+export interface IEmployeeWalletInfo {
+  amount_paid: string;
+  amount_to_pay: string;
+  employee: number;
+  id: number;
+  last_payment_amount: string;
+  last_payment_date: string | null;
+}

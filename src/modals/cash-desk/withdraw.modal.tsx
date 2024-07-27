@@ -4,7 +4,7 @@ import NiceModal, { useModal } from "@ebay/nice-modal-react";
 import classes from "./styles.module.scss";
 import { Autocomplete, Button, Divider, TextField } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
-import { getOperations } from "@/service/kassa/kassa.service";
+import { getOperations, searchKassaData } from "@/service/kassa/kassa.service";
 import { IKassaOperations, IWithdrawal } from "@/ts/kassa.interface";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { Clear, Done } from "@mui/icons-material";

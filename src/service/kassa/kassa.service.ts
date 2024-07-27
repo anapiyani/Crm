@@ -1,5 +1,6 @@
 import {
   ICashRegister,
+  IEmployeeWalletInfo,
   IKassaOperations,
   IPeriodCashRegister,
   ISearchKassa,
@@ -80,3 +81,8 @@ export const searchKassaData = (
   return api.get(url).then((res) => res.data);
 };
 
+export const getEmployeeSalaryWallet = (
+  id: number
+): Promise<IEmployeeWalletInfo> => {
+  return api.get(`/salary-wallet/?user_id=${id}`).then((res) => res.data);
+};
