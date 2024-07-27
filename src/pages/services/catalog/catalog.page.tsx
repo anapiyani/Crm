@@ -54,8 +54,7 @@ const ServiceCatalog = () => {
 
   const handleServiceSelect = (service: IService) => {
     setService(service);
-    console.log(service);
-    console.log(parent);
+
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
@@ -63,14 +62,7 @@ const ServiceCatalog = () => {
   };
 
   const handleSearch = () => {
-    console.log(formData);
     getSearchResults(formData).then((data) => setSearchResults(data));
-    console.log({
-      id: 2,
-      name: "Service 2",
-    });
-    console.log(searchResults);
-    console.log(searchResults?.services.some((service) => service.id === 2));
   };
 
   useEffect(() => {
@@ -134,7 +126,6 @@ const ServiceCatalog = () => {
           </h5>
           <Divider />
           <div className={classes.catalog__upper__search__content}>
-            {/* <Form onSubmit={handleSearch}> */}
             <div className={classes.catalog__upper__search__content__row}>
               <p className={classes.catalog__upper__search__content__label}>
                 Услуга
@@ -265,7 +256,6 @@ const ServiceCatalog = () => {
                 Искать
               </Button>
             </div>
-            {/* </Form> */}
           </div>
         </div>
       </div>

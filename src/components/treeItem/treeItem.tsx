@@ -10,7 +10,6 @@ import { ISearchResult } from "@/ts/hierarchy.inteface";
 import classes from "./styles.module.scss";
 import { useDrop, useDrag } from "react-dnd";
 import {
-  Button,
   Divider,
   IconButton,
   ListItemIcon,
@@ -291,13 +290,14 @@ const TreeView: React.FC<TreeViewProps> = ({
             }}
           >
             <MenuItem
-              disabled={
-                selectedCategoryId?.level == "section" ||
-                selectedCategoryId?.level == "service_type" ||
-                selectedCategoryId?.level == "group" ||
-                selectedCategoryId?.level == "category" ||
-                selectedCategoryId?.level == "subcategory"
-              }
+              disabled={[
+                "section",
+                "service_type",
+                "group",
+                "category",
+                "subcategory",
+                undefined,
+              ].includes(selectedCategoryId?.level)}
               onClick={() => handleAddHierarchy("section")}
             >
               <ListItemIcon>{levelsIcon["section"]}</ListItemIcon>
@@ -306,12 +306,13 @@ const TreeView: React.FC<TreeViewProps> = ({
               </ListItemText>
             </MenuItem>
             <MenuItem
-              disabled={
-                selectedCategoryId?.level == "service_type" ||
-                selectedCategoryId?.level == "group" ||
-                selectedCategoryId?.level == "category" ||
-                selectedCategoryId?.level == "subcategory"
-              }
+              disabled={[
+                "service_type",
+                "group",
+                "category",
+                "subcategory",
+                undefined,
+              ].includes(selectedCategoryId?.level)}
               onClick={() => handleAddHierarchy("service_type")}
             >
               <ListItemIcon>{levelsIcon["service_type"]}</ListItemIcon>
@@ -320,11 +321,12 @@ const TreeView: React.FC<TreeViewProps> = ({
               </ListItemText>
             </MenuItem>
             <MenuItem
-              disabled={
-                selectedCategoryId?.level == "group" ||
-                selectedCategoryId?.level == "category" ||
-                selectedCategoryId?.level == "subcategory"
-              }
+              disabled={[
+                "group",
+                "category",
+                "subcategory",
+                undefined,
+              ].includes(selectedCategoryId?.level)}
               onClick={() => handleAddHierarchy("group")}
             >
               <ListItemIcon>{levelsIcon["group"]}</ListItemIcon>
@@ -333,10 +335,9 @@ const TreeView: React.FC<TreeViewProps> = ({
               </ListItemText>
             </MenuItem>
             <MenuItem
-              disabled={
-                selectedCategoryId?.level == "category" ||
-                selectedCategoryId?.level == "subcategory"
-              }
+              disabled={["category", "subcategory", undefined].includes(
+                selectedCategoryId?.level
+              )}
               onClick={() => handleAddHierarchy("category")}
             >
               <ListItemIcon>{levelsIcon["category"]}</ListItemIcon>
