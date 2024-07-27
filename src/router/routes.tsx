@@ -18,6 +18,7 @@ import {
   EmployeeCabinet,
   EmployeeVisits,
   ClientSearch,
+  IndirectCostsPage,
 } from "@/pages";
 
 // import { Role } from "@/ts/types";
@@ -55,6 +56,11 @@ export const ROUTES: IRoute[] = [
     name: "Customer add",
     path: "/employees/add",
     component: <EmployeeAdd />,
+  },
+  {
+    name: "Inderect costs",
+    path: "/cashdesk/indirect-costs",
+    component: <IndirectCostsPage />,
   },
   {
     name: "Clients",
