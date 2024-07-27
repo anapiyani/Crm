@@ -1,17 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import NiceModal, { useModal } from "@ebay/nice-modal-react";
 import toast from "react-hot-toast";
-import {
-  Button,
-  Divider,
-  Table,
-  TextField,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
-} from "@mui/material";
+import { Button, Divider, TextField } from "@mui/material";
 import {
   Add,
   Clear,
@@ -20,7 +11,6 @@ import {
   Done,
   Help,
   AddCircle,
-  DeleteOutline,
   Close,
 } from "@mui/icons-material";
 
@@ -47,6 +37,7 @@ import {
 } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
+import ReusableServiceTable from "./_components/reusable-service-table/reusable-service-table";
 
 interface ICreateAppointmentModalProps {
   start: string;
@@ -117,6 +108,17 @@ const CreateAppointmentModal: React.FC<ICreateAppointmentModalProps> = ({
     },
   ]);
   const AppointmentMutation = useCreateAppointment();
+
+  useEffect(() => {
+    setAppointmentDates([
+      {
+        id: Date.now(),
+        date: dayjs(start.split(" ")[0]),
+        start_time: dayjs(`${start.split(" ")[0]} ${start.split(" ")[1]}`),
+        end_time: dayjs(`${start.split(" ")[0]} ${end.split(" ")[1]}`),
+      },
+    ]);
+  }, [start, end]);
 
   const { data: clientsData } = useQuery({
     queryKey: ["employeeData"],
@@ -220,7 +222,7 @@ const CreateAppointmentModal: React.FC<ICreateAppointmentModalProps> = ({
       ...appointmentDates,
       {
         id: Date.now(),
-        date: dayjs(),
+        date: dayjs(start.split(" ")[0]),
         start_time: dayjs().hour(9).minute(0),
         end_time: dayjs().hour(10).minute(0),
       },
@@ -229,6 +231,15 @@ const CreateAppointmentModal: React.FC<ICreateAppointmentModalProps> = ({
 
   const handleDeleteDate = (id: number) => {
     setAppointmentDates(appointmentDates.filter((item) => item.id !== id));
+  };
+
+  const handleQuantityChange = (id: number, quantity: number) => {
+    setServiceTableData(
+      serviceTableData &&
+        serviceTableData.map((item) =>
+          item.id === id ? { ...item, quantity } : item
+        )
+    );
   };
 
   return (
@@ -452,64 +463,11 @@ const CreateAppointmentModal: React.FC<ICreateAppointmentModalProps> = ({
           </div>
 
           {serviceTableData && serviceTableData.length > 0 && (
-            <div className={classes["create-appointment__services--table"]}>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Услуга</TableCell>
-                    <TableCell>Параметр</TableCell>
-                    <TableCell>Кол-во</TableCell>
-                    <TableCell>Цена</TableCell>
-                    <TableCell>
-                      <DeleteOutline />
-                    </TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {serviceTableData.map((service, index) => (
-                    <TableRow key={index}>
-                      <TableCell>{service.service}</TableCell>
-                      <TableCell>{service.parameter}</TableCell>
-                      <TableCell>
-                        <TextField
-                          value={service.quantity}
-                          onChange={(e) => {
-                            setServiceTableData(
-                              serviceTableData.map((item) =>
-                                item.id === service.id
-                                  ? { ...item, quantity: +e.target.value }
-                                  : item
-                              )
-                            );
-                          }}
-                          sx={{
-                            width: "5rem",
-                            "& .MuiOutlinedInput-root": {
-                              fontSize: "1.4rem",
-                              padding: 0,
-                            },
-
-                            "& .MuiOutlinedInput-input": {
-                              padding: "1rem 0.5rem",
-                            },
-                          }}
-                        />
-                      </TableCell>
-                      <TableCell>{service.price}</TableCell>
-                      <TableCell>
-                        <div
-                          onClick={() =>
-                            handleDeleteServiceTableData(service.id)
-                          }
-                        >
-                          <Close />
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
+            <ReusableServiceTable
+              data={serviceTableData}
+              onQuantityChange={handleQuantityChange}
+              onDelete={handleDeleteServiceTableData}
+            />
           )}
 
           {isNotesOpen && (

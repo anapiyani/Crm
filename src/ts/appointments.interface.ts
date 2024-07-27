@@ -22,9 +22,9 @@ export interface IAppointmentCreateForm {
   client_id: number;
   employee_id: number;
   status?: string;
-  dates: string[], 
-  start_times: string[],
-  end_times: string[],
+  dates: string[];
+  start_times: string[];
+  end_times: string[];
   discount_custom?: string;
   notes?: string;
   type: string;
@@ -59,4 +59,41 @@ export interface IAppointmentReturn
       material_name: string;
     } & IMaterialPurchases
   >;
+}
+
+interface IClient {
+  id: number;
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone_number: string;
+}
+
+export interface ISingleAppointmentReturn {
+  id: number;
+  client: IClient;
+  status: string;
+  discount_custom: string | null;
+  notes: string;
+  type: string;
+  appointment_services: Array<{
+    id: number;
+    service: number;
+    service_name: string;
+    price: string;
+    quantity: number;
+    parameter: string;
+  }>;
+  material_purchases: Array<{
+    id: number;
+    material: number;
+    material_name: string;
+    quantity: string;
+    price: string;
+  }>;
+  total_price: string;
+  created_at: string;
+  updated_at: string;
+  employee_id: number;
+  employee_name: string;
 }

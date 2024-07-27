@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ModalWindow from "@/components/modal-window/modal-window";
 import NiceModal, { useModal } from "@ebay/nice-modal-react";
 import classes from "@/modals/home/styles.module.scss";
 import ResponsiveTabs from "@/components/tabs/tabs.component";
 import { eventTabs, eventTableData, header, bodyData } from "./data";
 import Grid from "@mui/material/Unstable_Grid2";
-import { Divider } from "@mui/material";
+import { CircularProgress, Divider } from "@mui/material";
 import TableVertical from "@/components/tables/tableVertical/vertical-info-card";
 import TableHorizontal from "@/components/tables/table-horizontal/horizontal-info-card";
 import {
@@ -18,16 +18,41 @@ import {
 } from "@/pages/clients/client-card/data";
 import EmployeeVisitsTable from "@/pages/employees/employee-visits/visits-table/employee-visits-table";
 import ChangeHistoryTable from "@/components/tables/table-change-history/table-change-history";
+import { useQuery } from "@tanstack/react-query";
+import { getAppointmentById } from "@/service/appointments/appointments.service";
+import EventDetailsFirstTab from "./_tabs/event-details-first-tab";
 
-const EventDetailsModal = () => {
+interface IEventDetailsModalProps {
+  appointmentId: number;
+}
+
+const EventDetailsModal: React.FC<IEventDetailsModalProps> = ({
+  appointmentId,
+}) => {
   const modal = useModal();
   const [currentTab, setCurrentTab] = useState(0);
+  const [page, setPage] = useState(1);
+
+  const {
+    data: singleAppointmentData,
+    isPending: singleAppointmentPending,
+    refetch,
+  } = useQuery({
+    queryKey: ["appointmentByIdData", appointmentId],
+    queryFn: () => getAppointmentById(appointmentId),
+    enabled: false,
+    staleTime: 1000 * 60 * 5,
+  });
+
+  useEffect(() => {
+    if (appointmentId) {
+      refetch();
+    }
+  }, [appointmentId, refetch]);
 
   const handleTabChange = (tabIndex: number) => {
     setCurrentTab(tabIndex);
   };
-
-  const [page, setPage] = useState(1);
 
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
@@ -41,7 +66,22 @@ const EventDetailsModal = () => {
       case 0:
         return (
           <div>
-            <h1>hello</h1>
+            {singleAppointmentPending ? (
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  height: "100%",
+                }}
+              >
+                <CircularProgress />
+              </div>
+            ) : (
+              <EventDetailsFirstTab
+                data={singleAppointmentData}
+              />
+            )}
           </div>
         );
       case 1:
@@ -142,7 +182,7 @@ const EventDetailsModal = () => {
 
   return (
     <ModalWindow
-      title={"Event Details"}
+      title={"Запись клиента"}
       open={modal.visible}
       handleClose={() => modal.hide()}
       className={classes["u-p-0"]}
