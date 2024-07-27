@@ -46,7 +46,6 @@ const SalaryModal = () => {
   }, [selectedEmployee]);
 
   console.log(selectedEmployee);
-  console.log(employeeInfo);
 
   const modal = useModal();
   return (
