@@ -51,7 +51,6 @@ const CustomAutoComplete = <T extends IOption>({
         fullWidth
         size={size}
         getOptionLabel={(option) => option[selectValue] as string}
-        getOptionKey={(option) => option.value as string}
         isOptionEqualToValue={(option, value) => option.value === value.value}
         PaperComponent={({ children }) => (
           <Paper sx={{ fontSize: "1.4rem" }}>{children}</Paper>
@@ -63,7 +62,7 @@ const CustomAutoComplete = <T extends IOption>({
           ...sx,
         }}
         onChange={(_, newValue) => {
-          if (onChange && newValue !== null) {
+          if (onChange) {
             onChange(newValue as T);
           }
         }}

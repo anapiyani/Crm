@@ -199,7 +199,7 @@ const CashDesk = () => {
   const options = operationsData ? processOperationsData(operationsData) : [];
 
   const handleSalaryModal = () => {
-    NiceModal.show(salaryModal);
+    NiceModal.show(salaryModal, { refetchCashRegister });
   };
 
   const handleWithdrawModal = () => {

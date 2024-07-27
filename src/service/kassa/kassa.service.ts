@@ -3,6 +3,7 @@ import {
   IEmployeeWalletInfo,
   IKassaOperations,
   IPeriodCashRegister,
+  ISalaryPayment,
   ISearchKassa,
   IWithdrawal,
   KassaResponse,
@@ -85,4 +86,8 @@ export const getEmployeeSalaryWallet = (
   id: number
 ): Promise<IEmployeeWalletInfo> => {
   return api.get(`/salary-wallet/?user_id=${id}`).then((res) => res.data);
+};
+
+export const salaryPayment = (formData: ISalaryPayment): Promise<any> => {
+  return api.post("/salary-wallet-payment/", formData).then((res) => res.data);
 };

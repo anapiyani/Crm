@@ -1,7 +1,22 @@
 import { useMutation } from "@tanstack/react-query";
-import { kassaDeposit, kassaWithdraw } from "./kassa.service";
+import { kassaDeposit, kassaWithdraw, salaryPayment } from "./kassa.service";
 import toast from "react-hot-toast";
-import { IWithdrawal } from "@/ts/kassa.interface";
+import { ISalaryPayment, IWithdrawal } from "@/ts/kassa.interface";
+
+export const useSalary = (onSuccess?: () => void) => {
+  return useMutation<ISalaryPayment, Error, ISalaryPayment>({
+    mutationFn: salaryPayment,
+    onSuccess: () => {
+      toast.success("Зарплата успешно выдана");
+      if (onSuccess) {
+        onSuccess();
+      }
+    },
+    onError: () => {
+      toast.error("Ошибка при выдаче зарплаты");
+    },
+  });
+};
 
 export const useWithdrawl = (onSuccess?: () => void) => {
   return useMutation<IWithdrawal, Error, IWithdrawal>({
