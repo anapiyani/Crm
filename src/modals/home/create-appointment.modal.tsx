@@ -38,6 +38,8 @@ import {
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs } from "dayjs";
 import ReusableServiceTable from "./_components/reusable-service-table/reusable-service-table";
+import { getHierarchyByEmployeeId } from "@/service/hierarchy/hierarchy.service";
+import { flattenEmployeeHierarchy } from "@/utils/flatten-employee-hierarchy";
 
 interface ICreateAppointmentModalProps {
   start: string;
@@ -146,6 +148,13 @@ const CreateAppointmentModal: React.FC<ICreateAppointmentModalProps> = ({
     refetchOnWindowFocus: false,
   });
 
+  const { data: employeeHierarchyData } = useQuery({
+    queryKey: ["employeeHierarchyData", employee],
+    queryFn: () => getHierarchyByEmployeeId(employee),
+    staleTime: Infinity,
+    refetchOnWindowFocus: false,
+  });
+
   const buttonClass = {
     fontSize: "1.1rem",
     fontWeight: 600,
@@ -240,6 +249,23 @@ const CreateAppointmentModal: React.FC<ICreateAppointmentModalProps> = ({
           item.id === id ? { ...item, quantity } : item
         )
     );
+  };
+
+  const handleSaveSelectedServices = (selectedServices: any[]) => {
+    setServiceTableData((prevData) => {
+      const newData = [...(prevData || [])];
+      selectedServices.forEach((selectedService) => {
+        const existingService = newData.find(
+          (item) => item.service_id === selectedService.service_id
+        );
+        if (existingService) {
+          existingService.quantity = selectedService.quantity;
+        } else {
+          newData.push(selectedService);
+        }
+      });
+      return newData;
+    });
   };
 
   return (
@@ -409,7 +435,12 @@ const CreateAppointmentModal: React.FC<ICreateAppointmentModalProps> = ({
                   fontWeight: 600,
                 }}
                 onClick={() => {
-                  NiceModal.show(ChooseServiceModal);
+                  NiceModal.show(ChooseServiceModal, {
+                    onSave: handleSaveSelectedServices,
+                    flattenData: flattenEmployeeHierarchy(
+                      employeeHierarchyData || []
+                    ),
+                  });
                 }}
               >
                 Выбрать услуги

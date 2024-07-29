@@ -1,4 +1,7 @@
-import { IServiceCategory } from "@/ts/service.interface";
+import {
+  IEmployeeServiceHierarchy,
+  IServiceCategory,
+} from "@/ts/service.interface";
 import api from "../api";
 import {
   IAddHierarchy,
@@ -51,5 +54,13 @@ export const moveHierarchy = (
   }).toString();
   return api
     .post("/hierarchy/hierarchical-items/move/?" + params)
+    .then((res) => res.data);
+};
+
+export const getHierarchyByEmployeeId = (
+  employeeId: string
+): Promise<IEmployeeServiceHierarchy[]> => {
+  return api
+    .get(`/hierarchy/services-by-employee/${employeeId}/`)
     .then((res) => res.data);
 };

@@ -42,7 +42,7 @@ const EventDetailsModal: React.FC<IEventDetailsModalProps> = ({
     queryFn: () => getAppointmentById(appointmentId),
     enabled: false,
     staleTime: 1000 * 60 * 5,
-  });
+  }); 
 
   useEffect(() => {
     if (appointmentId) {
@@ -78,9 +78,7 @@ const EventDetailsModal: React.FC<IEventDetailsModalProps> = ({
                 <CircularProgress />
               </div>
             ) : (
-              <EventDetailsFirstTab
-                data={singleAppointmentData}
-              />
+              <EventDetailsFirstTab data={singleAppointmentData} />
             )}
           </div>
         );
@@ -159,7 +157,6 @@ const EventDetailsModal: React.FC<IEventDetailsModalProps> = ({
 
               <Divider />
             </div>
-
             <EmployeeVisitsTable data={eventTableData} />
             <div style={{ display: "flex", flexDirection: "column" }}></div>
           </div>
