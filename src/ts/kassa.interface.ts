@@ -1,3 +1,6 @@
+import { count } from 'console'
+import { type } from 'os'
+
 export interface IKassaOperations {
   children: IKassaOperations[] | []
   id: number
@@ -101,4 +104,27 @@ export interface ISalaryPayment {
   type: string
   withdrawal_method: string
   customer: number
+}
+
+export interface IIndirectCosts {
+  date: string | null;
+  money_type: string;
+  operation_type: string;
+  total_amount_change: string;
+}
+
+export interface IIndirectCostsDetails {
+  name: string;
+  operations: IIndirectCosts[];
+}
+
+export interface IIndirectCostsResponse {
+  production_expenses: string;
+  production_details: IIndirectCostsDetails[];
+  operational_expenses: string;
+  operational_details: IIndirectCostsDetails[];
+  expenses_on_checks_cash_register: string;
+  checks_cash_register_details: IIndirectCostsDetails[];
+  administrative_expenses: string;
+  administrative_details: IIndirectCostsDetails[];
 }

@@ -1,3 +1,4 @@
+import { FC, useState } from 'react'
 import CounterCard from '@/components/counter-card/counter-card'
 import BreadcrumbsCustom from '@/components/navigation/breadcrumbs/breadcrumbs'
 import VerticalTextField from '@/components/textfield-vertical/textfield-vertical'
@@ -17,10 +18,10 @@ import {
 	TableRow,
 } from '@mui/material'
 import { useQuery } from '@tanstack/react-query'
-import { useState } from 'react'
 import classes from './style.module.scss'
+import dayjs from 'dayjs'
 
-const IndirectCostsPage: React.FC = () => {
+const IndirectCostsPage: FC = () => {
 	const {
 		data: indirectCostsData,
 		isLoading: indirectCostsLoading,
@@ -29,8 +30,12 @@ const IndirectCostsPage: React.FC = () => {
 		queryKey: ['indirectCosts'],
 		queryFn: getIndirectCosts,
 	})
+
 	const [openTables, setOpenTables] = useState<{ [key: string]: boolean }>({
-		table1: true,
+		table1: false,
+		table2: false,
+		table3: false,
+		table4: false,
 	})
 
 	const toggleTable = (tableKey: string) => {
@@ -45,13 +50,13 @@ const IndirectCostsPage: React.FC = () => {
 			<div className={classes.main__upper}>
 				<BreadcrumbsCustom />
 				<div className={classes.main__header}>
-					<h1> Косвенные расчеты</h1>
+					<h1>Косвенные расчеты</h1>
 					<div className={classes.main__header__row}>
 						<CounterCard
 							backgroundColor={'#2196F34D'}
 							iconColor={'var(--primary-main)'}
 							textTitle={'Разходы за отчетный период'}
-							valueText={'200 000 руб'}
+							valueText={indirectCostsData ? Number(indirectCostsData.administrative_expenses) + Number(indirectCostsData.expenses_on_checks_cash_register) + Number(indirectCostsData.operational_expenses) + Number(indirectCostsData.production_expenses) : 0}
 						/>
 						<CounterCard
 							backgroundColor={'#2E7D324D'}
@@ -197,8 +202,8 @@ const IndirectCostsPage: React.FC = () => {
 								type={'double'}
 								doubleDivier='-'
 							/>
-							<Button variant='contained'> Создать отчет</Button>
-							<Button variant='outlined'> Сбросить</Button>
+							<Button variant='contained'>Создать отчет</Button>
+							<Button variant='outlined'>Сбросить</Button>
 						</FormControl>
 					</div>
 				</div>
@@ -243,7 +248,7 @@ const IndirectCostsPage: React.FC = () => {
 										alignItems: 'center',
 									}}
 								>
-									<h1>-6 000 руб</h1>
+									<h1>-{indirectCostsData?.production_expenses} руб</h1>
 									<span style={{ paddingTop: '8px' }}>
 										{openTables.table1 ? (
 											<ExpandLess style={{ fontSize: '24px' }} />
@@ -254,28 +259,176 @@ const IndirectCostsPage: React.FC = () => {
 								</div>
 							</div>
 							{openTables.table1 && (
-								<Table className={classes.table}>
-									<TableHead>
-										<TableRow>
-											<TableCell>Категория</TableCell>
-											<TableCell>Дата</TableCell>
-											<TableCell>Сумма</TableCell>
-										</TableRow>
-									</TableHead>
-									<TableBody>
-										<TableRow>
-											<TableCell>Категория</TableCell>
-											<TableCell>Дата</TableCell>
-											<TableCell>Сумма</TableCell>
-										</TableRow>
-										<TableRow>
-											<TableCell>Категория</TableCell>
-											<TableCell>Дата</TableCell>
-											<TableCell>Сумма</TableCell>
-										</TableRow>
-									</TableBody>
-								</Table>
-							)}
+								indirectCostsData?.production_expenses && (
+									<Table className={classes.table}>
+										<TableHead>
+											<TableRow>
+												<TableCell>Дата</TableCell>
+												<TableCell>Тип операции</TableCell>
+												<TableCell>Сумма</TableCell>
+											</TableRow>
+										</TableHead>
+										<TableBody>
+											{indirectCostsData.production_details.map((item, index) => (
+												item.operations.map((operation, index) => (
+													<TableRow key={index}>
+														<TableCell>{dayjs(operation.date).format("DD.MM.YYYY")}</TableCell>
+														<TableCell>{operation.operation_type}</TableCell>
+														<TableCell>{operation.total_amount_change}</TableCell>
+													</TableRow>
+												))
+											))}
+										</TableBody>
+									</Table>
+								))
+							}
+						</div>
+						<div className={classes.main__content__result__wrap}>
+							<div
+								onClick={() => toggleTable('table2')}
+								className={classes.main__content__result__wrap__header}
+							>
+								<h1>Операционные расходы</h1>
+
+								<div
+									style={{
+										display: 'flex',
+										flexDirection: 'row',
+										alignItems: 'center',
+									}}
+								>
+									<h1>-{indirectCostsData?.operational_expenses} руб</h1>
+									<span style={{ paddingTop: '8px' }}>
+										{openTables.table2 ? (
+											<ExpandLess style={{ fontSize: '24px' }} />
+										) : (
+											<ExpandMore style={{ fontSize: '24px' }} />
+										)}
+									</span>
+								</div>
+							</div>
+							{openTables.table2 && (
+								indirectCostsData?.operational_expenses && (
+									<Table className={classes.table}>
+										<TableHead>
+											<TableRow>
+												<TableCell>Дата</TableCell>
+												<TableCell>Тип операции</TableCell>
+												<TableCell>Сумма</TableCell>
+											</TableRow>
+										</TableHead>
+										<TableBody>
+											{indirectCostsData.operational_details.map((item, index) => (
+												item.operations.map((operation, index) => (
+													<TableRow key={index}>
+														<TableCell>{dayjs(operation.date).format("DD.MM.YYYY")}</TableCell>
+														<TableCell>{operation.operation_type}</TableCell>
+														<TableCell>{operation.total_amount_change}</TableCell>
+													</TableRow>
+												))
+											))}
+										</TableBody>
+									</Table>
+								))
+							}
+						</div>
+						<div className={classes.main__content__result__wrap}>
+							<div
+								onClick={() => toggleTable('table3')}
+								className={classes.main__content__result__wrap__header}
+							>
+								<h1>Административные расходы</h1>
+
+								<div
+									style={{
+										display: 'flex',
+										flexDirection: 'row',
+										alignItems: 'center',
+									}}
+								>
+									<h1>-{indirectCostsData?.administrative_expenses} руб</h1>
+									<span style={{ paddingTop: '8px' }}>
+										{openTables.table3 ? (
+											<ExpandLess style={{ fontSize: '24px' }} />
+										) : (
+											<ExpandMore style={{ fontSize: '24px' }} />
+										)}
+									</span>
+								</div>
+							</div>
+							{openTables.table3 && (
+								indirectCostsData?.administrative_expenses && (
+									<Table className={classes.table}>
+										<TableHead>
+											<TableRow>
+												<TableCell>Дата</TableCell>
+												<TableCell>Тип операции</TableCell>
+												<TableCell>Сумма</TableCell>
+											</TableRow>
+										</TableHead>
+										<TableBody>
+											{indirectCostsData.administrative_details.map((item, index) => (
+												item.operations.map((operation, index) => (
+													<TableRow key={index}>
+														<TableCell>{dayjs(operation.date).format("DD.MM.YYYY")}</TableCell>
+														<TableCell>{operation.operation_type}</TableCell>
+														<TableCell>{operation.total_amount_change}</TableCell>
+													</TableRow>
+												))
+											))}
+										</TableBody>
+									</Table>
+								))
+							}
+						</div>
+						<div className={classes.main__content__result__wrap}>
+							<div
+								onClick={() => toggleTable('table4')}
+								className={classes.main__content__result__wrap__header}
+							>
+								<h1>Расходы по чекам кассовый аппарат</h1>
+
+								<div
+									style={{
+										display: 'flex',
+										flexDirection: 'row',
+										alignItems: 'center',
+									}}
+								>
+									<h1>-{indirectCostsData?.expenses_on_checks_cash_register} руб</h1>
+									<span style={{ paddingTop: '8px' }}>
+										{openTables.table4 ? (
+											<ExpandLess style={{ fontSize: '24px' }} />
+										) : (
+											<ExpandMore style={{ fontSize: '24px' }} />
+										)}
+									</span>
+								</div>
+							</div>
+							{openTables.table4 && (
+								indirectCostsData?.expenses_on_checks_cash_register && (
+									<Table className={classes.table}>
+										<TableHead>
+											<TableRow>
+												<TableCell>Дата</TableCell>
+												<TableCell>Тип операции</TableCell>
+												<TableCell>Сумма</TableCell>
+											</TableRow>
+										</TableHead>
+										<TableBody>
+											{indirectCostsData.checks_cash_register_details.map((item, index) => (
+												item.operations.map((operation, index) => (
+													<TableRow key={index}>
+														<TableCell>{dayjs(operation.date).format("DD.MM.YYYY")}</TableCell>
+														<TableCell>{operation.operation_type}</TableCell>
+														<TableCell>{operation.total_amount_change}</TableCell>
+													</TableRow>
+												))
+											))}
+										</TableBody>
+									</Table>
+								))
+							}
 						</div>
 					</div>
 				</div>
@@ -283,4 +436,5 @@ const IndirectCostsPage: React.FC = () => {
 		</div>
 	)
 }
+
 export default IndirectCostsPage

@@ -50,7 +50,7 @@ const ServiceCatalog = () => {
     queryFn: getHierarchy,
     staleTime: Infinity,
     refetchOnWindowFocus: false,
-  })
+  });
 
   const handleServiceSelect = (service: IService) => {
     setService(service)
