@@ -31,6 +31,14 @@ const IndirectCostsPage: FC = () => {
 		queryFn: getIndirectCosts,
 	})
 
+	const reportPeriod = () => {
+		return (
+			indirectCostsData && (
+				Number(indirectCostsData.administrative_expenses) + Number(indirectCostsData.expenses_on_checks_cash_register) + Number(indirectCostsData.operational_expenses) + Number(indirectCostsData.production_expenses)
+			)
+		)
+	}
+
 	const [openTables, setOpenTables] = useState<{ [key: string]: boolean }>({
 		table1: false,
 		table2: false,
@@ -56,7 +64,7 @@ const IndirectCostsPage: FC = () => {
 							backgroundColor={'#2196F34D'}
 							iconColor={'var(--primary-main)'}
 							textTitle={'Разходы за отчетный период'}
-							valueText={indirectCostsData ? Number(indirectCostsData.administrative_expenses) + Number(indirectCostsData.expenses_on_checks_cash_register) + Number(indirectCostsData.operational_expenses) + Number(indirectCostsData.production_expenses) : 0}
+							valueText={indirectCostsData ? reportPeriod() : 0}
 						/>
 						<CounterCard
 							backgroundColor={'#2E7D324D'}

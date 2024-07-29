@@ -8,7 +8,7 @@ type CounterCardProps = {
   iconColor: string;
   textTitle: string;
   textTitleFocus?: string;
-  valueText: string | number;
+  valueText: string | number | undefined;
   isButton?: boolean;
 };
 
