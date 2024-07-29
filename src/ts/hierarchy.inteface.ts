@@ -35,3 +35,17 @@ export interface ISearchResult {
     name: string;
   }[];
 }
+
+export interface IAddHierarchy {
+  name: string;
+  level: string;
+  parent?: number;
+  services: number[];
+  role: number[];
+}
+
+export interface IMoveHierarchy {
+  item: number;
+  type: string;
+  to: number;
+}
