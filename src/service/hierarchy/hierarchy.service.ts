@@ -1,8 +1,10 @@
 import { IServiceCategory } from "@/ts/service.interface";
 import api from "../api";
 import {
+  IAddHierarchy,
   IfilterRequest,
   IfiltersResponse,
+  IMoveHierarchy,
   ISearchResult,
 } from "@/ts/hierarchy.inteface";
 
@@ -31,4 +33,23 @@ export const getSearchResults = (
     subcategory: filter.subcategory,
   }).toString();
   return api.get(`/hierarchy/search/?${params}`).then((res) => res.data);
+};
+
+export const addHierarchy = (
+  data: IAddHierarchy
+): Promise<IServiceCategory> => {
+  return api.post("/hierarchy/hierarchy/", data).then((res) => res.data);
+};
+
+export const moveHierarchy = (
+  data: IMoveHierarchy
+): Promise<IServiceCategory> => {
+  const params = new URLSearchParams({
+    item_id: data.item.toString(),
+    item_type: data.type,
+    new_parent_id: data.to.toString(),
+  }).toString();
+  return api
+    .post("/hierarchy/hierarchical-items/move/?" + params)
+    .then((res) => res.data);
 };

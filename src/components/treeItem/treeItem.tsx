@@ -1,12 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import LanOutlinedIcon from "@mui/icons-material/LanOutlined";
 import FolderIcon from "@mui/icons-material/Folder";
 import ContentCutIcon from "@mui/icons-material/ContentCut";
-import { Add } from "@mui/icons-material";
+import { Add, Category } from "@mui/icons-material";
 import { IService, IServiceCategory } from "@/ts/service.interface";
-import { ISearchResult } from "@/ts/hierarchy.inteface";
+import {
+  IAddHierarchy,
+  IMoveHierarchy,
+  ISearchResult,
+} from "@/ts/hierarchy.inteface";
 import classes from "./styles.module.scss";
 import { useDrop, useDrag } from "react-dnd";
 import {
@@ -17,6 +21,14 @@ import {
   Menu,
   MenuItem,
 } from "@mui/material";
+import {
+  addHierarchy,
+  moveHierarchy,
+} from "@/service/hierarchy/hierarchy.service";
+import {
+  useCreateHierarchy,
+  useMoveHierarchy,
+} from "@/service/hierarchy/hierarchy.hook";
 
 interface IServiceProps {
   service: IService;
@@ -115,6 +127,8 @@ const TreeItem: React.FC<ICategoryProps> = ({
   const [isOpen, setIsOpen] = useState(false);
   const toggle = () => setIsOpen(!isOpen);
 
+  const dropZoneRef = useRef<string | null>(null);
+
   const [{ isDragging }, drag] = useDrag(() => ({
     type: "ITEM",
     item: { id: category.id, type: "category" },
@@ -126,7 +140,11 @@ const TreeItem: React.FC<ICategoryProps> = ({
   const [{ isOver }, drop] = useDrop({
     accept: "ITEM",
     drop: (item: { id: number; type: string }) => {
-      onDropItem(item.id, item.type, category.id);
+      if (dropZoneRef.current !== category.id.toString()) {
+        dropZoneRef.current = category.id.toString();
+        onDropItem(item.id, item.type, category.id);
+        console.log("Dropped item", item.id, item.type, "on", category.id);
+      }
     },
     collect: (monitor) => ({
       isOver: !!monitor.isOver(),
@@ -226,10 +244,23 @@ const TreeView: React.FC<TreeViewProps> = ({
   ] = useState<IServiceCategory | null>(null);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+  const [isDropping, setIsDropping] = useState<boolean>(false);
+
+  const createHierarchiItem = useCreateHierarchy();
+  const moveHierarchyItems = useMoveHierarchy();
+
   const handleClickAnchor = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
-  const handleAddHierarchy = (name: string) => {
+  const handleAddHierarchy = (levelName: string) => {
+    const temp: IAddHierarchy = {
+      name: "New hierarchy",
+      level: levelName,
+      parent: selectedCategoryId?.id,
+      services: [],
+      role: [],
+    };
+    createHierarchiItem.mutate(temp);
     setAnchorEl(null);
   };
   const handleCloseAnchor = () => {
@@ -252,10 +283,29 @@ const TreeView: React.FC<TreeViewProps> = ({
     itemType: string,
     targetId: number
   ) => {
-    // Implement your logic to handle the dropped item here
-    console.log(
-      `Item ${itemType} with ID ${itemId} dropped on target with ID ${targetId}`
-    );
+    if (isDropping) {
+      console.log("Drop event ignored because another drop is in progress.");
+      return; // Prevent duplicate drop events
+    }
+
+    setIsDropping(true);
+    const typeItem = [
+      "section",
+      "service_type",
+      "group",
+      "category",
+      "subcategory",
+    ].includes(itemType)
+      ? "hierarchical_item"
+      : "service";
+
+    const temp: IMoveHierarchy = {
+      item: itemId,
+      type: typeItem,
+      to: targetId,
+    };
+
+    moveHierarchyItems.mutate(temp);
   };
 
   return (
