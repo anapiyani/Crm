@@ -9,14 +9,15 @@ interface IProps extends Omit<TextFieldProps, "ref" | "variant"> {
   size?: "small" | "medium";
 }
 
-const CustomTextField: React.FC<IProps> = ({
+const CustomTextField = React.forwardRef<HTMLInputElement, IProps>(({
   label,
   addClassName,
   size,
   ...props
-}) => {
+}, ref) => {
   return (
     <TextField
+      ref={ref}
       size={size}
       {...props}
       label={label}
@@ -35,6 +36,8 @@ const CustomTextField: React.FC<IProps> = ({
       className={classNames(classes["input"], addClassName)}
     />
   );
-};
+});
+
+CustomTextField.displayName = 'CustomTextField';
 
 export default CustomTextField;

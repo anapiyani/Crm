@@ -1,8 +1,8 @@
 import React from "react";
 import BreadcrumbsCustom from "@/components/navigation/breadcrumbs/breadcrumbs";
-import classes from "./styles.module.scss";
 import InputCard from "@/components/input-card/input-card";
 import CustomTextField from "@/components/textField/textField.component";
+import VerticalTextField from "@/components/textfield-vertical/textfield-vertical";
 import InputMask from "react-input-mask";
 import {
   Autocomplete,
@@ -14,12 +14,12 @@ import {
   RadioGroup,
   TextField,
 } from "@mui/material";
-import VerticalTextField from "@/components/textfield-vertical/textfield-vertical";
-import flagIcon from "@/assets/icons/Flags.svg";
 import { Textarea, Checkbox } from "@mui/joy";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import classes from "./styles.module.scss";
+import flagIcon from "@/assets/icons/Flags.svg";
 
 const schema = z.object({
   surname: z.string().min(1, "Заполните обязательное поле"),
@@ -53,8 +53,6 @@ const ClientsAdd = () => {
     setError,
     formState: { errors, isSubmitting },
   } = useForm<FormValues>({ resolver: zodResolver(schema) });
-  //react hook form tutorial
-  //tanstack react query tutorial
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     try {
@@ -66,13 +64,6 @@ const ClientsAdd = () => {
       });
       console.log(error);
     }
-  };
-
-  const [value, setValue] = React.useState('female');
-  
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setValue((event.target as HTMLInputElement).value);
   };
 
   return (
@@ -104,7 +95,6 @@ const ClientsAdd = () => {
                   error={!!errors.surname}
                   helperText={errors.surname?.message}
                 />
-
                 <VerticalTextField
                   label={"Имя"}
                   placeholder={""}
@@ -112,7 +102,6 @@ const ClientsAdd = () => {
                   error={!!errors.name}
                   helperText={errors.name?.message}
                 />
-
                 <VerticalTextField
                   label={"Отчество"}
                   placeholder={""}
@@ -120,7 +109,6 @@ const ClientsAdd = () => {
                   error={!!errors.middlename}
                   helperText={errors.middlename?.message}
                 />
-
                 <Autocomplete
                   sx={{
                     "& .MuiAutocomplete-inputRoot": {
@@ -146,16 +134,15 @@ const ClientsAdd = () => {
                         Категория
                       </p>
                       <TextField
-                        sx={{ height: "40px" }}
                         {...params}
                         {...register("category")}
-                        className={"main__lower__auto__input"}
                         error={!!errors.category}
                         helperText={errors.category?.message}
                       />
                     </div>
                   )}
                 />
+
                 <Autocomplete
                   sx={{
                     "& .MuiAutocomplete-inputRoot": {
@@ -178,12 +165,10 @@ const ClientsAdd = () => {
                   renderInput={(params) => (
                     <div className={classes["main__lower__auto"]}>
                       <p className={classes["main__lower__auto__label"]}>
-                        Доп.категория
+                        Доп. категория
                       </p>
                       <TextField
-                        sx={{ height: "40px" }}
                         {...params}
-                        className={"main__lower__auto__input"}
                         {...register("subcategory")}
                         error={!!errors.subcategory}
                         helperText={errors.subcategory?.message}
@@ -216,9 +201,7 @@ const ClientsAdd = () => {
                         Город
                       </p>
                       <TextField
-                        sx={{ height: "40px" }}
                         {...params}
-                        className={"main__lower__auto__input"}
                         {...register("city")}
                         error={!!errors.city}
                         helperText={errors.city?.message}
@@ -237,15 +220,8 @@ const ClientsAdd = () => {
                   <InputMask mask="+7 (999) 999 9999" {...register("whatsapp")}>
                     {(inputProps: any) => (
                       <CustomTextField
-                      {...(inputProps as any)}
                         size="small"
-                        sx={{
-                          height: "40px",
-                          "& .MuiOutlinedInput-root": {
-                            fontSize: "1.6rem",
-                            height: "40px",
-                          },
-                        }}
+                        {...(inputProps as any)}
                         label={"WhatsApp"}
                         InputProps={{
                           startAdornment: (
@@ -266,17 +242,9 @@ const ClientsAdd = () => {
                   <InputMask mask="+7 (999) 999 9999" {...register("mobile")}>
                     {(inputProps: any) => (
                       <CustomTextField
-                        {...inputProps}
                         size="small"
-                        sx={{
-                          height: "40px",
-                          "& .MuiOutlinedInput-root": {
-                            fontSize: "1.6rem",
-                            height: "40px",
-                          },
-                        }}
+                        {...inputProps}
                         label={"Моб. телефон"}
-                 
                         InputProps={{
                           startAdornment: (
                             <InputAdornment position="start">
@@ -294,36 +262,22 @@ const ClientsAdd = () => {
                     )}
                   </InputMask>
                   <CustomTextField
+                    size="small"
+                    label={"Email"}
                     {...register("email")}
                     error={!!errors.email}
                     helperText={errors.email?.message}
-                    size="small"
-                    sx={{
-                      height: "40px",
-                      "& .MuiOutlinedInput-root": {
-                        fontSize: "1.6rem",
-                        height: "40px",
-                      },
-                    }}
-                    label={"Email"}
                   />
                   <CustomTextField
+                    size="small"
+                    label={"Instagram"}
                     {...register("instagram")}
                     error={!!errors.instagram}
                     helperText={errors.instagram?.message}
-                    size="small"
-                    sx={{
-                      height: "40px",
-                      "& .MuiOutlinedInput-root": {
-                        fontSize: "1.6rem",
-                        height: "40px",
-                      },
-                    }}
-                    label={"Instagram"}
                   />
                 </div>
               }
-            ></InputCard>
+            />
             <InputCard
               title={"Привелечение клиента"}
               children={
@@ -354,9 +308,7 @@ const ClientsAdd = () => {
                           Сотрудник
                         </p>
                         <TextField
-                          sx={{ height: "40px" }}
                           {...params}
-                          className={"main__lower__auto__input"}
                           {...register("employee")}
                           error={!!errors.employee}
                           helperText={errors.employee?.message}
@@ -365,11 +317,12 @@ const ClientsAdd = () => {
                     )}
                   />
                   <Autocomplete
+                    size="small"
                     sx={{
                       "& .MuiAutocomplete-inputRoot": {
                         padding: "3px 0px 3px 0px",
                         fontSize: "1.4rem",
-                        width: "30rem",
+                        width: "30рем",
                       },
                     }}
                     options={[
@@ -390,7 +343,6 @@ const ClientsAdd = () => {
                         </p>
                         <TextField
                           {...params}
-                          className={"main__lower__auto__input"}
                           {...register("source")}
                           error={!!errors.source}
                           helperText={errors.source?.message}
@@ -412,7 +364,7 @@ const ClientsAdd = () => {
                     "& .MuiAutocomplete-inputRoot": {
                       padding: "3px 0px 3px 0px",
                       fontSize: "1.4rem",
-                      width: "30rem",
+                      width: "30рем",
                     },
                   }}
                   options={[
@@ -432,9 +384,7 @@ const ClientsAdd = () => {
                         Рассылка SMS
                       </p>
                       <TextField
-                        sx={{ height: "40px" }}
                         {...params}
-                        className={"main__lower__auto__input"}
                         {...register("sms_subscription")}
                         error={!!errors.sms_subscription}
                         helperText={errors.sms_subscription?.message}
@@ -448,7 +398,7 @@ const ClientsAdd = () => {
                     "& .MuiAutocomplete-inputRoot": {
                       padding: "3px 0px 3px 0px",
                       fontSize: "1.4rem",
-                      width: "30rem",
+                      width: "30рем",
                     },
                   }}
                   options={[
@@ -468,9 +418,7 @@ const ClientsAdd = () => {
                         Род занятий
                       </p>
                       <TextField
-                        sx={{ height: "40px" }}
                         {...params}
-                        className={"main__lower__auto__input"}
                         {...register("occupation")}
                         error={!!errors.occupation}
                         helperText={errors.occupation?.message}
@@ -484,7 +432,7 @@ const ClientsAdd = () => {
                     "& .MuiAutocomplete-inputRoot": {
                       padding: "3px 0px 3px 0px",
                       fontSize: "1.4rem",
-                      width: "30rem",
+                      width: "30рем",
                     },
                   }}
                   options={[
@@ -504,9 +452,7 @@ const ClientsAdd = () => {
                         Расп. салона
                       </p>
                       <TextField
-                        sx={{ height: "40px" }}
                         {...params}
-                        className={"main__lower__auto__input"}
                         {...register("salon_location")}
                         error={!!errors.salon_location}
                         helperText={errors.salon_location?.message}
@@ -520,7 +466,7 @@ const ClientsAdd = () => {
                     "& .MuiAutocomplete-inputRoot": {
                       padding: "3px 0px 3px 0px",
                       fontSize: "1.4rem",
-                      width: "30rem",
+                      width: "30рем",
                     },
                   }}
                   options={[
@@ -540,9 +486,7 @@ const ClientsAdd = () => {
                         Кл-т сотрудника
                       </p>
                       <TextField
-                        sx={{ height: "40px" }}
                         {...params}
-                        className={"main__lower__auto__input"}
                         {...register("employee_client")}
                         error={!!errors.employee_client}
                         helperText={errors.employee_client?.message}
@@ -553,8 +497,8 @@ const ClientsAdd = () => {
                 <div className={classes["main__lower__container__gender"]}>
                   <p
                     style={{
-                      fontSize: "1.6rem",
-                      width: "6rem",
+                      fontSize: "1.6рем",
+                      width: "6рем",
                       textAlign: "end",
                     }}
                   >
@@ -563,9 +507,7 @@ const ClientsAdd = () => {
                   <FormControl>
                     <RadioGroup
                       aria-labelledby="demo-radio-buttons-group-label"
-                      name="gender"
                       row
-                      defaultValue="female"
                     >
                       <FormControlLabel
                         value="female"
@@ -600,11 +542,11 @@ const ClientsAdd = () => {
                     </RadioGroup>
                   </FormControl>
                 </div>
-                <div className={classes["main__lower__container__gender"]}>
+                <div className={classes["main__lower__container__survey"]}>
                   <p
                     style={{
-                      fontSize: "1.6rem",
-                      width: "6rem",
+                      fontSize: "1.6рем",
+                      width: "6рем",
                       textAlign: "end",
                     }}
                   >
@@ -613,9 +555,7 @@ const ClientsAdd = () => {
                   <FormControl>
                     <RadioGroup
                       aria-labelledby="demo-radio-buttons-group-label"
-                      name="gender"
                       row
-                      defaultValue="Нет"
                     >
                       <FormControlLabel
                         value="Есть"
@@ -639,11 +579,11 @@ const ClientsAdd = () => {
                         {...register("survey")}
                         sx={{
                           "& .MuiFormControlLabel-label": {
-                            fontSize: "1.6rem",
+                            fontSize: "1.6рем",
                           },
                           "& .MuiSvgIcon-root": {
-                            height: "2rem",
-                            width: "2rem",
+                            height: "2рем",
+                            width: "2рем",
                           },
                         }}
                       />
@@ -658,12 +598,11 @@ const ClientsAdd = () => {
             children={
               <div className={classes["main__lower__container__card"]}>
                 <Textarea
-                  defaultValue={""}
+                  defaultValue={""} // Use defaultValue instead of children
                   placeholder={"Введите комментарий"}
                   variant={"outlined"}
                   size="lg"
                   {...register("comment")}
-                  name="comment"
                   sx={{
                     width: "100%",
                     height: "30rem",
@@ -675,8 +614,8 @@ const ClientsAdd = () => {
                 <Checkbox
                   size="lg"
                   label="Основная характеристика"
-                  variant="outlined"
                   {...register("main_characteristic")}
+                  variant="outlined"
                   sx={{
                     fontSize: "1.6rem",
                   }}
