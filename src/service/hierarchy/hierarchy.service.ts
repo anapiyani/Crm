@@ -57,10 +57,11 @@ export const moveHierarchy = (
     .then((res) => res.data);
 };
 
-export const getHierarchyByEmployeeId = (
-  employeeId: string
-): Promise<IEmployeeServiceHierarchy[]> => {
-  return api
-    .get(`/hierarchy/services-by-employee/${employeeId}/`)
-    .then((res) => res.data);
+export const updateHirearchy = (
+  data: IServiceCategory
+): Promise<IServiceCategory> => {
+  const params = new URLSearchParams({
+    id: data.id.toString(),
+  }).toString();
+  return api.put("/hierarchy/hierarchy/?" + params).then((res) => res.data);
 };

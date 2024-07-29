@@ -4,7 +4,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import LanOutlinedIcon from "@mui/icons-material/LanOutlined";
 import FolderIcon from "@mui/icons-material/Folder";
 import ContentCutIcon from "@mui/icons-material/ContentCut";
-import { Add, Category } from "@mui/icons-material";
+import { Add, Edit } from "@mui/icons-material";
 import { IService, IServiceCategory } from "@/ts/service.interface";
 import {
   IAddHierarchy,
@@ -21,10 +21,7 @@ import {
   Menu,
   MenuItem,
 } from "@mui/material";
-import {
-  addHierarchy,
-  moveHierarchy,
-} from "@/service/hierarchy/hierarchy.service";
+
 import {
   useCreateHierarchy,
   useMoveHierarchy,
@@ -419,6 +416,9 @@ const TreeView: React.FC<TreeViewProps> = ({
               </ListItemText>
             </MenuItem>
           </Menu>
+          <IconButton>
+            <Edit />
+          </IconButton>
         </div>
       </div>
       <Divider />
