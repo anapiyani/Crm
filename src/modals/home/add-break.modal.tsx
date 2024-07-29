@@ -10,11 +10,11 @@ import { Dayjs } from "dayjs";
 import classes from "./styles.module.scss";
 
 interface IAddBreakModalProps {
-  resourceId: string;
+  resourceId: string
 }
 
 const AddBreakModal: React.FC<IAddBreakModalProps> = ({ resourceId }) => {
-  const modal = useModal();
+  const modal = useModal()
   const addBreakToScheduleMutation = useAddBreakToSchedule();
   const [startTime, setStartTime] = useState<Dayjs | null>(null);
   const [endTime, setEndTime] = useState<Dayjs | null>(null);

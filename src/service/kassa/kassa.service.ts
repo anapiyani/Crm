@@ -1,6 +1,7 @@
 import {
 	ICashRegister,
 	IEmployeeWalletInfo,
+	IIndirectCostsResponse,
 	IKassaOperations,
 	IPeriodCashRegister,
 	ISalaryPayment,
@@ -92,8 +93,8 @@ export const salaryPayment = (formData: ISalaryPayment): Promise<any> => {
 	return api.post('/salary-wallet-payment/', formData).then(res => res.data)
 }
 
-export const getIndirectCosts = (formData: any): Promise<any> => {
-	const params = new URLSearchParams()
+export const getIndirectCosts = (formData: any): Promise<IIndirectCostsResponse> => {
+	const params = new URLSearchParams();
 	if (formData) {
 		if (formData.from_date) {
 			params.append('from_date', formData.from_date)

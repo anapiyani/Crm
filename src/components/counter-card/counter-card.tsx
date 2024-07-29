@@ -8,14 +8,14 @@ type CounterCardProps = {
   iconColor: string;
   textTitle: string;
   textTitleFocus?: string;
-  valueText: string;
+  valueText: string | number | undefined;
   isButton?: boolean;
 };
 
 const CounterCard: React.FC<CounterCardProps> = (props) => {
   return (
     <Card
-    
+
       sx={{
         maxHeight: "14.8",
         width: { xs: "22rem", md: "30rem" },
@@ -30,7 +30,7 @@ const CounterCard: React.FC<CounterCardProps> = (props) => {
               backgroundColor: props.backgroundColor,
             }}
           >
-            <ContentCut sx={{ color: props.iconColor, width:24 }} />
+            <ContentCut sx={{ color: props.iconColor, width: 24 }} />
           </div>
           <CardActions>
             {props.isButton ? (
