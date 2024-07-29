@@ -11,6 +11,7 @@ interface IProps extends Omit<TextFieldProps, "ref" | "variant"> {
   doubleDivier?: string;
   onChangeFrom?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onChangeTo?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  register?: any;
 }
 
 const VerticalTextField: React.FC<IProps> = ({
@@ -22,6 +23,7 @@ const VerticalTextField: React.FC<IProps> = ({
   onChangeFrom,
   onChangeTo,
   type = "text", // Default type is text
+  register,
   ...props
 }) => {
   // Function to render TextField based on type
@@ -33,6 +35,7 @@ const VerticalTextField: React.FC<IProps> = ({
           <div className={classNames(classes["main__double"])}>
             <TextField
               {...props}
+              {...register}
               variant="outlined"
               size="small"
               placeholder={placeholder}
@@ -48,6 +51,7 @@ const VerticalTextField: React.FC<IProps> = ({
             <p>{doubleDivier}</p>
             <TextField
               {...props}
+              {...register}
               variant="outlined"
               size="small"
               placeholder={placeholderOptional}
@@ -66,6 +70,7 @@ const VerticalTextField: React.FC<IProps> = ({
         return (
           <TextField
             {...props}
+            {...register}
             variant="outlined"
             size="small"
             placeholder={placeholder}

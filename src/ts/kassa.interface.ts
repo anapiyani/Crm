@@ -91,3 +91,14 @@ export interface IEmployeeWalletInfo {
   last_payment_amount: string;
   last_payment_date: string | null;
 }
+
+export interface ISalaryPayment {
+  date_from: string;
+  date_to: string;
+  employee: number;
+  salary: string;
+  salary_entry?: string;
+  type: string;
+  withdrawal_method: string;
+  customer: number;
+}
