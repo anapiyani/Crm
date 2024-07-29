@@ -1,34 +1,34 @@
-import BreadcrumbsCustom from "@/components/navigation/breadcrumbs/breadcrumbs";
+import BreadcrumbsCustom from "@/components/navigation/breadcrumbs/breadcrumbs"
 import {
   getHierarchy,
   getHierarchySearchOption,
   getSearchResults,
-} from "@/service/hierarchy/hierarchy.service";
-import { IService } from "@/ts/service.interface";
+} from "@/service/hierarchy/hierarchy.service"
+import { IService } from "@/ts/service.interface"
 import {
   Autocomplete,
   Button,
   CircularProgress,
   Divider,
   TextField,
-} from "@mui/material";
-import { DndProvider } from "react-dnd";
-import { HTML5Backend } from "react-dnd-html5-backend";
-import { useQuery } from "@tanstack/react-query";
-import toast from "react-hot-toast";
-import { LanOutlined, Folder, ContentCut } from "@mui/icons-material";
-import classes from "./styles.module.scss";
-import CustomTextField from "@/components/textField/textField.component";
-import TreeView from "@/components/treeItem/treeItem";
+} from "@mui/material"
+import { DndProvider } from "react-dnd"
+import { HTML5Backend } from "react-dnd-html5-backend"
+import { useQuery } from "@tanstack/react-query"
+import toast from "react-hot-toast"
+import { LanOutlined, Folder, ContentCut } from "@mui/icons-material"
+import classes from "./styles.module.scss"
+import CustomTextField from "@/components/textField/textField.component"
+import TreeView from "@/components/treeItem/treeItem"
 
-import SearchFilterCard from "@/components/search-filter-card/search-filter-card";
-import { useEffect, useState } from "react";
+import SearchFilterCard from "@/components/search-filter-card/search-filter-card"
+import { useEffect, useState } from "react"
 
-import { IfiltersResponse, ISearchResult } from "@/ts/hierarchy.inteface";
+import { IfiltersResponse, ISearchResult } from "@/ts/hierarchy.inteface"
 
 const ServiceCatalog = () => {
-  const [service, setService] = useState<IService | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [service, setService] = useState<IService | null>(null)
+  const [isLoading, setIsLoading] = useState(true)
   const [formData, setFormData] = useState({
     category: "",
     department: "",
@@ -38,36 +38,36 @@ const ServiceCatalog = () => {
     section: "",
     service_type: "",
     subcategory: "",
-  });
+  })
 
-  const [searchResults, setSearchResults] = useState<ISearchResult>();
+  const [searchResults, setSearchResults] = useState<ISearchResult>()
   const handleOptionLoad = () => {
-    getHierarchySearchOption().then((data) => setFilterOptions(data));
-  };
-  const [filterOptions, setFilterOptions] = useState<IfiltersResponse>();
+    getHierarchySearchOption().then((data) => setFilterOptions(data))
+  }
+  const [filterOptions, setFilterOptions] = useState<IfiltersResponse>()
   const { data, isPending, isError } = useQuery({
     queryKey: ["hierarchyData"],
     queryFn: getHierarchy,
     staleTime: Infinity,
     refetchOnWindowFocus: false,
-  });
+  })
 
   const handleServiceSelect = (service: IService) => {
-    setService(service);
+    setService(service)
 
-    setIsLoading(true);
+    setIsLoading(true)
     setTimeout(() => {
-      setIsLoading(false);
-    }, 10);
-  };
+      setIsLoading(false)
+    }, 10)
+  }
 
   const handleSearch = () => {
-    getSearchResults(formData).then((data) => setSearchResults(data));
-  };
+    getSearchResults(formData).then((data) => setSearchResults(data))
+  }
 
   useEffect(() => {
-    handleOptionLoad();
-  }, []);
+    handleOptionLoad()
+  }, [])
 
   const rows = [
     { IconComponent: LanOutlined, color: "#0B6BCB", label: "Отдел" },
@@ -77,14 +77,14 @@ const ServiceCatalog = () => {
     { IconComponent: Folder, color: "#EF6C00", label: "Категория" },
     { IconComponent: Folder, color: "#FBC02D", label: "Подкатегория" },
     { IconComponent: ContentCut, color: "#388E3C", label: "Услуга" },
-  ];
+  ]
 
   if (isError) {
-    toast.error("Произошла ошибка при получении данных.");
+    toast.error("Произошла ошибка при получении данных.")
   }
 
   function handleAutocompleteChange(value: any, fieldName: string): void {
-    setFormData((prev) => ({ ...prev, [fieldName]: value }));
+    setFormData((prev) => ({ ...prev, [fieldName]: value }))
   }
 
   return (
@@ -513,7 +513,7 @@ const ServiceCatalog = () => {
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default ServiceCatalog;
+export default ServiceCatalog

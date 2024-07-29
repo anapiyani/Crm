@@ -1,24 +1,24 @@
-import React, { useState } from "react";
-import NiceModal, { useModal } from "@ebay/nice-modal-react";
-import ModalWindow from "@/components/modal-window/modal-window";
-import { TimePicker } from "@mui/x-date-pickers/TimePicker";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { Textarea } from "@mui/joy";
-import { useAddBreakToSchedule } from "@/service/schedule/schedule.hook";
-import { Dayjs } from "dayjs";
-import classes from "./styles.module.scss";
+import React, { useState } from "react"
+import NiceModal, { useModal } from "@ebay/nice-modal-react"
+import ModalWindow from "@/components/modal-window/modal-window"
+import { TimePicker } from "@mui/x-date-pickers/TimePicker"
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs"
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider"
+import { Textarea } from "@mui/joy"
+import { useAddBreakToSchedule } from "@/service/schedule/schedule.hook"
+import { Dayjs } from "dayjs"
+import classes from "./styles.module.scss"
 
 interface IAddBreakModalProps {
-  resourceId: string;
+  resourceId: string
 }
 
 const AddBreakModal: React.FC<IAddBreakModalProps> = ({ resourceId }) => {
-  const modal = useModal();
-  const addBreakToScheduleMutation = useAddBreakToSchedule();
-  const [startTime, setStartTime] = useState<Dayjs | null>(null);
-  const [endTime, setEndTime] = useState<Dayjs | null>(null);
-  const [comment, setComment] = useState<string>("");
+  const modal = useModal()
+  const addBreakToScheduleMutation = useAddBreakToSchedule()
+  const [startTime, setStartTime] = useState<Dayjs | null>(null)
+  const [endTime, setEndTime] = useState<Dayjs | null>(null)
+  const [comment, setComment] = useState<string>("")
 
   const handleSaveClick = () => {
     addBreakToScheduleMutation.mutate({
@@ -26,8 +26,8 @@ const AddBreakModal: React.FC<IAddBreakModalProps> = ({ resourceId }) => {
       start_time: startTime?.format("HH:mm") || "",
       end_time: endTime?.format("HH:mm") || "",
       break_note: comment,
-    });
-  };
+    })
+  }
 
   return (
     <ModalWindow
@@ -35,8 +35,8 @@ const AddBreakModal: React.FC<IAddBreakModalProps> = ({ resourceId }) => {
       open={modal.visible}
       handleClose={() => modal.hide()}
       handleSave={() => {
-        handleSaveClick();
-        modal.hide();
+        handleSaveClick()
+        modal.hide()
       }}
       className={classes["u-p-0"]}
     >
@@ -80,7 +80,7 @@ const AddBreakModal: React.FC<IAddBreakModalProps> = ({ resourceId }) => {
         </div>
       </LocalizationProvider>
     </ModalWindow>
-  );
-};
+  )
+}
 
-export default NiceModal.create(AddBreakModal);
+export default NiceModal.create(AddBreakModal)
