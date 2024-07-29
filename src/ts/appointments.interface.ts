@@ -94,6 +94,9 @@ export interface ISingleAppointmentReturn {
   total_price: string;
   created_at: string;
   updated_at: string;
+  date: string;
+  start_time: string;
+  end_time: string;
   employee_id: number;
   employee_name: string;
 }

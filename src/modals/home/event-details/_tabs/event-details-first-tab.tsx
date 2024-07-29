@@ -42,12 +42,14 @@ const EventDetailsFirstTab: React.FC<IEventDetailsFirstTabProps> = ({
 }) => {
   const [servicesData, setServicesData] = useState<ITableRowData[]>([]);
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(
-    dayjs(data?.created_at)
+    dayjs(data?.date)
   );
   const [startTime, setStartTime] = useState<Dayjs | null>(
-    dayjs(data?.created_at)
+    data ? dayjs(`${data.date} ${data.start_time}`) : null
   );
-  const [endTime, setEndTime] = useState<Dayjs | null>(dayjs(data?.updated_at));
+  const [endTime, setEndTime] = useState<Dayjs | null>(
+    data ? dayjs(`${data.date} ${data.end_time}`) : null
+  );
   const [selectedService, setSelectedService] = useState<IOption | null>(null);
   const [selectedParameter, setSelectedParameter] = useState<IOption | null>(
     null
@@ -82,6 +84,9 @@ const EventDetailsFirstTab: React.FC<IEventDetailsFirstTabProps> = ({
           parameter_id: service.service,
         }))
       );
+      setSelectedDate(dayjs(data.date));
+      setStartTime(dayjs(`${data.date} ${data.start_time}`));
+      setEndTime(dayjs(`${data.date} ${data.end_time}`));
     }
   }, [data]);
 
