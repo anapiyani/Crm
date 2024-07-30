@@ -26,9 +26,7 @@ interface IEventDetailsModalProps {
   appointmentId: number;
 }
 
-const EventDetailsModal: React.FC<IEventDetailsModalProps> = ({
-  appointmentId,
-}) => {
+const EventDetails: React.FC<IEventDetailsModalProps> = ({ appointmentId }) => {
   const modal = useModal();
   const [currentTab, setCurrentTab] = useState(0);
   const [page, setPage] = useState(1);
@@ -42,7 +40,7 @@ const EventDetailsModal: React.FC<IEventDetailsModalProps> = ({
     queryFn: () => getAppointmentById(appointmentId),
     enabled: false,
     staleTime: 1000 * 60 * 5,
-  }); 
+  });
 
   useEffect(() => {
     if (appointmentId) {
@@ -198,4 +196,5 @@ const EventDetailsModal: React.FC<IEventDetailsModalProps> = ({
   );
 };
 
-export default NiceModal.create(EventDetailsModal);
+const EventDetailsModal = NiceModal.create(EventDetails);
+export default EventDetailsModal;

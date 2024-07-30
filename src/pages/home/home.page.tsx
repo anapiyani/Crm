@@ -8,6 +8,8 @@ import {
   TextField,
   Button,
   CircularProgress,
+  Menu,
+  MenuItem,
 } from "@mui/material";
 import InputMask from "react-input-mask";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -29,6 +31,7 @@ import {
   CreateAppointmentModal,
   DeleteBreakModal,
   EventDetailsModal,
+  ShiftReportModal,
 } from "@/modals";
 import Icons from "@/assets/icons/icons";
 
@@ -51,6 +54,8 @@ const Home = () => {
   const calendarRef = useRef<FullCalendar | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [burgerMenuAnchorEl, setBurgerMenuAnchorEl] =
+    useState<null | HTMLElement>(null);
   const [selectedResourceId, setSelectedResourceId] = useState<string | null>(
     null
   );
@@ -128,6 +133,14 @@ const Home = () => {
     });
   };
 
+  const handleBurgerMenuClick = (event: MouseEvent) => {
+    setBurgerMenuAnchorEl(event.currentTarget as HTMLElement);
+  };
+
+  const handleCloseBurgerMenu = () => {
+    setBurgerMenuAnchorEl(null);
+  };
+
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <div className={classes["home"]}>
@@ -158,8 +171,8 @@ const Home = () => {
               customButtons={{
                 shiftReport: {
                   text: "Отчет смены",
-                  click: function () {
-                    toast.success("Отчет смены");
+                  click: () => {
+                    NiceModal.show(ShiftReportModal);
                   },
                 },
                 weekButton: {
@@ -168,11 +181,9 @@ const Home = () => {
                     toast.success("Неделя");
                   },
                 },
-                menuButton: {
+                burgetMenuButton: {
                   text: "Меню",
-                  click: function () {
-                    toast.success("Menu");
-                  },
+                  click: handleBurgerMenuClick,
                 },
                 settingsButton: {
                   text: "Настройки",
@@ -182,7 +193,7 @@ const Home = () => {
               headerToolbar={{
                 left: "prev next today shiftReport",
                 center: "title",
-                right: "weekButton menuButton settingsButton",
+                right: "weekButton burgetMenuButton settingsButton",
               }}
               slotLabelFormat={{
                 hour: "numeric",
@@ -209,6 +220,30 @@ const Home = () => {
               resourceId={selectedResourceId || ""}
               username={selectedTitle || ""}
             />
+            <ResourceDropdownMenu
+              anchorEl={anchorEl}
+              onClose={handleCloseDropdownMenu}
+              resourceId={selectedResourceId || ""}
+              username={selectedTitle || ""}
+            />
+            <Menu
+              anchorEl={burgerMenuAnchorEl}
+              open={Boolean(burgerMenuAnchorEl)}
+              onClose={handleCloseBurgerMenu}
+            >
+              <MenuItem onClick={handleCloseBurgerMenu}>
+                <div>Добавить соотрудника в график</div>
+              </MenuItem>
+              <MenuItem onClick={handleCloseBurgerMenu}>
+                <div>Изменить порядок отображения соотрудников</div>
+              </MenuItem>
+              <MenuItem onClick={handleCloseBurgerMenu}>
+                <div>Скачать журнал записей</div>
+              </MenuItem>
+              <MenuItem onClick={handleCloseBurgerMenu}>
+                <div>Посмотреть удаленные записи</div>
+              </MenuItem>
+            </Menu>
           </div>
           <div
             className={

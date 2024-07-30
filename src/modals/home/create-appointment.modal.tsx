@@ -65,7 +65,7 @@ interface IOption {
   value: number;
 }
 
-const CreateAppointmentModal: React.FC<ICreateAppointmentModalProps> = ({
+const CreateAppointment: React.FC<ICreateAppointmentModalProps> = ({
   start,
   end,
   employee,
@@ -585,4 +585,5 @@ const CreateAppointmentModal: React.FC<ICreateAppointmentModalProps> = ({
   );
 };
 
-export default NiceModal.create(CreateAppointmentModal);
+const CreateAppointmentModal = NiceModal.create(CreateAppointment);
+export default CreateAppointmentModal;
