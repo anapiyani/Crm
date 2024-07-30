@@ -95,6 +95,7 @@
         border-radius: 1rem;
         border: 1px solid #cdd7e1;
         &__header {
+          cursor: pointer;
           display: flex;
           flex-direction: row;
           justify-content: space-between;
@@ -206,4 +207,17 @@
   display: flex;
   align-items: center;
   gap: 1rem;
+}
+
+.datePicker {
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  input {
+    width: 65%;
+  }
+  p {
+    font-size: 1.6rem;
+  }
 }

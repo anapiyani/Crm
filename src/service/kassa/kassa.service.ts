@@ -1,7 +1,9 @@
 import {
   ICashRegister,
+  IDateRegisters,
   IEmployeeWalletInfo,
   IIndirectCostsResponse,
+  IIndirectSumarry,
   IKassaOperations,
   IPeriodCashRegister,
   ISalaryPayment,
@@ -11,6 +13,8 @@ import {
 } from "@/ts/kassa.interface";
 import { IResponseData } from "@/ts/types";
 import api from "../api";
+import { data } from "@/pages/employees/employee-visits/data";
+import { get } from "http";
 
 export const getOperations = (
   kassa_transaction?: boolean,
@@ -94,18 +98,22 @@ export const salaryPayment = (formData: ISalaryPayment): Promise<any> => {
 };
 
 export const getIndirectCosts = (
-  formData: any,
-): Promise<IIndirectCostsResponse> => {
+  formData: IDateRegisters,
+): Promise<IIndirectCostsResponse[]> => {
   const params = new URLSearchParams();
   if (formData) {
-    if (formData.from_date) {
-      params.append("from_date", formData.from_date);
+    if (formData.date_from) {
+      params.append("date_from", formData.date_from);
     }
-    if (formData.to_date) {
-      params.append("to_date", formData.to_date);
+    if (formData.date_to) {
+      params.append("date_to", formData.date_to);
     }
   }
   return api
     .get(`/indirect_calculations/?${params?.toString()}`)
     .then((res) => res.data);
+};
+
+export const getIndirectCostsSummary = (): Promise<IIndirectSumarry> => {
+  return api.get("/indirect_calculations/summary/").then((res) => res.data);
 };
