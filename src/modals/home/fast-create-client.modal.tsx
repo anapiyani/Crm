@@ -1,7 +1,7 @@
 import ModalWindow from "@/components/modal-window/modal-window";
 import NiceModal, { useModal } from "@ebay/nice-modal-react";
 
-const FastCreateClientModal = () => {
+const FastCreateClient = () => {
   const modal = useModal();
   return (
     <ModalWindow
@@ -16,4 +16,5 @@ const FastCreateClientModal = () => {
   );
 };
 
-export default NiceModal.create(FastCreateClientModal);
+const FastCreateClientModal = NiceModal.create(FastCreateClient);
+export default FastCreateClientModal;

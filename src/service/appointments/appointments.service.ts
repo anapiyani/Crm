@@ -16,3 +16,21 @@ export const getAppointmentById = (
 ): Promise<ISingleAppointmentReturn> => {
   return api.get(`/appointments/appointments/${id}/`).then((res) => res.data);
 };
+
+export const getCustomerAppointmentHistoryById = (customer_id: number) => {
+  return api
+    .get(`/appointments/appointments/history/${customer_id}/`)
+    .then((res) => res.data);
+};
+
+export const getCustomerAppointmentNoShowById = (customer_id: number) => {
+  return api
+    .get(`/appointments/appointments/no-show/${customer_id}/`)
+    .then((res) => res.data);
+};
+
+export const getCustomerAppointmentPlannedById = (customer_id: number) => {
+  return api
+    .get(`/appointments/appointments/planned/${customer_id}/`)
+    .then((res) => res.data);
+};

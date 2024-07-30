@@ -7,7 +7,7 @@ interface IDeleteBreakModalProps {
   breakId: number;
 }
 
-const DeleteBreakModal: React.FC<IDeleteBreakModalProps> = ({ breakId }) => {
+const DeleteBreak: React.FC<IDeleteBreakModalProps> = ({ breakId }) => {
   const modal = useModal();
   const DeleteBreakMutation = useDeleteBreakFromSchedule();
 
@@ -31,4 +31,5 @@ const DeleteBreakModal: React.FC<IDeleteBreakModalProps> = ({ breakId }) => {
   );
 };
 
-export default NiceModal.create(DeleteBreakModal);
+const DeleteBreakModal = NiceModal.create(DeleteBreak);
+export default DeleteBreakModal;

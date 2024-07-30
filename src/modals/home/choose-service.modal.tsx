@@ -14,7 +14,7 @@ interface ChooseServiceModalProps {
   }[];
 }
 
-const ChooseServiceModal: React.FC<ChooseServiceModalProps> = ({
+const ChooseService: React.FC<ChooseServiceModalProps> = ({
   onSave,
   flattenData,
 }) => {
@@ -65,4 +65,5 @@ const ChooseServiceModal: React.FC<ChooseServiceModalProps> = ({
   );
 };
 
-export default NiceModal.create(ChooseServiceModal);
+const ChooseServiceModal = NiceModal.create(ChooseService);
+export default ChooseServiceModal;
