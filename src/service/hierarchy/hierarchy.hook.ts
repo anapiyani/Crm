@@ -3,7 +3,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   addHierarchy,
   moveHierarchy,
-  updateHirearchy,
+  updateHierarchy,
+  deleteHierarchy,
 } from "./hierarchy.service";
 import toast from "react-hot-toast";
 import { IAddHierarchy, IMoveHierarchy } from "@/ts/hierarchy.inteface";
@@ -39,13 +40,27 @@ export const useMoveHierarchy = () => {
 export const useUpdateHierarchy = () => {
   const queryClient = useQueryClient();
   return useMutation<IServiceCategory, Error, IServiceCategory>({
-    mutationFn: updateHirearchy,
+    mutationFn: updateHierarchy,
     onSuccess: () => {
       toast.success("Иерархия успешно обновлена.");
       queryClient.invalidateQueries({ queryKey: ["hierarchyData"] });
     },
     onError: (error: Error) => {
       toast.error(`Упс! ошибка при обновлении: ${error.message}`);
+    },
+  });
+};
+
+export const useDeleteHierarchy = () => {
+  const queryClient = useQueryClient();
+  return useMutation<void, Error, number>({
+    mutationFn: deleteHierarchy,
+    onSuccess: () => {
+      toast.success("Иерархия успешно удалена.");
+      queryClient.invalidateQueries({ queryKey: ["hierarchyData"] });
+    },
+    onError: (error: Error) => {
+      toast.error(`Упс! ошибка при удалении: ${error.message}`);
     },
   });
 };

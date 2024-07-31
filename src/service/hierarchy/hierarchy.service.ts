@@ -8,7 +8,9 @@ import {
   IfilterRequest,
   IfiltersResponse,
   IMoveHierarchy,
+  IRolesbyDepartment,
   ISearchResult,
+  IStorageCategory,
 } from "@/ts/hierarchy.inteface";
 
 export const getHierarchy = (): Promise<IServiceCategory[]> => {
@@ -57,11 +59,48 @@ export const moveHierarchy = (
     .then((res) => res.data);
 };
 
-export const updateHirearchy = (
+export const updateHierarchy = (
   data: IServiceCategory
 ): Promise<IServiceCategory> => {
+  const reqbody = {
+    name: data.name,
+    level: data.level,
+    parent: data.parent,
+    services: [],
+    role: [],
+  };
   const params = new URLSearchParams({
     id: data.id.toString(),
   }).toString();
-  return api.put("/hierarchy/hierarchy/?" + params).then((res) => res.data);
+  return api
+    .put(`/hierarchy/hierarchy/${data.id}/`, reqbody)
+    .then((res) => res.data);
+};
+
+export const getRolesByDepartments = (): Promise<IRolesbyDepartment[]> => {
+  return api.get("/hierarchy/roles-with-departments/").then((res) => res.data);
+};
+export const linkRoleToHierarchy = (data: {
+  department_id: number;
+  role_id: number;
+}): Promise<{
+  department_id: number;
+  role_id: number;
+}> => {
+  return api.post("/hierarchy/roles/associate/", data).then((res) => res.data);
+};
+export const deleteHierarchy = (id: number): Promise<void> => {
+  return api.delete(`/hierarchy/hierarchy/${id}/`).then((res) => res.data);
+};
+
+export const getHierarchyStorage = (): Promise<IStorageCategory[]> => {
+  return api.get("/hierarchy/hierarchy-storage/").then((res) => res.data);
+};
+
+export const getHierarchyByEmployeeId = (
+  employeeId: string
+): Promise<IEmployeeServiceHierarchy[]> => {
+  return api
+    .get(`/hierarchy/services-by-employee/${employeeId}/`)
+    .then((res) => res.data);
 };

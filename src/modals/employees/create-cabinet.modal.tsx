@@ -1,20 +1,15 @@
 import ModalWindow from "@/components/modal-window/modal-window";
-import { Form } from "react-router-dom";
+
 import NiceModal, { useModal } from "@ebay/nice-modal-react";
 import VerticalTextField from "@/components/textfield-vertical/textfield-vertical";
-import classes from "./styles.module.scss";
 
-import {
-  FormControl,
-  FormControlLabel,
-  Radio,
-  RadioGroup,
-} from "@mui/material";
-import { createRoom } from "@/service/rooms/rooms.service";
+import { FormControlLabel, Radio, RadioGroup } from "@mui/material";
+
 import { useState } from "react";
 import { useCreateRoom } from "@/service/rooms/rooms.hook";
 
 const CreateCabinetModal = () => {
+  const modal = useModal();
   const [roomName, setRoomName] = useState<string>("");
   const [isOnline, setIsOnline] = useState<boolean>(false);
 
@@ -29,7 +24,6 @@ const CreateCabinetModal = () => {
     });
   };
 
-  const modal = useModal();
   return (
     <ModalWindow
       title={"Добавить кабинет"}
