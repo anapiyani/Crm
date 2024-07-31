@@ -2,6 +2,7 @@ import {
   ICashRegister,
   IDateRegisters,
   IEmployeeWalletInfo,
+  IIndirectCategory,
   IIndirectCostsResponse,
   IIndirectSumarry,
   IKassaOperations,
@@ -13,8 +14,6 @@ import {
 } from "@/ts/kassa.interface";
 import { IResponseData } from "@/ts/types";
 import api from "../api";
-import { data } from "@/pages/employees/employee-visits/data";
-import { get } from "http";
 
 export const getOperations = (
   kassa_transaction?: boolean,
@@ -116,4 +115,14 @@ export const getIndirectCosts = (
 
 export const getIndirectCostsSummary = (): Promise<IIndirectSumarry> => {
   return api.get("/indirect_calculations/summary/").then((res) => res.data);
+};
+
+export const addCategoryIndirectCosts = (
+  formData: IIndirectCategory,
+): Promise<any> => {
+  return api.post("/operations/", formData).then((res) => res.data);
+};
+
+export const deleteCategoryIndirectCosts = (id: number): Promise<any> => {
+  return api.delete(`/operations/${id}/`).then((res) => res.data);
 };

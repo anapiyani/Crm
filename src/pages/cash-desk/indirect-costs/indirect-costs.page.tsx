@@ -1,11 +1,20 @@
-import { ChangeEvent, FC, useRef, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import CounterCard from "@/components/counter-card/counter-card";
 import BreadcrumbsCustom from "@/components/navigation/breadcrumbs/breadcrumbs";
 import {
+  deleteCategoryIndirectCosts,
   getIndirectCosts,
   getIndirectCostsSummary,
 } from "@/service/kassa/kassa.service";
-import { Add, Edit, ExpandLess, ExpandMore } from "@mui/icons-material";
+import {
+  Add,
+  Edit,
+  ExpandLess,
+  ExpandMore,
+  Check,
+  Close,
+  DeleteOutline,
+} from "@mui/icons-material";
 import {
   Button,
   FormControl,
@@ -22,11 +31,23 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { useForm, Controller } from "react-hook-form";
 import classes from "./style.module.scss";
-import dayjs from "dayjs";
+import dayjs, { locale } from "dayjs";
 import CustomDatePicker from "@/components/date-picker/date-picker-custom";
+import { IIndirectForm } from "@/ts/kassa.interface";
+import { AddCategoryModal } from "@/modals";
+import NiceModal, { show } from "@ebay/nice-modal-react";
+import { data } from "@/pages/employees/employee-visits/data";
+import { current } from "@reduxjs/toolkit";
+import { count, table } from "console";
+import { type } from "os";
+import { format } from "path";
+import { render } from "react-dom";
+import { isError } from "util";
 
 const IndirectCostsPage: FC = () => {
-  const { control, handleSubmit, watch, reset, getValues } = useForm();
+  const [edit, setEdit] = useState<boolean>(false);
+  const { control, handleSubmit, watch, reset, getValues } =
+    useForm<IIndirectForm>();
   const [defaultDate, setDefaultDate] = useState({
     date_from: dayjs().startOf("month").format("DD.MM.YYYY"),
     date_to: dayjs().endOf("month").format("DD.MM.YYYY"),
@@ -51,6 +72,7 @@ const IndirectCostsPage: FC = () => {
     queryKey: ["indirectCosts"],
     queryFn: () => getIndirectCosts(defaultDate),
   });
+
   const inputRefStart = useRef<HTMLInputElement>(null);
   const inputRefEnd = useRef<HTMLInputElement>(null);
 
@@ -62,6 +84,12 @@ const IndirectCostsPage: FC = () => {
       [tableKey]: !prevState[tableKey],
     }));
   };
+
+  useEffect(() => {
+    if (defaultDate) {
+      refetchIndirectCosts();
+    }
+  }, [defaultDate]);
 
   const selectedPeriod = watch("selectedPeriod");
 
@@ -76,8 +104,82 @@ const IndirectCostsPage: FC = () => {
     }
   };
 
-  const handleSubmitDate = (data: any) => {
-    console.log("Form data:", data);
+  const openAddCategoryModal = () => {
+    NiceModal.show(AddCategoryModal);
+  };
+
+  const handleSubmitDate = (data: IIndirectForm) => {
+    switch (data.selectedPeriod) {
+      case "custom": {
+        setDefaultDate({
+          date_from: dayjs(data.startDate!).format("DD.MM.YYYY"),
+          date_to: dayjs(data.endDate!).format("DD.MM.YYYY"),
+        });
+        refetchIndirectCosts();
+        break;
+      }
+      case "day": {
+        setDefaultDate({
+          date_from: dayjs().format("DD.MM.YYYY"),
+          date_to: dayjs().format("DD.MM.YYYY"),
+        });
+        refetchIndirectCosts();
+        break;
+      }
+      case "week": {
+        setDefaultDate({
+          date_from: dayjs().startOf("week").format("DD.MM.YYYY"),
+          date_to: dayjs().endOf("week").format("DD.MM.YYYY"),
+        });
+        refetchIndirectCosts();
+        break;
+      }
+      case "month": {
+        setDefaultDate({
+          date_from: dayjs().startOf("month").format("DD.MM.YYYY"),
+          date_to: dayjs().endOf("month").format("DD.MM.YYYY"),
+        });
+        refetchIndirectCosts();
+        break;
+      }
+      case "quarter": {
+        setDefaultDate({
+          date_from: dayjs()
+            .subtract(3, "months")
+            .startOf("month")
+            .format("DD.MM.YYYY"),
+          date_to: dayjs().endOf("month").format("DD.MM.YYYY"),
+        });
+        break;
+      }
+      case "year": {
+        setDefaultDate({
+          date_from: dayjs().startOf("year").format("DD.MM.YYYY"),
+          date_to: dayjs().endOf("year").format("DD.MM.YYYY"),
+        });
+        refetchIndirectCosts();
+        break;
+      }
+      default:
+        break;
+    }
+  };
+
+  const handleDeleteCategory = async (id: number) => {
+    await deleteCategoryIndirectCosts(id);
+    refetchIndirectCosts();
+  };
+
+  const handleEditNameCategory = (id: number, name: string) => {
+    // when in edit person should click name of category or operation and name should change to input and change the name only after clicking save button
+  };
+
+  const handleAddOperation = (parentId: number) => {
+    NiceModal.show(AddCategoryModal, { parentId: parentId });
+  };
+
+  const handleSaveCategories = () => {
+    setEdit(false);
   };
 
   return (
@@ -295,14 +397,41 @@ const IndirectCostsPage: FC = () => {
                   }}
                 />
               </div>
-              <div className={classes.main__content__result__header__row}>
-                <Button startIcon={<Edit />} variant="outlined">
-                  Редактивровать
-                </Button>
-                <Button startIcon={<Add />} variant="outlined">
-                  Добавить Категорию
-                </Button>
-              </div>
+              {edit ? (
+                <div className={classes.main__content__result__header__row}>
+                  <Button
+                    onClick={() => setEdit(false)}
+                    startIcon={<Close />}
+                    variant="outlined"
+                  >
+                    Отменить
+                  </Button>
+                  <Button
+                    startIcon={<Check />}
+                    onClick={handleSaveCategories}
+                    variant="contained"
+                  >
+                    Сохранить
+                  </Button>
+                </div>
+              ) : (
+                <div className={classes.main__content__result__header__row}>
+                  <Button
+                    onClick={() => setEdit(true)}
+                    startIcon={<Edit />}
+                    variant="outlined"
+                  >
+                    Редактивровать
+                  </Button>
+                  <Button
+                    startIcon={<Add />}
+                    onClick={openAddCategoryModal}
+                    variant="outlined"
+                  >
+                    Добавить Категорию
+                  </Button>
+                </div>
+              )}
             </div>
             {indirectCostsData &&
               indirectCostsData.map((item, index) => {
@@ -317,7 +446,6 @@ const IndirectCostsPage: FC = () => {
                       className={classes.main__content__result__wrap__header}
                     >
                       <h1>{item.main_operation_name}</h1>
-
                       <div
                         style={{
                           display: "flex",
@@ -333,30 +461,89 @@ const IndirectCostsPage: FC = () => {
                             <ExpandMore style={{ fontSize: "24px" }} />
                           )}
                         </span>
+                        {edit && (
+                          <Button
+                            sx={{ minWidth: "4rem" }}
+                            className={classes.editBtns}
+                            onClick={() =>
+                              handleAddOperation(item.main_operation_id)
+                            }
+                          >
+                            <Add
+                              sx={{
+                                fontSize: "1.6rem",
+                              }}
+                            />
+                          </Button>
+                        )}
+                        {edit && (
+                          <Button
+                            onClick={() =>
+                              handleDeleteCategory(item.main_operation_id)
+                            }
+                            sx={{ minWidth: "4rem" }}
+                            color="error"
+                          >
+                            <DeleteOutline sx={{ fontSize: "1.6rem" }} />
+                          </Button>
+                        )}
                       </div>
                     </div>
                     {openTables[tableKey] && item.details && (
                       <Table className={classes.table}>
                         <TableHead>
                           <TableRow>
+                            <TableCell>Название категории</TableCell>
                             <TableCell>Дата</TableCell>
                             <TableCell>Тип операции</TableCell>
                             <TableCell>Сумма</TableCell>
+                            {edit && <TableCell>Действия</TableCell>}
                           </TableRow>
                         </TableHead>
                         <TableBody>
                           {item.details.map((itemDetail, detailIndex) =>
-                            itemDetail.operations?.map((operation, opIndex) => (
-                              <TableRow key={opIndex}>
-                                <TableCell>
-                                  {dayjs(operation.date).format("DD.MM.YYYY")}
-                                </TableCell>
-                                <TableCell>{operation.money_type}</TableCell>
-                                <TableCell>
-                                  {operation.total_amount_change}
-                                </TableCell>
+                            itemDetail.operations &&
+                            itemDetail.operations.length > 0 ? (
+                              itemDetail.operations.map(
+                                (operation, opIndex) => (
+                                  <TableRow key={`${detailIndex}-${opIndex}`}>
+                                    <TableCell>{itemDetail.name}</TableCell>
+                                    <TableCell>
+                                      {dayjs(operation.date).format(
+                                        "DD.MM.YYYY",
+                                      )}
+                                    </TableCell>
+                                    <TableCell>
+                                      {operation.money_type}
+                                    </TableCell>
+                                    <TableCell>
+                                      {operation.total_amount_change}
+                                    </TableCell>
+                                    {edit && (
+                                      <TableCell className={classes.editTable}>
+                                        <Button>
+                                          <DeleteOutline />
+                                        </Button>
+                                      </TableCell>
+                                    )}
+                                  </TableRow>
+                                ),
+                              )
+                            ) : (
+                              <TableRow key={detailIndex}>
+                                <TableCell>{itemDetail.name}</TableCell>
+                                <TableCell>Нет данных</TableCell>
+                                <TableCell>Нет данных</TableCell>
+                                <TableCell>Нет данных</TableCell>
+                                {edit && (
+                                  <TableCell className={classes.editTable}>
+                                    <Button>
+                                      <DeleteOutline />
+                                    </Button>
+                                  </TableCell>
+                                )}
                               </TableRow>
-                            )),
+                            ),
                           )}
                         </TableBody>
                       </Table>

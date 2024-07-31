@@ -5,6 +5,7 @@ import FastCreateClientModal from "./home/fast-create-client.modal";
 import DeleteBreakModal from "./home/delete-break.modal";
 import ChooseServiceModal from "./home/choose-service.modal";
 import ShiftReportModal from "./home/shift-report.modal";
+import AddCategoryModal from "./cash-desk/indirect-category-add.modal";
 
 export {
   AddBreakModal,
@@ -14,4 +15,5 @@ export {
   DeleteBreakModal,
   ChooseServiceModal,
   ShiftReportModal,
+  AddCategoryModal,
 };

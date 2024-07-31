@@ -110,6 +110,7 @@ export interface IIndirectCosts {
   date: string | null;
   money_type: string;
   total_amount_change: string;
+  name: string;
 }
 
 export interface IIndirectCostsDetails {
@@ -134,4 +135,16 @@ export interface IIndirectSumarry {
   expenses_all_time: string;
   accumulated_income_statistics_in_month: string;
   average_expenses_per_month: string;
+}
+
+export interface IIndirectForm {
+  endDate?: string;
+  startDate?: string;
+  selectedPeriod: string;
+}
+
+export interface IIndirectCategory {
+  name: string;
+  expense: boolean;
+  parent?: number;
 }
