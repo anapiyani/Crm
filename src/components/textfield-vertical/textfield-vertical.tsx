@@ -1,8 +1,9 @@
+import React, { forwardRef } from "react";
 import TextField, { TextFieldProps } from "@mui/material/TextField";
 import classNames from "classnames";
 import classes from "./styles.module.scss";
 
-interface IProps extends Omit<TextFieldProps, "ref" | "variant"> {
+interface IProps extends Omit<TextFieldProps, "variant"> {
   label?: string;
   addClassName?: string;
   type?: string;
@@ -14,25 +15,64 @@ interface IProps extends Omit<TextFieldProps, "ref" | "variant"> {
   register?: any;
 }
 
-const VerticalTextField: React.FC<IProps> = ({
-  label,
-  placeholder,
-  placeholderOptional,
-  addClassName,
-  doubleDivier,
-  onChangeFrom,
-  onChangeTo,
-  type = "text", // Default type is text
-  register,
-  ...props
-}) => {
-  // Function to render TextField based on type
-  const renderTextField = () => {
-    switch (type) {
-      case "double":
-        // Example for number type
-        return (
-          <div className={classNames(classes["main__double"])}>
+const VerticalTextField = forwardRef<HTMLInputElement, IProps>(
+  (
+    {
+      label,
+      placeholder,
+      placeholderOptional,
+      addClassName,
+      doubleDivier,
+      onChangeFrom,
+      onChangeTo,
+      type = "text",
+      register,
+      ...props
+    },
+    ref,
+  ) => {
+    const renderTextField = () => {
+      switch (type) {
+        case "double":
+          return (
+            <div className={classNames(classes["main__double"])}>
+              <TextField
+                {...props}
+                {...register}
+                variant="outlined"
+                size="small"
+                placeholder={placeholder}
+                className={classNames(
+                  classes["main__double__inputDouble"],
+                  addClassName,
+                )}
+                onChange={onChangeFrom}
+                InputProps={{
+                  style: { fontSize: "16px" },
+                }}
+                inputRef={ref}
+              />
+              <p>{doubleDivier}</p>
+              <TextField
+                {...props}
+                {...register}
+                variant="outlined"
+                size="small"
+                placeholder={placeholderOptional}
+                className={classNames(
+                  classes["main__double__inputDouble"],
+                  addClassName,
+                )}
+                onChange={onChangeTo}
+                InputProps={{
+                  style: { fontSize: "16px" },
+                }}
+                inputRef={ref}
+              />
+            </div>
+          );
+        default:
+          return (
             <TextField
               {...props}
               {...register}
@@ -40,54 +80,25 @@ const VerticalTextField: React.FC<IProps> = ({
               size="small"
               placeholder={placeholder}
               className={classNames(
-                classes["main__double__inputDouble"],
-                addClassName
+                classes["main__single__input"],
+                addClassName,
               )}
-              onChange={onChangeFrom}
               InputProps={{
                 style: { fontSize: "16px" },
               }}
+              inputRef={ref}
             />
-            <p>{doubleDivier}</p>
-            <TextField
-              {...props}
-              {...register}
-              variant="outlined"
-              size="small"
-              placeholder={placeholderOptional}
-              className={classNames(
-                classes["main__double__inputDouble"],
-                addClassName
-              )}
-              onChange={onChangeTo}
-              InputProps={{
-                style: { fontSize: "16px" },
-              }}
-            />
-          </div>
-        );
-      default:
-        return (
-          <TextField
-            {...props}
-            {...register}
-            variant="outlined"
-            size="small"
-            placeholder={placeholder}
-            className={classNames(classes["main__single__input"], addClassName)}
-            InputProps={{
-              style: { fontSize: "16px" },
-            }}
-          />
-        );
-    }
-  };
+          );
+      }
+    };
 
-  return (
-    <div className={classes["main"]}>
-      <p style={{ fontSize: "16px" }}>{label}</p> {renderTextField()}
-    </div>
-  );
-};
+    return (
+      <div className={classes["main"]}>
+        <p style={{ fontSize: "16px" }}>{label}</p>
+        {renderTextField()}
+      </div>
+    );
+  },
+);
 
 export default VerticalTextField;

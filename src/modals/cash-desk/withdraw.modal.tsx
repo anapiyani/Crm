@@ -3,7 +3,7 @@ import ModalWindow from "@/components/modal-window/modal-window";
 import NiceModal, { useModal } from "@ebay/nice-modal-react";
 import classes from "./styles.module.scss";
 import { Autocomplete, Button, Divider, TextField } from "@mui/material";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getOperations, searchKassaData } from "@/service/kassa/kassa.service";
 import { IKassaOperations, IWithdrawal } from "@/ts/kassa.interface";
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -11,26 +11,20 @@ import { Clear, Done } from "@mui/icons-material";
 import { useWithdrawl } from "@/service/kassa/kassa.hook";
 import toast from "react-hot-toast";
 
-interface WithdrawModalProps {
-  refetchCashRegister: () => void;
-}
-
-const WithdrawModal: React.FC<WithdrawModalProps> = ({
-  refetchCashRegister,
-}) => {
+const WithdrawModal: React.FC = () => {
   const { register, handleSubmit, reset } = useForm<IWithdrawal>();
   const { data: operationsData } = useQuery({
     queryKey: ["kassaService"],
     queryFn: () => getOperations(),
   });
 
-  const mutation = useWithdrawl(refetchCashRegister);
+  const mutation = useWithdrawl();
   const [summ, setSumm] = useState<number>(0);
   const [selectedOperationId, setSelectedOperationId] = useState<string | null>(
-    null
+    null,
   );
   const [selectedMoneyType, setSelectedMoneyType] = useState<string | null>(
-    null
+    null,
   );
 
   const onSubmit: SubmitHandler<IWithdrawal> = async (data: IWithdrawal) => {
@@ -49,7 +43,7 @@ const WithdrawModal: React.FC<WithdrawModalProps> = ({
   };
 
   const processOperationsData = (
-    operations: IKassaOperations[]
+    operations: IKassaOperations[],
   ): { label: string; value: string; isParent: boolean; id: number }[] => {
     const result: {
       label: string;
@@ -59,7 +53,7 @@ const WithdrawModal: React.FC<WithdrawModalProps> = ({
     }[] = [];
     const traverse = (
       nodes: IKassaOperations[],
-      parent: IKassaOperations | null
+      parent: IKassaOperations | null,
     ) => {
       nodes.forEach((node) => {
         if (node.children && node.children.length > 0) {
