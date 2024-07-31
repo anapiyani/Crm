@@ -42,7 +42,6 @@ const SalaryModal: React.FC = () => {
     data: ISalaryPayment,
   ) => {
     await mutation.mutate(data);
-    useQueryClient().invalidateQueries({ queryKey: ["cashregister"] });
     reset();
     handleCloseModal();
   };

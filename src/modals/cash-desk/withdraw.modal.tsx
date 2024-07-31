@@ -35,7 +35,6 @@ const WithdrawModal: React.FC = () => {
     };
     if ((selectedOperationId && selectedMoneyType) || summ === 0) {
       await mutation.mutate(formData);
-      useQueryClient().invalidateQueries({ queryKey: ["cashregister"] });
       modal.hide();
       reset();
     } else {
