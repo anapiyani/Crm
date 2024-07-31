@@ -17,32 +17,34 @@ import {
 import AddRoleModal from "@/modals/service-catalog/add-role.modal";
 import NiceModal from "@ebay/nice-modal-react";
 import CreateCategoryModal from "@/modals/service-catalog/create-category.modal";
-import EditCategoryModal from "@/modals/service-catalog/edit-category.modal";
 import classes from "./styles.module.scss";
 import {
-  useCreateHierarchy,
   useDeleteHierarchy,
   useMoveHierarchy,
 } from "@/service/hierarchy/hierarchy.hook";
-import { IService, IServiceCategory } from "@/ts/service.interface";
-import { IMoveHierarchy, ISearchResult } from "@/ts/hierarchy.inteface";
+import { IMaterial } from "@/ts/storage.interface";
+import {
+  ISearchResultStorage,
+  IStorageCategory,
+} from "@/ts/hierarchy.inteface";
+import { IMoveHierarchy } from "@/ts/hierarchy.inteface";
 
-interface IServiceProps {
-  service: IService;
+interface IMaterialProps {
+  material: IMaterial;
   isSelected: boolean;
-  onSelect: (service: IService) => void;
+  onSelect: (material: IMaterial) => void;
   isHighlighted: boolean | undefined;
 }
 
-const ServiceItem: React.FC<IServiceProps> = ({
-  service,
+const MaterialItem: React.FC<IMaterialProps> = ({
+  material,
   isSelected,
   onSelect,
   isHighlighted,
 }) => {
   const [{ isDragging }, drag] = useDrag(() => ({
     type: "ITEM",
-    item: { id: service.id, type: "service" },
+    item: { id: material.id, type: "material" },
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging(),
     }),
@@ -51,7 +53,7 @@ const ServiceItem: React.FC<IServiceProps> = ({
   return (
     <li
       ref={drag}
-      className={`${classes["tree__service"]} ${
+      className={`${classes["tree__material"]} ${
         isSelected ? classes["selected"] : ""
       }`}
       style={{
@@ -59,26 +61,26 @@ const ServiceItem: React.FC<IServiceProps> = ({
         gap: "1.6rem",
         opacity: isDragging ? 0.5 : 1,
       }}
-      onClick={() => onSelect(service)}
+      onClick={() => onSelect(material)}
     >
       <ContentCutIcon style={{ color: "#388E3C", fontSize: "24px" }} />{" "}
       <p style={{ fontWeight: isHighlighted ? "bold" : "normal" }}>
-        {service.name}
+        {material.name}
       </p>
     </li>
   );
 };
 
 interface ICategoryProps {
-  category: IServiceCategory;
-  selectedServiceId: number | null;
-  selectedCategoryId: IServiceCategory | null;
-  searchResults?: ISearchResult;
-  onSelectCategory: (category: IServiceCategory) => void;
-  onSelectService: (service: IService) => void;
+  category: IStorageCategory;
+  selectedMaterialId: number | null;
+  selectedCategoryId: IStorageCategory | null;
+  searchResults?: ISearchResultStorage;
+  onSelectCategory: (category: IStorageCategory) => void;
+  onSelectMaterial: (material: IMaterial) => void;
   onDropItem: (itemId: number, itemType: string, targetId: number) => void;
   isOver: boolean;
-  onHover: (hovered: boolean, category: IServiceCategory) => void;
+  onHover: (hovered: boolean, category: IStorageCategory) => void;
 }
 
 const levelsIcon: Record<string, JSX.Element> = {
@@ -116,11 +118,11 @@ const levelsIcon: Record<string, JSX.Element> = {
 
 const TreeItem: React.FC<ICategoryProps> = ({
   category,
-  selectedServiceId,
+  selectedMaterialId,
   selectedCategoryId,
   searchResults,
   onSelectCategory,
-  onSelectService,
+  onSelectMaterial,
   onDropItem,
   isOver,
   onHover,
@@ -186,7 +188,7 @@ const TreeItem: React.FC<ICategoryProps> = ({
         <span style={{ fontWeight: isHighlighted ? "bold" : "normal" }}>
           {category.name}
         </span>
-        {(category.children.length > 0 || category.services.length > 0) && (
+        {(category.children.length > 0 || category.materials.length > 0) && (
           <span style={{ paddingTop: "8px" }} onClick={toggle}>
             {isOpen ? (
               <ExpandLessIcon style={{ fontSize: "24px" }} />
@@ -202,26 +204,26 @@ const TreeItem: React.FC<ICategoryProps> = ({
             <TreeItem
               key={child.id}
               category={child}
-              selectedServiceId={selectedServiceId}
+              selectedMaterialId={selectedMaterialId}
               selectedCategoryId={selectedCategoryId}
               searchResults={searchResults}
               onSelectCategory={onSelectCategory}
-              onSelectService={onSelectService}
+              onSelectMaterial={onSelectMaterial}
               onDropItem={onDropItem}
               isOver={isOver}
               onHover={onHover}
             />
           ))}
-          {category.services.length > 0 && (
+          {category.materials.length > 0 && (
             <ul>
-              {category.services.map((service) => (
-                <ServiceItem
-                  key={service.id}
-                  service={service}
-                  isSelected={service.id === selectedServiceId}
-                  onSelect={onSelectService}
-                  isHighlighted={searchResults?.services.some(
-                    (serviceresult) => serviceresult.id === service.id
+              {category.materials.map((material) => (
+                <MaterialItem
+                  key={material.id}
+                  material={material}
+                  isSelected={material.id === selectedMaterialId}
+                  onSelect={onSelectMaterial}
+                  isHighlighted={searchResults?.materials.some(
+                    (materialResult) => materialResult.id === material.id
                   )}
                 />
               ))}
@@ -234,30 +236,30 @@ const TreeItem: React.FC<ICategoryProps> = ({
 };
 
 interface TreeViewProps {
-  categories: IServiceCategory[];
-  searchResults?: ISearchResult;
-  onServiceSelect: (service: IService) => void;
+  categories: IStorageCategory[];
+  searchResults?: ISearchResultStorage;
+  onMaterialSelect: (material: IMaterial) => void;
 }
 
-const TreeView: React.FC<TreeViewProps> = ({
+const TreeViewStorage: React.FC<TreeViewProps> = ({
   categories,
-  onServiceSelect,
+  onMaterialSelect,
   searchResults,
 }) => {
-  const [selectedServiceId, setSelectedServiceId] = useState<number | null>(
+  const [selectedMaterialId, setSelectedMaterialId] = useState<number | null>(
     null
   );
   const [
     selectedCategoryId,
     setSelectedCategoryId,
-  ] = useState<IServiceCategory | null>(null);
+  ] = useState<IStorageCategory | null>(null);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const [isDropping, setIsDropping] = useState<boolean>(false);
   const [
     hoveredCategory,
     setHoveredCategory,
-  ] = useState<IServiceCategory | null>(null);
+  ] = useState<IStorageCategory | null>(null);
 
   const moveHierarchyItems = useMoveHierarchy();
   const deleteHierarchyItems = useDeleteHierarchy();
@@ -276,15 +278,15 @@ const TreeView: React.FC<TreeViewProps> = ({
     setAnchorEl(null);
   };
 
-  const handleSelectService = (service: IService) => {
-    setSelectedServiceId(service.id);
+  const handleSelectMaterial = (material: IMaterial) => {
+    setSelectedMaterialId(material.id);
     setSelectedCategoryId(null);
-    onServiceSelect(service);
+    onMaterialSelect(material);
   };
 
-  const handleSelectCategory = (category: IServiceCategory) => {
+  const handleSelectCategory = (category: IStorageCategory) => {
     setSelectedCategoryId(category);
-    setSelectedServiceId(null);
+    setSelectedMaterialId(null);
   };
 
   const handleDropItem = (
@@ -306,7 +308,7 @@ const TreeView: React.FC<TreeViewProps> = ({
       "subcategory",
     ].includes(itemType)
       ? "hierarchical_item"
-      : "service";
+      : "material";
 
     const temp: IMoveHierarchy = {
       item: itemId,
@@ -324,7 +326,7 @@ const TreeView: React.FC<TreeViewProps> = ({
     });
   };
 
-  const handleHover = (hovered: boolean, category: IServiceCategory) => {
+  const handleHover = (hovered: boolean, category: IStorageCategory) => {
     if (hovered) {
       setHoveredCategory(category);
     } else {
@@ -335,7 +337,7 @@ const TreeView: React.FC<TreeViewProps> = ({
   return (
     <div className={classes["windows"]}>
       <div className={classes["window__header"]}>
-        <p>Выберите услугу</p>
+        <p>Выберите материал</p>
         <div>
           <IconButton
             disabled={selectedCategoryId === null}
@@ -439,7 +441,7 @@ const TreeView: React.FC<TreeViewProps> = ({
                 />
               </ListItemIcon>
               <ListItemText primaryTypographyProps={{ fontSize: "1.6rem" }}>
-                Услуга
+                Материал
               </ListItemText>
             </MenuItem>
           </Menu>
@@ -456,11 +458,7 @@ const TreeView: React.FC<TreeViewProps> = ({
                 ...{ "&:hover": { backgroundColor: "var(--primary-700)" } },
                 ...{ "&:disabled": { color: "white" } },
               }}
-              onClick={() => {
-                NiceModal.show(EditCategoryModal, {
-                  category: selectedCategoryId ? selectedCategoryId : undefined,
-                });
-              }}
+              onClick={() => {}}
             >
               <Edit fontSize="large" />
             </IconButton>
@@ -516,11 +514,11 @@ const TreeView: React.FC<TreeViewProps> = ({
           <TreeItem
             key={category.id}
             category={category}
-            selectedServiceId={selectedServiceId}
+            selectedMaterialId={selectedMaterialId}
             selectedCategoryId={selectedCategoryId}
             searchResults={searchResults}
             onSelectCategory={handleSelectCategory}
-            onSelectService={handleSelectService}
+            onSelectMaterial={handleSelectMaterial}
             onDropItem={handleDropItem}
             isOver={hoveredCategory?.id === category.id}
             onHover={handleHover}
@@ -531,4 +529,4 @@ const TreeView: React.FC<TreeViewProps> = ({
   );
 };
 
-export default TreeView;
+export default TreeViewStorage;

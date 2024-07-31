@@ -1,3 +1,5 @@
+import { IMaterial } from "./storage.interface";
+
 export interface Ifilters {
   id: number;
   name: string;
@@ -35,6 +37,18 @@ export interface ISearchResult {
     name: string;
   }[];
 }
+export interface ISearchResultStorage {
+  hierarchical_items: {
+    id: number;
+    name: string;
+    level: string;
+  }[];
+
+  materials: {
+    id: number;
+    name: string;
+  }[];
+}
 
 export interface IAddHierarchy {
   name: string;
@@ -48,4 +62,23 @@ export interface IMoveHierarchy {
   item: number;
   type: string;
   to: number;
+}
+
+export interface IRolesbyDepartment {
+  department: string;
+  roles: [
+    {
+      id: number;
+      name: string;
+    }
+  ];
+}
+
+export interface IStorageCategory {
+  id: number;
+  name: string;
+  level: string;
+  parent: number | null;
+  children: IStorageCategory[];
+  materials: IMaterial[];
 }

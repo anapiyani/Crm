@@ -7,6 +7,29 @@ export interface IStorage {
   type: string;
 }
 
+export interface IMaterial {
+  id: number;
+  vendor_code: string;
+  name: string;
+  description: string;
+  provider: string;
+  purchase_price: string;
+  retail_price: string;
+  wholesale_price: string;
+  selling_price: string;
+  is_product: boolean;
+  unit_of_measurement: string;
+  volume: string;
+  norm_volume: string;
+  tare_weight: string;
+  discount_size: string;
+  service_volume: string;
+  is_active: boolean;
+  date_added: string;
+  date_updated: string;
+  service: string | null;
+}
+
 export interface IAddStorage {
   name: string;
   type: string | undefined;

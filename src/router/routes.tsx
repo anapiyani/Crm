@@ -20,6 +20,7 @@ import {
   ClientSearch,
   IndirectCostsPage,
 } from "@/pages";
+import StoragePage from "@/pages/storage/storate.page";
 
 // import { Role } from "@/ts/types";
 
@@ -96,6 +97,11 @@ export const ROUTES: IRoute[] = [
     name: "Service Catalog",
     path: "/services",
     component: <ServiceCatalog />,
+  },
+  {
+    name: "Storage Catalog",
+    path: "/storage",
+    component: <StoragePage />,
   },
   {
     name: "Service Price List",
