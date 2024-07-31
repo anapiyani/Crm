@@ -3,7 +3,7 @@ import ModalWindow from "@/components/modal-window/modal-window";
 import NiceModal, { useModal } from "@ebay/nice-modal-react";
 import classes from "./styles.module.scss";
 import { Autocomplete, Button, Divider, TextField } from "@mui/material";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getOperations } from "@/service/kassa/kassa.service";
 import { IKassaOperations, IWithdrawal } from "@/ts/kassa.interface";
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -11,24 +11,20 @@ import { Clear, Done } from "@mui/icons-material";
 import { useDepositKassa } from "@/service/kassa/kassa.hook";
 import toast from "react-hot-toast";
 
-interface EndureModalProps {
-  refetchCashRegister: () => void;
-}
-
-const EndureModal: React.FC<EndureModalProps> = ({ refetchCashRegister }) => {
+const EndureModal: React.FC = () => {
   const { register, handleSubmit, reset } = useForm<IWithdrawal>();
   const { data: operationsData } = useQuery({
     queryKey: ["kassaService"],
     queryFn: () => getOperations(true),
   });
 
-  const mutation = useDepositKassa(refetchCashRegister);
+  const mutation = useDepositKassa();
   const [summ, setSumm] = useState<number>(0);
   const [selectedOperationId, setSelectedOperationId] = useState<string | null>(
-    null
+    null,
   );
   const [selectedMoneyType, setSelectedMoneyType] = useState<string | null>(
-    null
+    null,
   );
 
   const onSubmit: SubmitHandler<IWithdrawal> = async (data: IWithdrawal) => {
@@ -39,6 +35,7 @@ const EndureModal: React.FC<EndureModalProps> = ({ refetchCashRegister }) => {
     };
     if ((selectedOperationId && selectedMoneyType) || summ === 0) {
       await mutation.mutate(formData);
+      useQueryClient().invalidateQueries({ queryKey: ["cashregister"] });
       modal.hide();
       reset();
     } else {
@@ -47,7 +44,7 @@ const EndureModal: React.FC<EndureModalProps> = ({ refetchCashRegister }) => {
   };
 
   const processOperationsData = (
-    operations: IKassaOperations[]
+    operations: IKassaOperations[],
   ): { label: string; value: string; isParent: boolean; id: number }[] => {
     const result: {
       label: string;
@@ -57,7 +54,7 @@ const EndureModal: React.FC<EndureModalProps> = ({ refetchCashRegister }) => {
     }[] = [];
     const traverse = (
       nodes: IKassaOperations[],
-      parent: IKassaOperations | null
+      parent: IKassaOperations | null,
     ) => {
       nodes.forEach((node) => {
         if (node.children && node.children.length > 0) {

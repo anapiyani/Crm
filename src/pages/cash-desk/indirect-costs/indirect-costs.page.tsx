@@ -31,18 +31,11 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { useForm, Controller } from "react-hook-form";
 import classes from "./style.module.scss";
-import dayjs, { locale } from "dayjs";
+import dayjs from "dayjs";
 import CustomDatePicker from "@/components/date-picker/date-picker-custom";
 import { IIndirectForm } from "@/ts/kassa.interface";
 import { AddCategoryModal } from "@/modals";
-import NiceModal, { show } from "@ebay/nice-modal-react";
-import { data } from "@/pages/employees/employee-visits/data";
-import { current } from "@reduxjs/toolkit";
-import { count, table } from "console";
-import { type } from "os";
-import { format } from "path";
-import { render } from "react-dom";
-import { isError } from "util";
+import NiceModal from "@ebay/nice-modal-react";
 
 const IndirectCostsPage: FC = () => {
   const [edit, setEdit] = useState<boolean>(false);

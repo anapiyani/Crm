@@ -56,32 +56,11 @@ export const searchKassaData = (
   formData: ISearchKassa,
 ): Promise<IResponseData<KassaResponse[]>> => {
   const params = new URLSearchParams();
-  if (formData.operation_type) {
-    params.append("operation_type", formData.operation_type.toString());
-  }
-  if (formData.from_amount) {
-    params.append("from_amount", formData.from_amount.toString());
-  }
-  if (formData.to_amount) {
-    params.append("to_amount", formData.to_amount.toString());
-  }
-  if (formData.from_date) {
-    params.append("from_date", formData.from_date);
-  }
-  if (formData.to_date) {
-    params.append("to_date", formData.to_date);
-  }
-  if (formData.money_type) {
-    formData.money_type.forEach((type) => {
-      params.append("money_type", type);
-    });
-  }
-  if (formData.page) {
-    params.append("page", formData.page.toString());
-  }
-  if (formData.page_size) {
-    params.append("page_size", formData.page_size.toString());
-  }
+  Object.entries(formData).forEach(([key, value]) => {
+    if (value) {
+      params.append(key, value.toString());
+    }
+  });
   const url = `/transactions/list/?${params.toString()}`;
   return api.get(url).then((res) => res.data);
 };

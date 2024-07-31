@@ -12,14 +12,14 @@ import {
   salaryPayment,
 } from "./kassa.service";
 
-export const useSalary = (inRefetch?: () => void) => {
+export const useSalary = () => {
+  const queryClient = useQueryClient();
+
   return useMutation<ISalaryPayment, Error, ISalaryPayment>({
     mutationFn: salaryPayment,
     onSuccess: () => {
       toast.success("Зарплата успешно выдана");
-      if (inRefetch) {
-        inRefetch();
-      }
+      queryClient.invalidateQueries({ queryKey: ["cashregister"] });
     },
     onError: () => {
       toast.error("Ошибка при выдаче зарплаты");
@@ -27,14 +27,15 @@ export const useSalary = (inRefetch?: () => void) => {
   });
 };
 
-export const useWithdrawl = (inRefetch?: () => void) => {
+export const useWithdrawl = () => {
+  const queryClient = useQueryClient();
+
   return useMutation<IWithdrawal, Error, IWithdrawal>({
     mutationFn: kassaWithdraw,
     onSuccess: (data) => {
       toast.success("Деньги успешно сняты");
-      if (inRefetch) {
-        inRefetch();
-      }
+      queryClient.invalidateQueries({ queryKey: ["cashregister"] });
+
       return data;
     },
     onError: () => {
@@ -43,14 +44,13 @@ export const useWithdrawl = (inRefetch?: () => void) => {
   });
 };
 
-export const useDepositKassa = (inRefetch?: () => void) => {
+export const useDepositKassa = () => {
+  const queryClient = useQueryClient();
   return useMutation<IWithdrawal, Error, IWithdrawal>({
     mutationFn: kassaDeposit,
     onSuccess: (data) => {
       toast.success("Деньги успешно зачислены");
-      if (inRefetch) {
-        inRefetch();
-      }
+      queryClient.invalidateQueries({ queryKey: ["cashregister"] });
       return data;
     },
     onError: () => {

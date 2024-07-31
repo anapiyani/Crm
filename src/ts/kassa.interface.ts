@@ -1,6 +1,3 @@
-import { count } from "console";
-import { type } from "os";
-
 export interface IKassaOperations {
   children: IKassaOperations[] | [];
   id: number;

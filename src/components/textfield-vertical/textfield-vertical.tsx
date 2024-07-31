@@ -31,7 +31,6 @@ const VerticalTextField = forwardRef<HTMLInputElement, IProps>(
     },
     ref,
   ) => {
-    // Function to render TextField based on type
     const renderTextField = () => {
       switch (type) {
         case "double":
