@@ -10,6 +10,8 @@ import classes from "./styles.module.scss";
 import { Add, Check, Close, Delete, East, West } from "@mui/icons-material";
 import HeaderTemplate from "../header/header.component";
 import StepInput from "../stepInput/stepInput.component";
+import TemplateName from "../templateName/templateName.component";
+import FixedPart from "../fixedPart/fixedPart.component";
 
 const steps = [
   "Имя шаблона",
@@ -41,6 +43,14 @@ const StepForm = () => {
 
   const handleSave = () => {
     console.log("save");
+  };
+
+  const displayStep = () => {
+    if (activeStep === 0) {
+      return <TemplateName />;
+    } else if (activeStep === 1) {
+      return <FixedPart />;
+    }
   };
 
   return (
@@ -82,14 +92,7 @@ const StepForm = () => {
       </Stepper>
       <React.Fragment>
         <Typography sx={{ mt: 2, mb: 1 }} variant="h6">
-          <div className={classes.child}>
-            <HeaderTemplate children={steps[activeStep]} />
-            <StepInput
-              labelName={"Название шаблона"}
-              placeholder={"Мастера"}
-              onChange={() => console.log("change")}
-            />
-          </div>
+          <div className={classes.child}>{displayStep()}</div>
         </Typography>
         <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
           {activeStep === 0 ? (

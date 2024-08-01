@@ -13,6 +13,7 @@ const StepInput = ({
   afterChild?: React.ReactNode;
   onChange: () => void;
   plusMinusBtns?: boolean;
+  isAutoComplete?: boolean;
 }) => {
   return (
     <div className={classes.stepInput}>
