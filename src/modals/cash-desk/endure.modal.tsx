@@ -10,10 +10,6 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { Clear, Done } from "@mui/icons-material";
 import { useDepositKassa } from "@/service/kassa/kassa.hook";
 import toast from "react-hot-toast";
-import { data } from "@/pages/employees/employee-visits/data";
-import { error } from "console";
-import { type } from "os";
-import { title } from "process";
 
 const EndureModal: React.FC = () => {
   const { register, handleSubmit, reset } = useForm<IWithdrawal>();
