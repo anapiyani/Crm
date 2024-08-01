@@ -4,7 +4,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import LanOutlinedIcon from "@mui/icons-material/LanOutlined";
 import FolderIcon from "@mui/icons-material/Folder";
 import ContentCutIcon from "@mui/icons-material/ContentCut";
-import { Add, Create, Delete, Edit, Man } from "@mui/icons-material";
+import { Add, ContentPaste, Delete, Edit, Man } from "@mui/icons-material";
 import { useDrop, useDrag } from "react-dnd";
 import {
   Divider,
@@ -16,11 +16,11 @@ import {
 } from "@mui/material";
 import AddRoleModal from "@/modals/service-catalog/add-role.modal";
 import NiceModal from "@ebay/nice-modal-react";
-import CreateCategoryModal from "@/modals/service-catalog/create-category.modal";
+import createStorageCategoryModal from "@/modals/storage-catalog/create-storage-category.modal";
 import classes from "./styles.module.scss";
 import {
-  useDeleteHierarchy,
-  useMoveHierarchy,
+  useDeleteStorageHierarchy,
+  useMoveStorageHierarchy,
 } from "@/service/hierarchy/hierarchy.hook";
 import { IMaterial } from "@/ts/storage.interface";
 import {
@@ -28,6 +28,7 @@ import {
   IStorageCategory,
 } from "@/ts/hierarchy.inteface";
 import { IMoveHierarchy } from "@/ts/hierarchy.inteface";
+import editStorageCategoryModal from "@/modals/storage-catalog/edit-storage-category.modal";
 
 interface IMaterialProps {
   material: IMaterial;
@@ -260,15 +261,18 @@ const TreeViewStorage: React.FC<TreeViewProps> = ({
     hoveredCategory,
     setHoveredCategory,
   ] = useState<IStorageCategory | null>(null);
+  const [copiedCategory, setCopiedCategory] = useState<IStorageCategory | null>(
+    null
+  );
 
-  const moveHierarchyItems = useMoveHierarchy();
-  const deleteHierarchyItems = useDeleteHierarchy();
+  const moveHierarchyItems = useMoveStorageHierarchy();
+  const deleteHierarchyItems = useDeleteStorageHierarchy();
 
   const handleClickAnchor = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
   };
   const handleAddHierarchy = (levelName: string) => {
-    NiceModal.show(CreateCategoryModal, {
+    NiceModal.show(createStorageCategoryModal, {
       level: levelName,
       parent: selectedCategoryId?.id,
     });
@@ -324,6 +328,15 @@ const TreeViewStorage: React.FC<TreeViewProps> = ({
         setIsDropping(false);
       },
     });
+  };
+
+  const handlePasteItem = () => {
+    const temp: IMoveHierarchy = {
+      item: copiedCategory!.id,
+      type: "hierarchical_item",
+      to: selectedCategoryId!.id,
+    };
+    moveHierarchyItems.mutate(temp);
   };
 
   const handleHover = (hovered: boolean, category: IStorageCategory) => {
@@ -458,7 +471,11 @@ const TreeViewStorage: React.FC<TreeViewProps> = ({
                 ...{ "&:hover": { backgroundColor: "var(--primary-700)" } },
                 ...{ "&:disabled": { color: "white" } },
               }}
-              onClick={() => {}}
+              onClick={() => {
+                NiceModal.show(editStorageCategoryModal, {
+                  category: selectedCategoryId ? selectedCategoryId : undefined,
+                });
+              }}
             >
               <Edit fontSize="large" />
             </IconButton>
@@ -477,15 +494,32 @@ const TreeViewStorage: React.FC<TreeViewProps> = ({
               ...{ "&:disabled": { color: "white" } },
             }}
             onClick={() => {
-              NiceModal.show(AddRoleModal, {
-                categoryId: selectedCategoryId
-                  ? selectedCategoryId.id
-                  : undefined,
-              });
+              setCopiedCategory(selectedCategoryId);
             }}
           >
-            <Man fontSize="large" />
+            <ContentCutIcon fontSize="large" />
           </IconButton>
+          {copiedCategory !== null && (
+            <IconButton
+              disabled={selectedCategoryId === null}
+              sx={{
+                color: "white",
+                backgroundColor: "#F09800",
+                borderRadius: "10%",
+                padding: "0.5rem",
+                boxShadow: "None",
+
+                ...{ "&:hover": { backgroundColor: "var(--primary-700)" } },
+                ...{ "&:disabled": { color: "white" } },
+              }}
+              onClick={() => {
+                handlePasteItem();
+              }}
+            >
+              <ContentPaste fontSize="large" />
+            </IconButton>
+          )}
+
           {selectedCategoryId?.level !== "department" && (
             <IconButton
               disabled={selectedCategoryId === null}

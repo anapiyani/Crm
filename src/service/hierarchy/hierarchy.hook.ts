@@ -5,9 +5,18 @@ import {
   moveHierarchy,
   updateHierarchy,
   deleteHierarchy,
+  addStorageHierarchy,
+  moveStorageHierarchy,
+  updateStorageHierarchy,
+  deleteStorageHierarchy,
 } from "./hierarchy.service";
 import toast from "react-hot-toast";
-import { IAddHierarchy, IMoveHierarchy } from "@/ts/hierarchy.inteface";
+import {
+  IAddHierarchy,
+  IAddStorageHierarchy,
+  IMoveHierarchy,
+  IStorageCategory,
+} from "@/ts/hierarchy.inteface";
 
 export const useCreateHierarchy = () => {
   const queryClient = useQueryClient();
@@ -16,6 +25,20 @@ export const useCreateHierarchy = () => {
     onSuccess: () => {
       toast.success("Иерархия успешно добавлена.");
       queryClient.invalidateQueries({ queryKey: ["hierarchyData"] });
+    },
+    onError: (error: Error) => {
+      toast.error(`Упс! ошибка при добавлении: ${error.message}`);
+    },
+  });
+};
+
+export const useCreateStorageHierarchy = () => {
+  const queryClient = useQueryClient();
+  return useMutation<IStorageCategory, Error, IAddStorageHierarchy>({
+    mutationFn: addStorageHierarchy,
+    onSuccess: () => {
+      toast.success("Иерархия успешно добавлена.");
+      queryClient.invalidateQueries({ queryKey: ["storageHierarchyData"] });
     },
     onError: (error: Error) => {
       toast.error(`Упс! ошибка при добавлении: ${error.message}`);
@@ -37,6 +60,20 @@ export const useMoveHierarchy = () => {
   });
 };
 
+export const useMoveStorageHierarchy = () => {
+  const queryClient = useQueryClient();
+  return useMutation<IStorageCategory, Error, IMoveHierarchy>({
+    mutationFn: moveStorageHierarchy,
+    onSuccess: () => {
+      toast.success("Иерархия успешно перемещена.");
+      queryClient.invalidateQueries({ queryKey: ["storageHierarchyData"] });
+    },
+    onError: (error: Error) => {
+      toast.error(`Упс! ошибка при перемещении: ${error.message}`);
+    },
+  });
+};
+
 export const useUpdateHierarchy = () => {
   const queryClient = useQueryClient();
   return useMutation<IServiceCategory, Error, IServiceCategory>({
@@ -51,6 +88,20 @@ export const useUpdateHierarchy = () => {
   });
 };
 
+export const useUpdateStorageHierarchy = () => {
+  const queryClient = useQueryClient();
+  return useMutation<IStorageCategory, Error, IStorageCategory>({
+    mutationFn: updateStorageHierarchy,
+    onSuccess: () => {
+      toast.success("Иерархия успешно обновлена.");
+      queryClient.invalidateQueries({ queryKey: ["storageHierarchyData"] });
+    },
+    onError: (error: Error) => {
+      toast.error(`Упс! ошибка при обновлении: ${error.message}`);
+    },
+  });
+};
+
 export const useDeleteHierarchy = () => {
   const queryClient = useQueryClient();
   return useMutation<void, Error, number>({
@@ -58,6 +109,20 @@ export const useDeleteHierarchy = () => {
     onSuccess: () => {
       toast.success("Иерархия успешно удалена.");
       queryClient.invalidateQueries({ queryKey: ["hierarchyData"] });
+    },
+    onError: (error: Error) => {
+      toast.error(`Упс! ошибка при удалении: ${error.message}`);
+    },
+  });
+};
+
+export const useDeleteStorageHierarchy = () => {
+  const queryClient = useQueryClient();
+  return useMutation<void, Error, number>({
+    mutationFn: deleteStorageHierarchy,
+    onSuccess: () => {
+      toast.success("Иерархия успешно удалена.");
+      queryClient.invalidateQueries({ queryKey: ["storageHierarchyData"] });
     },
     onError: (error: Error) => {
       toast.error(`Упс! ошибка при удалении: ${error.message}`);
