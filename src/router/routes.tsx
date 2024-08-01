@@ -17,6 +17,7 @@ import {
   StorageSettings,
   EmployeeCabinet,
   EmployeeVisits,
+  SalaryPage,
   ClientSearch,
   IndirectCostsPage,
 } from "@/pages";
@@ -116,6 +117,11 @@ export const ROUTES: IRoute[] = [
     name: "Add client",
     path: "/clients/add",
     component: <ClientAdd />,
+  },
+  {
+    name: "Salary",
+    path: "/employees/salary",
+    component: <SalaryPage />,
   },
   {
     name: "Employee Visits",

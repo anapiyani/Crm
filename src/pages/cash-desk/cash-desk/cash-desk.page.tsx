@@ -257,6 +257,39 @@ const CashDesk = () => {
     );
   }
 
+  const incomeAllMoney = () => {
+    if (cashRegisterData) {
+      return (
+        Number(cashRegisterData.income_cash_money) +
+        Number(cashRegisterData.income_card_money) +
+        Number(cashRegisterData.income_check_money) +
+        Number(cashRegisterData.income_checking_account_money)
+      );
+    }
+  };
+
+  const expenseAllMoney = () => {
+    if (cashRegisterData) {
+      return (
+        Number(cashRegisterData.expense_cash_money) +
+        Number(cashRegisterData.expense_card_money) +
+        Number(cashRegisterData.expense_check_money) +
+        Number(cashRegisterData.expense_checking_account_money)
+      );
+    }
+  };
+
+  const incomeAllMoneyPeriod = () => {
+    if (cashRegisterData) {
+      return (
+        Number(cashRegisterData.overall_cash_money) +
+        Number(cashRegisterData.overall_card_money) +
+        Number(cashRegisterData.overall_check_money) +
+        Number(cashRegisterData.overall_checking_account_money)
+      );
+    }
+  };
+
   return (
     <div className={classes.main}>
       <BreadcrumbsCustom />
@@ -300,10 +333,10 @@ const CashDesk = () => {
                 </>
               }
               content={[
-                { icon: <Public />, text: cashRegisterData?.income_cash_money },
+                { icon: <Public />, text: incomeAllMoney()?.toString() },
                 {
                   icon: <Payments />,
-                  text: cashRegisterData?.income_check_money,
+                  text: cashRegisterData?.income_cash_money,
                 },
                 {
                   icon: <CreditCard />,
@@ -311,11 +344,11 @@ const CashDesk = () => {
                 },
                 {
                   icon: <LocalActivity />,
-                  text: cashRegisterData?.income_checking_account_money,
+                  text: cashRegisterData?.income_check_money,
                 },
                 {
                   icon: <MenuBook />,
-                  text: cashRegisterData?.overall_cash_money,
+                  text: cashRegisterData?.income_checking_account_money,
                 },
               ]}
             />
@@ -331,11 +364,11 @@ const CashDesk = () => {
               content={[
                 {
                   icon: <Public />,
-                  text: cashRegisterData?.expense_cash_money,
+                  text: expenseAllMoney()?.toString(),
                 },
                 {
                   icon: <Payments />,
-                  text: cashRegisterData?.expense_check_money,
+                  text: cashRegisterData?.expense_cash_money,
                 },
                 {
                   icon: <CreditCard />,
@@ -343,11 +376,11 @@ const CashDesk = () => {
                 },
                 {
                   icon: <LocalActivity />,
-                  text: cashRegisterData?.expense_checking_account_money,
+                  text: cashRegisterData?.expense_check_money,
                 },
                 {
                   icon: <MenuBook />,
-                  text: cashRegisterData?.overall_card_money,
+                  text: cashRegisterData?.expense_checking_account_money,
                 },
               ]}
             />
@@ -363,11 +396,11 @@ const CashDesk = () => {
               content={[
                 {
                   icon: <Public />,
-                  text: cashRegisterData?.overall_cash_money,
+                  text: incomeAllMoney()?.toString(),
                 },
                 {
                   icon: <Payments />,
-                  text: cashRegisterData?.overall_check_money,
+                  text: cashRegisterData?.overall_cash_money,
                 },
                 {
                   icon: <CreditCard />,
@@ -375,11 +408,11 @@ const CashDesk = () => {
                 },
                 {
                   icon: <LocalActivity />,
-                  text: cashRegisterData?.overall_checking_account_money,
+                  text: cashRegisterData?.overall_check_money,
                 },
                 {
                   icon: <MenuBook />,
-                  text: cashRegisterData?.overall_card_money,
+                  text: cashRegisterData?.overall_checking_account_money,
                 },
               ]}
             />

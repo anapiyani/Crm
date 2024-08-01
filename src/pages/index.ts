@@ -23,6 +23,7 @@ import NotFound from "./not-found/not-found-page";
 import Unauthorized from "./unauthorized/unauthorized.page";
 import EmployeeCabinet from "./employees/cabinet/employee-cabinet";
 import IndirectCostsPage from "./cash-desk/indirect-costs/indirect-costs.page";
+import SalaryPage from "./employees/salary/salary.page";
 
 export {
   Home,
@@ -45,6 +46,7 @@ export {
   StorageSettings,
   EmployeeCabinet,
   EmployeeVisits,
+  SalaryPage,
   ClientSearch,
   IndirectCostsPage,
 };
