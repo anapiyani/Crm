@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { ChangeEvent, FC, useState } from "react";
 import ModalWindow from "@/components/modal-window/modal-window";
-import NiceModal, { useModal } from "@ebay/nice-modal-react";
+import NiceModal, { create, hide, useModal } from "@ebay/nice-modal-react";
 import classes from "./styles.module.scss";
 import { Autocomplete, Button, Divider, TextField } from "@mui/material";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -10,6 +10,10 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { Clear, Done } from "@mui/icons-material";
 import { useDepositKassa } from "@/service/kassa/kassa.hook";
 import toast from "react-hot-toast";
+import { data } from "@/pages/employees/employee-visits/data";
+import { error } from "console";
+import { type } from "os";
+import { title } from "process";
 
 const EndureModal: React.FC = () => {
   const { register, handleSubmit, reset } = useForm<IWithdrawal>();
@@ -82,6 +86,11 @@ const EndureModal: React.FC = () => {
 
   const handleCloseModal = () => {
     modal.hide();
+  };
+
+  const onChangeSumm = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = Number(e.target.value);
+    setSumm(isNaN(value) ? 0 : value);
   };
 
   const modal = useModal();
@@ -170,7 +179,7 @@ const EndureModal: React.FC = () => {
                 },
               }}
               {...register("amount", {
-                onChange: (e) => setSumm(Number(e.target.value)),
+                onChange: onChangeSumm,
               })}
             />
             <Button

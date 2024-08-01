@@ -84,6 +84,11 @@ const WithdrawModal: React.FC = () => {
     modal.hide();
   };
 
+  const onChangeSumm = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = Number(e.target.value);
+    setSumm(isNaN(value) ? 0 : value);
+  };
+
   const modal = useModal();
   return (
     <ModalWindow
@@ -170,7 +175,7 @@ const WithdrawModal: React.FC = () => {
                 },
               }}
               {...register("amount", {
-                onChange: (e) => setSumm(Number(e.target.value)),
+                onChange: onChangeSumm,
               })}
             />
             <Button
