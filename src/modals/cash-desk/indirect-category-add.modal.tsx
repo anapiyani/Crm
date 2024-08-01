@@ -27,7 +27,6 @@ const AddCategoryModal: React.FC<AddCategoryModalProps> = ({ parentId }) => {
       parent: parent ? parent : undefined,
     };
     await mutation.mutate(data);
-
     setCategoryName("");
     modal.hide();
   };

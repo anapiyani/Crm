@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { ChangeEvent, FC, useState } from "react";
 import ModalWindow from "@/components/modal-window/modal-window";
-import NiceModal, { useModal } from "@ebay/nice-modal-react";
+import NiceModal, { create, hide, useModal } from "@ebay/nice-modal-react";
 import classes from "./styles.module.scss";
 import { Autocomplete, Button, Divider, TextField } from "@mui/material";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
@@ -82,6 +82,11 @@ const EndureModal: React.FC = () => {
 
   const handleCloseModal = () => {
     modal.hide();
+  };
+
+  const onChangeSumm = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = Number(e.target.value);
+    setSumm(isNaN(value) ? 0 : value);
   };
 
   const modal = useModal();
@@ -170,7 +175,7 @@ const EndureModal: React.FC = () => {
                 },
               }}
               {...register("amount", {
-                onChange: (e) => setSumm(Number(e.target.value)),
+                onChange: onChangeSumm,
               })}
             />
             <Button

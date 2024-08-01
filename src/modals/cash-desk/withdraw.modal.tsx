@@ -3,8 +3,8 @@ import ModalWindow from "@/components/modal-window/modal-window";
 import NiceModal, { useModal } from "@ebay/nice-modal-react";
 import classes from "./styles.module.scss";
 import { Autocomplete, Button, Divider, TextField } from "@mui/material";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { getOperations, searchKassaData } from "@/service/kassa/kassa.service";
+import { useQuery } from "@tanstack/react-query";
+import { getOperations } from "@/service/kassa/kassa.service";
 import { IKassaOperations, IWithdrawal } from "@/ts/kassa.interface";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { Clear, Done } from "@mui/icons-material";
@@ -82,6 +82,11 @@ const WithdrawModal: React.FC = () => {
 
   const handleCloseModal = () => {
     modal.hide();
+  };
+
+  const onChangeSumm = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = Number(e.target.value);
+    setSumm(isNaN(value) ? 0 : value);
   };
 
   const modal = useModal();
@@ -170,7 +175,7 @@ const WithdrawModal: React.FC = () => {
                 },
               }}
               {...register("amount", {
-                onChange: (e) => setSumm(Number(e.target.value)),
+                onChange: onChangeSumm,
               })}
             />
             <Button
