@@ -8,7 +8,7 @@ import Typography from "@mui/material/Typography";
 import { useState } from "react";
 import classes from "./styles.module.scss";
 import { Add, Check, Close, Delete, East, West } from "@mui/icons-material";
-import HeaderTemplate from "../header/header.component";
+import HeaderTemplate from "../MultiStepHeader/MultiStepHeader.component";
 import StepInput from "../stepInput/stepInput.component";
 import TemplateName from "../templateName/templateName.component";
 import FixedPart from "../fixedPart/fixedPart.component";
