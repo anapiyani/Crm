@@ -1,0 +1,13 @@
+.header {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  &__content {
+    width: 100%;
+    h2 {
+      font-size: 1.8rem;
+      font-weight: 400;
+      color: var(--primary-500);
+    }
+  }
+}
