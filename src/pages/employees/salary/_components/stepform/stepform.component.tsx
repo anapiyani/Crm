@@ -7,7 +7,9 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { useState } from "react";
 import classes from "./styles.module.scss";
-import { Check, Close, Delete, East, West } from "@mui/icons-material";
+import { Add, Check, Close, Delete, East, West } from "@mui/icons-material";
+import HeaderTemplate from "../header/header.component";
+import StepInput from "../stepInput/stepInput.component";
 
 const steps = [
   "Имя шаблона",
@@ -80,7 +82,14 @@ const StepForm = () => {
       </Stepper>
       <React.Fragment>
         <Typography sx={{ mt: 2, mb: 1 }} variant="h6">
-          {steps[activeStep]} - Page {activeStep + 1}
+          <div className={classes.child}>
+            <HeaderTemplate children={steps[activeStep]} />
+            <StepInput
+              labelName={"Название шаблона"}
+              placeholder={"Мастера"}
+              onChange={() => console.log("change")}
+            />
+          </div>
         </Typography>
         <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
           {activeStep === 0 ? (
