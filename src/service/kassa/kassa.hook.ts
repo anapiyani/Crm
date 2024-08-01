@@ -20,6 +20,7 @@ export const useSalary = () => {
     onSuccess: () => {
       toast.success("Зарплата успешно выдана");
       queryClient.invalidateQueries({ queryKey: ["cashregister"] });
+      queryClient.invalidateQueries({ queryKey: ["searchResult"] });
     },
     onError: () => {
       toast.error("Ошибка при выдаче зарплаты");
@@ -35,7 +36,7 @@ export const useWithdrawl = () => {
     onSuccess: (data) => {
       toast.success("Деньги успешно сняты");
       queryClient.invalidateQueries({ queryKey: ["cashregister"] });
-
+      queryClient.invalidateQueries({ queryKey: ["searchResult"] });
       return data;
     },
     onError: () => {
@@ -51,6 +52,7 @@ export const useDepositKassa = () => {
     onSuccess: (data) => {
       toast.success("Деньги успешно зачислены");
       queryClient.invalidateQueries({ queryKey: ["cashregister"] });
+      queryClient.invalidateQueries({ queryKey: ["searchResult"] });
       return data;
     },
     onError: () => {
