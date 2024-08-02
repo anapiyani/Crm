@@ -1,0 +1,21 @@
+.floating {
+  &__content {
+    &__checkboxes {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: start;
+      span {
+        font-size: 1.6rem;
+      }
+      padding-bottom: 2rem;
+    }
+  }
+  &__text_top {
+    font-size: 1.6rem;
+    font-weight: 400;
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+}
