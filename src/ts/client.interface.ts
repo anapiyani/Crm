@@ -2,8 +2,8 @@ import { IUser } from "./types";
 
 export interface IClientAddForm {
   user: IUser;
-  personal_discount_id: number;
-  discount_card_id: number;
+  // personal_discount_id: number | null;
+  // discount_card_id: number | null;
   category: string;
   occupation: string;
   invite_source: string;
@@ -46,6 +46,6 @@ export interface ICreateClientReturn {
   card_number: string;
   sms_notification: boolean;
   description: string;
-  description_as_main_characteristic: boolean;
+  description_as_main_characteristic:   boolean;
   employee: number;
 }

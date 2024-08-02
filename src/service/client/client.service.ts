@@ -8,3 +8,4 @@ export const addClient = (
   ): Promise<ICreateClientReturn> => {
     return api.post("/users/register-customer/", form).then((res) => res.data);
   };
+

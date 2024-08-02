@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import BreadcrumbsCustom from "@/components/navigation/breadcrumbs/breadcrumbs";
 import classes from "./styles.module.scss";
 import InputCard from "@/components/input-card/input-card";
@@ -17,9 +17,14 @@ import {
 import VerticalTextField from "@/components/textfield-vertical/textfield-vertical";
 import flagIcon from "@/assets/icons/Flags.svg";
 import { Textarea, Checkbox } from "@mui/joy";
-import { useForm, SubmitHandler } from "react-hook-form";
-import { z } from "zod";
+import { useForm, SubmitHandler, Controller } from "react-hook-form";
+import { date, z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useAddClient } from "@/service/client/client.hook";
+import CustomAutoComplete from "@/components/autocomplete/custom-autocomplete.component";
+import { useQuery } from "@tanstack/react-query";
+import { getHierarchyEmployeesByDepartment } from "@/service/hierarchy/hierarchy.service";
+import { IRolesbyDepartment } from "@/ts/hierarchy.inteface";
 
 const schema = z.object({
   surname: z.string().min(1, "Заполните обязательное поле"),
@@ -32,12 +37,12 @@ const schema = z.object({
   mobile: z.string().min(1, "Заполните обязательное поле"),
   email: z.string().email("Неверный формат"),
   instagram: z.string().optional(),
-  employee: z.string().optional(),
+  employee: z.number().optional(),
   source: z.string().optional(),
   sms_subscription: z.string().optional(),
   occupation: z.string().optional(),
   salon_location: z.string().optional(),
-  employee_client: z.string().optional(),
+  employee_client: z.number().optional(),
   gender: z.enum(["female", "male"]),
   survey: z.enum(["Есть", "Нет"]),
   comment: z.string().optional(),
@@ -51,28 +56,211 @@ const ClientsAdd = () => {
     register,
     handleSubmit,
     setError,
+    setValue,
+    reset,
+    control,
     formState: { errors, isSubmitting },
-  } = useForm<FormValues>({ resolver: zodResolver(schema) });
-  //react hook form tutorial
+  } = useForm<FormValues>({
+    resolver: zodResolver(schema),
+  });
   //tanstack react query tutorial
 
-  const onSubmit: SubmitHandler<FormValues> = async (data) => {
-    try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      console.log(data);
-    } catch (error) {
-      setError("root", {
-        message: "Error message",
+  const { mutate: addClient } = useAddClient();
+
+  const employeeOptions = [
+    { label: "Получено согласие", value: "true" },
+    { label: "Запрет на рассылку", value: "false" },
+  ];
+
+  const occupationOptions = [
+    { label: "Не указано", value: "Не указано" },
+    {
+      label: "Безработный/домохозяйка",
+      value: "Безработный/домохозяйка",
+    },
+    { label: "Бизнесмен", value: "Бизнесмен" },
+    { label: "Госслужащий", value: "Госслужащий" },
+    { label: "Инженер", value: "Инженер" },
+    { label: "Офисный сотрудник", value: "Офисный сотрудник" },
+    { label: "Пенсионер", value: "Пенсионер" },
+    { label: "Рабочий", value: "Рабочий" },
+    { label: "Студент", value: "Студент" },
+  ];
+
+  const salonLocationOptions = [
+    { label: "Не указано", value: "Не указано" },
+    { label: "Дом салона", value: "Дом салона" },
+    { label: "Соседний дом", value: "Соседний дом" },
+    { label: "Район", value: "Район" },
+    { label: "Далеко", value: "Далеко" },
+    { label: "Другой город", value: "Другой город" },
+  ];
+
+  const sourceOptions = [
+    { label: "Не указано", value: "Не указано" },
+    {
+      label: "Интернет поисковики",
+      value: "Интернет поисковики",
+    },
+    { label: "Купоны", value: "Купоны" },
+    { label: "Листовки", value: "Листовки" },
+    {
+      label: "По рекомендации клиента",
+      value: "По рекомендации клиента",
+    },
+    {
+      label: "По рекомендации конкретного клиента",
+      value: "По рекомендации конкретного клиента",
+    },
+    { label: "Проходил мимо", value: "Проходил мимо" },
+    { label: "Реклама в СМИ", value: "Реклама в СМИ" },
+    { label: "Реклама наружная", value: "Реклама наружная" },
+    { label: "Рекламная печать", value: "Рекламная печать" },
+    {
+      label: "Родственник сотрудника",
+      value: "Родственник сотрудника",
+    },
+    { label: "Рядом живет", value: "Рядом живет" },
+    { label: "Рядом работает", value: "Рядом работает" },
+    { label: "Свой клиент", value: "Свой клиент" },
+    { label: "Сотрудник", value: "Сотрудник" },
+    { label: "Соцсети", value: "Соцсети" },
+    {
+      label: "Онлайн-запись: сайт",
+      value: "Онлайн-запись: сайт",
+    },
+    {
+      label: "Онлайн-запись: vkontakte",
+      value: "Онлайн-запись: vkontakte",
+    },
+    {
+      label: "Онлайн-запись: facebook",
+      value: "Онлайн-запись: facebook",
+    },
+    { label: "Яндекс карты", value: "Яндекс карты" },
+    {
+      label: "Онлайн-запись: мобильное приложение",
+      value: "Онлайн-запись: мобильное приложение",
+    },
+  ];
+  const categoryOptions = [
+    { label: "Без категории", value: "Без категории" },
+    { label: "VIP-клиент", value: "VIP-клиент" },
+    { label: "Постоянный клиент", value: "Постоянный клиент" },
+    { label: "Сотрудник", value: "Сотрудник" },
+  ];
+  const subcategoryOptions = [{ label: "Не указано", value: "Не указано" }];
+  const cityOptions = [{ label: "Не обнаружено", value: "Не обнаружено" }];
+
+  const hierarchicalData = [
+    {
+      nodeType: "department",
+      nodeName: "Ресепшн",
+    },
+    {
+      nodeType: "role",
+      nodeName: "Марина Вишневская, Администратор",
+      nodeId: 1,
+    },
+    {
+      nodeType: "role",
+      nodeName: "Карина Карина, Администратор",
+      nodeId: 2,
+    },
+    {
+      nodeType: "role",
+      nodeName: "Джамиля Ортаева, Администратор",
+      nodeId: 3,
+    },
+    {
+      nodeType: "role",
+      nodeName: "Динара Тюрина, Администратор",
+      nodeId: 4,
+    },
+    {
+      nodeType: "department",
+      nodeName: "Парикмахерский зал",
+    },
+    {
+      nodeType: "role",
+      nodeName: "Миразиз Абидов, Мастер",
+      nodeId: 5,
+    },
+    {
+      nodeType: "role",
+      nodeName: "Анарa Досмуханова, Мастер-стилист",
+      nodeId: 6,
+    },
+    {
+      nodeType: "role",
+      nodeName: "Ирина Загитова, Мастер-стилист",
+      nodeId: 7,
+    },
+  ];
+
+  const { data: employeeDepartmentHierarchyData } = useQuery({
+    queryKey: ["employeeDepartmentHierarchyData"],
+    queryFn: () => getHierarchyEmployeesByDepartment(),
+    staleTime: 1000 * 60 * 5,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+  });
+
+  console.log(employeeDepartmentHierarchyData);
+
+
+  const proccessRoleOptions = (roles: IRolesbyDepartment[]) => {
+    const results: {
+      nodeType: string;
+      nodeName: string;
+      nodeId?: number;
+    }[] = [];
+    roles.forEach((role) => {
+      results.push({
+        nodeType: "department",
+        nodeName: role.department,
       });
-      console.log(error);
-    }
+      role.roles.forEach((r) => {
+        results.push({
+          nodeType: "role",
+          nodeName: r.name,
+          nodeId: r.id,
+        });
+      });
+    });
+    return results;
   };
 
-  const [value, setValue] = React.useState('female');
-  
+  const onSubmit: SubmitHandler<FormValues> = async (data) => {
+    const clientData = {
+      user: {
+        first_name: data.name,
+        last_name: data.surname,
+        gender: data.gender,
+        date_of_birth: "2021-10-10",
+        phone_number: data.mobile,
+        phone_number_whatsapp: data.whatsapp,
+        email: data.email,
+      },
+      category: data.category || "",
+      occupation: data.occupation || "",
+      invite_source: data.source || "",
+      card_number: "4400430275029991",
+      sms_notification: data.sms_subscription === "true" ? true : false,
+      description: data.comment || "",
+      description_as_main_characteristic: data.main_characteristic || false,
+      employee: data.employee || 0,
+    };
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setValue((event.target as HTMLInputElement).value);
+    addClient(clientData, {
+      onSuccess: () => {
+        console.log("Client added successfully", clientData);
+        reset();
+      },
+      onError: (error) => {
+        console.error("Error adding client", error);
+      },
+    });
   };
 
   return (
@@ -121,109 +309,95 @@ const ClientsAdd = () => {
                   helperText={errors.middlename?.message}
                 />
 
-                <Autocomplete
-                  sx={{
-                    "& .MuiAutocomplete-inputRoot": {
-                      padding: "3px 0px 3px 0px",
-                      fontSize: "1.4rem",
-                      width: "30rem",
-                    },
-                  }}
-                  options={[
-                    { label: "Option 1", value: "1" },
-                    { label: "Option 2", value: "2" },
-                    { label: "Option 3", value: "3" },
-                    { label: "Option 4", value: "4" },
-                    { label: "Option 5", value: "5" },
-                  ]}
-                  isOptionEqualToValue={(option, value) =>
-                    option.value === value.value
-                  }
-                  getOptionLabel={(option) => option.label}
-                  renderInput={(params) => (
-                    <div className={classes["main__lower__auto"]}>
-                      <p className={classes["main__lower__auto__label"]}>
-                        Категория
-                      </p>
-                      <TextField
-                        sx={{ height: "40px" }}
-                        {...params}
-                        {...register("category")}
-                        className={"main__lower__auto__input"}
-                        error={!!errors.category}
-                        helperText={errors.category?.message}
-                      />
-                    </div>
+                <Controller
+                  name="category"
+                  control={control}
+                  render={({ field }) => (
+                    <CustomAutoComplete
+                      sx={{
+                        "& .MuiAutocomplete-inputRoot": {
+                          padding: "3px 0px 3px 0px",
+                          fontSize: "1.4rem",
+                          maxWidth: "30rem",
+                          width: "30rem",
+                          justifyContent: "flex-end",
+                        },
+                      }}
+                      {...field}
+                      selectValue="label"
+                      size="small"
+                      label="Категория"
+                      options={categoryOptions || []}
+                      onChange={(value) => {
+                        field.onChange(value?.value);
+                      }}
+                      value={
+                        categoryOptions?.find(
+                          (option) => option.value === field.value
+                        ) || null
+                      }
+                    />
                   )}
                 />
-                <Autocomplete
-                  sx={{
-                    "& .MuiAutocomplete-inputRoot": {
-                      padding: "3px 0px 3px 0px",
-                      fontSize: "1.4rem",
-                      width: "30rem",
-                    },
-                  }}
-                  options={[
-                    { label: "Option 1", value: "1" },
-                    { label: "Option 2", value: "2" },
-                    { label: "Option 3", value: "3" },
-                    { label: "Option 4", value: "4" },
-                    { label: "Option 5", value: "5" },
-                  ]}
-                  isOptionEqualToValue={(option, value) =>
-                    option.value === value.value
-                  }
-                  getOptionLabel={(option) => option.label}
-                  renderInput={(params) => (
-                    <div className={classes["main__lower__auto"]}>
-                      <p className={classes["main__lower__auto__label"]}>
-                        Доп.категория
-                      </p>
-                      <TextField
-                        sx={{ height: "40px" }}
-                        {...params}
-                        className={"main__lower__auto__input"}
-                        {...register("subcategory")}
-                        error={!!errors.subcategory}
-                        helperText={errors.subcategory?.message}
-                      />
-                    </div>
+
+                <Controller
+                  name="subcategory"
+                  control={control}
+                  render={({ field }) => (
+                    <CustomAutoComplete
+                      sx={{
+                        "& .MuiAutocomplete-inputRoot": {
+                          padding: "3px 0px 3px 0px",
+                          fontSize: "1.4rem",
+                          maxWidth: "30rem",
+                          width: "30rem",
+                          justifyContent: "flex-end",
+                        },
+                      }}
+                      {...field}
+                      selectValue="label"
+                      size="small"
+                      label="Доп. категория"
+                      options={subcategoryOptions || []}
+                      onChange={(value) => {
+                        field.onChange(value?.value);
+                      }}
+                      value={
+                        subcategoryOptions?.find(
+                          (option) => option.value === field.value
+                        ) || null
+                      }
+                    />
                   )}
                 />
-                <Autocomplete
-                  sx={{
-                    "& .MuiAutocomplete-inputRoot": {
-                      padding: "3px 0px 3px 0px",
-                      fontSize: "1.4rem",
-                      width: "30rem",
-                    },
-                  }}
-                  options={[
-                    { label: "Option 1", value: "1" },
-                    { label: "Option 2", value: "2" },
-                    { label: "Option 3", value: "3" },
-                    { label: "Option 4", value: "4" },
-                    { label: "Option 5", value: "5" },
-                  ]}
-                  isOptionEqualToValue={(option, value) =>
-                    option.value === value.value
-                  }
-                  getOptionLabel={(option) => option.label}
-                  renderInput={(params) => (
-                    <div className={classes["main__lower__auto"]}>
-                      <p className={classes["main__lower__auto__label"]}>
-                        Город
-                      </p>
-                      <TextField
-                        sx={{ height: "40px" }}
-                        {...params}
-                        className={"main__lower__auto__input"}
-                        {...register("city")}
-                        error={!!errors.city}
-                        helperText={errors.city?.message}
-                      />
-                    </div>
+                <Controller
+                  name="city"
+                  control={control}
+                  render={({ field }) => (
+                    <CustomAutoComplete
+                      sx={{
+                        "& .MuiAutocomplete-inputRoot": {
+                          padding: "3px 0px 3px 0px",
+                          fontSize: "1.4rem",
+                          maxWidth: "30rem",
+                          width: "30rem",
+                          justifyContent: "flex-end",
+                        },
+                      }}
+                      {...field}
+                      selectValue="label"
+                      size="small"
+                      label="Город"
+                      options={cityOptions || []}
+                      onChange={(value) => {
+                        field.onChange(value?.value);
+                      }}
+                      value={
+                        cityOptions?.find(
+                          (option) => option.value === field.value
+                        ) || null
+                      }
+                    />
                   )}
                 />
               </div>
@@ -234,10 +408,10 @@ const ClientsAdd = () => {
               title={"Контакты"}
               children={
                 <div className={classes["main__lower__container__cardgrid"]}>
-                  <InputMask mask="+7 (999) 999 9999" {...register("whatsapp")}>
+                  <InputMask mask="+7 999 999 9999" {...register("whatsapp")}>
                     {(inputProps: any) => (
                       <CustomTextField
-                      {...(inputProps as any)}
+                        {...(inputProps as any)}
                         size="small"
                         sx={{
                           height: "40px",
@@ -263,7 +437,7 @@ const ClientsAdd = () => {
                       />
                     )}
                   </InputMask>
-                  <InputMask mask="+7 (999) 999 9999" {...register("mobile")}>
+                  <InputMask mask="+7 999 999 9999" {...register("mobile")}>
                     {(inputProps: any) => (
                       <CustomTextField
                         {...inputProps}
@@ -276,7 +450,6 @@ const ClientsAdd = () => {
                           },
                         }}
                         label={"Моб. телефон"}
-                 
                         InputProps={{
                           startAdornment: (
                             <InputAdornment position="start">
@@ -325,77 +498,103 @@ const ClientsAdd = () => {
               }
             ></InputCard>
             <InputCard
-              title={"Привелечение клиента"}
+              title={"Привлечение клиента"}
               children={
                 <div className={classes["main__lower__container__card"]}>
-                  <Autocomplete
-                    size="small"
-                    sx={{
-                      "& .MuiAutocomplete-inputRoot": {
-                        padding: "3px 0px 3px 0px",
-                        fontSize: "1.4rem",
-                        width: "30rem",
-                      },
-                    }}
-                    options={[
-                      { label: "Option 1", value: "1" },
-                      { label: "Option 2", value: "2" },
-                      { label: "Option 3", value: "3" },
-                      { label: "Option 4", value: "4" },
-                      { label: "Option 5", value: "5" },
-                    ]}
-                    isOptionEqualToValue={(option, value) =>
-                      option.value === value.value
-                    }
-                    getOptionLabel={(option) => option.label}
-                    renderInput={(params) => (
-                      <div className={classes["main__lower__auto"]}>
-                        <p className={classes["main__lower__auto__label"]}>
-                          Сотрудник
-                        </p>
-                        <TextField
-                          sx={{ height: "40px" }}
-                          {...params}
-                          className={"main__lower__auto__input"}
-                          {...register("employee")}
-                          error={!!errors.employee}
-                          helperText={errors.employee?.message}
-                        />
-                      </div>
+                  <Controller
+                    name="employee"
+                    control={control}
+                    render={({ field }) => (
+                      <Autocomplete
+                        size="small"
+                        sx={{
+                          "& .MuiAutocomplete-inputRoot": {
+                            padding: "3px 0px 3px 0px",
+                            fontSize: "1.4rem",
+                            width: "30rem",
+                          },
+                        }}
+                        options={hierarchicalData}
+                        getOptionLabel={(option) => option.nodeName}
+                        isOptionEqualToValue={(option, value) =>
+                          option.nodeId === value.nodeId
+                        }
+                        onChange={(event, value) =>
+                          field.onChange(value ? value.nodeId : undefined)
+                        }
+                        renderOption={(props, option) => (
+                          <li
+                            {...props}
+                            key={option.nodeId}
+                            style={{
+                              pointerEvents:
+                                option.nodeType === "department"
+                                  ? "none"
+                                  : "auto",
+                            }}
+                          >
+                            <p
+                              style={{
+                                fontSize: "1.6rem",
+                                fontWeight:
+                                  option.nodeType === "department"
+                                    ? "bold"
+                                    : "normal",
+                                marginLeft:
+                                  option.nodeType === "department"
+                                    ? "0"
+                                    : "1rem",
+                              }}
+                            >
+                              {option.nodeName}
+                            </p>
+                          </li>
+                        )}
+                        renderInput={(params) => (
+                          <div className={classes["main__lower__auto"]}>
+                            <p className={classes["main__lower__auto__label"]}>
+                              Сотрудник
+                            </p>
+                            <TextField
+                              sx={{ height: "40px" }}
+                              {...params}
+                              className={"main__lower__auto__input"}
+                              error={!!errors.employee}
+                              helperText={errors.employee?.message}
+                            />
+                          </div>
+                        )}
+                      />
                     )}
                   />
-                  <Autocomplete
-                    sx={{
-                      "& .MuiAutocomplete-inputRoot": {
-                        padding: "3px 0px 3px 0px",
-                        fontSize: "1.4rem",
-                        width: "30rem",
-                      },
-                    }}
-                    options={[
-                      { label: "Option 1", value: "1" },
-                      { label: "Option 2", value: "2" },
-                      { label: "Option 3", value: "3" },
-                      { label: "Option 4", value: "4" },
-                      { label: "Option 5", value: "5" },
-                    ]}
-                    isOptionEqualToValue={(option, value) =>
-                      option.value === value.value
-                    }
-                    getOptionLabel={(option) => option.label}
-                    renderInput={(params) => (
-                      <div className={classes["main__lower__auto"]}>
-                        <p className={classes["main__lower__auto__label"]}>
-                          Источник
-                        </p>
-                        <TextField
-                          {...params}
-                          className={"main__lower__auto__input"}
-                          {...register("source")}
-                          error={!!errors.source}
-                          helperText={errors.source?.message}
-                        />
-                      </div>
+                  <Controller
+                    name="source"
+                    control={control}
+                    render={({ field }) => (
+                      <CustomAutoComplete
+                        sx={{
+                          "& .MuiAutocomplete-inputRoot": {
+                            padding: "3px 0px 3px 0px",
+                            fontSize: "1.4rem",
+                            maxWidth: "30rem",
+                            width: "30rem",
+                            justifyContent: "flex-end",
+                          },
+                        }}
+                        {...field}
+                        selectValue="label"
+                        size="small"
+                        label="Источник"
+                        options={sourceOptions || []}
+                        onChange={(value) => {
+                          field.onChange(value?.value);
+                        }}
+                        value={
+                          sourceOptions?.find(
+                            (option) => option.value === field.value
+                          ) || null
+                        }
+                      />
                     )}
                   />
                 </div>
@@ -406,150 +605,164 @@ const ClientsAdd = () => {
             title={"Дополнительная информация"}
             children={
               <div className={classes["main__lower__container__card"]}>
-                <Autocomplete
-                  size="small"
-                  sx={{
-                    "& .MuiAutocomplete-inputRoot": {
-                      padding: "3px 0px 3px 0px",
-                      fontSize: "1.4rem",
-                      width: "30rem",
-                    },
-                  }}
-                  options={[
-                    { label: "Option 1", value: "1" },
-                    { label: "Option 2", value: "2" },
-                    { label: "Option 3", value: "3" },
-                    { label: "Option 4", value: "4" },
-                    { label: "Option 5", value: "5" },
-                  ]}
-                  isOptionEqualToValue={(option, value) =>
-                    option.value === value.value
-                  }
-                  getOptionLabel={(option) => option.label}
-                  renderInput={(params) => (
-                    <div className={classes["main__lower__auto"]}>
-                      <p className={classes["main__lower__auto__label"]}>
-                        Рассылка SMS
-                      </p>
-                      <TextField
-                        sx={{ height: "40px" }}
-                        {...params}
-                        className={"main__lower__auto__input"}
-                        {...register("sms_subscription")}
-                        error={!!errors.sms_subscription}
-                        helperText={errors.sms_subscription?.message}
-                      />
-                    </div>
+                <Controller
+                  name="sms_subscription"
+                  control={control}
+                  render={({ field }) => (
+                    <CustomAutoComplete
+                      sx={{
+                        "& .MuiAutocomplete-inputRoot": {
+                          padding: "3px 0px 3px 0px",
+                          fontSize: "1.4rem",
+                          maxWidth: "30rem",
+                          width: "30rem",
+                          justifyContent: "flex-end",
+                        },
+                      }}
+                      {...field}
+                      selectValue="label"
+                      size="small"
+                      label="Рассылка SMS"
+                      options={employeeOptions || []}
+                      onChange={(value) => {
+                        field.onChange(value?.value);
+                      }}
+                      value={
+                        employeeOptions?.find(
+                          (option) => option.value === field.value
+                        ) || null
+                      }
+                    />
                   )}
                 />
-                <Autocomplete
-                  size="small"
-                  sx={{
-                    "& .MuiAutocomplete-inputRoot": {
-                      padding: "3px 0px 3px 0px",
-                      fontSize: "1.4rem",
-                      width: "30rem",
-                    },
-                  }}
-                  options={[
-                    { label: "Option 1", value: "1" },
-                    { label: "Option 2", value: "2" },
-                    { label: "Option 3", value: "3" },
-                    { label: "Option 4", value: "4" },
-                    { label: "Option 5", value: "5" },
-                  ]}
-                  isOptionEqualToValue={(option, value) =>
-                    option.value === value.value
-                  }
-                  getOptionLabel={(option) => option.label}
-                  renderInput={(params) => (
-                    <div className={classes["main__lower__auto"]}>
-                      <p className={classes["main__lower__auto__label"]}>
-                        Род занятий
-                      </p>
-                      <TextField
-                        sx={{ height: "40px" }}
-                        {...params}
-                        className={"main__lower__auto__input"}
-                        {...register("occupation")}
-                        error={!!errors.occupation}
-                        helperText={errors.occupation?.message}
-                      />
-                    </div>
+
+                <Controller
+                  name="occupation"
+                  control={control}
+                  render={({ field }) => (
+                    <CustomAutoComplete
+                      sx={{
+                        "& .MuiAutocomplete-inputRoot": {
+                          padding: "3px 0px 3px 0px",
+                          fontSize: "1.4rem",
+                          maxWidth: "30rem",
+                          width: "30rem",
+                          justifyContent: "flex-end",
+                        },
+                      }}
+                      {...field}
+                      selectValue="label"
+                      size="small"
+                      label="Род занятий"
+                      options={occupationOptions || []}
+                      onChange={(value) => {
+                        field.onChange(value?.value);
+                      }}
+                      value={
+                        occupationOptions?.find(
+                          (option) => option.value === field.value
+                        ) || null
+                      }
+                    />
                   )}
                 />
-                <Autocomplete
-                  size="small"
-                  sx={{
-                    "& .MuiAutocomplete-inputRoot": {
-                      padding: "3px 0px 3px 0px",
-                      fontSize: "1.4rem",
-                      width: "30rem",
-                    },
-                  }}
-                  options={[
-                    { label: "Option 1", value: "1" },
-                    { label: "Option 2", value: "2" },
-                    { label: "Option 3", value: "3" },
-                    { label: "Option 4", value: "4" },
-                    { label: "Option 5", value: "5" },
-                  ]}
-                  isOptionEqualToValue={(option, value) =>
-                    option.value === value.value
-                  }
-                  getOptionLabel={(option) => option.label}
-                  renderInput={(params) => (
-                    <div className={classes["main__lower__auto"]}>
-                      <p className={classes["main__lower__auto__label"]}>
-                        Расп. салона
-                      </p>
-                      <TextField
-                        sx={{ height: "40px" }}
-                        {...params}
-                        className={"main__lower__auto__input"}
-                        {...register("salon_location")}
-                        error={!!errors.salon_location}
-                        helperText={errors.salon_location?.message}
-                      />
-                    </div>
+
+                <Controller
+                  name="salon_location"
+                  control={control}
+                  render={({ field }) => (
+                    <CustomAutoComplete
+                      sx={{
+                        "& .MuiAutocomplete-inputRoot": {
+                          padding: "3px 0px 3px 0px",
+                          fontSize: "1.4rem",
+                          maxWidth: "30rem",
+                          width: "30rem",
+                          justifyContent: "flex-end",
+                        },
+                      }}
+                      {...field}
+                      selectValue="label"
+                      size="small"
+                      label="Расп. салона"
+                      options={salonLocationOptions || []}
+                      onChange={(value) => {
+                        field.onChange(value?.value);
+                      }}
+                      value={
+                        salonLocationOptions?.find(
+                          (option) => option.value === field.value
+                        ) || null
+                      }
+                    />
                   )}
                 />
-                <Autocomplete
-                  size="small"
-                  sx={{
-                    "& .MuiAutocomplete-inputRoot": {
-                      padding: "3px 0px 3px 0px",
-                      fontSize: "1.4rem",
-                      width: "30rem",
-                    },
-                  }}
-                  options={[
-                    { label: "Option 1", value: "1" },
-                    { label: "Option 2", value: "2" },
-                    { label: "Option 3", value: "3" },
-                    { label: "Option 4", value: "4" },
-                    { label: "Option 5", value: "5" },
-                  ]}
-                  isOptionEqualToValue={(option, value) =>
-                    option.value === value.value
-                  }
-                  getOptionLabel={(option) => option.label}
-                  renderInput={(params) => (
-                    <div className={classes["main__lower__auto"]}>
-                      <p className={classes["main__lower__auto__label"]}>
-                        Кл-т сотрудника
-                      </p>
-                      <TextField
-                        sx={{ height: "40px" }}
-                        {...params}
-                        className={"main__lower__auto__input"}
-                        {...register("employee_client")}
-                        error={!!errors.employee_client}
-                        helperText={errors.employee_client?.message}
-                      />
-                    </div>
+
+                <Controller
+                  name="employee_client"
+                  control={control}
+                  render={({ field }) => (
+                    <Autocomplete
+                      size="small"
+                      sx={{
+                        "& .MuiAutocomplete-inputRoot": {
+                          padding: "3px 0px 3px 0px",
+                          fontSize: "1.4rem",
+                          width: "30rem",
+                        },
+                      }}
+                      options={hierarchicalData}
+                      getOptionLabel={(option) => option.nodeName}
+                      isOptionEqualToValue={(option, value) =>
+                        option.nodeId === value.nodeId
+                      }
+                      onChange={(event, value) =>
+                        field.onChange(value ? value.nodeId : undefined)
+                      }
+                      renderOption={(props, option) => (
+                        <li
+                          {...props}
+                          key={option.nodeId}
+                          style={{
+                            pointerEvents:
+                              option.nodeType === "department"
+                                ? "none"
+                                : "auto",
+                          }}
+                        >
+                          <p
+                            style={{
+                              fontSize: "1.6rem",
+                              fontWeight:
+                                option.nodeType === "department"
+                                  ? "bold"
+                                  : "normal",
+                              marginLeft:
+                                option.nodeType === "department" ? "0" : "1rem",
+                            }}
+                          >
+                            {option.nodeName}
+                          </p>
+                        </li>
+                      )}
+                      renderInput={(params) => (
+                        <div className={classes["main__lower__auto"]}>
+                          <p className={classes["main__lower__auto__label"]}>
+                            Клиент сотрудника
+                          </p>
+                          <TextField
+                            sx={{ height: "40px" }}
+                            {...params}
+                            className={"main__lower__auto__input"}
+                            error={!!errors.employee_client}
+                            helperText={errors.employee_client?.message}
+                          />
+                        </div>
+                      )}
+                    />
                   )}
                 />
+
                 <div className={classes["main__lower__container__gender"]}>
                   <p
                     style={{

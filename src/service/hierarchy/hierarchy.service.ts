@@ -148,3 +148,7 @@ export const getHierarchyByEmployeeId = (
     .get(`/hierarchy/services-by-employee/${employeeId}/`)
     .then((res) => res.data);
 };
+
+export const getHierarchyEmployeesByDepartment = () => {
+  return api.get("/hierarchy/employees-by-departments/").then((res) => res.data);
+}
