@@ -5,6 +5,7 @@ import {
 } from "@/ts/service.interface";
 import api from "../api";
 import { IResponseData } from "@/ts/types";
+import { IServiceParent } from "@/ts/hierarchy.inteface";
 
 export const getServiceById = (id: number): Promise<IService> => {
   return api.get(`/services/services/${id}/`).then((res) => res.data);
@@ -27,5 +28,13 @@ export const getServiceForEmployeeById = (
 ): Promise<IResponseData<IUserService[]>> => {
   return api
     .get(`/services/services/employee/${user_id}/`)
+    .then((res) => res.data);
+};
+
+export const getServiceParent = (
+  service_id: number
+): Promise<IServiceParent[]> => {
+  return api
+    .get(`/hierarchy/hierarchy-parents/${service_id}/`)
     .then((res) => res.data);
 };

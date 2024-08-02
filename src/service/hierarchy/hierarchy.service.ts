@@ -11,6 +11,7 @@ import {
   IMoveHierarchy,
   IRolesbyDepartment,
   ISearchResult,
+  IServiceParent,
   IStorageCategory,
 } from "@/ts/hierarchy.inteface";
 

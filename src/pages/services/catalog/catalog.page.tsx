@@ -1,34 +1,50 @@
-import BreadcrumbsCustom from "@/components/navigation/breadcrumbs/breadcrumbs"
+import BreadcrumbsCustom from "@/components/navigation/breadcrumbs/breadcrumbs";
 import {
   getHierarchy,
   getHierarchySearchOption,
   getSearchResults,
-} from "@/service/hierarchy/hierarchy.service"
-import { IService } from "@/ts/service.interface"
+} from "@/service/hierarchy/hierarchy.service";
+import { getServiceParent } from "@/service/services/services.service";
+import { IService } from "@/ts/service.interface";
 import {
   Autocomplete,
   Button,
   CircularProgress,
   Divider,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
   TextField,
-} from "@mui/material"
-import { DndProvider } from "react-dnd"
-import { HTML5Backend } from "react-dnd-html5-backend"
-import { useQuery } from "@tanstack/react-query"
-import toast from "react-hot-toast"
-import { LanOutlined, Folder, ContentCut } from "@mui/icons-material"
-import classes from "./styles.module.scss"
-import CustomTextField from "@/components/textField/textField.component"
-import TreeView from "@/components/treeItem/treeItem"
+} from "@mui/material";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
+import { useQuery } from "@tanstack/react-query";
+import toast from "react-hot-toast";
+import {
+  LanOutlined,
+  Folder,
+  ContentCut,
+  DeleteOutline,
+} from "@mui/icons-material";
+import classes from "./styles.module.scss";
+import CustomTextField from "@/components/textField/textField.component";
+import TreeView from "@/components/treeItem/treeItem";
 
-import SearchFilterCard from "@/components/search-filter-card/search-filter-card"
-import { useEffect, useState } from "react"
+import SearchFilterCard from "@/components/search-filter-card/search-filter-card";
+import { useEffect, useState } from "react";
 
-import { IfiltersResponse, ISearchResult } from "@/ts/hierarchy.inteface"
+import {
+  IfiltersResponse,
+  ISearchResult,
+  IServiceParent,
+} from "@/ts/hierarchy.inteface";
+import dayjs from "dayjs";
 
 const ServiceCatalog = () => {
-  const [service, setService] = useState<IService | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
+  const [service, setService] = useState<IService | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [formData, setFormData] = useState({
     category: "",
     department: "",
@@ -38,13 +54,14 @@ const ServiceCatalog = () => {
     section: "",
     service_type: "",
     subcategory: "",
-  })
+  });
 
-  const [searchResults, setSearchResults] = useState<ISearchResult>()
+  const [searchResults, setSearchResults] = useState<ISearchResult>();
+  const [serviceParents, setServiceParents] = useState<IServiceParent[]>();
   const handleOptionLoad = () => {
-    getHierarchySearchOption().then((data) => setFilterOptions(data))
-  }
-  const [filterOptions, setFilterOptions] = useState<IfiltersResponse>()
+    getHierarchySearchOption().then((data) => setFilterOptions(data));
+  };
+  const [filterOptions, setFilterOptions] = useState<IfiltersResponse>();
   const { data, isPending, isError } = useQuery({
     queryKey: ["hierarchyData"],
     queryFn: getHierarchy,
@@ -53,21 +70,22 @@ const ServiceCatalog = () => {
   });
 
   const handleServiceSelect = (service: IService) => {
-    setService(service)
+    setService(service);
+    getServiceParent(service.id).then((data) => setServiceParents(data));
 
-    setIsLoading(true)
+    setIsLoading(true);
     setTimeout(() => {
-      setIsLoading(false)
-    }, 10)
-  }
+      setIsLoading(false);
+    }, 10);
+  };
 
   const handleSearch = () => {
-    getSearchResults(formData).then((data) => setSearchResults(data))
-  }
+    getSearchResults(formData).then((data) => setSearchResults(data));
+  };
 
   useEffect(() => {
-    handleOptionLoad()
-  }, [])
+    handleOptionLoad();
+  }, []);
 
   const rows = [
     { IconComponent: LanOutlined, color: "#0B6BCB", label: "Отдел" },
@@ -77,19 +95,22 @@ const ServiceCatalog = () => {
     { IconComponent: Folder, color: "#EF6C00", label: "Категория" },
     { IconComponent: Folder, color: "#FBC02D", label: "Подкатегория" },
     { IconComponent: ContentCut, color: "#388E3C", label: "Услуга" },
-  ]
+  ];
 
   if (isError) {
-    toast.error("Произошла ошибка при получении данных.")
+    toast.error("Произошла ошибка при получении данных.");
   }
 
   function handleAutocompleteChange(value: any, fieldName: string): void {
-    setFormData((prev) => ({ ...prev, [fieldName]: value }))
+    setFormData((prev) => ({ ...prev, [fieldName]: value }));
   }
 
   return (
     <div className={classes.catalog}>
-      <BreadcrumbsCustom />
+      <div className={classes.catalog__bread}>
+        <BreadcrumbsCustom />
+      </div>
+
       <div className={classes.catalog__upper}>
         <div className={classes.catalog__upper__content}>
           <div className={classes.catalog__upper__content__header}>
@@ -259,12 +280,13 @@ const ServiceCatalog = () => {
           </div>
         </div>
       </div>
+
       <div className={classes.catalog__lower}>
-        <div className={classes.catalog__lower__info}>
-          {isLoading ? (
-            <div style={{ height: "250px" }}></div>
-          ) : (
-            <>
+        {isLoading ? (
+          <div style={{ height: "250px" }}></div>
+        ) : (
+          <div className={classes.catalog__lower__service}>
+            <div className={classes.catalog__lower__info}>
               <SearchFilterCard
                 classNameUnique={classes.catalog__lower__info__card1}
                 title={"Обзор"}
@@ -376,66 +398,26 @@ const ServiceCatalog = () => {
                 openEnabled={false}
                 children={
                   <div className={classes.catalog__lower__info__content}>
-                    <div className={classes.catalog__lower__info__row}>
-                      <p>Наименование</p>
-                      <TextField
-                        className={classes.catalog__lower__info__row__input}
-                        disabled
-                        variant="standard"
-                        defaultValue={"Укладка"}
-                        sx={{
-                          "& .MuiInputBase-root.Mui-disabled:before": {
-                            fontSize: "1.6rem",
-                            borderBottom: "0.5px solid #636b744d",
-                          },
-                        }}
-                      />
-                    </div>
-                    <div className={classes.catalog__lower__info__row}>
-                      <p>Наименование</p>
-                      <TextField
-                        className={classes.catalog__lower__info__row__input}
-                        disabled
-                        variant="standard"
-                        defaultValue={"Укладка"}
-                        sx={{
-                          "& .MuiInputBase-root.Mui-disabled:before": {
-                            fontSize: "1.6rem",
-                            borderBottom: "0.5px solid #636b744d",
-                          },
-                        }}
-                      />
-                    </div>
-                    <div className={classes.catalog__lower__info__row}>
-                      <p>Наименование</p>
-                      <TextField
-                        className={classes.catalog__lower__info__row__input}
-                        disabled
-                        variant="standard"
-                        defaultValue={"Укладка"}
-                        sx={{
-                          "& .MuiInputBase-root.Mui-disabled:before": {
-                            fontSize: "1.6rem",
-                            borderBottom: "0.5px solid #636b744d",
-                          },
-                        }}
-                      />
-                    </div>
-                    <div className={classes.catalog__lower__info__row}>
-                      <p>Наименование</p>
-                      <TextField
-                        className={classes.catalog__lower__info__row__input}
-                        disabled
-                        variant="standard"
-                        defaultValue={"Укладка"}
-                        sx={{
-                          "& .MuiInputBase-root.Mui-disabled:before": {
-                            fontSize: "1.6rem",
-                            borderBottom: "0.5px solid #636b744d",
-                          },
-                        }}
-                      />
-                    </div>
+                    {serviceParents?.map((parent) => (
+                      <div
+                        key={parent.id}
+                        className={classes.catalog__lower__info__row}
+                      >
+                        <p>{parent.level}</p>
+                        <TextField
+                          className={classes.catalog__lower__info__row__input}
+                          disabled
+                          variant="standard"
+                          defaultValue={parent.name}
+                          sx={{
+                            "& .MuiInputBase-root.Mui-disabled:before": {
+                              fontSize: "1.6rem",
+                              borderBottom: "0.5px solid #636b744d",
+                            },
+                          }}
+                        />
+                      </div>
+                    ))}
                   </div>
                 }
               />
@@ -446,57 +428,12 @@ const ServiceCatalog = () => {
                 children={
                   <div className={classes.catalog__lower__info__content}>
                     <div className={classes.catalog__lower__info__row}>
-                      <p>Наименование</p>
+                      <p>Скидка</p>
                       <TextField
                         className={classes.catalog__lower__info__row__input}
                         disabled
                         variant="standard"
-                        defaultValue={"Укладка"}
-                        sx={{
-                          "& .MuiInputBase-root.Mui-disabled:before": {
-                            fontSize: "1.6rem",
-                            borderBottom: "0.5px solid #636b744d",
-                          },
-                        }}
-                      />
-                    </div>
-                    <div className={classes.catalog__lower__info__row}>
-                      <p>Наименование</p>
-                      <TextField
-                        className={classes.catalog__lower__info__row__input}
-                        disabled
-                        variant="standard"
-                        defaultValue={"Укладка"}
-                        sx={{
-                          "& .MuiInputBase-root.Mui-disabled:before": {
-                            fontSize: "1.6rem",
-                            borderBottom: "0.5px solid #636b744d",
-                          },
-                        }}
-                      />
-                    </div>
-                    <div className={classes.catalog__lower__info__row}>
-                      <p>Наименование</p>
-                      <TextField
-                        className={classes.catalog__lower__info__row__input}
-                        disabled
-                        variant="standard"
-                        defaultValue={"Укладка"}
-                        sx={{
-                          "& .MuiInputBase-root.Mui-disabled:before": {
-                            fontSize: "1.6rem",
-                            borderBottom: "0.5px solid #636b744d",
-                          },
-                        }}
-                      />
-                    </div>
-                    <div className={classes.catalog__lower__info__row}>
-                      <p>Наименование</p>
-                      <TextField
-                        className={classes.catalog__lower__info__row__input}
-                        disabled
-                        variant="standard"
-                        defaultValue={"Укладка"}
+                        defaultValue={service?.discount.size + "%"}
                         sx={{
                           "& .MuiInputBase-root.Mui-disabled:before": {
                             fontSize: "1.6rem",
@@ -508,12 +445,32 @@ const ServiceCatalog = () => {
                   </div>
                 }
               />
-            </>
-          )}
-        </div>
+            </div>
+            <div className={classes.catalog__lower__service__wrapper}>
+              <div className={classes.catalog__lower__service__wrapper__header}>
+                <h1>Стоимость</h1>
+              </div>
+
+              <Table className={classes.table}>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Должность</TableCell>
+                    <TableCell>Стоимость</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  <TableRow>
+                    <TableCell>Мастер</TableCell>
+                    <TableCell>1000</TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </div>
+          </div>
+        )}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default ServiceCatalog
+export default ServiceCatalog;

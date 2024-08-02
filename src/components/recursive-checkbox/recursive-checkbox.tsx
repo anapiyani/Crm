@@ -11,7 +11,8 @@ interface ITreeItemProps {
   onServiceChange: (
     id: number,
     isChecked: boolean,
-    type: "service" | "category"
+    type: "service" | "category",
+    name: string
   ) => void;
   preCheckedItems: { id: number; type: "service" | "category" }[];
 }
@@ -66,21 +67,29 @@ const RecursiveCheckbox: React.FC<ITreeItemProps> = ({
     category: IServiceCategory,
     isChecked: boolean | null
   ) => {
-    onServiceChange(category.id, isChecked === true, "category");
+    onServiceChange(category.id, isChecked === true, "category", category.name);
     category.services.forEach((service) => {
-      onServiceChange(service.id, isChecked === true, "service");
+      onServiceChange(service.id, isChecked === true, "service", service.name);
     });
     category.children.forEach((child) => {
       propagateCheckState(child, isChecked);
     });
   };
 
-  const handleServiceCheckboxChange = (serviceId: number) => {
+  const handleServiceCheckboxChange = (
+    serviceId: number,
+    serviceName?: string
+  ) => {
     const newChecked = !preCheckedItems.some(
       (preChecked) =>
         preChecked.id === serviceId && preChecked.type === "service"
     );
-    onServiceChange(serviceId, newChecked, "service");
+    onServiceChange(
+      serviceId,
+      newChecked,
+      "service",
+      serviceName ? serviceName : ""
+    );
   };
 
   const toggle = () => setIsOpen(!isOpen);
@@ -137,7 +146,9 @@ const RecursiveCheckbox: React.FC<ITreeItemProps> = ({
                         preChecked.id === service.id &&
                         preChecked.type === "service"
                     )}
-                    onChange={() => handleServiceCheckboxChange(service.id)}
+                    onChange={() =>
+                      handleServiceCheckboxChange(service.id, service.name)
+                    }
                   />
                   <span className={classes["tree__label"]}>{service.name}</span>
                 </li>
