@@ -5,6 +5,7 @@ import {
 import api from "../api";
 import {
   IAddHierarchy,
+  IAddStorageHierarchy,
   IfilterRequest,
   IfiltersResponse,
   IMoveHierarchy,
@@ -46,6 +47,14 @@ export const addHierarchy = (
   return api.post("/hierarchy/hierarchy/", data).then((res) => res.data);
 };
 
+export const addStorageHierarchy = (
+  data: IAddStorageHierarchy
+): Promise<IStorageCategory> => {
+  return api
+    .post("/hierarchy/hierarchy-storage/", data)
+    .then((res) => res.data);
+};
+
 export const moveHierarchy = (
   data: IMoveHierarchy
 ): Promise<IServiceCategory> => {
@@ -56,6 +65,19 @@ export const moveHierarchy = (
   }).toString();
   return api
     .post("/hierarchy/hierarchical-items/move/?" + params)
+    .then((res) => res.data);
+};
+
+export const moveStorageHierarchy = (
+  data: IMoveHierarchy
+): Promise<IStorageCategory> => {
+  const params = new URLSearchParams({
+    item_id: data.item.toString(),
+    item_type: data.type,
+    new_parent_id: data.to.toString(),
+  }).toString();
+  return api
+    .post("/hierarchy/hierarchical-items-storage/move/?" + params)
     .then((res) => res.data);
 };
 
@@ -77,6 +99,21 @@ export const updateHierarchy = (
     .then((res) => res.data);
 };
 
+export const updateStorageHierarchy = (
+  data: IStorageCategory
+): Promise<IStorageCategory> => {
+  const reqbody = {
+    name: data.name,
+    level: data.level,
+    parent: data.parent,
+    materials: [],
+  };
+
+  return api
+    .put(`/hierarchy/hierarchy-storage/${data.id}/`, reqbody)
+    .then((res) => res.data);
+};
+
 export const getRolesByDepartments = (): Promise<IRolesbyDepartment[]> => {
   return api.get("/hierarchy/roles-with-departments/").then((res) => res.data);
 };
@@ -91,6 +128,12 @@ export const linkRoleToHierarchy = (data: {
 };
 export const deleteHierarchy = (id: number): Promise<void> => {
   return api.delete(`/hierarchy/hierarchy/${id}/`).then((res) => res.data);
+};
+
+export const deleteStorageHierarchy = (id: number): Promise<void> => {
+  return api
+    .delete(`/hierarchy/hierarchy-storage/${id}/`)
+    .then((res) => res.data);
 };
 
 export const getHierarchyStorage = (): Promise<IStorageCategory[]> => {

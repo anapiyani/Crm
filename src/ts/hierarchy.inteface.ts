@@ -57,6 +57,12 @@ export interface IAddHierarchy {
   services: number[];
   role: number[];
 }
+export interface IAddStorageHierarchy {
+  name: string;
+  level: string;
+  parent?: number;
+  materials: number[];
+}
 
 export interface IMoveHierarchy {
   item: number;
