@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import HeaderTemplate from "../MultiStepHeader/MultiStepHeader.component";
 import StepInput from "../stepInput/stepInput.component";
 import classes from "./styles.module.scss";
-import { Checkbox, FormControlLabel } from "@mui/material";
+import { Button, Checkbox, FormControlLabel } from "@mui/material";
+import NiceModal from "@ebay/nice-modal-react";
+import salaryServicesModal from "@/modals/employees/salary-services.modal";
 
 interface DevServiceItem {
   id: string;
@@ -40,7 +42,7 @@ const FloatingPart: React.FC = () => {
 
   const handleDeleteService = (id: string) => {
     setDevServices((prevDevServices) =>
-      prevDevServices.filter((service) => service.id !== id),
+      prevDevServices.filter((service) => service.id !== id)
     );
   };
 
@@ -131,7 +133,12 @@ const FloatingPart: React.FC = () => {
           devServices.map((service) => (
             <div key={service.id} id={service.id}>
               {service.element}
-              {/* hier scheße Button für löschen */}
+              {
+                /* hier scheße Button für löschen */
+                <Button onClick={() => NiceModal.show(salaryServicesModal)}>
+                  OPEN MODAL
+                </Button>
+              }
             </div>
           ))
         ) : (

@@ -88,3 +88,10 @@ export interface IStorageCategory {
   children: IStorageCategory[];
   materials: IMaterial[];
 }
+
+export interface IServiceParent {
+  id: number;
+  name: string;
+  level: string;
+  parent: number | null;
+}
