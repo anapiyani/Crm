@@ -57,3 +57,8 @@ export interface ICardInfoEmployee {
   revenue: string;
   services_count: number;
 }
+
+export interface IOptions {
+  value: string;
+  label: string;
+}

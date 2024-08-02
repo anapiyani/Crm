@@ -7,11 +7,13 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { useState } from "react";
 import classes from "./styles.module.scss";
-import { Add, Check, Close, Delete, East, West } from "@mui/icons-material";
-import HeaderTemplate from "../MultiStepHeader/MultiStepHeader.component";
-import StepInput from "../stepInput/stepInput.component";
+import { Check, Close, Delete, East, West } from "@mui/icons-material";
 import TemplateName from "../templateName/templateName.component";
-import FixedPart from "../fixedPart/fixedPart.component";
+import FixedPart from "../fixed-part/fixedPart.component";
+import FloatingPart from "../floating-part/floating-part.component";
+import SellingGoods from "../selling-goods/selling-goods.component";
+import AttractingCliens from "../attracting-clients/attracting-clients.component";
+import CustomerDevelopment from "../customer-development/customer-development.component";
 
 const steps = [
   "Имя шаблона",
@@ -50,6 +52,14 @@ const StepForm = () => {
       return <TemplateName />;
     } else if (activeStep === 1) {
       return <FixedPart />;
+    } else if (activeStep === 2) {
+      return <FloatingPart />;
+    } else if (activeStep === 3) {
+      return <SellingGoods />;
+    } else if (activeStep === 4) {
+      return <AttractingCliens />;
+    } else if (activeStep === 5) {
+      return <CustomerDevelopment />;
     }
   };
 

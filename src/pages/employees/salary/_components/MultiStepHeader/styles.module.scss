@@ -4,10 +4,16 @@
   flex-direction: column;
   &__content {
     width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     h2 {
       font-size: 1.8rem;
       font-weight: 400;
       color: var(--primary-500);
+    }
+    button {
+      font-size: 1.6rem;
     }
   }
 }
