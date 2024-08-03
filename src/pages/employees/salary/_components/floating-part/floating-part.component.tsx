@@ -2,9 +2,17 @@ import React, { useState } from "react";
 import HeaderTemplate from "../MultiStepHeader/MultiStepHeader.component";
 import StepInput from "../step-input/step-input.component";
 import classes from "./styles.module.scss";
-import { Button, Checkbox, Divider, FormControlLabel } from "@mui/material";
+import {
+  Button,
+  Autocomplete,
+  Checkbox,
+  Divider,
+  FormControlLabel,
+  TextField,
+} from "@mui/material";
 import NiceModal from "@ebay/nice-modal-react";
 import salaryServicesModal from "@/modals/employees/salary-services.modal";
+import { Delete } from "@mui/icons-material";
 
 interface DevServiceItem {
   id: string;
@@ -20,124 +28,263 @@ const FloatingPart: React.FC = () => {
       id: newId,
       element: (
         <div>
-          <div style={{ display: "flex" }}>
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
             <div style={{ display: "flex", flexDirection: "column" }}>
               <div
                 className={classes.services__employeePersentage__info}
                 style={{
                   display: "flex",
                   flexDirection: "column",
-                  width: "15rem",
+                  width: "25rem",
                   marginBottom: "1rem",
                 }}
               >
-                <p style={{ fontSize: "1.6rem" }}>% сотрудника</p>
+                <p style={{ fontSize: "1.6rem", marginBottom: "0.5rem" }}>
+                  % сотрудника
+                </p>
                 <div style={{ display: "flex", marginBottom: "1rem" }}>
-                  <input
+                  <TextField
+                    size="small"
                     type="text"
                     placeholder="0"
-                    style={{ width: "12rem", marginRight: "1rem" }}
+                    style={{
+                      width: "12rem",
+                      marginRight: "1rem",
+                      fontSize: "1.4rem",
+                    }}
                     onChange={(e) => console.log(e.target.value)}
                   />
-                  <p>руб.</p>
+                  <p style={{ fontSize: "1.4rem" }}>руб.</p>
                 </div>
-                <select name="pets" id="pet-select">
-                  <option value="fixed_percent">Фикс. сумма</option>
-                  <option value="service_percent">% от чека</option>
-                  <option value="service_materials_no_discount_percent">
-                    % - МТ без скидк
-                  </option>
-                  <option value="service_materials_discount_percent">
-                    % - МТ со скид
-                  </option>
-                  <option value="service_minus_client_bonuses_materials_percent">
-                    % от (чека за услуги - бонусы клиента - материалы)
-                  </option>
-                </select>
+                <Autocomplete
+                  size="small"
+                  options={[
+                    { label: "Фикс. сумма", value: "fixed_percent" },
+                    { label: "% от чека", value: "service_percent" },
+                    {
+                      label: "% - МТ без скидк",
+                      value: "service_materials_no_discount_percent",
+                    },
+                    {
+                      label: "% - МТ со скид",
+                      value: "service_materials_discount_percent",
+                    },
+                    {
+                      label:
+                        "% от (чека за услуги - бонусы клиента - материалы)",
+                      value: "service_minus_client_bonuses_materials_percent",
+                    },
+                  ]}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Выберите опцию"
+                      variant="outlined"
+                      sx={{
+                        fontSize: "1.4rem",
+                        marginBottom: "1rem",
+                      }}
+                    />
+                  )}
+                  sx={{
+                    "& .MuiAutocomplete-inputRoot": {
+                      fontSize: "1rem",
+                      padding: "0.5rem",
+                    },
+                  }}
+                />
               </div>
               <div
                 className={classes.services__employeePersentage__info}
                 style={{
                   display: "flex",
                   flexDirection: "column",
-                  width: "15rem",
+                  width: "25rem",
                   marginBottom: "1rem",
                 }}
               >
-                <p style={{ fontSize: "1.3rem" }}>Свои клиенты / 1-й чек</p>
-                <select name="pets" id="pet-select">
-                  <option value="service_percent">По умолчанию</option>
-                  <option value="service_materials_no_discount_percent">
-                    Свои клиенты
-                  </option>
-                  <option value="service_materials_discount_percent">
-                    С первого чека
-                  </option>
-                </select>
+                <p style={{ fontSize: "1.3rem", marginBottom: "0.5rem" }}>
+                  Свои клиенты / 1-й чек
+                </p>
+                <Autocomplete
+                  size="small"
+                  options={[
+                    { label: "По умолчанию", value: "service_percent" },
+                    {
+                      label: "Свои клиенты",
+                      value: "service_materials_no_discount_percent",
+                    },
+                    {
+                      label: "С первого чека",
+                      value: "service_materials_discount_percent",
+                    },
+                  ]}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Выберите опцию"
+                      variant="outlined"
+                      sx={{
+                        fontSize: "1.4rem",
+                        marginBottom: "1rem",
+                      }}
+                    />
+                  )}
+                  sx={{
+                    "& .MuiAutocomplete-inputRoot": {
+                      fontSize: "1rem",
+                      padding: "0.5rem",
+                    },
+                  }}
+                />
               </div>
               <div
                 className={classes.services__employeePersentage__info}
                 style={{
                   display: "flex",
                   flexDirection: "column",
-                  width: "15rem",
+                  width: "25rem",
                   marginBottom: "1rem",
                 }}
               >
-                <p style={{ fontSize: "1.3rem" }}>Прайс / чек</p>
-                <select name="pets" id="pet-select">
-                  <option value="service_percent">По умолчанию</option>
-                  <option value="service_materials_no_discount_percent">
-                    По чеку (после всех скидок)
-                  </option>
-                  <option value="service_materials_discount_percent">
-                    По прайсу (без учета скидок)
-                  </option>
-                </select>
+                <p style={{ fontSize: "1.3rem", marginBottom: "0.5rem" }}>
+                  Прайс / чек
+                </p>
+                <Autocomplete
+                  size="small"
+                  options={[
+                    { label: "По умолчанию", value: "service_percent" },
+                    {
+                      label: "По чеку (после всех скидок)",
+                      value: "service_materials_no_discount_percent",
+                    },
+                    {
+                      label: "По прайсу (без учета скидок)",
+                      value: "service_materials_discount_percent",
+                    },
+                  ]}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Выберите опцию"
+                      variant="outlined"
+                      sx={{
+                        fontSize: "1.4rem",
+                        marginBottom: "1rem",
+                      }}
+                    />
+                  )}
+                  sx={{
+                    "& .MuiAutocomplete-inputRoot": {
+                      fontSize: "1rem",
+                      padding: "0.5rem",
+                    },
+                  }}
+                />
               </div>
               <div
                 className={classes.services__employeePersentage__info}
                 style={{
                   display: "flex",
                   flexDirection: "column",
-                  width: "15rem",
+                  width: "25rem",
                   marginBottom: "1rem",
                 }}
               >
-                <p style={{ fontSize: "1.3rem" }}>Материалы какие</p>
-                <select name="pets" id="pet-select">
-                  <option value="service_percent">По умолчанию</option>
-                  <option value="service_percent">
-                    Вычитать все материалы
-                  </option>
-                  <option value="service_materials_no_discount_percent">
-                    Вычитать только "не в чек"
-                  </option>
-                  <option value="service_materials_discount_percent">
-                    Вычитать только "в чек"
-                  </option>
-                </select>
+                <p style={{ fontSize: "1.3rem", marginBottom: "0.5rem" }}>
+                  Материалы какие
+                </p>
+                <Autocomplete
+                  size="small"
+                  options={[
+                    { label: "По умолчанию", value: "service_percent" },
+                    {
+                      label: "Вычитать все материалы",
+                      value: "service_percent",
+                    },
+                    {
+                      label: "Вычитать только 'не в чек'",
+                      value: "service_materials_no_discount_percent",
+                    },
+                    {
+                      label: "Вычитать только 'в чек'",
+                      value: "service_materials_discount_percent",
+                    },
+                  ]}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Выберите опцию"
+                      variant="outlined"
+                      sx={{
+                        fontSize: "1.4rem",
+                        marginBottom: "1rem",
+                      }}
+                    />
+                  )}
+                  sx={{
+                    "& .MuiAutocomplete-inputRoot": {
+                      fontSize: "1rem",
+                      padding: "0.5rem",
+                    },
+                  }}
+                />
               </div>
               <div
                 className={classes.services__employeePersentage__info}
                 style={{
                   display: "flex",
                   flexDirection: "column",
-                  width: "15rem",
+
                   marginBottom: "1rem",
                 }}
               >
-                <p style={{ fontSize: "1.3rem" }}>Материалы откуда</p>
-                <select name="pets" id="pet-select">
-                  <option value="service_percent">По умолчанию</option>
-                  <option value="service_percent">Вычитать из выручки</option>
-                  <option value="service_materials_no_discount_percent">
-                    Вычитается из доли мастера
-                  </option>
-                </select>
+                <p style={{ fontSize: "1.3rem", marginBottom: "0.5rem" }}>
+                  Материалы откуда
+                </p>
+                <Autocomplete
+                  size="small"
+                  options={[
+                    { label: "По умолчанию", value: "service_percent" },
+                    { label: "Вычитать из выручки", value: "service_percent" },
+                    {
+                      label: "Вычитается из доли мастера",
+                      value: "service_materials_no_discount_percent",
+                    },
+                  ]}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Выберите опцию"
+                      variant="outlined"
+                      sx={{
+                        fontSize: "1rem",
+                        marginBottom: "1rem",
+                      }}
+                    />
+                  )}
+                  sx={{
+                    "& .MuiAutocomplete-inputRoot": {
+                      fontSize: "1rem",
+                      padding: "0.5rem",
+                    },
+                  }}
+                />
               </div>
             </div>
-            {/* hier scheße Button für löschen modal */}
+            <a
+              className={classes.linkBtn}
+              onClick={() => NiceModal.show(salaryServicesModal)}
+              style={{ fontSize: "1.4rem" }}
+            >
+              Выбрать услуги
+            </a>
+            <Button
+              className={classes.deleteBtn}
+              onClick={() => handleDeleteService(newId)}
+            >
+              <Delete />
+            </Button>
           </div>
           <Divider />
         </div>
@@ -222,10 +369,12 @@ const FloatingPart: React.FC = () => {
           <FormControlLabel
             control={<Checkbox />}
             label="Вычитать стоимость израсходованных материалов из зарплаты"
+            sx={{ fontSize: "1.4rem" }}
           />
           <FormControlLabel
             control={<Checkbox />}
             label="Прибавлять стоимость израсходованных материалов к зарплате"
+            sx={{ fontSize: "1.4rem" }}
           />
         </div>
       </div>
@@ -239,16 +388,13 @@ const FloatingPart: React.FC = () => {
           devServices.map((service) => (
             <div key={service.id} id={service.id}>
               {service.element}
-              {
-                /* hier scheße Button für löschen */
-                <Button onClick={() => NiceModal.show(salaryServicesModal)}>
-                  OPEN MODAL
-                </Button>
-              }
+              {/* hier scheße Button für löschen */}
             </div>
           ))
         ) : (
-          <p>Все услуги, оказываемые сотрудником, испльзуют общие настройки.</p>
+          <p style={{ fontSize: "1.4rem" }}>
+            Все услуги, оказываемые сотрудником, испльзуют общие настройки.
+          </p>
         )}
       </div>
     </div>
