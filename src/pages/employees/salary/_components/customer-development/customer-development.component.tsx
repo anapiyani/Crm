@@ -1,5 +1,5 @@
 import HeaderTemplate from "../MultiStepHeader/MultiStepHeader.component";
-import StepInput from "../stepInput/stepInput.component";
+import StepInput from "../step-input/step-input.component";
 import classes from "./styles.module.scss";
 
 const CustomerDevelopment = () => {
