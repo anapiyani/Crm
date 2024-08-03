@@ -24,7 +24,16 @@ import { useAddClient } from "@/service/client/client.hook";
 import CustomAutoComplete from "@/components/autocomplete/custom-autocomplete.component";
 import { useQuery } from "@tanstack/react-query";
 import { getHierarchyEmployeesByDepartment } from "@/service/hierarchy/hierarchy.service";
-import { IRolesbyDepartment } from "@/ts/hierarchy.inteface";
+import { Department } from "@/ts/client.interface";
+import {
+  smsOptions,
+  occupationOptions,
+  salonLocationOptions,
+  sourceOptions,
+  categoryOptions,
+  subcategoryOptions,
+  cityOptions,
+} from "./data";
 
 const schema = z.object({
   surname: z.string().min(1, "Заполните обязательное поле"),
@@ -67,169 +76,51 @@ const ClientsAdd = () => {
 
   const { mutate: addClient } = useAddClient();
 
-  const employeeOptions = [
-    { label: "Получено согласие", value: "true" },
-    { label: "Запрет на рассылку", value: "false" },
-  ];
+  const useEmployees = () => {
+    return useQuery({
+      queryKey: ["employeeDepartmentHierarchyData"],
+      queryFn: () => getHierarchyEmployeesByDepartment(),
+      staleTime: 1000 * 60 * 5,
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+    });
+  };
 
-  const occupationOptions = [
-    { label: "Не указано", value: "Не указано" },
-    {
-      label: "Безработный/домохозяйка",
-      value: "Безработный/домохозяйка",
-    },
-    { label: "Бизнесмен", value: "Бизнесмен" },
-    { label: "Госслужащий", value: "Госслужащий" },
-    { label: "Инженер", value: "Инженер" },
-    { label: "Офисный сотрудник", value: "Офисный сотрудник" },
-    { label: "Пенсионер", value: "Пенсионер" },
-    { label: "Рабочий", value: "Рабочий" },
-    { label: "Студент", value: "Студент" },
-  ];
+  interface EmployeeOption {
+    nodeType: string;
+    nodeName: string;
+    nodeId?: number;
+    uniqueKey: string;
+  }
 
-  const salonLocationOptions = [
-    { label: "Не указано", value: "Не указано" },
-    { label: "Дом салона", value: "Дом салона" },
-    { label: "Соседний дом", value: "Соседний дом" },
-    { label: "Район", value: "Район" },
-    { label: "Далеко", value: "Далеко" },
-    { label: "Другой город", value: "Другой город" },
-  ];
+  const processEmployeeOptions = (data: Department[]): EmployeeOption[] => {
+    const options: EmployeeOption[] = [];
 
-  const sourceOptions = [
-    { label: "Не указано", value: "Не указано" },
-    {
-      label: "Интернет поисковики",
-      value: "Интернет поисковики",
-    },
-    { label: "Купоны", value: "Купоны" },
-    { label: "Листовки", value: "Листовки" },
-    {
-      label: "По рекомендации клиента",
-      value: "По рекомендации клиента",
-    },
-    {
-      label: "По рекомендации конкретного клиента",
-      value: "По рекомендации конкретного клиента",
-    },
-    { label: "Проходил мимо", value: "Проходил мимо" },
-    { label: "Реклама в СМИ", value: "Реклама в СМИ" },
-    { label: "Реклама наружная", value: "Реклама наружная" },
-    { label: "Рекламная печать", value: "Рекламная печать" },
-    {
-      label: "Родственник сотрудника",
-      value: "Родственник сотрудника",
-    },
-    { label: "Рядом живет", value: "Рядом живет" },
-    { label: "Рядом работает", value: "Рядом работает" },
-    { label: "Свой клиент", value: "Свой клиент" },
-    { label: "Сотрудник", value: "Сотрудник" },
-    { label: "Соцсети", value: "Соцсети" },
-    {
-      label: "Онлайн-запись: сайт",
-      value: "Онлайн-запись: сайт",
-    },
-    {
-      label: "Онлайн-запись: vkontakte",
-      value: "Онлайн-запись: vkontakte",
-    },
-    {
-      label: "Онлайн-запись: facebook",
-      value: "Онлайн-запись: facebook",
-    },
-    { label: "Яндекс карты", value: "Яндекс карты" },
-    {
-      label: "Онлайн-запись: мобильное приложение",
-      value: "Онлайн-запись: мобильное приложение",
-    },
-  ];
-  const categoryOptions = [
-    { label: "Без категории", value: "Без категории" },
-    { label: "VIP-клиент", value: "VIP-клиент" },
-    { label: "Постоянный клиент", value: "Постоянный клиент" },
-    { label: "Сотрудник", value: "Сотрудник" },
-  ];
-  const subcategoryOptions = [{ label: "Не указано", value: "Не указано" }];
-  const cityOptions = [{ label: "Не обнаружено", value: "Не обнаружено" }];
-
-  const hierarchicalData = [
-    {
-      nodeType: "department",
-      nodeName: "Ресепшн",
-    },
-    {
-      nodeType: "role",
-      nodeName: "Марина Вишневская, Администратор",
-      nodeId: 1,
-    },
-    {
-      nodeType: "role",
-      nodeName: "Карина Карина, Администратор",
-      nodeId: 2,
-    },
-    {
-      nodeType: "role",
-      nodeName: "Джамиля Ортаева, Администратор",
-      nodeId: 3,
-    },
-    {
-      nodeType: "role",
-      nodeName: "Динара Тюрина, Администратор",
-      nodeId: 4,
-    },
-    {
-      nodeType: "department",
-      nodeName: "Парикмахерский зал",
-    },
-    {
-      nodeType: "role",
-      nodeName: "Миразиз Абидов, Мастер",
-      nodeId: 5,
-    },
-    {
-      nodeType: "role",
-      nodeName: "Анарa Досмуханова, Мастер-стилист",
-      nodeId: 6,
-    },
-    {
-      nodeType: "role",
-      nodeName: "Ирина Загитова, Мастер-стилист",
-      nodeId: 7,
-    },
-  ];
-
-  const { data: employeeDepartmentHierarchyData } = useQuery({
-    queryKey: ["employeeDepartmentHierarchyData"],
-    queryFn: () => getHierarchyEmployeesByDepartment(),
-    staleTime: 1000 * 60 * 5,
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-  });
-
-  console.log(employeeDepartmentHierarchyData);
-
-
-  const proccessRoleOptions = (roles: IRolesbyDepartment[]) => {
-    const results: {
-      nodeType: string;
-      nodeName: string;
-      nodeId?: number;
-    }[] = [];
-    roles.forEach((role) => {
-      results.push({
+    data.forEach((department, departmentIndex) => {
+      options.push({
         nodeType: "department",
-        nodeName: role.department,
+        nodeName: department.department,
+        nodeId: departmentIndex,
+        uniqueKey: `department-${departmentIndex}`,
       });
-      role.roles.forEach((r) => {
-        results.push({
+
+      department.employees.forEach((employee, employeeIndex) => {
+        options.push({
           nodeType: "role",
-          nodeName: r.name,
-          nodeId: r.id,
+          nodeName: `${employee.full_name}, ${employee.position}`,
+          nodeId: employee.employee_id,
+          uniqueKey: `${employee.employee_id}-${department.department}`,
         });
       });
     });
-    return results;
+
+    return options;
   };
+
+  const { data: employeeDepartmentHierarchyData, isLoading } = useEmployees();
+  const employeeOptions = employeeDepartmentHierarchyData
+    ? processEmployeeOptions(employeeDepartmentHierarchyData)
+    : [];
 
   const onSubmit: SubmitHandler<FormValues> = async (data) => {
     const clientData = {
@@ -237,7 +128,7 @@ const ClientsAdd = () => {
         first_name: data.name,
         last_name: data.surname,
         gender: data.gender,
-        date_of_birth: "2021-10-10",
+        date_of_birth: "2002-11-25",
         phone_number: data.mobile,
         phone_number_whatsapp: data.whatsapp,
         email: data.email,
@@ -245,7 +136,7 @@ const ClientsAdd = () => {
       category: data.category || "",
       occupation: data.occupation || "",
       invite_source: data.source || "",
-      card_number: "4400430275029991",
+      card_number: "",
       sms_notification: data.sms_subscription === "true" ? true : false,
       description: data.comment || "",
       description_as_main_characteristic: data.main_characteristic || false,
@@ -514,7 +405,7 @@ const ClientsAdd = () => {
                             width: "30rem",
                           },
                         }}
-                        options={hierarchicalData}
+                        options={employeeOptions}
                         getOptionLabel={(option) => option.nodeName}
                         isOptionEqualToValue={(option, value) =>
                           option.nodeId === value.nodeId
@@ -525,7 +416,7 @@ const ClientsAdd = () => {
                         renderOption={(props, option) => (
                           <li
                             {...props}
-                            key={option.nodeId}
+                            key={option.uniqueKey}
                             style={{
                               pointerEvents:
                                 option.nodeType === "department"
@@ -623,12 +514,12 @@ const ClientsAdd = () => {
                       selectValue="label"
                       size="small"
                       label="Рассылка SMS"
-                      options={employeeOptions || []}
+                      options={smsOptions || []}
                       onChange={(value) => {
                         field.onChange(value?.value);
                       }}
                       value={
-                        employeeOptions?.find(
+                        smsOptions?.find(
                           (option) => option.value === field.value
                         ) || null
                       }
@@ -711,7 +602,7 @@ const ClientsAdd = () => {
                           width: "30rem",
                         },
                       }}
-                      options={hierarchicalData}
+                      options={employeeOptions}
                       getOptionLabel={(option) => option.nodeName}
                       isOptionEqualToValue={(option, value) =>
                         option.nodeId === value.nodeId
@@ -722,7 +613,7 @@ const ClientsAdd = () => {
                       renderOption={(props, option) => (
                         <li
                           {...props}
-                          key={option.nodeId}
+                          key={option.uniqueKey}
                           style={{
                             pointerEvents:
                               option.nodeType === "department"
@@ -754,8 +645,8 @@ const ClientsAdd = () => {
                             sx={{ height: "40px" }}
                             {...params}
                             className={"main__lower__auto__input"}
-                            error={!!errors.employee_client}
-                            helperText={errors.employee_client?.message}
+                            error={!!errors.employee}
+                            helperText={errors.employee?.message}
                           />
                         </div>
                       )}

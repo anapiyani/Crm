@@ -49,3 +49,19 @@ export interface ICreateClientReturn {
   description_as_main_characteristic:   boolean;
   employee: number;
 }
+
+
+
+export interface Employee {
+  employee_id: number;
+  full_name: string;
+  email: string;
+  position: string;
+  city: string;
+  start_date: string;
+}
+
+export interface Department {
+  department: string;
+  employees: Employee[];
+}

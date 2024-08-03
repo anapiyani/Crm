@@ -14,6 +14,8 @@ import {
   IServiceParent,
   IStorageCategory,
 } from "@/ts/hierarchy.inteface";
+import { Department } from "@/ts/client.interface";
+
 
 export const getHierarchy = (): Promise<IServiceCategory[]> => {
   return api.get("/hierarchy/hierarchy/").then((res) => res.data);
@@ -149,6 +151,6 @@ export const getHierarchyByEmployeeId = (
     .then((res) => res.data);
 };
 
-export const getHierarchyEmployeesByDepartment = () => {
+export const getHierarchyEmployeesByDepartment = (): Promise<Department[]> => {
   return api.get("/hierarchy/employees-by-departments/").then((res) => res.data);
 }
