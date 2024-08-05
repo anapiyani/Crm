@@ -140,8 +140,6 @@ const CreateAppointment: React.FC<ICreateAppointmentModalProps> = ({
     refetchOnWindowFocus: false,
   });
 
-  console.log(servicesDataByEmployee);
-
   const { data: parametersData } = useQuery({
     queryKey: ["parametersData", selectedServices?.value],
     queryFn: () => getServiceParametersById(selectedServices?.value as number),
@@ -269,8 +267,6 @@ const CreateAppointment: React.FC<ICreateAppointmentModalProps> = ({
       return newData;
     });
   };
-
-  console.log(servicesDataByEmployee);
 
   return (
     <ModalWindow

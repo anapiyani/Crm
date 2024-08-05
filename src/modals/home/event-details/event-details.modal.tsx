@@ -3,9 +3,9 @@ import ModalWindow from "@/components/modal-window/modal-window";
 import NiceModal, { useModal } from "@ebay/nice-modal-react";
 import classes from "@/modals/home/styles.module.scss";
 import ResponsiveTabs from "@/components/tabs/tabs.component";
-import { eventTabs, eventTableData, header, bodyData } from "./data";
+import { eventTabs, header, bodyData } from "./data";
 import Grid from "@mui/material/Unstable_Grid2";
-import { Button, CircularProgress, Divider } from "@mui/material";
+import { Button, CircularProgress } from "@mui/material";
 import TableVertical from "@/components/tables/tableVertical/vertical-info-card";
 import TableHorizontal from "@/components/tables/table-horizontal/horizontal-info-card";
 import {
@@ -16,7 +16,6 @@ import {
   contactsTableData,
   commentsTableData,
 } from "@/pages/clients/client-card/data";
-import EmployeeVisitsTable from "@/pages/employees/employee-visits/visits-table/employee-visits-table";
 import ChangeHistoryTable from "@/components/tables/table-change-history/table-change-history";
 import { useQuery } from "@tanstack/react-query";
 import {

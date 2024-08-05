@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import classes from "./styles.module.scss";
-import { eventTableData } from "../data";
-import EmployeeVisitsTable from "@/pages/employees/employee-visits/visits-table/employee-visits-table";
 import { Divider } from "@mui/material";
 import { IAppointmentHistory } from "@/ts/appointments.interface";
 import EventHistoryTable from "../../_components/event-history-table/event-history-table";
@@ -14,18 +12,6 @@ interface IEventDetailsThirdTabProps {
   plannedVisitsData: IAppointmentHistory[];
   noShowData: IAppointmentHistory[];
   deletedData: IAppointmentHistory[];
-}
-
-interface IPlannedTableData {
-  id: number;
-  date: string;
-  time: string;
-  status: string;
-  employee: string;
-  service: string;
-  price: string;
-  admin: string;
-  [key: string]: string | number | boolean | undefined;
 }
 
 const plannedTableHeadCells = [
@@ -74,7 +60,6 @@ const EventDetailsThirdTab: React.FC<IEventDetailsThirdTabProps> = ({
 }) => {
   const [tabIndex, setTabIndex] = useState<number>(0);
 
-  // const transformedPlannedData = transformPlannedVisitsData(plannedVisitsData);
   const transformedPlannedData = transformDataToTableFormat(
     plannedVisitsData,
     plannedTableHeadCells
