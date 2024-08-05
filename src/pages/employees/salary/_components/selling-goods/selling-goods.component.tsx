@@ -14,6 +14,12 @@ const SellingGoods = () => {
   const [certificateContent, setCertificateContent] = useState<
     CertificateItem[]
   >([]);
+  const [abonementsWithOtherPercent, setAbonementsWithOtherPercent] = useState<
+    CertificateItem[]
+  >([]);
+  const [goodsWithOtherPercent, setGoodsWithOtherPercent] = useState<
+    CertificateItem[]
+  >([]);
 
   const handleOpenCertificateContent = () => {
     const newId = `devService-${Date.now()}`;
@@ -30,6 +36,7 @@ const SellingGoods = () => {
                   flexDirection: "column",
                   width: "15rem",
                   marginBottom: "1rem",
+                  marginRight: "12rem",
                 }}
               >
                 <p style={{ fontSize: "1.6rem", marginBottom: "0.5rem" }}>
@@ -99,8 +106,209 @@ const SellingGoods = () => {
     ]);
   };
 
+  const handleOpenAbonementsWithOtherPercent = () => {
+    const newId = `devAbonement-${Date.now()}`;
+    const newAbonement: CertificateItem = {
+      id: newId,
+      element: (
+        <div>
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <div style={{ display: "flex", flexDirection: "column" }}>
+              <div
+                className={classes.services__employeePersentage__info}
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  width: "15rem",
+                  marginBottom: "1rem",
+                  marginRight: "12rem",
+                }}
+              >
+                <p style={{ fontSize: "1.6rem", marginBottom: "0.5rem" }}>
+                  % сотрудника
+                </p>
+                <div style={{ display: "flex", marginBottom: "1rem" }}>
+                  <TextField
+                    size="small"
+                    type="text"
+                    placeholder="0"
+                    style={{
+                      width: "10rem",
+                      marginRight: "1rem",
+                      fontSize: "1.4rem",
+                    }}
+                    onChange={(e) => console.log(e.target.value)}
+                  />
+                  <p style={{ fontSize: "1.4rem" }}>руб.</p>
+                </div>
+                <Autocomplete
+                  size="small"
+                  options={[
+                    { label: "Фикс. сумма", value: "fixed_percent" },
+                    { label: "% от чека", value: "service_percent" },
+                  ]}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Выберите опцию"
+                      variant="outlined"
+                      sx={{
+                        fontSize: "1.4rem",
+                        marginBottom: "1rem",
+                      }}
+                    />
+                  )}
+                  sx={{
+                    "& .MuiAutocomplete-inputRoot": {
+                      fontSize: "1rem",
+                      padding: "0.5rem",
+                    },
+                  }}
+                />
+                <Autocomplete
+                  size="small"
+                  options={[
+                    { label: "Продажа", value: "prosazha" },
+                    { label: "Продление", value: "service_percent" },
+                  ]}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Выберите опцию"
+                      variant="outlined"
+                      sx={{
+                        fontSize: "1.4rem",
+                        marginBottom: "1rem",
+                      }}
+                    />
+                  )}
+                  sx={{
+                    "& .MuiAutocomplete-inputRoot": {
+                      fontSize: "1rem",
+                      padding: "0.5rem",
+                    },
+                  }}
+                />
+              </div>
+            </div>
+            <StepInput
+              labelName={"Абонементы"}
+              placeholder={"Выберите абонементы"}
+              isAutoComplete={true}
+              options={[]}
+              onChange={() => console.log("certificates")}
+            />
+            <Button
+              className={classes.deleteBtn}
+              onClick={() => handleDeleteAbonement(newId)}
+            >
+              <Delete />
+            </Button>
+          </div>
+          <Divider />
+        </div>
+      ),
+    };
+    setAbonementsWithOtherPercent((prevDevServices) => [
+      ...prevDevServices,
+      newAbonement,
+    ]);
+  };
+
+  const handleOpenGoodsWithOtherPercent = () => {
+    const newId = `devGoods-${Date.now()}`;
+    const newGoods: CertificateItem = {
+      id: newId,
+      element: (
+        <div>
+          <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <div style={{ display: "flex", flexDirection: "column" }}>
+              <div
+                className={classes.services__employeePersentage__info}
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  width: "25rem",
+                  marginBottom: "1rem",
+                }}
+              >
+                <p style={{ fontSize: "1.6rem", marginBottom: "0.5rem" }}>
+                  % сотрудника
+                </p>
+                <div style={{ display: "flex", marginBottom: "1rem" }}>
+                  <TextField
+                    size="small"
+                    type="text"
+                    placeholder="0"
+                    style={{
+                      width: "12rem",
+                      marginRight: "1rem",
+                      fontSize: "1.4rem",
+                    }}
+                    onChange={(e) => console.log(e.target.value)}
+                  />
+                  <p style={{ fontSize: "1.4rem" }}>руб.</p>
+                </div>
+                <Autocomplete
+                  size="small"
+                  options={[
+                    { label: "Фикс. сумма", value: "fixed_percent" },
+                    { label: "% от чека", value: "service_percent" },
+                  ]}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Выберите опцию"
+                      variant="outlined"
+                      sx={{
+                        fontSize: "1.4rem",
+                        marginBottom: "1rem",
+                      }}
+                    />
+                  )}
+                  sx={{
+                    "& .MuiAutocomplete-inputRoot": {
+                      fontSize: "1rem",
+                      padding: "0.5rem",
+                    },
+                  }}
+                />
+              </div>
+            </div>
+            <a className={classes.linkBtn} style={{ fontSize: "1.4rem" }}>
+              Выбрать товары
+            </a>
+            <Button
+              className={classes.deleteBtn}
+              onClick={() => handleDeleteGoods(newId)}
+            >
+              <Delete />
+            </Button>
+          </div>
+          <Divider />
+        </div>
+      ),
+    };
+    setGoodsWithOtherPercent((prevDevServices) => [
+      ...prevDevServices,
+      newGoods,
+    ]);
+  };
+
   const handleDeleteCertificate = (id: string) => {
     setCertificateContent((prevDevServices) =>
+      prevDevServices.filter((service) => service.id !== id),
+    );
+  };
+
+  const handleDeleteAbonement = (id: string) => {
+    setAbonementsWithOtherPercent((prevDevServices) =>
+      prevDevServices.filter((service) => service.id !== id),
+    );
+  };
+
+  const handleDeleteGoods = (id: string) => {
+    setGoodsWithOtherPercent((prevDevServices) =>
       prevDevServices.filter((service) => service.id !== id),
     );
   };
@@ -179,11 +387,22 @@ const SellingGoods = () => {
         </div>
       </div>
       <div className={classes.selling__item}>
-        <HeaderTemplate children={"Абонементы с другим процентом"} />
+        <HeaderTemplate
+          hasPlus={true}
+          children={"Абонементы с другим процентом"}
+          onPlusClick={handleOpenAbonementsWithOtherPercent}
+        />
         <div className={classes.selling__item__content}>
-          <p className={classes.lonlyP}>
-            Все абонементы, продаваемые сотрудником, используют общие настройки.
-          </p>
+          {abonementsWithOtherPercent.length > 0 ? (
+            abonementsWithOtherPercent.map((abonement) => (
+              <div key={abonement.id}>{abonement.element}</div>
+            ))
+          ) : (
+            <p className={classes.lonlyP}>
+              Все абонементы, продаваемые сотрудником, используют общие
+              настройки.
+            </p>
+          )}
         </div>
       </div>
       <div className={classes.selling__item}>
@@ -207,11 +426,21 @@ const SellingGoods = () => {
         </div>
       </div>
       <div className={classes.selling__item}>
-        <HeaderTemplate children={"Товары с другим процентом"} />
+        <HeaderTemplate
+          hasPlus={true}
+          onPlusClick={handleOpenGoodsWithOtherPercent}
+          children={"Товары с другим процентом"}
+        />
         <div className={classes.selling__item__content}>
-          <p className={classes.lonlyP}>
-            Все товары, продаваемые сотрудником, используют общие настройки.
-          </p>
+          {goodsWithOtherPercent.length > 0 ? (
+            goodsWithOtherPercent.map((goods) => (
+              <div key={goods.id}>{goods.element}</div>
+            ))
+          ) : (
+            <p className={classes.lonlyP}>
+              Все товары, продаваемые сотрудником, используют общие настройки.
+            </p>
+          )}
         </div>
       </div>
     </div>
