@@ -20,3 +20,15 @@ export const addBreakToSchedule = (data: Omit<IBreaks, "id">) => {
 export const deleteBreakFromSchedule = (id: number) => {
   return api.delete(`/schedule/breaks/${id}/`).then((res) => res.data);
 };
+
+export const addTimeOffToSchedule = (
+  employee_id: number, 
+  data:  { status: string },
+  date: string,
+) => {
+  return api.post(`/schedule/day-statuses/add-time-off/${employee_id}/date/?date=${date}`, data).then((res) => res.data);
+};
+
+export const getEmployeeScheduleDates = (employee_id: number): Promise<{date: string}[]> => {
+  return api.get(`/schedule/schedules/employee/dates/?employee_id=${employee_id}`).then((res) => res.data);
+}

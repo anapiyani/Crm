@@ -2,7 +2,10 @@ import {
   IAppointmentCreateForm,
   IAppointmentReturn,
 } from "@/ts/appointments.interface";
-import { createAppointments } from "./appointments.service";
+import {
+  createAppointments,
+  temporaryDeleteAppointment,
+} from "./appointments.service";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import { useModal } from "@ebay/nice-modal-react";
@@ -22,6 +25,19 @@ export const useCreateAppointment = () => {
       const errorMessage =
         "Произошла ошибка при добавлении записи." || error.message;
       toast.error(errorMessage);
+    },
+  });
+};
+
+export const useTemporaryDeleteAppointment = () => {
+  const queryClient = useQueryClient();
+  const modal = useModal();
+  return useMutation({
+    mutationFn: temporaryDeleteAppointment,
+    onSuccess: () => {
+      toast.success("Запись успешно удалена!");
+      queryClient.invalidateQueries({ queryKey: ["schedules"] });
+      modal.hide();
     },
   });
 };

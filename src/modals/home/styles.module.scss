@@ -134,3 +134,23 @@
 .u-mt-2 {
   margin-top: 2rem;
 }
+
+
+.event-details {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+
+  &__right {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  &__modal {
+    min-width: 100rem;
+    width: 120rem;
+  }
+}

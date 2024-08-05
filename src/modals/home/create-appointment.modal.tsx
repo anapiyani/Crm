@@ -71,9 +71,8 @@ const CreateAppointment: React.FC<ICreateAppointmentModalProps> = ({
   employee,
 }) => {
   const modal = useModal();
-  const [appointmentForm, setAppointmentForm] = useState<
-    IAppointmentCreateForm
-  >(initialAppointmentForm);
+  const [appointmentForm, setAppointmentForm] =
+    useState<IAppointmentCreateForm>(initialAppointmentForm);
   const [selectedEmployee, setSelectedEmployee] = useState<IOption | null>(
     null
   );
@@ -140,6 +139,8 @@ const CreateAppointment: React.FC<ICreateAppointmentModalProps> = ({
     staleTime: Infinity,
     refetchOnWindowFocus: false,
   });
+
+  console.log(servicesDataByEmployee);
 
   const { data: parametersData } = useQuery({
     queryKey: ["parametersData", selectedServices?.value],
@@ -268,6 +269,8 @@ const CreateAppointment: React.FC<ICreateAppointmentModalProps> = ({
       return newData;
     });
   };
+
+  console.log(servicesDataByEmployee);
 
   return (
     <ModalWindow
@@ -456,10 +459,10 @@ const CreateAppointment: React.FC<ICreateAppointmentModalProps> = ({
                 value={selectedServices}
                 onChange={(value) => setSelectedServices(value)}
                 options={
-                  servicesDataByEmployee?.results
-                    ? servicesDataByEmployee.results.map((service) => ({
-                        label: service.parameter.split(":")[0],
-                        value: service.service,
+                  servicesDataByEmployee
+                    ? servicesDataByEmployee.map((service) => ({
+                        label: service.service,
+                        value: service.parameter.id,
                       }))
                     : []
                 }

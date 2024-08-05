@@ -100,3 +100,24 @@ export interface ISingleAppointmentReturn {
   employee_id: number;
   employee_name: string;
 }
+
+export interface IAppointmentHistory {
+  id: number;
+  client_name: string;
+  employee_name: string;
+  status: string;
+  department: string;
+  date: string;
+  start_time: string;
+  end_time: string;
+  services: Array<{
+    id: number;
+    service_name: string;
+    parameter: string;
+    price: string;
+    quantity: number;
+    total_price: string;
+  }>;
+  discount_custom: string;
+  total_price: string;
+}

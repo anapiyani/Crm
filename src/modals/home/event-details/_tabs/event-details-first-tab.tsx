@@ -80,7 +80,7 @@ const EventDetailsFirstTab: React.FC<IEventDetailsFirstTabProps> = ({
           service_id: service.service,
           price: service.price,
           quantity: service.quantity,
-          parameter: service.parameter.split(":")[1],
+          parameter: service.parameter,
           parameter_id: service.service,
         }))
       );
@@ -209,10 +209,10 @@ const EventDetailsFirstTab: React.FC<IEventDetailsFirstTabProps> = ({
               value={selectedService}
               onChange={(value) => setSelectedService(value)}
               options={
-                servicesDataByEmployee?.results
-                  ? servicesDataByEmployee.results.map((service) => ({
-                      label: service.parameter.split(":")[0],
-                      value: service.service,
+                servicesDataByEmployee
+                  ? servicesDataByEmployee.map((service) => ({
+                      label: service.service,
+                      value: service.parameter.id,
                     }))
                   : []
               }

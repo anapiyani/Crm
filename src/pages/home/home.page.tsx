@@ -10,17 +10,23 @@ import {
   CircularProgress,
   Menu,
   MenuItem,
+  Paper,
 } from "@mui/material";
 import InputMask from "react-input-mask";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DateCalendar } from "@mui/x-date-pickers/DateCalendar";
+import {
+  LocalizationProvider,
+  DateCalendar,
+  PickersDay,
+  PickersDayProps,
+} from "@mui/x-date-pickers";
 import { Cached, Search, AddCircle, Help } from "@mui/icons-material";
 
 import { ResourceApi } from "@fullcalendar/resource/index.js";
 import FullCalendar from "@fullcalendar/react";
 import resourceTimeGridPlugin from "@fullcalendar/resource-timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
+import { DateSelectArg, DatesSetArg, EventClickArg } from "@fullcalendar/core";
 import dayjs, { Dayjs } from "dayjs";
 
 import BreadcrumbsCustom from "@/components/navigation/breadcrumbs/breadcrumbs";
@@ -42,10 +48,12 @@ import { calendarStatuses } from "./data";
 import classes from "./styles.module.scss";
 import "./custom.css";
 import { useQuery } from "@tanstack/react-query";
-import { getScheduleByDate } from "@/service/schedule/schedule.service";
+import {
+  getEmployeeScheduleDates,
+  getScheduleByDate,
+} from "@/service/schedule/schedule.service";
 import { transformSchedulesToFullCalendar } from "@/utils/transform-data";
 import EventContent from "./_components/event-content";
-import { DateSelectArg, DatesSetArg, EventClickArg } from "@fullcalendar/core";
 import ResourceCard from "./_components/resource-card";
 
 const Home = () => {
@@ -59,6 +67,7 @@ const Home = () => {
   const [selectedResourceId, setSelectedResourceId] = useState<string | null>(
     null
   );
+  // const [selectedEmployee, setSelectedEmployee] = useState<
   const [selectedTitle, setSelectedTitle] = useState<string | null>(null);
   const [events, setEvents] = useState<any[]>([]);
   const [resources, setResources] = useState<any[]>([]);
@@ -69,6 +78,15 @@ const Home = () => {
     staleTime: 1000 * 60 * 5,
     refetchOnWindowFocus: false,
   });
+
+  const { data: getEmployeeScheduleData } = useQuery({
+    queryKey: ["employeeScheduleData"],
+    queryFn: () => getEmployeeScheduleDates(52),
+    staleTime: Infinity,
+  });
+
+  const highlightedDays =
+    getEmployeeScheduleData?.map((item) => item.date) || [];
 
   useEffect(() => {
     if (schedulesData) {
@@ -140,6 +158,29 @@ const Home = () => {
   const handleCloseBurgerMenu = () => {
     setBurgerMenuAnchorEl(null);
   };
+
+  function ServerDay(
+    props: PickersDayProps<Dayjs> & { highlightedDays?: string[] }
+  ) {
+    const { highlightedDays = [], day, outsideCurrentMonth, ...other } = props;
+
+    const isSelected = highlightedDays.includes(day.format("YYYY-MM-DD"));
+
+    return (
+      <PickersDay
+        {...other}
+        outsideCurrentMonth={outsideCurrentMonth}
+        day={day}
+        sx={{
+          backgroundColor: isSelected ? "green" : undefined,
+          color: isSelected ? "white" : undefined,
+          "&:hover": {
+            backgroundColor: isSelected ? "darkgreen" : undefined,
+          },
+        }}
+      />
+    );
+  }
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -302,7 +343,7 @@ const Home = () => {
                     <Divider />
                     <Autocomplete
                       sx={{
-                        height: "4rem",
+                        height: "3  rem",
                         marginTop: "1rem",
                       }}
                       disablePortal
@@ -310,11 +351,19 @@ const Home = () => {
                         { label: "The Godfather", id: 1 },
                         { label: "Pulp Fiction", id: 2 },
                       ]}
+                      PaperComponent={({ children }) => (
+                        <Paper sx={{ fontSize: "1.4rem" }}>{children}</Paper>
+                      )}
                       renderInput={(params) => (
                         <TextField
                           {...params}
                           placeholder="Поиск"
                           variant="outlined"
+                          sx={{
+                            "& .MuiOutlinedInput-root": {
+                              fontSize: "1.4rem",
+                            },
+                          }}
                         />
                       )}
                     />
@@ -344,6 +393,14 @@ const Home = () => {
                         ".MuiPickersCalendarHeader-labelContainer": {
                           fontSize: "1.4rem",
                         },
+                      }}
+                      slots={{
+                        day: ServerDay,
+                      }}
+                      slotProps={{
+                        day: {
+                          highlightedDays,
+                        } as any,
                       }}
                     />
                     <div className={classes["calendar--status"]}>
