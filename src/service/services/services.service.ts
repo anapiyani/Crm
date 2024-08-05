@@ -25,7 +25,7 @@ export const getServiceParametersById = (
 
 export const getServiceForEmployeeById = (
   user_id: string
-): Promise<IResponseData<IUserService[]>> => {
+): Promise<IUserService[]> => {
   return api
     .get(`/services/services/employee/${user_id}/`)
     .then((res) => res.data);

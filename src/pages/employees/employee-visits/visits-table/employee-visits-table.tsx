@@ -28,8 +28,8 @@ const StyledTableRow = styled(TableRow, {
       ? "#FBFCFE"
       : "#FFFFFF"
     : (rowIndex ?? 0) % 2 === 0
-    ? "#FBFCFE"
-    : "#FFFFFF",
+      ? "#FBFCFE"
+      : "#FFFFFF",
   "&:last-child td, &:last-child th": {
     borderBottom: 0,
   },

@@ -40,9 +40,12 @@ export interface IServiceCategory {
 
 export interface IUserService {
   id: number;
-  service: number;
+  service: string;
   role: number;
-  parameter: string;
+  parameter: {
+    id: number;
+    name: string;
+  };
   price: string;
   type: string;
 }
@@ -61,7 +64,6 @@ export interface IEmployeeServiceHierarchy {
     type: string;
   }[];
 }
-
 
 export interface IHierarchyFlattenService {
   id: number;

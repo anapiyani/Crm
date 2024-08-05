@@ -1,10 +1,9 @@
 import ModalWindow from "@/components/modal-window/modal-window";
-import VerticalTextField from "@/components/textfield-vertical/textfield-vertical";
 import {
   getRolesByDepartments,
   linkRoleToHierarchy,
 } from "@/service/hierarchy/hierarchy.service";
-import { IRolesbyDepartment } from "@/ts/hierarchy.inteface";
+import { proccessRoleOptions } from "@/utils/process-role-options";
 import NiceModal, { useModal } from "@ebay/nice-modal-react";
 import { Autocomplete, TextField } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
@@ -30,6 +29,7 @@ const AddRoleModal: React.FC<AddRoleModalProps> = ({ categoryId }) => {
     queryKey: ["roles"],
     queryFn: () => getRolesByDepartments(),
   });
+
   useEffect(() => {
     if (data) {
       setNode(proccessRoleOptions(data));
@@ -40,27 +40,6 @@ const AddRoleModal: React.FC<AddRoleModalProps> = ({ categoryId }) => {
     linkRoleToHierarchy({ department_id: categoryId, role_id: roleId });
   };
 
-  const proccessRoleOptions = (roles: IRolesbyDepartment[]) => {
-    const results: {
-      nodeType: string;
-      nodeName: string;
-      nodeId?: number;
-    }[] = [];
-    roles.forEach((role) => {
-      results.push({
-        nodeType: "department",
-        nodeName: role.department,
-      });
-      role.roles.forEach((r) => {
-        results.push({
-          nodeType: "role",
-          nodeName: r.name,
-          nodeId: r.id,
-        });
-      });
-    });
-    return results;
-  };
   return (
     <ModalWindow
       title={"Добавить Роль"}
