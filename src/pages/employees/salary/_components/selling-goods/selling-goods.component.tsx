@@ -4,13 +4,19 @@ import StepInput from "../step-input/step-input.component";
 import classes from "./styles.module.scss";
 import { Autocomplete, Button, Divider, TextField } from "@mui/material";
 import { Delete } from "@mui/icons-material";
+import { Control } from "react-hook-form";
+import { IStepFormHook } from "@/ts/employee.interface";
 
 interface CertificateItem {
   id: string;
   element: React.ReactNode;
 }
 
-const SellingGoods = () => {
+interface GoodsPartProps {
+  control: Control<IStepFormHook>;
+}
+
+const SellingGoods: React.FC<GoodsPartProps> = ({ control }) => {
   const [certificateContent, setCertificateContent] = useState<
     CertificateItem[]
   >([]);

@@ -1,10 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import toast from "react-hot-toast";
-import {
-  addEmployee,
-  IAddEmployeeInterface,
-  searchEmployee,
-} from "./employee.service";
+import { addEmployee, IAddEmployeeInterface } from "./employee.service";
 import { IEmployeeAddForm } from "@/ts/types";
 
 export const useAddEmployee = () => {
@@ -16,7 +12,7 @@ export const useAddEmployee = () => {
     },
     onError: (error) => {
       const errorMessage =
-        "Произошла ошибка при добавлении сотрудника." || error.message;
+        error.message || "Произошла ошибка при добавлении сотрудника.";
       toast.error(errorMessage);
     },
   });

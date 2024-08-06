@@ -1,48 +1,58 @@
-import { IOptions } from "@/ts/employee.interface";
+import React from "react";
+import { Controller, Control } from "react-hook-form";
+import { IOptions, IStepFormHook } from "@/ts/employee.interface";
 import HeaderTemplate from "../MultiStepHeader/MultiStepHeader.component";
 import StepInput from "../step-input/step-input.component";
 import classes from "./styles.module.scss";
 
-const FixedPart = () => {
-  const handleChange = (value: IOptions) => {
-    console.log("Selected value:", value.value);
-  };
+interface FixedPartProps {
+  control: Control<IStepFormHook>;
+}
+
+const FixedPart: React.FC<FixedPartProps> = ({ control }) => {
+  const options: IOptions[] = [
+    { label: "За час", value: "hourly" },
+    { label: "За смену", value: "shift" },
+    { label: "За неделю", value: "week" },
+    { label: "За месяц", value: "month" },
+  ];
 
   return (
     <div className={classes.fixed}>
       <HeaderTemplate children={"Фиксированная часть"} />
       <div className={classes.fixed__content}>
-        <StepInput
-          labelName={"Система начисления"}
-          placeholder={"За смену"}
-          isAutoComplete={true}
-          options={[
-            { label: "За час", value: "hourly" },
-            { label: "За смену", value: "shift" },
-            {
-              label: "За смену в зависимости от выручки за месяц",
-              value: "monthly_revenue",
-            },
-            {
-              label: "За смену в зависимости от выручки за день",
-              value: "daily_revenue",
-            },
-            {
-              label: "За смену в зависимости от продолжительности записей",
-              value: "duration",
-            },
-            { label: "За неделю", value: "week" },
-            { label: "За месяц", value: "month" },
-          ]}
-          onChange={handleChange}
+        <Controller
+          name="fixed_components.0.accrual_type"
+          control={control}
+          render={({ field }) => (
+            <StepInput
+              labelName={"Система начисления"}
+              placeholder={"Выберите систему начисления"}
+              isAutoComplete={true}
+              options={options}
+              onChange={(selectedOption) =>
+                field.onChange(selectedOption.value)
+              }
+              selectedOption={
+                options.find((option) => option.value === field.value) || null
+              }
+            />
+          )}
         />
-        <StepInput
-          isNumber={true}
-          labelName={"Объем фикс. части"}
-          placeholder={"0"}
-          onChange={(value) => console.log("Number input changed:", value)}
-          plusMinusBtns={true}
-          afterChild={<p>руб.</p>}
+        <Controller
+          name="fixed_components.0.fixed_amount"
+          control={control}
+          render={({ field }) => (
+            <StepInput
+              isNumber={true}
+              labelName={"Объем фикс. части"}
+              placeholder={"0"}
+              onChange={(value) => field.onChange(value)}
+              plusMinusBtns={true}
+              afterChild={<p>руб.</p>}
+              dataValue={field.value || ""}
+            />
+          )}
         />
       </div>
     </div>
