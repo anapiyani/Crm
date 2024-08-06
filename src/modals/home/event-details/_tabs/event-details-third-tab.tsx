@@ -129,6 +129,7 @@ const EventDetailsThirdTab: React.FC<IEventDetailsThirdTabProps> = ({
       >
         {tabsData.map((tab) => (
           <p
+            key={tab.id}
             style={{
               fontSize: "1.6rem",
               color: tabIndex === tab.id ? "var(--brand-500)" : "#000000",

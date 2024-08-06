@@ -6,6 +6,9 @@ import DeleteBreakModal from "./home/delete-break.modal";
 import ChooseServiceModal from "./home/choose-service.modal";
 import ShiftReportModal from "./home/shift-report.modal";
 import AddCategoryModal from "./cash-desk/indirect-category-add.modal";
+import DeleteAllBreaksConfirmationModal from "./home/delete-all-breaks-confirmation.modal";
+import DeleteEmployeeScheduleConfirmationModal from "./home/delete-employee-schedule-confirmation.modal";
+import TakeDayOffConfirmationModal from "./home/take-day-off-confirmation.modal";
 
 export {
   AddBreakModal,
@@ -16,4 +19,7 @@ export {
   ChooseServiceModal,
   ShiftReportModal,
   AddCategoryModal,
+  DeleteAllBreaksConfirmationModal,
+  DeleteEmployeeScheduleConfirmationModal,
+  TakeDayOffConfirmationModal,
 };

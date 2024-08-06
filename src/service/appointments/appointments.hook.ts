@@ -11,13 +11,13 @@ import toast from "react-hot-toast";
 import { useModal } from "@ebay/nice-modal-react";
 
 export const useCreateAppointment = () => {
-  const queryClinent = useQueryClient();
+  const queryClient = useQueryClient();
   const modal = useModal();
   return useMutation<IAppointmentReturn, Error, IAppointmentCreateForm>({
     mutationFn: createAppointments,
     onSuccess: (data) => {
       toast.success("Запись успешно добавлена!");
-      queryClinent.invalidateQueries({ queryKey: ["schedules"] });
+      queryClient.invalidateQueries({ queryKey: ["schedules"] });
       modal.hide();
       return data;
     },

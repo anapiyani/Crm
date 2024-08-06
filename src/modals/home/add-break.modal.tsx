@@ -11,9 +11,10 @@ import classes from "./styles.module.scss";
 
 interface IAddBreakModalProps {
   resourceId: string;
+  date: string;
 }
 
-const AddBreak: React.FC<IAddBreakModalProps> = ({ resourceId }) => {
+const AddBreak: React.FC<IAddBreakModalProps> = ({ resourceId, date }) => {
   const modal = useModal();
   const addBreakToScheduleMutation = useAddBreakToSchedule();
   const [startTime, setStartTime] = useState<Dayjs | null>(null);
@@ -26,6 +27,7 @@ const AddBreak: React.FC<IAddBreakModalProps> = ({ resourceId }) => {
       start_time: startTime?.format("HH:mm") || "",
       end_time: endTime?.format("HH:mm") || "",
       break_note: comment,
+      date: date,
     });
   };
 
@@ -44,7 +46,6 @@ const AddBreak: React.FC<IAddBreakModalProps> = ({ resourceId }) => {
         <div className={classes["break-modal"]}>
           <div className={classes["break-modal__time"]}>
             <TimePicker
-              label="Basic time picker"
               sx={{
                 width: "100%",
                 "& .MuiOutlinedInput-input": {
@@ -56,7 +57,6 @@ const AddBreak: React.FC<IAddBreakModalProps> = ({ resourceId }) => {
               format="HH:mm"
             />
             <TimePicker
-              label="basic time picker"
               sx={{
                 width: "100%",
                 "& .MuiOutlinedInput-input": {
