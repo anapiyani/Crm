@@ -5,6 +5,7 @@ import {
   ICardInfoEmployee,
   IEmployeesData,
   ISearchFormData,
+  ITemplateList,
   IUserDetails,
 } from "@/ts/employee.interface";
 
@@ -22,7 +23,7 @@ export interface IAddEmployeeInterface {
 }
 
 export const addEmployee = (
-  form: IEmployeeAddForm
+  form: IEmployeeAddForm,
 ): Promise<IAddEmployeeInterface> => {
   return api.post("/users/register-employee/", form).then((res) => res.data);
 };
@@ -32,7 +33,7 @@ export const searchDepartment = (): Promise<IDepartments> => {
 };
 
 export const searchEmployee = (
-  formData?: Partial<ISearchFormData>
+  formData?: Partial<ISearchFormData>,
 ): Promise<void | IEmployeesData> => {
   const params = new URLSearchParams();
   Object.entries(formData!).forEach(([key, value]) => {
@@ -45,11 +46,19 @@ export const searchEmployee = (
 };
 
 export const cardInfoEmplpyee = (
-  user_id: number
+  user_id: number,
 ): Promise<ICardInfoEmployee> => {
   return api.get(`/information-card/${user_id}/`).then((res) => res.data);
 };
 
 export const mainInfoEmployee = (user_id: number): Promise<IUserDetails> => {
   return api.get(`/users/${user_id}/`).then((res) => res.data);
+};
+
+export const getTemplateList = (): Promise<ITemplateList[]> => {
+  return api.get("/salary-template/list").then((res) => res.data);
+};
+
+export const editTemplateGet = (id: number): Promise<ITemplateList> => {
+  return api.get(`/salary-template/${id}/`).then((res) => res.data);
 };

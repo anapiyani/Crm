@@ -1,15 +1,30 @@
+import React from "react";
 import HeaderTemplate from "../MultiStepHeader/MultiStepHeader.component";
 import StepInput from "../step-input/step-input.component";
 import classes from "./styles.module.scss";
+import { Controller, Control } from "react-hook-form";
+import { IStepFormHook } from "@/ts/employee.interface";
 
-const TemplateName = () => {
+interface TemplateNameProps {
+  control: Control<IStepFormHook>;
+}
+
+const TemplateName: React.FC<TemplateNameProps> = ({ control }) => {
   return (
     <div className={classes.naming}>
       <HeaderTemplate children={"Переименовать шаблон"} />
-      <StepInput
-        labelName={"Название шаблона"}
-        placeholder={"Мастера"}
-        onChange={() => console.log("change")}
+      <Controller
+        name="name"
+        control={control}
+        render={({ field }) => (
+          <StepInput
+            {...field}
+            labelName={"Название шаблона"}
+            placeholder={"Мастера"}
+            dataValue={field.value || ""}
+            onChange={(e) => field.onChange(e)}
+          />
+        )}
       />
     </div>
   );
