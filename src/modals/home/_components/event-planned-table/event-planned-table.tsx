@@ -229,7 +229,7 @@ export default function EventPlannedTable<T extends ITableData>({
           <Typography
             variant="h6"
             align="center"
-            sx={{ padding: "16px", fontSize: "1.6rem" }}
+            sx={{ padding: "16px", fontSize: "1.6rem", fontWeight: 400 }}
           >
             Ничего не найдено
           </Typography>

@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   addBreakToSchedule,
+  addTimeOffToScheduleByDate,
   deleteBreakFromSchedule,
 } from "./schedule.service";
 import { IBreaks } from "@/ts/schedule.interface";
@@ -36,6 +37,24 @@ export const useDeleteBreakFromSchedule = () => {
       const errorMessage =
         "Произошла ошибка при удалении перерыва." || error.message;
       toast.error(errorMessage);
+    },
+  });
+};
+
+export const useTimeOffToSchedule = () => {
+  return useMutation({
+    mutationFn: ({
+      employee_id,
+      date,
+    }: {
+      date: string;
+      employee_id: string;
+    }) => addTimeOffToScheduleByDate(employee_id, date),
+    onSuccess: () => {
+      toast.success("Отпуск успешно добавлен");
+    },
+    onError: () => {
+      toast.error("Ошибка при добавлении отпуска");
     },
   });
 };

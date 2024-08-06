@@ -1,6 +1,11 @@
 import React from "react";
 import NiceModal from "@ebay/nice-modal-react";
-import { AddBreakModal } from "@/modals";
+import {
+  AddBreakModal,
+  DeleteAllBreaksConfirmationModal,
+  DeleteEmployeeScheduleConfirmationModal,
+  TakeDayOffConfirmationModal,
+} from "@/modals";
 import { Divider, Menu, MenuItem } from "@mui/material";
 import {
   CalendarMonth,
@@ -19,6 +24,7 @@ interface IResourceDropdownMenuProps {
   anchorEl: null | HTMLElement;
   onClose: () => void;
   resourceId: string;
+  date: string;
   username?: string;
 }
 
@@ -27,11 +33,31 @@ const ResourceDropdownMenu: React.FC<IResourceDropdownMenuProps> = ({
   onClose,
   resourceId,
   username,
+  date,
 }) => {
   const navigate = useNavigate();
   const handleAddBreak = () => {
     NiceModal.show(AddBreakModal, {
       resourceId,
+      date: date,
+    });
+  };
+
+  const handleDeleteAllBreaks = () => {
+    NiceModal.show(DeleteAllBreaksConfirmationModal, {
+      date: date,
+      employee_id: resourceId,
+    });
+  };
+
+  const handleDeleteEmployeeSchedule = () => {
+    NiceModal.show(DeleteEmployeeScheduleConfirmationModal, {});
+  };
+
+  const handleTakeDayoff = () => {
+    NiceModal.show(TakeDayOffConfirmationModal, {
+      employee_id: resourceId,
+      date: date,
     });
   };
 
@@ -59,14 +85,26 @@ const ResourceDropdownMenu: React.FC<IResourceDropdownMenuProps> = ({
     {
       icon: <DoNotDisturb />,
       text: "Удалить все перерывы",
+      onClick: () => {
+        handleDeleteAllBreaks();
+        onClose();
+      },
     },
     {
       icon: <Warning />,
       text: "Поставить отгул",
+      onClick: () => {
+        handleTakeDayoff();
+        onClose();
+      },
     },
     {
       icon: <Delete />,
       text: "Удалить смену",
+      onClick: () => {
+        handleDeleteEmployeeSchedule();
+        onClose();
+      },
     },
   ];
 

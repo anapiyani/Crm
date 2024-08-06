@@ -16,6 +16,7 @@ export interface IBreaks {
   start_time: string;
   end_time: string;
   break_note: string;
+  date: string;
 }
 
 export interface IAppointment {

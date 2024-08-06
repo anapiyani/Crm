@@ -172,8 +172,8 @@ const Home = () => {
         outsideCurrentMonth={outsideCurrentMonth}
         day={day}
         sx={{
-          backgroundColor: isSelected ? "green" : undefined,
-          color: isSelected ? "white" : undefined,
+          backgroundColor: isSelected ? "#A5D6A7" : undefined,
+          color: isSelected ? "black" : undefined,
           "&:hover": {
             backgroundColor: isSelected ? "darkgreen" : undefined,
           },
@@ -260,12 +260,14 @@ const Home = () => {
               onClose={handleCloseDropdownMenu}
               resourceId={selectedResourceId || ""}
               username={selectedTitle || ""}
+              date={selectedDate?.format("YYYY-MM-DD") || ""}
             />
             <ResourceDropdownMenu
               anchorEl={anchorEl}
               onClose={handleCloseDropdownMenu}
               resourceId={selectedResourceId || ""}
               username={selectedTitle || ""}
+              date={selectedDate?.format("YYYY-MM-DD") || ""}
             />
             <Menu
               anchorEl={burgerMenuAnchorEl}

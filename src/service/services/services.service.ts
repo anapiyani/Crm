@@ -38,3 +38,12 @@ export const getServiceParent = (
     .get(`/hierarchy/hierarchy-parents/${service_id}/`)
     .then((res) => res.data);
 };
+
+export const deleteAllBreaks = (
+  date: string,
+  employee_id: string
+): Promise<void> => {
+  return api
+    .delete(`/schedule/breaks/delete/?date=${date}&employee_id=${employee_id}`)
+    .then((res) => res.data);
+};
