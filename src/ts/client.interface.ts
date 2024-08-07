@@ -46,13 +46,11 @@ export interface ICreateClientReturn {
   card_number: string;
   sms_notification: boolean;
   description: string;
-  description_as_main_characteristic:   boolean;
+  description_as_main_characteristic: boolean;
   employee: number;
 }
 
-
-
-export interface Employee {
+export interface IEmployee {
   employee_id: number;
   full_name: string;
   email: string;
@@ -61,7 +59,7 @@ export interface Employee {
   start_date: string;
 }
 
-export interface Department {
+export interface IEmployeeDepartment {
   department: string;
-  employees: Employee[];
+  employees: IEmployee[];
 }

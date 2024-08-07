@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import React from "react";
 import BreadcrumbsCustom from "@/components/navigation/breadcrumbs/breadcrumbs";
-import classes from "./styles.module.scss";
 import InputCard from "@/components/input-card/input-card";
 import CustomTextField from "@/components/textField/textField.component";
 import InputMask from "react-input-mask";
@@ -18,13 +17,12 @@ import VerticalTextField from "@/components/textfield-vertical/textfield-vertica
 import flagIcon from "@/assets/icons/Flags.svg";
 import { Textarea, Checkbox } from "@mui/joy";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
-import { date, z } from "zod";
+import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAddClient } from "@/service/client/client.hook";
 import CustomAutoComplete from "@/components/autocomplete/custom-autocomplete.component";
 import { useQuery } from "@tanstack/react-query";
 import { getHierarchyEmployeesByDepartment } from "@/service/hierarchy/hierarchy.service";
-import { Department } from "@/ts/client.interface";
 import {
   smsOptions,
   occupationOptions,
@@ -34,6 +32,8 @@ import {
   subcategoryOptions,
   cityOptions,
 } from "./data";
+import { processEmployeeOptions } from "@/utils/process-employees-departments";
+import classes from "./styles.module.scss";
 
 const schema = z.object({
   surname: z.string().min(1, "Заполните обязательное поле"),
@@ -60,19 +60,16 @@ const schema = z.object({
 
 type FormValues = z.infer<typeof schema>;
 
-const ClientsAdd = () => {
+const ClientsAdd: React.FC = () => {
   const {
     register,
     handleSubmit,
-    setError,
-    setValue,
     reset,
     control,
     formState: { errors, isSubmitting },
   } = useForm<FormValues>({
     resolver: zodResolver(schema),
   });
-  //tanstack react query tutorial
 
   const { mutate: addClient } = useAddClient();
 
@@ -84,37 +81,6 @@ const ClientsAdd = () => {
       refetchOnMount: false,
       refetchOnWindowFocus: false,
     });
-  };
-
-  interface EmployeeOption {
-    nodeType: string;
-    nodeName: string;
-    nodeId?: number;
-    uniqueKey: string;
-  }
-
-  const processEmployeeOptions = (data: Department[]): EmployeeOption[] => {
-    const options: EmployeeOption[] = [];
-
-    data.forEach((department, departmentIndex) => {
-      options.push({
-        nodeType: "department",
-        nodeName: department.department,
-        nodeId: departmentIndex,
-        uniqueKey: `department-${departmentIndex}`,
-      });
-
-      department.employees.forEach((employee, employeeIndex) => {
-        options.push({
-          nodeType: "role",
-          nodeName: `${employee.full_name}, ${employee.position}`,
-          nodeId: employee.employee_id,
-          uniqueKey: `${employee.employee_id}-${department.department}`,
-        });
-      });
-    });
-
-    return options;
   };
 
   const { data: employeeDepartmentHierarchyData, isLoading } = useEmployees();
