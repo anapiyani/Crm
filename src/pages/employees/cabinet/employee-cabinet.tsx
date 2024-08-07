@@ -126,7 +126,6 @@ const EmployeeCabinet = () => {
                 <RecursiveCheckbox
                   key={`category-${service.id}`}
                   category={service}
-                  onChildChange={() => {}}
                   onServiceChange={handleServiceChange}
                   preCheckedItems={selectedItems}
                 />

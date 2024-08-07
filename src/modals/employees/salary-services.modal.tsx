@@ -14,7 +14,7 @@ interface ITreeItemProps {
   type: "service" | "category";
   serviceName: string;
   parent: number | null;
-  parent_name: string;
+  parent_name: string | null;
 }
 const SalaryServicesModal = (selected: ITreeItemProps[]) => {
   const modal = useModal();
@@ -31,7 +31,6 @@ const SalaryServicesModal = (selected: ITreeItemProps[]) => {
 
   useEffect(() => {
     setData(serviceData!);
-    console.log(serviceData);
   }, [serviceData]);
 
   const handleServiceChange = (
@@ -40,7 +39,7 @@ const SalaryServicesModal = (selected: ITreeItemProps[]) => {
     type: "service" | "category",
     serviceName: string,
     parent: number | null,
-    parent_name: string
+    parent_name: string | null
   ) => {
     setSelectedItems((prev) => {
       if (isChecked === 1) {
@@ -50,13 +49,7 @@ const SalaryServicesModal = (selected: ITreeItemProps[]) => {
           { id, isChecked, type, serviceName, parent, parent_name },
         ];
       } else if (isChecked === 2) {
-        // Remove the item if it's unchecked
-        return prev.filter(
-          (item) =>
-            !(item.id === id && item.type === type,
-            item.parent === parent,
-            item.parent_name === parent_name)
-        );
+        return prev.filter((item) => !(item.id === id && item.type === type));
       } else if (isChecked === 3) {
         if (!prev.some((item) => item.id === id && item.type === type)) {
           return [
@@ -67,6 +60,7 @@ const SalaryServicesModal = (selected: ITreeItemProps[]) => {
           return prev;
         }
       }
+
       return prev;
     });
   };
@@ -165,7 +159,6 @@ const SalaryServicesModal = (selected: ITreeItemProps[]) => {
             <RecursiveCheckbox
               key={`category-${service.id}`}
               category={service}
-              onChildChange={() => {}}
               onServiceChange={handleServiceChange}
               preCheckedItems={selectedItems}
             />

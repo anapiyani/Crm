@@ -7,7 +7,7 @@ import { getHierarchyById } from "@/service/hierarchy/hierarchy.service";
 
 interface ITreeItemProps {
   category: IServiceCategory;
-  onChildChange: (state: number) => void; // 1 = Checked, 2 = Unchecked, 3 = Indeterminate
+
   onServiceChange: (
     id: number,
     isChecked: number, // 1 = Checked, 2 = Unchecked, 3 = Indeterminate
@@ -21,7 +21,6 @@ interface ITreeItemProps {
 
 const RecursiveCheckbox: React.FC<ITreeItemProps> = ({
   category,
-  onChildChange,
   onServiceChange,
   preCheckedItems,
 }) => {
@@ -40,13 +39,13 @@ const RecursiveCheckbox: React.FC<ITreeItemProps> = ({
 
     if (isCategoryChecked) {
       setChecked(1);
-      onChildChange(1);
+
       return;
     }
 
     if (category.services.length === 0 && category.children.length === 0) {
       setChecked(2);
-      onChildChange(2);
+
       return;
     }
 
@@ -87,14 +86,13 @@ const RecursiveCheckbox: React.FC<ITreeItemProps> = ({
     }
 
     setChecked(state);
-    onChildChange(state);
   };
 
   const handleCheckboxChange = () => {
     const newChecked = checked === 2 ? 1 : 2; // Toggle between unchecked and checked
     setChecked(newChecked);
     handleCategoryChange(category, newChecked);
-    onChildChange(newChecked);
+
     propagateParentChange(category.parent, newChecked);
   };
 
@@ -158,8 +156,8 @@ const RecursiveCheckbox: React.FC<ITreeItemProps> = ({
     const parentCategory = await getHierarchyById(parentCategoryId);
 
     const siblingStates = await Promise.all(
-      parentCategory.children.map(async (child) => {
-        const childCategory = await getHierarchyById(child.id);
+      parentCategory.children.map((child) => {
+        const childCategory = child;
 
         const isChecked = preCheckedItems.some(
           (preChecked) =>
@@ -200,10 +198,12 @@ const RecursiveCheckbox: React.FC<ITreeItemProps> = ({
 
         let state = 2; // Default to unchecked (2)
 
-        if (isChecked && allServicesChecked && allChildrenChecked) {
+        if (allServicesChecked && allChildrenChecked) {
           state = 1; // Checked (1)
         } else if (isIndeterminate) {
           state = 3; // Indeterminate (3)
+        } else {
+          state = 2;
         }
 
         return state;
@@ -222,9 +222,10 @@ const RecursiveCheckbox: React.FC<ITreeItemProps> = ({
       parentState = 3; // Any indeterminate -> parent becomes indeterminate
     } else if (anySiblingsChecked || childCheckedState === 1) {
       parentState = 3; // Mixed state -> parent becomes indeterminate
+    } else {
+      parentState = 2;
     }
 
-    console.log("Parent state: ", parentState, parentCategory.name);
     onServiceChange(
       parentCategory.id,
       parentState,
@@ -234,7 +235,7 @@ const RecursiveCheckbox: React.FC<ITreeItemProps> = ({
       parentCategory.parent_name
     );
 
-    propagateParentChange(parentCategory.parent, parentState);
+    propagateParentChange(parentCategory.parent, childCheckedState);
   };
 
   const toggle = () => setIsOpen(!isOpen);
@@ -263,7 +264,6 @@ const RecursiveCheckbox: React.FC<ITreeItemProps> = ({
             <RecursiveCheckbox
               key={`category-${child.id}`}
               category={child}
-              onChildChange={updateCheckedState}
               onServiceChange={onServiceChange}
               preCheckedItems={preCheckedItems}
             />

@@ -28,7 +28,7 @@ interface IServiceTextProps {
   type: "service" | "category";
   serviceName: string;
   parent: number | null;
-  parent_name: string;
+  parent_name: string | null;
 }
 
 interface FloatingPartProps {
@@ -37,8 +37,8 @@ interface FloatingPartProps {
 
 const FloatingPart: React.FC<FloatingPartProps> = ({ control }) => {
   const [devServices, setDevServices] = useState<DevServiceItem[]>([]);
-  const [selectedItems, setSelectedItems] = useState<string[]>([]);
 
+  //Zhango's function to traverse from service to parent
   const treeTraverse = (data: IServiceTextProps[], item: IServiceTextProps) => {
     let result: string[] = [];
     if (item.parent === null) {
@@ -53,20 +53,26 @@ const FloatingPart: React.FC<FloatingPartProps> = ({ control }) => {
     }
     return result;
   };
-
+  //Zhango's function to create List of services
   const handleListCreate = (data: IServiceTextProps[]) => {
     const services = data.filter((item) => item.type === "service");
     let textResult: string[][] = [];
     services.map((item) => textResult.push(treeTraverse(data, item)));
     const uniqueResult = [...new Set(textResult.map((item) => item.join(">")))];
-    setSelectedItems(uniqueResult);
-  };
-  useEffect(() => {
-    console.log(selectedItems);
-  }, [selectedItems.length]);
 
-  const handleShowNewService = () => {
+    return uniqueResult;
+  };
+
+  const handleShowNewService = (
+    selected: string[] = [], //default values made by Zhango
+    cost: string | undefined = undefined,
+    option: { label: string; value: string } = {
+      label: "Фикс. сумма",
+      value: "fixed_percent",
+    }
+  ) => {
     const newId = `devService-${Date.now()}`;
+    console.log("NewService" + selected);
     const newService: DevServiceItem = {
       id: newId,
       element: (
@@ -91,12 +97,15 @@ const FloatingPart: React.FC<FloatingPartProps> = ({ control }) => {
                     size="small"
                     type="text"
                     placeholder="0"
+                    defaultValue={cost}
                     style={{
                       width: "12rem",
                       marginRight: "1rem",
                       fontSize: "1.4rem",
                     }}
-                    onChange={(e) => console.log(e.target.value)}
+                    onChange={(e) => {
+                      cost = e.target.value;
+                    }}
                   />
                   <p style={{ fontSize: "1.4rem" }}>руб.</p>
                 </div>
@@ -119,6 +128,10 @@ const FloatingPart: React.FC<FloatingPartProps> = ({ control }) => {
                       value: "service_minus_client_bonuses_materials_percent",
                     },
                   ]}
+                  defaultValue={option}
+                  onChange={(e, value) => {
+                    option = value as { label: string; value: string };
+                  }}
                   renderInput={(params) => (
                     <TextField
                       {...params}
@@ -142,20 +155,26 @@ const FloatingPart: React.FC<FloatingPartProps> = ({ control }) => {
             <div>
               <a
                 className={classes.linkBtn}
+                //Open Modal to chose services
                 onClick={() =>
                   NiceModal.show(salaryServicesModal).then((res) => {
                     const newServiceText: IServiceTextProps[] = res as IServiceTextProps[];
-                    handleListCreate(newServiceText);
+                    handleShowNewService(
+                      handleListCreate(newServiceText),
+                      cost,
+                      option
+                    );
+                    handleDeleteService(newId);
                   })
                 }
                 style={{ fontSize: "1.4rem" }}
               >
                 Выбрать услуги
               </a>
-              {selectedItems.length > 0 ? (
+              {selected.length > 0 ? ( //text if you want to change it's design
                 <div>
                   <p style={{ fontSize: "1.4rem" }}>Выбранные услуги:</p>
-                  {selectedItems.map((item) => (
+                  {selected.map((item) => (
                     <p key={item} style={{ fontSize: "1.4rem" }}>
                       {item}
                     </p>
