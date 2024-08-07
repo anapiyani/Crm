@@ -55,6 +55,8 @@ import {
 import { transformSchedulesToFullCalendar } from "@/utils/transform-data";
 import EventContent from "./_components/event-content";
 import ResourceCard from "./_components/resource-card";
+import { getHierarchyEmployeesByDepartment } from "@/service/hierarchy/hierarchy.service";
+import { processEmployeeOptions } from "@/utils/process-employees-departments";
 
 const Home = () => {
   const [isHide, setIsHide] = useState<boolean>(false);
@@ -65,12 +67,12 @@ const Home = () => {
   const [burgerMenuAnchorEl, setBurgerMenuAnchorEl] =
     useState<null | HTMLElement>(null);
   const [selectedResourceId, setSelectedResourceId] = useState<string | null>(
-    null
+    null,
   );
-  // const [selectedEmployee, setSelectedEmployee] = useState<
   const [selectedTitle, setSelectedTitle] = useState<string | null>(null);
   const [events, setEvents] = useState<any[]>([]);
   const [resources, setResources] = useState<any[]>([]);
+  const [selectedEmployee, setSelectedEmployee] = useState<number>();
 
   const { data: schedulesData, isPending: scheduesDataPending } = useQuery({
     queryKey: ["schedules", selectedDate?.format("YYYY-MM-DD")],
@@ -79,10 +81,29 @@ const Home = () => {
     refetchOnWindowFocus: false,
   });
 
+  const useEmployees = () => {
+    return useQuery({
+      queryKey: ["employeeDepartmentHierarchyData"],
+      queryFn: () => getHierarchyEmployeesByDepartment(),
+      staleTime: 1000 * 60 * 5,
+      refetchOnMount: false,
+      refetchOnWindowFocus: false,
+    });
+  };
+
+  const handleOpenSchedule = (id: number) => {
+    setSelectedEmployee(id);
+  };
+
+  const { data: employeeDepartmentHierarchyData, isLoading } = useEmployees();
+  const employeeOptions = employeeDepartmentHierarchyData
+    ? processEmployeeOptions(employeeDepartmentHierarchyData, true)
+    : [];
+
   const { data: getEmployeeScheduleData } = useQuery({
-    queryKey: ["employeeScheduleData"],
-    queryFn: () => getEmployeeScheduleDates(52),
-    staleTime: Infinity,
+    queryKey: ["employeeScheduleData", selectedEmployee],
+    queryFn: () => getEmployeeScheduleDates(selectedEmployee || 0),
+    staleTime: 1000 * 60 * 5,
   });
 
   const highlightedDays =
@@ -108,7 +129,7 @@ const Home = () => {
   const handleResourceClick = (
     resourceId: string,
     resourceTitle: string,
-    event: React.MouseEvent<HTMLElement>
+    event: React.MouseEvent<HTMLElement>,
   ) => {
     setSelectedResourceId(resourceId);
     setSelectedTitle(resourceTitle);
@@ -133,7 +154,6 @@ const Home = () => {
 
   const handleCloseDropdownMenu = () => {
     setAnchorEl(null);
-    setSelectedResourceId(null);
   };
 
   const handlePanelHide = () => {
@@ -160,7 +180,7 @@ const Home = () => {
   };
 
   function ServerDay(
-    props: PickersDayProps<Dayjs> & { highlightedDays?: string[] }
+    props: PickersDayProps<Dayjs> & { highlightedDays?: string[] },
   ) {
     const { highlightedDays = [], day, outsideCurrentMonth, ...other } = props;
 
@@ -261,6 +281,7 @@ const Home = () => {
               resourceId={selectedResourceId || ""}
               username={selectedTitle || ""}
               date={selectedDate?.format("YYYY-MM-DD") || ""}
+              handleOpenSchedule={handleOpenSchedule}
             />
             <ResourceDropdownMenu
               anchorEl={anchorEl}
@@ -268,6 +289,7 @@ const Home = () => {
               resourceId={selectedResourceId || ""}
               username={selectedTitle || ""}
               date={selectedDate?.format("YYYY-MM-DD") || ""}
+              handleOpenSchedule={handleOpenSchedule}
             />
             <Menu
               anchorEl={burgerMenuAnchorEl}
@@ -310,7 +332,7 @@ const Home = () => {
                     classes["u-rotate-270"],
                     classes["u-m-md"],
                     classes["u-text-blue"],
-                    classes["u-cursor-pointer"]
+                    classes["u-cursor-pointer"],
                   )}
                 >
                   <span>Развернуть</span>
@@ -326,7 +348,7 @@ const Home = () => {
                     className={classNames(
                       classes["u-flex-row"],
                       classes["u-text-blue"],
-                      classes["u-cursor-pointer"]
+                      classes["u-cursor-pointer"],
                     )}
                     onClick={handlePanelHide}
                   >
@@ -348,25 +370,49 @@ const Home = () => {
                         height: "3  rem",
                         marginTop: "1rem",
                       }}
-                      disablePortal
-                      options={[
-                        { label: "The Godfather", id: 1 },
-                        { label: "Pulp Fiction", id: 2 },
-                      ]}
-                      PaperComponent={({ children }) => (
-                        <Paper sx={{ fontSize: "1.4rem" }}>{children}</Paper>
+                      options={employeeOptions}
+                      getOptionLabel={(option) => option.nodeName}
+                      isOptionEqualToValue={(option, value) =>
+                        option.nodeId === value.nodeId
+                      }
+                      onChange={(event, value) =>
+                        setSelectedEmployee(value?.nodeId)
+                      }
+                      renderOption={(props, option) => (
+                        <li
+                          {...props}
+                          key={option.uniqueKey}
+                          style={{
+                            pointerEvents:
+                              option.nodeType === "department"
+                                ? "none"
+                                : "auto",
+                          }}
+                        >
+                          <p
+                            style={{
+                              fontSize: "1.6rem",
+                              fontWeight:
+                                option.nodeType === "department"
+                                  ? "bold"
+                                  : "normal",
+                              marginLeft:
+                                option.nodeType === "department" ? "0" : "1rem",
+                            }}
+                          >
+                            {option.nodeName}
+                          </p>
+                        </li>
                       )}
                       renderInput={(params) => (
-                        <TextField
-                          {...params}
-                          placeholder="Поиск"
-                          variant="outlined"
-                          sx={{
-                            "& .MuiOutlinedInput-root": {
-                              fontSize: "1.4rem",
-                            },
-                          }}
-                        />
+                        <div className={classes["main__lower__auto"]}>
+                          <TextField
+                            placeholder="Поиск"
+                            sx={{ height: "40px" }}
+                            {...params}
+                            className={"main__lower__auto__input"}
+                          />
+                        </div>
                       )}
                     />
                   </div>

@@ -8,9 +8,18 @@ interface EmployeeOption {
 }
 
 export const processEmployeeOptions = (
-  data: IEmployeeDepartment[]
+  data: IEmployeeDepartment[],
+  isHasAll?: boolean,
 ): EmployeeOption[] => {
   const options: EmployeeOption[] = [];
+
+  isHasAll &&
+    options.push({
+      nodeType: "role",
+      nodeName: "Все",
+      nodeId: 0,
+      uniqueKey: `department`,
+    });
 
   data.forEach((department, departmentIndex) => {
     if (department.employees.length > 0) {
