@@ -2,94 +2,240 @@ import React, { useState, useEffect } from "react";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import classes from "./styles.module.scss";
-import { IServiceCategory } from "@/ts/service.interface";
+import { IService, IServiceCategory } from "@/ts/service.interface";
+import { getHierarchyById } from "@/service/hierarchy/hierarchy.service";
 
 interface ITreeItemProps {
   category: IServiceCategory;
-  parentChecked: boolean | null;
-  onChildChange: (state: boolean | null) => void;
+
   onServiceChange: (
     id: number,
-    isChecked: boolean,
+    isChecked: number, // 1 = Checked, 2 = Unchecked, 3 = Indeterminate
     type: "service" | "category",
-    name: string
+    name: string,
+    parent: number,
+    parent_name: string
   ) => void;
   preCheckedItems: { id: number; type: "service" | "category" }[];
 }
 
 const RecursiveCheckbox: React.FC<ITreeItemProps> = ({
   category,
-  parentChecked,
-  onChildChange,
   onServiceChange,
   preCheckedItems,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [checked, setChecked] = useState<boolean | null>(null);
+  const [checked, setChecked] = useState<number>(2); // Use 1, 2, 3 for checked, unchecked, and intermediate
 
   useEffect(() => {
-    if (parentChecked !== null) {
-      setChecked(parentChecked);
-    }
-  }, [parentChecked]);
+    updateCheckedState();
+  }, [preCheckedItems, category.services, category.children]);
 
-  useEffect(() => {
+  const updateCheckedState = () => {
     const isCategoryChecked = preCheckedItems.some(
       (preChecked) =>
         preChecked.id === category.id && preChecked.type === "category"
     );
-    const isAnyServiceChecked = category.services.some((service) =>
+
+    if (isCategoryChecked) {
+      setChecked(1);
+
+      return;
+    }
+
+    if (category.services.length === 0 && category.children.length === 0) {
+      setChecked(2);
+
+      return;
+    }
+
+    const allServicesChecked = category.services.every((service) =>
       preCheckedItems.some(
         (preChecked) =>
           preChecked.id === service.id && preChecked.type === "service"
       )
     );
 
-    if (isCategoryChecked) {
-      setChecked(true);
-    } else if (isAnyServiceChecked) {
-      setChecked(null); // Indeterminate state when some services are checked
-    } else if (parentChecked !== null) {
-      setChecked(parentChecked);
-    } else {
-      setChecked(false);
+    const allChildrenChecked = category.children.every((child) =>
+      preCheckedItems.some(
+        (preChecked) =>
+          preChecked.id === child.id && preChecked.type === "category"
+      )
+    );
+
+    const anyServicesChecked = category.services.some((service) =>
+      preCheckedItems.some(
+        (preChecked) =>
+          preChecked.id === service.id && preChecked.type === "service"
+      )
+    );
+
+    const anyChildrenChecked = category.children.some((child) =>
+      preCheckedItems.some(
+        (preChecked) =>
+          preChecked.id === child.id && preChecked.type === "category"
+      )
+    );
+
+    let state = 2; // Default to unchecked
+
+    if (allServicesChecked && allChildrenChecked) {
+      state = 1; // All checked
+    } else if (anyServicesChecked || anyChildrenChecked) {
+      state = 3; // Intermediate
     }
-  }, [preCheckedItems, category.services, category.id, parentChecked]);
+
+    setChecked(state);
+  };
 
   const handleCheckboxChange = () => {
-    const newChecked = checked === null ? true : !checked;
+    const newChecked = checked === 2 ? 1 : 2; // Toggle between unchecked and checked
     setChecked(newChecked);
-    propagateCheckState(category, newChecked);
-    onChildChange(newChecked ? true : false);
+    handleCategoryChange(category, newChecked);
+
+    propagateParentChange(category.parent, newChecked);
   };
 
-  const propagateCheckState = (
-    category: IServiceCategory,
-    isChecked: boolean | null
-  ) => {
-    onServiceChange(category.id, isChecked === true, "category", category.name);
-    category.services.forEach((service) => {
-      onServiceChange(service.id, isChecked === true, "service", service.name);
-    });
-    category.children.forEach((child) => {
-      propagateCheckState(child, isChecked);
-    });
-  };
-
-  const handleServiceCheckboxChange = (
-    serviceId: number,
-    serviceName?: string
-  ) => {
-    const newChecked = !preCheckedItems.some(
+  const handleServiceCheckboxChange = async (service: IService) => {
+    const newChecked = preCheckedItems.some(
       (preChecked) =>
-        preChecked.id === serviceId && preChecked.type === "service"
-    );
+        preChecked.id === service.id && preChecked.type === "service"
+    )
+      ? 2
+      : 1;
     onServiceChange(
-      serviceId,
+      service.id,
       newChecked,
       "service",
-      serviceName ? serviceName : ""
+      service.name,
+      service.parent!,
+      service.parent_name
     );
+    propagateParentChange(service.parent, newChecked);
+    updateCheckedState();
+  };
+
+  const handleCategoryChange = (
+    category: IServiceCategory,
+    isChecked: number // 1 = Checked, 2 = Unchecked, 3 = Intermediate
+  ) => {
+    const updateItems = (cat: IServiceCategory, checked: number) => {
+      onServiceChange(
+        cat.id,
+        checked,
+        "category",
+        cat.name,
+        cat.parent!,
+        cat.parent_name
+      );
+
+      cat.services.forEach((service) =>
+        onServiceChange(
+          service.id,
+          checked,
+          "service",
+          service.name,
+          service.parent!,
+          service.parent_name
+        )
+      );
+
+      cat.children.forEach((child) => updateItems(child, checked));
+    };
+
+    updateItems(category, isChecked);
+    updateCheckedState();
+  };
+
+  const propagateParentChange = async (
+    parentCategoryId: number | null,
+    childCheckedState: number
+  ) => {
+    if (parentCategoryId === null) return;
+
+    const parentCategory = await getHierarchyById(parentCategoryId);
+
+    const siblingStates = await Promise.all(
+      parentCategory.children.map((child) => {
+        const childCategory = child;
+
+        const isChecked = preCheckedItems.some(
+          (preChecked) =>
+            preChecked.id === childCategory.id && preChecked.type === "category"
+        );
+
+        const allServicesChecked = childCategory.services.every((service) =>
+          preCheckedItems.some(
+            (preChecked) =>
+              preChecked.id === service.id && preChecked.type === "service"
+          )
+        );
+
+        const allChildrenChecked = childCategory.children.every((subChild) =>
+          preCheckedItems.some(
+            (preChecked) =>
+              preChecked.id === subChild.id && preChecked.type === "category"
+          )
+        );
+
+        const anyServicesChecked = childCategory.services.some((service) =>
+          preCheckedItems.some(
+            (preChecked) =>
+              preChecked.id === service.id && preChecked.type === "service"
+          )
+        );
+
+        const anyChildrenChecked = childCategory.children.some((subChild) =>
+          preCheckedItems.some(
+            (preChecked) =>
+              preChecked.id === subChild.id && preChecked.type === "category"
+          )
+        );
+
+        const isIndeterminate =
+          (anyServicesChecked || anyChildrenChecked) &&
+          !(allServicesChecked && allChildrenChecked);
+
+        let state = 2; // Default to unchecked (2)
+
+        if (allServicesChecked && allChildrenChecked) {
+          state = 1; // Checked (1)
+        } else if (isIndeterminate) {
+          state = 3; // Indeterminate (3)
+        } else {
+          state = 2;
+        }
+
+        return state;
+      })
+    );
+
+    const allSiblingsChecked = siblingStates.every((state) => state === 1);
+    const anySiblingsIndeterminate = siblingStates.some((state) => state === 3);
+    const anySiblingsChecked = siblingStates.some((state) => state === 1);
+
+    let parentState = 2; // Default to unchecked (2)
+
+    if (allSiblingsChecked && childCheckedState === 1) {
+      parentState = 1; // All checked
+    } else if (anySiblingsIndeterminate || childCheckedState === 3) {
+      parentState = 3; // Any indeterminate -> parent becomes indeterminate
+    } else if (anySiblingsChecked || childCheckedState === 1) {
+      parentState = 3; // Mixed state -> parent becomes indeterminate
+    } else {
+      parentState = 2;
+    }
+
+    onServiceChange(
+      parentCategory.id,
+      parentState,
+      "category",
+      parentCategory.name,
+      parentCategory.parent!,
+      parentCategory.parent_name
+    );
+
+    propagateParentChange(parentCategory.parent, childCheckedState);
   };
 
   const toggle = () => setIsOpen(!isOpen);
@@ -99,10 +245,10 @@ const RecursiveCheckbox: React.FC<ITreeItemProps> = ({
       <div className={classes["tree__branch"]}>
         <input
           type="checkbox"
-          checked={checked === true}
+          checked={checked === 1}
           onChange={handleCheckboxChange}
           ref={(el) => {
-            if (el) el.indeterminate = checked === null;
+            if (el) el.indeterminate = checked === 3;
           }}
         />
         <span onClick={toggle} className={classes["tree__label"]}>
@@ -118,16 +264,6 @@ const RecursiveCheckbox: React.FC<ITreeItemProps> = ({
             <RecursiveCheckbox
               key={`category-${child.id}`}
               category={child}
-              parentChecked={checked}
-              onChildChange={(state) => {
-                if (state === null) {
-                  setChecked(null);
-                } else if (state) {
-                  setChecked(true);
-                } else {
-                  setChecked(false);
-                }
-              }}
               onServiceChange={onServiceChange}
               preCheckedItems={preCheckedItems}
             />
@@ -146,9 +282,7 @@ const RecursiveCheckbox: React.FC<ITreeItemProps> = ({
                         preChecked.id === service.id &&
                         preChecked.type === "service"
                     )}
-                    onChange={() =>
-                      handleServiceCheckboxChange(service.id, service.name)
-                    }
+                    onChange={() => handleServiceCheckboxChange(service)}
                   />
                   <span className={classes["tree__label"]}>{service.name}</span>
                 </li>

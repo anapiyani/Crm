@@ -27,6 +27,8 @@ export interface IService {
   min_volume: number;
   department: number;
   parameters: IServiceParameters[];
+  parent: number | null;
+  parent_name: string;
 }
 
 export interface IServiceCategory {
@@ -34,6 +36,7 @@ export interface IServiceCategory {
   name: string;
   level: string;
   parent: number | null;
+  parent_name: string;
   children: IServiceCategory[];
   services: IService[];
 }

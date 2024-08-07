@@ -39,6 +39,12 @@ export const getServiceParent = (
     .then((res) => res.data);
 };
 
+export const getServicePrices = (service_id: number): Promise<IService> => {
+  return api
+    .get(`/services/service-prices/${service_id}/`)
+    .then((res) => res.data);
+};
+
 export const deleteAllBreaks = (
   date: string,
   employee_id: string

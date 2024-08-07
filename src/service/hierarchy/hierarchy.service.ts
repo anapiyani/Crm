@@ -150,6 +150,10 @@ export const getHierarchyByEmployeeId = (
     .then((res) => res.data);
 };
 
+export const getHierarchyById = (id: number): Promise<IServiceCategory> => {
+  return api.get(`/hierarchy/hierarchy/${id}/`).then((res) => res.data);
+};
+
 export const getHierarchyEmployeesByDepartment = (): Promise<
   IEmployeeDepartment[]
 > => {

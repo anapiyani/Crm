@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import HeaderTemplate from "../MultiStepHeader/MultiStepHeader.component";
 import StepInput from "../step-input/step-input.component";
 import classes from "./styles.module.scss";
@@ -13,12 +13,22 @@ import {
 import NiceModal from "@ebay/nice-modal-react";
 import salaryServicesModal from "@/modals/employees/salary-services.modal";
 import { Delete } from "@mui/icons-material";
+import { C, s } from "node_modules/@fullcalendar/core/internal-common";
 import { useForm, Controller, Control } from "react-hook-form";
 import { IStepFormHook, IOptions } from "@/ts/employee.interface";
 
 interface DevServiceItem {
   id: string;
   element: React.ReactNode;
+}
+
+interface IServiceTextProps {
+  id: number;
+  isChecked: number;
+  type: "service" | "category";
+  serviceName: string;
+  parent: number | null;
+  parent_name: string | null;
 }
 
 interface FloatingPartProps {
@@ -28,8 +38,41 @@ interface FloatingPartProps {
 const FloatingPart: React.FC<FloatingPartProps> = ({ control }) => {
   const [devServices, setDevServices] = useState<DevServiceItem[]>([]);
 
-  const handleShowNewService = () => {
+  //Zhango's function to traverse from service to parent
+  const treeTraverse = (data: IServiceTextProps[], item: IServiceTextProps) => {
+    let result: string[] = [];
+    if (item.parent === null) {
+      result.push(item.serviceName);
+      return result!;
+    }
+
+    const parent = data.find((el) => el.id === item.parent);
+    result = [...treeTraverse(data, parent!), ...result];
+    if (parent?.isChecked !== 1) {
+      result.push(item.serviceName);
+    }
+    return result;
+  };
+  //Zhango's function to create List of services
+  const handleListCreate = (data: IServiceTextProps[]) => {
+    const services = data.filter((item) => item.type === "service");
+    let textResult: string[][] = [];
+    services.map((item) => textResult.push(treeTraverse(data, item)));
+    const uniqueResult = [...new Set(textResult.map((item) => item.join(">")))];
+
+    return uniqueResult;
+  };
+
+  const handleShowNewService = (
+    selected: string[] = [], //default values made by Zhango
+    cost: string | undefined = undefined,
+    option: { label: string; value: string } = {
+      label: "Фикс. сумма",
+      value: "fixed_percent",
+    }
+  ) => {
     const newId = `devService-${Date.now()}`;
+    console.log("NewService" + selected);
     const newService: DevServiceItem = {
       id: newId,
       element: (
@@ -54,12 +97,15 @@ const FloatingPart: React.FC<FloatingPartProps> = ({ control }) => {
                     size="small"
                     type="text"
                     placeholder="0"
+                    defaultValue={cost}
                     style={{
                       width: "12rem",
                       marginRight: "1rem",
                       fontSize: "1.4rem",
                     }}
-                    onChange={(e) => console.log(e.target.value)}
+                    onChange={(e) => {
+                      cost = e.target.value;
+                    }}
                   />
                   <p style={{ fontSize: "1.4rem" }}>руб.</p>
                 </div>
@@ -82,6 +128,10 @@ const FloatingPart: React.FC<FloatingPartProps> = ({ control }) => {
                       value: "service_minus_client_bonuses_materials_percent",
                     },
                   ]}
+                  defaultValue={option}
+                  onChange={(e, value) => {
+                    option = value as { label: string; value: string };
+                  }}
                   renderInput={(params) => (
                     <TextField
                       {...params}
@@ -102,13 +152,39 @@ const FloatingPart: React.FC<FloatingPartProps> = ({ control }) => {
                 />
               </div>
             </div>
-            <a
-              className={classes.linkBtn}
-              onClick={() => NiceModal.show(salaryServicesModal)}
-              style={{ fontSize: "1.4rem" }}
-            >
-              Выбрать услуги
-            </a>
+            <div>
+              <a
+                className={classes.linkBtn}
+                //Open Modal to chose services
+                onClick={() =>
+                  NiceModal.show(salaryServicesModal).then((res) => {
+                    const newServiceText: IServiceTextProps[] = res as IServiceTextProps[];
+                    handleShowNewService(
+                      handleListCreate(newServiceText),
+                      cost,
+                      option
+                    );
+                    handleDeleteService(newId);
+                  })
+                }
+                style={{ fontSize: "1.4rem" }}
+              >
+                Выбрать услуги
+              </a>
+              {selected.length > 0 ? ( //text if you want to change it's design
+                <div>
+                  <p style={{ fontSize: "1.4rem" }}>Выбранные услуги:</p>
+                  {selected.map((item) => (
+                    <p key={item} style={{ fontSize: "1.4rem" }}>
+                      {item}
+                    </p>
+                  ))}
+                </div>
+              ) : (
+                <p style={{ fontSize: "1.4rem" }}>Услуги не выбраны</p>
+              )}
+            </div>
+
             <Button
               className={classes.deleteBtn}
               onClick={() => handleDeleteService(newId)}
@@ -125,7 +201,7 @@ const FloatingPart: React.FC<FloatingPartProps> = ({ control }) => {
 
   const handleDeleteService = (id: string) => {
     setDevServices((prevDevServices) =>
-      prevDevServices.filter((service) => service.id !== id),
+      prevDevServices.filter((service) => service.id !== id)
     );
   };
 
@@ -297,6 +373,7 @@ const FloatingPart: React.FC<FloatingPartProps> = ({ control }) => {
         onPlusClick={() => handleShowNewService()}
         children={"Услуги с другим процентом"}
       />
+
       <div className={classes.floating__text_top}>
         {devServices.length > 0 ? (
           devServices.map((service) => (
