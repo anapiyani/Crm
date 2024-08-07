@@ -5,7 +5,7 @@ import classes from './styles.module.scss'
 
 interface IOption {
 	label: string
-	value: number | string
+	value: number | string  | boolean
 }
 
 interface ICustomAutoCompleteProps<T extends IOption> {
@@ -19,6 +19,7 @@ interface ICustomAutoCompleteProps<T extends IOption> {
 	className?: string
 	size?: 'small' | 'medium'
 	sx?: SxProps
+	fullWidth?: boolean
 }
 
 const isString = (item: unknown): item is string => {
@@ -36,6 +37,7 @@ const CustomAutoComplete = <T extends IOption>({
 	className,
 	size = 'medium',
 	sx,
+	fullWidth,
 }: ICustomAutoCompleteProps<T>): React.ReactElement => {
 	return (
 		<div className={classNames(classes['autocomplete'], className)}>
@@ -48,7 +50,7 @@ const CustomAutoComplete = <T extends IOption>({
 				id={name}
 				options={options}
 				value={value}
-				fullWidth
+				fullWidth={fullWidth}
 				size={size}
 				getOptionLabel={option => option[selectValue] as string}
 				getOptionKey={option => option.value as string}
