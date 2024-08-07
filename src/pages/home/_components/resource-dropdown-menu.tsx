@@ -26,6 +26,7 @@ interface IResourceDropdownMenuProps {
   resourceId: string;
   date: string;
   username?: string;
+  handleOpenSchedule: (id: number) => void;
 }
 
 const ResourceDropdownMenu: React.FC<IResourceDropdownMenuProps> = ({
@@ -33,6 +34,7 @@ const ResourceDropdownMenu: React.FC<IResourceDropdownMenuProps> = ({
   onClose,
   resourceId,
   username,
+  handleOpenSchedule,
   date,
 }) => {
   const navigate = useNavigate();
@@ -65,6 +67,10 @@ const ResourceDropdownMenu: React.FC<IResourceDropdownMenuProps> = ({
     {
       icon: <CalendarMonth />,
       text: "Показать график",
+      onClick: () => {
+        handleOpenSchedule(Number(resourceId));
+        onClose();
+      },
     },
     {
       icon: <Event />,
