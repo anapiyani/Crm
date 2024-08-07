@@ -39,6 +39,7 @@
     "moment": "^2.30.1",
     "mui-one-time-password-input": "^2.0.2",
     "react": "^18.3.1",
+    "react-accessible-treeview": "^2.9.1",
     "react-big-calendar": "^1.13.0",
     "react-chartjs-2": "^5.2.0",
     "react-datepicker": "^7.2.0",

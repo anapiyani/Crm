@@ -32,14 +32,23 @@ const EmployeeCabinet = () => {
 
   const handleServiceChange = (
     id: number,
-    isChecked: boolean,
+    isChecked: number,
     type: "service" | "category"
   ) => {
-    setSelectedItems((prev) =>
-      isChecked
-        ? [...prev, { id, type }]
-        : prev.filter((item) => !(item.id === id && item.type === type))
-    );
+    setSelectedItems((prev) => {
+      if (isChecked === 1) {
+        // Add the item if it's checked
+        return [...prev, { id, type }];
+      } else if (isChecked === 2) {
+        // Remove the item if it's unchecked
+        return prev.filter((item) => !(item.id === id && item.type === type));
+      } else if (isChecked === 3) {
+        // For intermediate state, you might want to handle differently.
+        // This example does not add or remove but could be extended based on your needs.
+        return prev; // Keep the state as is or update based on specific logic.
+      }
+      return prev;
+    });
   };
 
   const handleSave = (room: IRoom) => {
@@ -117,7 +126,6 @@ const EmployeeCabinet = () => {
                 <RecursiveCheckbox
                   key={`category-${service.id}`}
                   category={service}
-                  parentChecked={false}
                   onChildChange={() => {}}
                   onServiceChange={handleServiceChange}
                   preCheckedItems={selectedItems}
