@@ -4,8 +4,8 @@ import StepInput from "../step-input/step-input.component";
 import classes from "./styles.module.scss";
 import { Autocomplete, Button, Divider, TextField } from "@mui/material";
 import { Delete } from "@mui/icons-material";
-import { Control } from "react-hook-form";
-import { IStepFormHook } from "@/ts/employee.interface";
+import { Control, Controller } from "react-hook-form";
+import { ITemplate } from "@/ts/employee.interface";
 
 interface CertificateItem {
   id: string;
@@ -13,10 +13,14 @@ interface CertificateItem {
 }
 
 interface GoodsPartProps {
-  control: Control<IStepFormHook>;
+  control: Control<ITemplate>;
 }
 
 const SellingGoods: React.FC<GoodsPartProps> = ({ control }) => {
+  const [choosenOption, setChoosenOption] = useState<string>(
+    control._defaultValues.fixed_part?.payroll_type || "",
+  );
+
   const [certificateContent, setCertificateContent] = useState<
     CertificateItem[]
   >([]);
@@ -324,33 +328,114 @@ const SellingGoods: React.FC<GoodsPartProps> = ({ control }) => {
       <div className={classes.selling__item}>
         <HeaderTemplate children={"Продажи"} />
         <div className={classes.selling__item__content}>
-          <StepInput
-            labelName="Сумма к начислению"
-            isAutoComplete={true}
-            placeholder="По прайсу (без учета скидок)"
-            options={[]}
-            onChange={(value) => console.log(value)}
+          <Controller
+            name="product_sales.revenue_type"
+            control={control}
+            render={({ field }) => {
+              const options = [
+                {
+                  label: "Только в рабочие дни сотрудника",
+                  value: "working_days",
+                },
+                { label: "За все время", value: "all_time" },
+                { label: "Выручка со своих записей", value: "own_bookings" },
+              ];
+
+              const selectedOption =
+                options.find((option) => option.value === field.value) || null;
+
+              return (
+                <StepInput
+                  labelName="Сумма к начислению"
+                  isAutoComplete={true}
+                  placeholder="По прайсу (без учета скидок)"
+                  selectedOption={selectedOption}
+                  onChange={(selectedOption) =>
+                    field.onChange(selectedOption.value)
+                  }
+                />
+              );
+            }}
           />
         </div>
       </div>
       <div className={classes.selling__item}>
         <HeaderTemplate children={"Продажа сертификатов"} />
         <div className={classes.selling__item__content}>
-          <StepInput
-            labelName="Система начислений"
-            isAutoComplete={true}
-            placeholder="Постоянный процент"
-            options={[]}
-            onChange={(value) => console.log(value)}
+          <Controller
+            name="certificate_sales.calculation_type"
+            control={control}
+            render={({ field }) => {
+              const options = [
+                { label: "Постоянный процент", value: "constant_percentage" },
+                { label: "В зависимости от суммы", value: "amount_dependent" },
+              ];
+              return (
+                <StepInput
+                  labelName={"Система начисления"}
+                  placeholder={"Выберите систему начисления"}
+                  isAutoComplete={true}
+                  options={options}
+                  onChange={(selectedOption) => {
+                    field.onChange(selectedOption.value);
+                    setChoosenOption(selectedOption.value);
+                  }}
+                  selectedOption={
+                    options.find((option) => option.value === field.value) ||
+                    null
+                  }
+                />
+              );
+            }}
           />
-          <StepInput
-            isNumber={true}
-            labelName="С сертификатов:"
-            plusMinusBtns={true}
-            placeholder="0"
-            onChange={(value) => console.log(value)}
-            afterChild={<p>%</p>}
-          />
+          {choosenOption === "amount_dependent" ? (
+            <>
+              <Controller
+                name="certificate_sales.from_percentage"
+                control={control}
+                render={({ field }) => (
+                  <StepInput
+                    isNumber={true}
+                    labelName={"Сумма от"}
+                    placeholder={"0"}
+                    onChange={(value) => field.onChange(value)}
+                    plusMinusBtns={true}
+                    dataValue={field.value || ""}
+                  />
+                )}
+              />
+              <Controller
+                name="certificate_sales.to_percentage"
+                control={control}
+                render={({ field }) => (
+                  <StepInput
+                    isNumber={true}
+                    labelName={"Сумма до"}
+                    placeholder={"0"}
+                    onChange={(value) => field.onChange(value)}
+                    plusMinusBtns={true}
+                    dataValue={field.value || ""}
+                  />
+                )}
+              />
+            </>
+          ) : (
+            <Controller
+              name="certificate_sales.constant_percentage"
+              control={control}
+              render={({ field }) => (
+                <StepInput
+                  isNumber={true}
+                  labelName="С сертификатов:"
+                  plusMinusBtns={true}
+                  placeholder="0"
+                  onChange={field.onChange}
+                  dataValue={field.value}
+                  afterChild={<p>%</p>}
+                />
+              )}
+            />
+          )}
         </div>
       </div>
       <div className={classes.selling__item}>
@@ -414,20 +499,49 @@ const SellingGoods: React.FC<GoodsPartProps> = ({ control }) => {
       <div className={classes.selling__item}>
         <HeaderTemplate children={"Продажа товаров"} />
         <div className={classes.selling__item__content}>
-          <StepInput
-            labelName="Система начислений"
-            isAutoComplete={true}
-            placeholder="Постоянный процент"
-            options={[]}
-            onChange={(value) => console.log(value)}
+          <Controller
+            name="product_sales.revenue_type"
+            control={control}
+            render={({ field }) => {
+              const options = [
+                {
+                  label: "Только в рабочие дни сотрудника",
+                  value: "working_days",
+                },
+                { label: "За все время", value: "all_time" },
+                { label: "Выручка со своих записей", value: "own_bookings" },
+              ];
+
+              const selectedOption =
+                options.find((option) => option.value === field.value) || null;
+
+              return (
+                <StepInput
+                  labelName="Система начислений"
+                  isAutoComplete={true}
+                  placeholder="По прайсу (без учета скидок)"
+                  selectedOption={selectedOption}
+                  onChange={(selectedOption) =>
+                    field.onChange(selectedOption.value)
+                  }
+                />
+              );
+            }}
           />
-          <StepInput
-            isNumber={true}
-            labelName="С товаров:"
-            plusMinusBtns={true}
-            placeholder="0"
-            onChange={(value) => console.log(value)}
-            afterChild={<p>%</p>}
+          <Controller
+            name="product_sales.percentage"
+            control={control}
+            render={({ field }) => (
+              <StepInput
+                isNumber={true}
+                labelName="С товаров:"
+                plusMinusBtns={true}
+                placeholder="0"
+                onChange={field.onChange}
+                dataValue={field.value}
+                afterChild={<p>%</p>}
+              />
+            )}
           />
         </div>
       </div>

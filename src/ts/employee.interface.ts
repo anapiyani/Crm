@@ -63,54 +63,82 @@ export interface IOptions {
   label: string;
 }
 
-// Für nur eine StepForm Komponente
-// hier für react hook form funktioniert es nicht
-export interface IStepFormHook {
-  // template:
+export interface ITemplate {
   name: string;
-  type: string;
-  // fixed part:
-  fixed_components: IFixedComponents[];
-  // floating part:
-  floating_components: IFloatingComponents[];
-  // selling goods:
-  product_sales_components: ProductSalesComponents[];
-  // attracting clients:
-
-  // customer development:
-}
-
-export interface ITemplateList {
-  id: number;
-  name: string;
-  type: "production" | "management" | "admin";
-  fixed_components: IFixedComponents[];
-  floating_components: IFloatingComponents[];
-  product_sales_components: ProductSalesComponents[];
-}
-
-export interface IFixedComponents {
+  template_type: "production" | "management" | "admin";
+  fixed_part: IFixedPart;
+  floating_part: IFloatingPart;
+  product_sales: IProductSales;
+  client_attraction: IClientAttraction;
+  client_development: IClientDevelopment;
+  services_with_different_percentage: IServicesWithDifferentPercentage[];
+  certificate_sales: ICertificateSales;
+  subscription_sales: ISubscriptionSales;
   id?: number;
-  salary_template?: number;
-  accrual_type: string;
+}
+
+export interface IFixedPart {
+  payroll_type: string;
   fixed_amount: string;
-}
-
-export interface IFloatingComponents {
-  accrual_type: string;
-  amount_to_pay: string;
-  floating_components_by_services?: IFloatingComponentsByServices[];
-  percent_amount: string;
-}
-
-export interface ProductSalesComponents {
-  accural_system: string;
-  percent_amount: string;
+  from_amount: string;
+  to_amount: string;
+  from_value: string;
+  to_value: string;
   id?: number;
-  salary_template?: number;
+  salary_only_for_worked_time: boolean;
 }
-export interface IFloatingComponentsByServices {
-  percent_amount: string;
-  services: number[];
-  type: string;
+
+export interface IFloatingPart {
+  id?: number;
+  revenue_dependent_type: string;
+  calculation_method: string;
+  material_cost_method: string;
+  employee_percentage: string;
+  own_clients_percentage: string;
+  min_amount: string;
+  min_amount_period: string;
+  bonus_type: string;
+  from_percentage: string;
+  to_percentage: string;
+}
+
+export interface IProductSales {
+  revenue_type: string;
+  calculation_type: string;
+  percentage: string;
+  id?: number;
+}
+
+export interface IClientAttraction {
+  // currently empty
+  id?: number;
+}
+
+export interface IClientDevelopment {
+  // currently empty
+  id?: number;
+}
+
+export interface IServicesWithDifferentPercentage {
+  service: number[];
+  employee_percentage: string;
+  calculation_method: string;
+  fixed_amount: string;
+  id?: number;
+}
+
+export interface ICertificateSales {
+  calculation_type: string;
+  from_percentage: string;
+  to_percentage: string;
+  constant_percentage: string;
+  id?: number;
+}
+
+export interface ISubscriptionSales {
+  calculation_type: string;
+  from_percentage: string;
+  to_percentage: string;
+  constant_percentage: string;
+  id?: number;
 }

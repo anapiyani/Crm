@@ -9,18 +9,17 @@ import {
   editTemplateGet,
   getTemplateList,
 } from "@/service/employee/employee.service";
-import { ITemplateList } from "@/ts/employee.interface";
+import { ITemplate } from "@/ts/employee.interface";
 
 const SalaryPage = () => {
   const [choosenTemplate, setChoosenTemplate] = useState<number | null>(null);
-  const [newTemplate, setNewTemplate] = useState<Partial<ITemplateList> | null>(
-    null,
-  );
+  const [newTemplate, setNewTemplate] = useState<ITemplate | null>(null);
 
   const { data: templateList, isLoading } = useQuery({
     queryKey: ["templateList"],
     queryFn: () => getTemplateList(),
   });
+
   const {
     data: editTemplate,
     isLoading: editTemplateLoading,
@@ -34,10 +33,10 @@ const SalaryPage = () => {
   useEffect(() => {
     if (templateList) {
       const firstProductionTemplate = templateList.find(
-        (template) => template.type === "production",
+        (template) => template.template_type === "production",
       );
       if (firstProductionTemplate) {
-        setChoosenTemplate(firstProductionTemplate.id);
+        setChoosenTemplate(firstProductionTemplate.id!);
       }
     }
   }, [templateList]);
@@ -49,18 +48,98 @@ const SalaryPage = () => {
     }
   }, [choosenTemplate, editTemplateRefetch]);
 
-  const handleAddTemplate = (
-    type: "production" | "management" | "admin" | undefined,
-  ) => {
+  const handleAddTemplate = (type: "production" | "management" | "admin") => {
     setChoosenTemplate(null);
     setNewTemplate({
       name: "",
-      type: type,
-      fixed_components: [],
-      floating_components: [],
-      product_sales_components: [],
+      template_type: type,
+      subscription_sales: {
+        calculation_type: "",
+        from_percentage: "",
+        to_percentage: "",
+        constant_percentage: "",
+      },
+      certificate_sales: {
+        calculation_type: "",
+        from_percentage: "",
+        to_percentage: "",
+        constant_percentage: "",
+      },
+      fixed_part: {
+        payroll_type: "",
+        fixed_amount: "",
+        from_amount: "",
+        to_amount: "",
+        from_value: "",
+        to_value: "",
+        salary_only_for_worked_time: false,
+      },
+      floating_part: {
+        revenue_dependent_type: "",
+        calculation_method: "",
+        material_cost_method: "",
+        employee_percentage: "",
+        own_clients_percentage: "",
+        min_amount: "",
+        min_amount_period: "",
+        bonus_type: "",
+        from_percentage: "",
+        to_percentage: "",
+      },
+      product_sales: {
+        revenue_type: "",
+        calculation_type: "",
+        percentage: "",
+      },
+      client_attraction: {
+        id: undefined,
+      },
+      client_development: {
+        id: undefined,
+      },
+      services_with_different_percentage: [],
     });
   };
+
+  const renderTemplateList = (
+    type: "production" | "management" | "admin",
+    title: string,
+  ) => (
+    <div className={classes.salary__content__list__items__item}>
+      <div className={classes.salary__content__list__items__item__header}>
+        <h2>{title}</h2>
+        <Button startIcon={<Add />} onClick={() => handleAddTemplate(type)}>
+          Добавить
+        </Button>
+      </div>
+      <Divider />
+      <div className={classes.salary__content__list__items__item__content}>
+        {templateList?.map(
+          (template) =>
+            template.template_type === type && (
+              <Button
+                key={template.id}
+                variant={
+                  choosenTemplate === template.id ? "contained" : undefined
+                }
+                onClick={() => {
+                  setChoosenTemplate(template.id!);
+                  setNewTemplate(null);
+                }}
+              >
+                <p
+                  className={
+                    choosenTemplate === template.id ? classes.active : ""
+                  }
+                >
+                  {template.name}
+                </p>
+              </Button>
+            ),
+        )}
+      </div>
+    </div>
+  );
 
   if (isLoading) {
     return (
@@ -83,141 +162,9 @@ const SalaryPage = () => {
             <Divider />
           </div>
           <div className={classes.salary__content__list__items}>
-            <div className={classes.salary__content__list__items__item}>
-              <div
-                className={classes.salary__content__list__items__item__header}
-              >
-                <h2>Производственный персонал</h2>
-                <Button
-                  startIcon={<Add />}
-                  onClick={() => handleAddTemplate("production")}
-                >
-                  Добавить
-                </Button>
-              </div>
-              <Divider />
-              <div
-                className={classes.salary__content__list__items__item__content}
-              >
-                {templateList?.map(
-                  (template) =>
-                    template.type === "production" && (
-                      <Button
-                        key={template.id}
-                        variant={
-                          choosenTemplate === template.id
-                            ? "contained"
-                            : undefined
-                        }
-                        onClick={() => {
-                          setChoosenTemplate(template.id);
-                          setNewTemplate(null);
-                        }}
-                      >
-                        <p
-                          className={
-                            choosenTemplate === template.id
-                              ? classes.active
-                              : ""
-                          }
-                        >
-                          {template.name}
-                        </p>
-                      </Button>
-                    ),
-                )}
-              </div>
-            </div>
-            <div className={classes.salary__content__list__items__item}>
-              <div
-                className={classes.salary__content__list__items__item__header}
-              >
-                <h2>Менеджмент</h2>
-                <Button
-                  startIcon={<Add />}
-                  onClick={() => handleAddTemplate("management")}
-                >
-                  Добавить
-                </Button>
-              </div>
-              <Divider />
-              <div
-                className={classes.salary__content__list__items__item__content}
-              >
-                {templateList?.map(
-                  (template) =>
-                    template.type === "management" && (
-                      <Button
-                        key={template.id}
-                        variant={
-                          choosenTemplate === template.id
-                            ? "contained"
-                            : undefined
-                        }
-                        onClick={() => {
-                          setChoosenTemplate(template.id);
-                          setNewTemplate(null);
-                        }}
-                      >
-                        <p
-                          className={
-                            choosenTemplate === template.id
-                              ? classes.active
-                              : ""
-                          }
-                        >
-                          {template.name}
-                        </p>
-                      </Button>
-                    ),
-                )}
-              </div>
-            </div>
-            <div className={classes.salary__content__list__items__item}>
-              <div
-                className={classes.salary__content__list__items__item__header}
-              >
-                <h2>Администратор</h2>
-                <Button
-                  startIcon={<Add />}
-                  onClick={() => handleAddTemplate("admin")}
-                >
-                  Добавить
-                </Button>
-              </div>
-              <Divider />
-              <div
-                className={classes.salary__content__list__items__item__content}
-              >
-                {templateList?.map(
-                  (template) =>
-                    template.type === "admin" && (
-                      <Button
-                        key={template.id}
-                        variant={
-                          choosenTemplate === template.id
-                            ? "contained"
-                            : undefined
-                        }
-                        onClick={() => {
-                          setChoosenTemplate(template.id);
-                          setNewTemplate(null);
-                        }}
-                      >
-                        <p
-                          className={
-                            choosenTemplate === template.id
-                              ? classes.active
-                              : ""
-                          }
-                        >
-                          {template.name}
-                        </p>
-                      </Button>
-                    ),
-                )}
-              </div>
-            </div>
+            {renderTemplateList("production", "Производственный персонал")}
+            {renderTemplateList("management", "Менеджмент")}
+            {renderTemplateList("admin", "Администратор")}
           </div>
         </div>
         <div className={classes.salary__content__settings}>

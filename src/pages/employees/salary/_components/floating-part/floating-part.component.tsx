@@ -9,13 +9,15 @@ import {
   Divider,
   FormControlLabel,
   TextField,
+  RadioGroup,
+  Radio,
 } from "@mui/material";
 import NiceModal from "@ebay/nice-modal-react";
 import salaryServicesModal from "@/modals/employees/salary-services.modal";
 import { Delete } from "@mui/icons-material";
 import { C, s } from "node_modules/@fullcalendar/core/internal-common";
 import { useForm, Controller, Control } from "react-hook-form";
-import { IStepFormHook, IOptions } from "@/ts/employee.interface";
+import { IOptions, ITemplate } from "@/ts/employee.interface";
 
 interface DevServiceItem {
   id: string;
@@ -32,7 +34,7 @@ interface IServiceTextProps {
 }
 
 interface FloatingPartProps {
-  control: Control<IStepFormHook>;
+  control: Control<ITemplate>;
 }
 
 const FloatingPart: React.FC<FloatingPartProps> = ({ control }) => {
@@ -69,7 +71,7 @@ const FloatingPart: React.FC<FloatingPartProps> = ({ control }) => {
     option: { label: string; value: string } = {
       label: "Фикс. сумма",
       value: "fixed_percent",
-    }
+    },
   ) => {
     const newId = `devService-${Date.now()}`;
     console.log("NewService" + selected);
@@ -158,11 +160,12 @@ const FloatingPart: React.FC<FloatingPartProps> = ({ control }) => {
                 //Open Modal to chose services
                 onClick={() =>
                   NiceModal.show(salaryServicesModal).then((res) => {
-                    const newServiceText: IServiceTextProps[] = res as IServiceTextProps[];
+                    const newServiceText: IServiceTextProps[] =
+                      res as IServiceTextProps[];
                     handleShowNewService(
                       handleListCreate(newServiceText),
                       cost,
-                      option
+                      option,
                     );
                     handleDeleteService(newId);
                   })
@@ -201,7 +204,7 @@ const FloatingPart: React.FC<FloatingPartProps> = ({ control }) => {
 
   const handleDeleteService = (id: string) => {
     setDevServices((prevDevServices) =>
-      prevDevServices.filter((service) => service.id !== id)
+      prevDevServices.filter((service) => service.id !== id),
     );
   };
 
@@ -210,34 +213,34 @@ const FloatingPart: React.FC<FloatingPartProps> = ({ control }) => {
       <HeaderTemplate children={"Общие настройки"} />
       <div className={classes.floating__content}>
         <Controller
-          name="floating_components.0.accrual_type"
+          name="floating_part.revenue_dependent_type"
           control={control}
           render={({ field }) => {
             const options = [
+              { label: "От выручки за день", value: "daily_revenue" },
+              { label: "От выручки за месяц", value: "monthly_revenue" },
+              { label: "От чека за услуги", value: "from_check_on_service" },
               {
-                label: "Процент от чека за услуги",
-                value: "service_percent",
+                label: "От чека за услуги - материалы без скидки",
+                value: "from_check_on_service_minus_materials",
               },
               {
-                label: "Процент от чека за услуги - материалы без скидки",
-                value: "service_materials_no_discount_percent",
+                label: "От чека за услуги - материалы со скидкой",
+                value: "from_check_on_service_minus_materials_with_discount",
               },
               {
-                label: "Процент от чека за услуги - материалы со скидкой",
-                value: "service_materials_discount_percent",
+                label: "От чека за услуги - бонусы клиента",
+                value: "from_check_on_service_minus_client_bonuses",
               },
               {
-                label: "Процент от чека за услуги - бонусы клиента",
-                value: "service_client_bonuses_percent",
+                label: "От чека за услуги - бонусы клиента - материалы",
+                value:
+                  "from_check_on_service_minus_client_bonuses_minus_materials",
               },
               {
-                label: "Процент от чека за услуги - бонусы клиента - материалы",
-                value: "service_client_bonuses_materials_percent",
-              },
-              {
-                label:
-                  "Процент от (чека за услуги - бонусы клиента - материалы)",
-                value: "service_minus_client_bonuses_materials_percent",
+                label: "От (чека за услуги - бонусы клиента - материалы)",
+                value:
+                  "from_check_on_service_minus_client_bonuses_minus_materials_v2",
               },
             ];
 
@@ -260,7 +263,7 @@ const FloatingPart: React.FC<FloatingPartProps> = ({ control }) => {
         />
 
         <Controller
-          name="floating_components.0.percent_amount"
+          name="floating_part.employee_percentage"
           control={control}
           render={({ field }) => (
             <StepInput
@@ -276,18 +279,12 @@ const FloatingPart: React.FC<FloatingPartProps> = ({ control }) => {
         />
 
         <Controller
-          name="floating_components.0.amount_to_pay"
+          name="floating_part.calculation_method"
           control={control}
           render={({ field }) => {
             const options = [
-              {
-                label: "По чеку (после всех скидок)",
-                value: "check_after_discounts",
-              },
-              {
-                label: "По прайсу (без учета скидок)",
-                value: "price_before_discounts",
-              },
+              { label: "По чеку (после всех скидок)", value: "check_total" },
+              { label: "По прайсу (без учета скидок)", value: "price_list" },
             ];
 
             const selectedOption =
@@ -308,63 +305,133 @@ const FloatingPart: React.FC<FloatingPartProps> = ({ control }) => {
           }}
         />
 
-        <StepInput
-          placeholder="Как в общих настройках салона"
-          labelName="Стоимость материалов"
-          onChange={() => console.log("float")}
-          isAutoComplete={true}
+        <Controller
+          name="floating_part.material_cost_method"
+          control={control}
+          render={({ field }) => {
+            const options = [
+              {
+                label: "Как в общих настройках салона",
+                value: "salon_settings",
+              },
+              { label: "Вычитается из выручки", value: "deduct_from_revenue" },
+              {
+                label: "Вычитается из доли мастера",
+                value: "deduct_from_master_share",
+              },
+            ];
+
+            const selectedOption =
+              options.find((option) => option.value === field.value) || null;
+
+            return (
+              <StepInput
+                placeholder="Вычитать стоимость материалов"
+                labelName="Стоимость материалов"
+                onChange={(selectedOption) =>
+                  field.onChange(selectedOption.value)
+                }
+                isAutoComplete={true}
+                options={options}
+                selectedOption={selectedOption}
+              />
+            );
+          }}
         />
 
-        <StepInput
-          labelName="Отнимать"
-          placeholder="0"
-          onChange={(value) => console.log(value)}
-          isNumber={true}
-          plusMinusBtns={true}
-          afterChild={
-            <p style={{ fontSize: "1.3rem" }}>
-              % (от зарплаты после расчета плав. части)
-            </p>
-          }
+        <Controller
+          name="floating_part.own_clients_percentage"
+          control={control}
+          render={({ field }) => (
+            <StepInput
+              labelName="Со своих клиентов"
+              placeholder="0"
+              onChange={field.onChange}
+              isNumber={true}
+              plusMinusBtns={true}
+              dataValue={field.value}
+              afterChild={<p>% (от суммы к начислению)</p>}
+            />
+          )}
         />
 
-        <StepInput
-          labelName="Со своих клиентов"
-          placeholder="0"
-          onChange={(value) => console.log(value)}
-          isNumber={true}
-          plusMinusBtns={true}
-          afterChild={<p>% (от суммы к начислению)</p>}
-        />
-
-        <StepInput
-          labelName="С первого чека"
-          placeholder="0"
-          onChange={(value) => console.log(value)}
-          isNumber={true}
-          plusMinusBtns={true}
-          afterChild={<p>% (от суммы к начислению)</p>}
-        />
-
-        <StepInput
-          labelName="Но не менее"
-          placeholder="0"
-          onChange={(value) => console.log(value)}
-          isNumber={true}
-          plusMinusBtns={true}
-          afterChild={<p>руб.</p>}
+        <Controller
+          name="floating_part.min_amount"
+          control={control}
+          render={({ field }) => (
+            <StepInput
+              labelName="Но не менее"
+              placeholder="0"
+              onChange={field.onChange}
+              dataValue={field.value}
+              isNumber={true}
+              plusMinusBtns={true}
+              afterChild={
+                <>
+                  <Controller
+                    name="floating_part.min_amount_period"
+                    control={control}
+                    render={({ field }) => (
+                      <Autocomplete
+                        options={[
+                          { label: "за смену", value: "shift" },
+                          { label: "за месяц", value: "month" },
+                        ]}
+                        defaultValue={{ label: "за смену", value: "shift" }}
+                        onChange={(e, value) => field.onChange(value?.value)}
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            label="Выберите период"
+                            variant="outlined"
+                            sx={{
+                              fontSize: "1.4rem",
+                              marginBottom: "1rem",
+                            }}
+                          />
+                        )}
+                        sx={{
+                          width: "20rem",
+                          "& .MuiAutocomplete-inputRoot": {
+                            fontSize: "1rem",
+                            padding: "0.5rem",
+                            width: "20rem",
+                          },
+                        }}
+                      />
+                    )}
+                  />
+                </>
+              }
+            />
+          )}
         />
 
         <div className={classes.floating__content__checkboxes}>
-          <FormControlLabel
-            control={<Checkbox />}
-            label="Вычитать стоимость израсходованных материалов из зарплаты"
-            sx={{ fontSize: "1.4rem" }}
-          />
-          <FormControlLabel
-            control={<Checkbox />}
-            label="Прибавлять стоимость израсходованных материалов к зарплате"
-            sx={{ fontSize: "1.4rem" }}
+          <Controller
+            name="floating_part.bonus_type"
+            control={control}
+            render={({ field }) => (
+              <RadioGroup
+                aria-label="bonus-type"
+                name="bonus-type"
+                onChange={field.onChange}
+                value={field.value}
+              >
+                <FormControlLabel
+                  value="deduct_material_cost"
+                  control={<Radio />}
+                  label="Вычитать стоимость израсходованных материалов из зарплаты"
+                  sx={{ fontSize: "1.4rem" }}
+                />
+                <FormControlLabel
+                  value="add_material_cost"
+                  control={<Radio />}
+                  label="Прибавлять стоимость израсходованных материалов к зарплате"
+                  sx={{ fontSize: "1.4rem" }}
+                />
+              </RadioGroup>
+            )}
           />
         </div>
       </div>

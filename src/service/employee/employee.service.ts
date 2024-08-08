@@ -5,7 +5,7 @@ import {
   ICardInfoEmployee,
   IEmployeesData,
   ISearchFormData,
-  ITemplateList,
+  ITemplate,
   IUserDetails,
 } from "@/ts/employee.interface";
 
@@ -55,10 +55,10 @@ export const mainInfoEmployee = (user_id: number): Promise<IUserDetails> => {
   return api.get(`/users/${user_id}/`).then((res) => res.data);
 };
 
-export const getTemplateList = (): Promise<ITemplateList[]> => {
-  return api.get("/salary-template/list").then((res) => res.data);
+export const getTemplateList = (): Promise<ITemplate[]> => {
+  return api.get("/templates/").then((res) => res.data);
 };
 
-export const editTemplateGet = (id: number): Promise<ITemplateList> => {
-  return api.get(`/salary-template/${id}/`).then((res) => res.data);
+export const editTemplateGet = (id: number): Promise<ITemplate> => {
+  return api.get(`/templates/${id}/`).then((res) => res.data);
 };

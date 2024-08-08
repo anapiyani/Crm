@@ -3,10 +3,10 @@ import HeaderTemplate from "../MultiStepHeader/MultiStepHeader.component";
 import StepInput from "../step-input/step-input.component";
 import classes from "./styles.module.scss";
 import { Controller, Control } from "react-hook-form";
-import { IStepFormHook } from "@/ts/employee.interface";
+import { ITemplate } from "@/ts/employee.interface";
 
 interface TemplateNameProps {
-  control: Control<IStepFormHook>;
+  control: Control<ITemplate>;
 }
 
 const TemplateName: React.FC<TemplateNameProps> = ({ control }) => {
