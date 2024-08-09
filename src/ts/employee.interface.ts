@@ -68,15 +68,20 @@ export interface ITemplate {
   template_type: "production" | "management" | "admin";
   fixed_part: IFixedPart;
   floating_part: IFloatingPart;
-  product_sales: IProductSales;
   client_attraction: IClientAttraction;
   client_development: IClientDevelopment;
   services_with_different_percentage: IServicesWithDifferentPercentage[];
-  certificate_sales: ICertificateSales;
-  subscription_sales: ISubscriptionSales;
+  item_sales: IItemSales;
   id?: number;
+  isEdit?: boolean;
 }
 
+export interface IItemSales {
+  certificate_sales: ICertificateSales;
+  product_sales: IProductSales;
+  revenue_type: string;
+  subscription_sales: ISubscriptionSales;
+}
 export interface IFixedPart {
   payroll_type: string;
   fixed_amount: string;
@@ -106,6 +111,8 @@ export interface IProductSales {
   revenue_type: string;
   calculation_type: string;
   percentage: string;
+  from_percentage: string;
+  to_percentage: string;
   id?: number;
 }
 
@@ -132,6 +139,8 @@ export interface ICertificateSales {
   from_percentage: string;
   to_percentage: string;
   constant_percentage: string;
+  from_value: string;
+  to_value: string;
   id?: number;
 }
 

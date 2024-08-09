@@ -14,6 +14,11 @@ import FloatingPart from "../floating-part/floating-part.component";
 import SellingGoods from "../selling-goods/selling-goods.component";
 import { ITemplate } from "@/ts/employee.interface";
 import classes from "./styles.module.scss";
+import {
+  useAddTemplate,
+  useDeleteTemplate,
+  useEditTemplate,
+} from "@/service/employee/employee.hook";
 
 const steps = [
   "Имя шаблона",
@@ -29,6 +34,9 @@ interface IStepFormProps {
 }
 
 const StepForm: React.FC<IStepFormProps> = ({ toEdit }) => {
+  const editMutation = useEditTemplate();
+  const addMutation = useAddTemplate();
+  const deleteMutation = useDeleteTemplate();
   const [activeStep, setActiveStep] = useState<number>(0);
   const { register, handleSubmit, reset, control } = useForm<ITemplate>();
 
@@ -39,13 +47,12 @@ const StepForm: React.FC<IStepFormProps> = ({ toEdit }) => {
         template_type: toEdit.template_type || "production",
         fixed_part: toEdit.fixed_part || {},
         floating_part: toEdit.floating_part || {},
-        product_sales: toEdit.product_sales || {},
         client_attraction: toEdit.client_attraction || {},
         client_development: toEdit.client_development || {},
         services_with_different_percentage:
           toEdit.services_with_different_percentage || [],
-        certificate_sales: toEdit.certificate_sales || {},
-        subscription_sales: toEdit.subscription_sales || {},
+        item_sales: toEdit.item_sales || {},
+        isEdit: toEdit.id ? true : false,
       };
       reset(defaultValues);
     }
@@ -57,7 +64,11 @@ const StepForm: React.FC<IStepFormProps> = ({ toEdit }) => {
   }, [toEdit, reset]);
 
   const onSubmit: SubmitHandler<ITemplate> = (data) => {
-    console.log("Form Data: ", data);
+    if (data.isEdit) {
+      editMutation.mutate({ form: data, id: toEdit!.id! });
+    } else {
+      addMutation.mutate(data);
+    }
   };
 
   const handleNext = () => {
@@ -74,7 +85,9 @@ const StepForm: React.FC<IStepFormProps> = ({ toEdit }) => {
   };
 
   const handleDelete = () => {
-    console.log("delete");
+    if (toEdit?.id) {
+      deleteMutation.mutate(toEdit.id);
+    }
     reset();
   };
 
