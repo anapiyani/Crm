@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Button, TextField, Autocomplete } from "@mui/material";
+import {
+  Button,
+  TextField,
+  Autocomplete,
+  Checkbox,
+  FormControlLabel,
+} from "@mui/material";
 import classes from "./styles.module.scss";
 import { IOptions } from "@/ts/employee.interface";
 
@@ -12,8 +18,10 @@ interface StepInputProps {
   isAutoComplete?: boolean;
   options?: IOptions[];
   isNumber?: boolean;
-  dataValue?: string; // For text/number fields
-  selectedOption?: IOptions | null; // For autocomplete fields
+  dataValue?: string;
+  selectedOption?: IOptions | null;
+  isCheckbox?: boolean;
+  checked?: boolean;
 }
 
 const StepInput: React.FC<StepInputProps> = ({
@@ -27,6 +35,8 @@ const StepInput: React.FC<StepInputProps> = ({
   isNumber,
   dataValue,
   selectedOption,
+  isCheckbox,
+  checked,
 }) => {
   const [inputValue, setInputValue] = useState(dataValue || "");
   const [selectedAutoCompleteOption, setSelectedAutoCompleteOption] =
@@ -66,10 +76,25 @@ const StepInput: React.FC<StepInputProps> = ({
     onChange(newValue);
   };
 
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    onChange(e.target.checked);
+  };
+
   return (
     <div className={classes.stepInput}>
       <p>{labelName}</p>
-      {isAutoComplete ? (
+      {isCheckbox ? (
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={checked || false}
+              onChange={handleCheckboxChange}
+              color="primary"
+            />
+          }
+          label={labelName}
+        />
+      ) : isAutoComplete ? (
         <Autocomplete
           sx={{
             width: "100%",
@@ -80,6 +105,7 @@ const StepInput: React.FC<StepInputProps> = ({
             },
           }}
           options={options}
+          isOptionEqualToValue={(option, value) => option.value === value.value}
           getOptionLabel={(option) => option.label}
           value={selectedAutoCompleteOption}
           onChange={handleAutoCompleteChange}

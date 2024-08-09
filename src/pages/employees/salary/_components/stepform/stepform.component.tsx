@@ -6,14 +6,14 @@ import StepLabel from "@mui/material/StepLabel";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import { useState, useEffect } from "react";
-import classes from "./styles.module.scss";
 import { Check, Close, Delete, East, West } from "@mui/icons-material";
+import { useForm, SubmitHandler } from "react-hook-form";
 import TemplateName from "../templateName/templateName.component";
 import FixedPart from "../fixed-part/fixedPart.component";
 import FloatingPart from "../floating-part/floating-part.component";
 import SellingGoods from "../selling-goods/selling-goods.component";
-import { useForm, SubmitHandler } from "react-hook-form";
-import { IStepFormHook, ITemplateList } from "@/ts/employee.interface";
+import { ITemplate } from "@/ts/employee.interface";
+import classes from "./styles.module.scss";
 
 const steps = [
   "Имя шаблона",
@@ -25,28 +25,38 @@ const steps = [
 ];
 
 interface IStepFormProps {
-  toEdit?: Partial<ITemplateList>;
+  toEdit?: Partial<ITemplate>;
 }
 
 const StepForm: React.FC<IStepFormProps> = ({ toEdit }) => {
   const [activeStep, setActiveStep] = useState<number>(0);
-  const { register, handleSubmit, reset, control } = useForm<IStepFormHook>();
+  const { register, handleSubmit, reset, control } = useForm<ITemplate>();
 
   useEffect(() => {
     if (toEdit) {
       const defaultValues = {
         name: toEdit.name || "",
-        type: toEdit.type || "",
-        fixed_components: toEdit.fixed_components || [],
-        floating_components: toEdit.floating_components || [],
-        product_sales_components: toEdit.product_sales_components || [],
+        template_type: toEdit.template_type || "production",
+        fixed_part: toEdit.fixed_part || {},
+        floating_part: toEdit.floating_part || {},
+        product_sales: toEdit.product_sales || {},
+        client_attraction: toEdit.client_attraction || {},
+        client_development: toEdit.client_development || {},
+        services_with_different_percentage:
+          toEdit.services_with_different_percentage || [],
+        certificate_sales: toEdit.certificate_sales || {},
+        subscription_sales: toEdit.subscription_sales || {},
       };
-
       reset(defaultValues);
     }
   }, [toEdit, reset]);
 
-  const onSubmit: SubmitHandler<IStepFormHook> = (data) => {
+  useEffect(() => {
+    setActiveStep(0);
+    reset();
+  }, [toEdit, reset]);
+
+  const onSubmit: SubmitHandler<ITemplate> = (data) => {
     console.log("Form Data: ", data);
   };
 
@@ -67,11 +77,6 @@ const StepForm: React.FC<IStepFormProps> = ({ toEdit }) => {
     console.log("delete");
     reset();
   };
-
-  useEffect(() => {
-    setActiveStep(0);
-    reset();
-  }, [toEdit]);
 
   const displayStep = () => {
     if (activeStep === 0) {
