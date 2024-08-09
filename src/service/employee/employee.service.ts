@@ -62,3 +62,21 @@ export const getTemplateList = (): Promise<ITemplate[]> => {
 export const editTemplateGet = (id: number): Promise<ITemplate> => {
   return api.get(`/templates/${id}/`).then((res) => res.data);
 };
+
+export const editTemplatePut = ({
+  form,
+  id,
+}: {
+  form: ITemplate;
+  id: number;
+}): Promise<ITemplate> => {
+  return api.put(`/templates/${id}/`, form).then((res) => res.data);
+};
+
+export const deleteTemplate = (id: number): Promise<void> => {
+  return api.delete(`/templates/${id}/`).then((res) => res.data);
+};
+
+export const addTemplate = (form: ITemplate): Promise<ITemplate> => {
+  return api.post("/templates/", form).then((res) => res.data);
+};

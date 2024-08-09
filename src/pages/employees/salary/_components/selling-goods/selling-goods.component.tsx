@@ -4,7 +4,7 @@ import StepInput from "../step-input/step-input.component";
 import classes from "./styles.module.scss";
 import { Autocomplete, Button, Divider, TextField } from "@mui/material";
 import { Delete } from "@mui/icons-material";
-import { Control, Controller } from "react-hook-form";
+import { Control, Controller, set } from "react-hook-form";
 import { ITemplate } from "@/ts/employee.interface";
 
 interface CertificateItem {
@@ -18,7 +18,15 @@ interface GoodsPartProps {
 
 const SellingGoods: React.FC<GoodsPartProps> = ({ control }) => {
   const [choosenOption, setChoosenOption] = useState<string>(
-    control._defaultValues.fixed_part?.payroll_type || "",
+    control._defaultValues.item_sales?.certificate_sales?.calculation_type ||
+      "",
+  );
+  const [choosenSubOption, setChoosenSubOption] = useState<string>(
+    control._defaultValues.item_sales?.subscription_sales?.calculation_type ||
+      "",
+  );
+  const [choosenGoodOption, setChoosenGoodOption] = useState<string>(
+    control._defaultValues.item_sales?.product_sales?.calculation_type || "",
   );
 
   const [certificateContent, setCertificateContent] = useState<
@@ -329,27 +337,30 @@ const SellingGoods: React.FC<GoodsPartProps> = ({ control }) => {
         <HeaderTemplate children={"Продажи"} />
         <div className={classes.selling__item__content}>
           <Controller
-            name="product_sales.revenue_type"
+            name="item_sales.revenue_type"
             control={control}
             render={({ field }) => {
               const options = [
                 {
-                  label: "Только в рабочие дни сотрудника",
-                  value: "working_days",
+                  label: "По чеку (после всех скидок)",
+                  value: "by_check_after_discount",
                 },
-                { label: "За все время", value: "all_time" },
-                { label: "Выручка со своих записей", value: "own_bookings" },
+                {
+                  label: "По прайсу (без учета скидок)",
+                  value: "by_price_before_discount",
+                },
               ];
-
-              const selectedOption =
-                options.find((option) => option.value === field.value) || null;
 
               return (
                 <StepInput
                   labelName="Сумма к начислению"
                   isAutoComplete={true}
                   placeholder="По прайсу (без учета скидок)"
-                  selectedOption={selectedOption}
+                  options={options}
+                  selectedOption={
+                    options.find((option) => option.value === field.value) ||
+                    null
+                  }
                   onChange={(selectedOption) =>
                     field.onChange(selectedOption.value)
                   }
@@ -363,12 +374,23 @@ const SellingGoods: React.FC<GoodsPartProps> = ({ control }) => {
         <HeaderTemplate children={"Продажа сертификатов"} />
         <div className={classes.selling__item__content}>
           <Controller
-            name="certificate_sales.calculation_type"
+            name="item_sales.certificate_sales.calculation_type"
             control={control}
             render={({ field }) => {
               const options = [
                 { label: "Постоянный процент", value: "constant_percentage" },
-                { label: "В зависимости от суммы", value: "amount_dependent" },
+                {
+                  label: "В зависимости от суммы личных продаж за месяц",
+                  value: "amount_dependent_self_month",
+                },
+                {
+                  label: "В зависимости от суммы личных продаж за день",
+                  value: "amount_dependent_self_day",
+                },
+                {
+                  label: "В зависимости от суммы общих продаж за месяц",
+                  value: "amount_dependent_overall_month",
+                },
               ];
               return (
                 <StepInput
@@ -388,10 +410,12 @@ const SellingGoods: React.FC<GoodsPartProps> = ({ control }) => {
               );
             }}
           />
-          {choosenOption === "amount_dependent" ? (
+          {choosenOption === "amount_dependent_self_month" ||
+          choosenOption === "amount_dependent_self_day" ||
+          choosenOption === "amount_dependent_overall_month" ? (
             <>
               <Controller
-                name="certificate_sales.from_percentage"
+                name="item_sales.certificate_sales.from_value"
                 control={control}
                 render={({ field }) => (
                   <StepInput
@@ -405,7 +429,7 @@ const SellingGoods: React.FC<GoodsPartProps> = ({ control }) => {
                 )}
               />
               <Controller
-                name="certificate_sales.to_percentage"
+                name="item_sales.certificate_sales.to_value"
                 control={control}
                 render={({ field }) => (
                   <StepInput
@@ -421,7 +445,7 @@ const SellingGoods: React.FC<GoodsPartProps> = ({ control }) => {
             </>
           ) : (
             <Controller
-              name="certificate_sales.constant_percentage"
+              name="item_sales.certificate_sales.constant_percentage"
               control={control}
               render={({ field }) => (
                 <StepInput
@@ -460,21 +484,96 @@ const SellingGoods: React.FC<GoodsPartProps> = ({ control }) => {
       <div className={classes.selling__item}>
         <HeaderTemplate children={"Продажа абонементов"} />
         <div className={classes.selling__item__content}>
-          <StepInput
-            labelName="Система начислений"
-            isAutoComplete={true}
-            placeholder="Постоянный процент"
-            options={[]}
-            onChange={(value) => console.log(value)}
+          <Controller
+            name="item_sales.subscription_sales.calculation_type"
+            control={control}
+            render={({ field }) => {
+              const options = [
+                {
+                  label: "Постоянный процент",
+                  value: "constant_percentage",
+                },
+                {
+                  label: "В зависимости от суммы личных продаж за месяц",
+                  value: "amount_dependent_self_month",
+                },
+                {
+                  label: "В зависимости от суммы личных продаж за день",
+                  value: "amount_dependent_self_day",
+                },
+                {
+                  label: "В зависимости от суммы общих продаж за месяц",
+                  value: "amount_dependent_overall_month",
+                },
+              ];
+              return (
+                <StepInput
+                  labelName="Система начислений"
+                  isAutoComplete={true}
+                  placeholder="Постоянный процент"
+                  options={options}
+                  onChange={(selectedOption) => {
+                    field.onChange(selectedOption.value);
+                    setChoosenSubOption(selectedOption.value);
+                  }}
+                  selectedOption={
+                    options.find((option) => option.value === field.value) ||
+                    null
+                  }
+                />
+              );
+            }}
           />
-          <StepInput
-            isNumber={true}
-            labelName="С абонементов:"
-            plusMinusBtns={true}
-            placeholder="0"
-            onChange={(value) => console.log(value)}
-            afterChild={<p>%</p>}
-          />
+          {choosenSubOption === "amount_dependent_self_month" ||
+          choosenSubOption === "amount_dependent_self_day" ||
+          choosenSubOption === "amount_dependent_overall_month" ? (
+            <>
+              <Controller
+                name="item_sales.subscription_sales.from_percentage"
+                control={control}
+                render={({ field }) => (
+                  <StepInput
+                    isNumber={true}
+                    labelName={"Сумма от"}
+                    placeholder={"0"}
+                    onChange={field.onChange}
+                    plusMinusBtns={true}
+                    dataValue={field.value || ""}
+                  />
+                )}
+              />
+              <Controller
+                name="item_sales.subscription_sales.to_percentage"
+                control={control}
+                render={({ field }) => (
+                  <StepInput
+                    isNumber={true}
+                    labelName={"Сумма до"}
+                    placeholder={"0"}
+                    onChange={(value) => field.onChange(value)}
+                    plusMinusBtns={true}
+                    dataValue={field.value || ""}
+                  />
+                )}
+              />
+            </>
+          ) : (
+            <Controller
+              name="item_sales.subscription_sales.constant_percentage"
+              control={control}
+              render={({ field }) => (
+                <StepInput
+                  isNumber={true}
+                  labelName="С абонементов:"
+                  plusMinusBtns={true}
+                  placeholder="0"
+                  onChange={field.onChange}
+                  dataValue={field.value}
+                  afterChild={<p>%</p>}
+                />
+              )}
+            />
+          )}
         </div>
       </div>
       <div className={classes.selling__item}>
@@ -500,49 +599,87 @@ const SellingGoods: React.FC<GoodsPartProps> = ({ control }) => {
         <HeaderTemplate children={"Продажа товаров"} />
         <div className={classes.selling__item__content}>
           <Controller
-            name="product_sales.revenue_type"
+            name="item_sales.product_sales.calculation_type"
             control={control}
             render={({ field }) => {
               const options = [
+                { label: "Постоянный процент", value: "constant_percentage" },
                 {
-                  label: "Только в рабочие дни сотрудника",
-                  value: "working_days",
+                  label: "В зависимости от суммы личных продаж за месяц",
+                  value: "amount_dependent_self_month",
                 },
-                { label: "За все время", value: "all_time" },
-                { label: "Выручка со своих записей", value: "own_bookings" },
+                {
+                  label: "В зависимости от суммы личных продаж за день",
+                  value: "amount_dependent_self_day",
+                },
               ];
-
-              const selectedOption =
-                options.find((option) => option.value === field.value) || null;
-
               return (
                 <StepInput
                   labelName="Система начислений"
                   isAutoComplete={true}
+                  options={options}
                   placeholder="По прайсу (без учета скидок)"
-                  selectedOption={selectedOption}
-                  onChange={(selectedOption) =>
-                    field.onChange(selectedOption.value)
+                  selectedOption={
+                    options.find((options) => options.value === field.value) ||
+                    null
                   }
+                  onChange={(selectedOption) => {
+                    field.onChange(selectedOption.value),
+                      setChoosenGoodOption(selectedOption.value);
+                  }}
                 />
               );
             }}
           />
-          <Controller
-            name="product_sales.percentage"
-            control={control}
-            render={({ field }) => (
-              <StepInput
-                isNumber={true}
-                labelName="С товаров:"
-                plusMinusBtns={true}
-                placeholder="0"
-                onChange={field.onChange}
-                dataValue={field.value}
-                afterChild={<p>%</p>}
+          {choosenGoodOption === "amount_dependent_self_month" ||
+          choosenGoodOption === "amount_dependent_self_day" ? (
+            <>
+              <Controller
+                name="item_sales.product_sales.from_percentage"
+                control={control}
+                render={({ field }) => (
+                  <StepInput
+                    isNumber={true}
+                    labelName={"Сумма от"}
+                    placeholder={"0"}
+                    onChange={field.onChange}
+                    plusMinusBtns={true}
+                    dataValue={field.value || ""}
+                  />
+                )}
               />
-            )}
-          />
+              <Controller
+                name="item_sales.product_sales.to_percentage"
+                control={control}
+                render={({ field }) => (
+                  <StepInput
+                    isNumber={true}
+                    labelName={"Сумма до"}
+                    placeholder={"0"}
+                    onChange={(value) => field.onChange(value)}
+                    plusMinusBtns={true}
+                    dataValue={field.value || ""}
+                  />
+                )}
+              />
+            </>
+          ) : (
+            <Controller
+              name="item_sales.product_sales.percentage"
+              control={control}
+              render={({ field }) => (
+                <StepInput
+                  isNumber={true}
+                  labelName="С товаров:"
+                  plusMinusBtns={true}
+                  placeholder="0"
+                  onChange={field.onChange}
+                  dataValue={field.value}
+                  afterChild={<p>%</p>}
+                />
+              )}
+            />
+          )}
         </div>
       </div>
       <div className={classes.selling__item}>
