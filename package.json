@@ -21,6 +21,7 @@
     "@fullcalendar/react": "^6.1.14",
     "@fullcalendar/resource": "^6.1.15",
     "@fullcalendar/resource-timegrid": "^6.1.14",
+    "@fullcalendar/scrollgrid": "^6.1.15",
     "@hookform/resolvers": "^3.9.0",
     "@mui/icons-material": "^5.15.20",
     "@mui/joy": "^5.0.0-beta.36",

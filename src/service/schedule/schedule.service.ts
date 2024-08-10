@@ -49,11 +49,24 @@ export const addTimeOffToScheduleByDate = (
   status: string;
 }> => {
   return api
-    .post(
-      `/schedule/day-statuses/add-time-off/${employee_id}/date/?${date}`,
-      {
-        status: "time_off",
-      }
-    )
+    .post(`/schedule/day-statuses/add-time-off/${employee_id}/date/?${date}`, {
+      status: "time_off",
+    })
+    .then((res) => res.data);
+};
+
+export const getEmployeeMonthlySchedule = (
+  employee_id: number
+): Promise<IResponseData<ISchedule[]>> => {
+  return api
+    .get(`/schedule/schedules/monthly/${employee_id}/`)
+    .then((res) => res.data);
+};
+
+export const getEmployeeWeeklySchedule = (
+  employee_id: number
+): Promise<IResponseData<ISchedule[]>> => {
+  return api
+    .get(`/schedule/schedules/weekly/${employee_id}/`)
     .then((res) => res.data);
 };

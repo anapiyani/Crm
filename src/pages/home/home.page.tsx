@@ -1,4 +1,10 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import NiceModal from "@ebay/nice-modal-react";
 import toast from "react-hot-toast";
 
@@ -10,7 +16,6 @@ import {
   CircularProgress,
   Menu,
   MenuItem,
-  Paper,
 } from "@mui/material";
 import InputMask from "react-input-mask";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -26,6 +31,7 @@ import { ResourceApi } from "@fullcalendar/resource/index.js";
 import FullCalendar from "@fullcalendar/react";
 import resourceTimeGridPlugin from "@fullcalendar/resource-timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
+import scrollGridPlugin from "@fullcalendar/scrollgrid";
 import { DateSelectArg, DatesSetArg, EventClickArg } from "@fullcalendar/core";
 import dayjs, { Dayjs } from "dayjs";
 
@@ -39,6 +45,7 @@ import {
   EventDetailsModal,
   ShiftReportModal,
 } from "@/modals";
+
 import Icons from "@/assets/icons/icons";
 
 import classNames from "classnames";
@@ -49,7 +56,9 @@ import classes from "./styles.module.scss";
 import "./custom.css";
 import { useQuery } from "@tanstack/react-query";
 import {
+  getEmployeeMonthlySchedule,
   getEmployeeScheduleDates,
+  getEmployeeWeeklySchedule,
   getScheduleByDate,
 } from "@/service/schedule/schedule.service";
 import { transformSchedulesToFullCalendar } from "@/utils/transform-data";
@@ -58,23 +67,33 @@ import ResourceCard from "./_components/resource-card";
 import { getHierarchyEmployeesByDepartment } from "@/service/hierarchy/hierarchy.service";
 import { processEmployeeOptions } from "@/utils/process-employees-departments";
 
-const Home = () => {
+const Home: React.FC = () => {
   const [isHide, setIsHide] = useState<boolean>(false);
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(dayjs());
   const calendarRef = useRef<FullCalendar | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [burgerMenuAnchorEl, setBurgerMenuAnchorEl] =
-    useState<null | HTMLElement>(null);
+    useState<HTMLElement | null>(null);
   const [selectedResourceId, setSelectedResourceId] = useState<string | null>(
-    null,
+    null
   );
   const [selectedTitle, setSelectedTitle] = useState<string | null>(null);
   const [events, setEvents] = useState<any[]>([]);
   const [resources, setResources] = useState<any[]>([]);
   const [selectedEmployee, setSelectedEmployee] = useState<number>();
+  const [selectedEmployeeName, setSelectedEmployeeName] = useState<string>("");
+  // const [isMonthlyView, setIsMonthlyView] = useState<boolean>(false);
+  // const [isWeeklyView, setIsWeeklyView] = useState<boolean>(false);
+  const [viewMode, setViewMode] = useState<"daily" | "weekly" | "monthly">(
+    "daily"
+  );
 
-  const { data: schedulesData, isPending: scheduesDataPending } = useQuery({
+  const {
+    data: schedulesData,
+    isPending: scheduesDataPending,
+    refetch: refetchScheduleByDate,
+  } = useQuery({
     queryKey: ["schedules", selectedDate?.format("YYYY-MM-DD")],
     queryFn: () => getScheduleByDate(dayjs(selectedDate).format("YYYY-MM-DD")),
     staleTime: 1000 * 60 * 5,
@@ -96,13 +115,30 @@ const Home = () => {
   };
 
   const { data: employeeDepartmentHierarchyData, isLoading } = useEmployees();
-  const employeeOptions = employeeDepartmentHierarchyData
-    ? processEmployeeOptions(employeeDepartmentHierarchyData, true)
-    : [];
+
+  const employeeOptions = useMemo(() => {
+    return employeeDepartmentHierarchyData
+      ? processEmployeeOptions(employeeDepartmentHierarchyData, true)
+      : [];
+  }, [employeeDepartmentHierarchyData]);
 
   const { data: getEmployeeScheduleData } = useQuery({
     queryKey: ["employeeScheduleData", selectedEmployee],
     queryFn: () => getEmployeeScheduleDates(selectedEmployee || 0),
+    staleTime: 1000 * 60 * 5,
+  });
+
+  const { data: getEmployeeMonthlyScheduleData } = useQuery({
+    queryKey: ["employeeMonthlyScheduleData", selectedEmployee],
+    queryFn: () => getEmployeeMonthlySchedule(selectedEmployee || 0),
+    enabled: viewMode === "monthly",
+    staleTime: 1000 * 60 * 5,
+  });
+
+  const { data: getEmployeeWeeklyScheduleData } = useQuery({
+    queryKey: ["employeeWeeklyScheduleData", selectedEmployee],
+    queryFn: () => getEmployeeWeeklySchedule(selectedEmployee || 0),
+    enabled: viewMode === "weekly",
     staleTime: 1000 * 60 * 5,
   });
 
@@ -129,14 +165,15 @@ const Home = () => {
   const handleResourceClick = (
     resourceId: string,
     resourceTitle: string,
-    event: React.MouseEvent<HTMLElement>,
+    event: React.MouseEvent<HTMLElement>
   ) => {
-    setSelectedResourceId(resourceId);
+    const [resourceEmployeeId, resourceDate] = resourceId.split("-");
+    setSelectedResourceId(resourceEmployeeId);
     setSelectedTitle(resourceTitle);
     setAnchorEl(event.currentTarget);
   };
 
-  const handleEventClick = (clickInfo: EventClickArg) => {
+  const handleEventClick = useCallback((clickInfo: EventClickArg) => {
     if (clickInfo.event.extendedProps.type === "break") {
       NiceModal.show(DeleteBreakModal, { breakId: Number(clickInfo.event.id) });
     } else {
@@ -144,7 +181,7 @@ const Home = () => {
         appointmentId: Number(clickInfo.event.id),
       });
     }
-  };
+  }, []);
 
   const handleDatesSet = (arg: DatesSetArg) => {
     const calendarApi = calendarRef.current?.getApi();
@@ -161,13 +198,16 @@ const Home = () => {
   };
 
   const handleCalendarDateSelect = (selectInfo: DateSelectArg) => {
+    const [resourceEmployeeId, resourceDate] = (
+      selectInfo.resource?._resource.id ?? ""
+    ).split("-");
     const start = dayjs(selectInfo.start).format("YYYY-MM-DD HH:mm:ss");
     const end = dayjs(selectInfo.end).format("YYYY-MM-DD HH:mm:ss");
-    const resourceId = selectInfo.resource?._resource.id;
+    // const resourceId = selectInfo.resource?._resource.id;
     NiceModal.show(CreateAppointmentModal, {
       start,
       end,
-      employee: resourceId,
+      employee: resourceEmployeeId,
     });
   };
 
@@ -179,8 +219,69 @@ const Home = () => {
     setBurgerMenuAnchorEl(null);
   };
 
+  const handleShowWeeklySchedule = (employeeId: number) => {
+    setSelectedEmployee(employeeId);
+    setViewMode("weekly");
+
+    const startOfWeek = dayjs(selectedDate).startOf("week");
+    const endOfWeek = dayjs(selectedDate).endOf("week");
+    const daysInWeek = endOfWeek.diff(startOfWeek, "days") + 1;
+
+    const newResources = [];
+    for (let i = 0; i < daysInWeek; i++) {
+      const date = startOfWeek.add(i, "day").format("YYYY-MM-DD");
+      newResources.push({
+        id: `${employeeId}-${date}`,
+        title: date,
+        eventColor: "gray",
+        extendedProps: {
+          role: "employee",
+          resourceId: employeeId,
+          date: date,
+        },
+      });
+    }
+
+    setResources(newResources);
+  };
+
+  const handleShowMonthlySchedule = (
+    employeeId: number,
+    employeeName: string
+  ) => {
+    setSelectedEmployee(employeeId);
+    setViewMode("monthly");
+
+    const startOfMonth = dayjs(selectedDate).startOf("month");
+    const endOfMonth = dayjs(selectedDate).endOf("month");
+    const daysInMonth = endOfMonth.date();
+
+    const newResources = [];
+    for (let i = 1; i <= daysInMonth; i++) {
+      const date = startOfMonth.add(i - 1, "day").format("YYYY-MM-DD");
+      const isWorkingDay =
+        getEmployeeMonthlyScheduleData?.results.find(
+          (schedule) =>
+            schedule.employee.id === employeeId && schedule.date === date
+        )?.day_status.status === "working_day";
+      newResources.push({
+        id: `${employeeId}-${date}`,
+        title: employeeName,
+        eventColor: "gray",
+        extendedProps: {
+          role: "employee",
+          resourceId: employeeId,
+          date: date,
+          working: isWorkingDay,
+        },
+      });
+    }
+
+    setResources(newResources);
+  };
+
   function ServerDay(
-    props: PickersDayProps<Dayjs> & { highlightedDays?: string[] },
+    props: PickersDayProps<Dayjs> & { highlightedDays?: string[] }
   ) {
     const { highlightedDays = [], day, outsideCurrentMonth, ...other } = props;
 
@@ -202,6 +303,28 @@ const Home = () => {
     );
   }
 
+  const handleBackToDailyView = async () => {
+    setSelectedEmployee(undefined);
+    setViewMode("daily");
+    setResources([]);
+    setEvents([]);
+
+    const newResponse = await refetchScheduleByDate();
+    if (newResponse.data) {
+      const { events, resources } = transformSchedulesToFullCalendar(
+        newResponse.data
+      );
+      setEvents(events);
+      setResources(resources);
+    }
+
+    if (calendarRef.current) {
+      const calendarApi = calendarRef.current.getApi();
+      calendarApi.changeView("resourceTimeGridDay");
+      calendarApi.refetchResources();
+    }
+  };
+
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <div className={classes["home"]}>
@@ -216,7 +339,11 @@ const Home = () => {
               ref={calendarRef}
               allDaySlot={false}
               nowIndicator={true}
-              plugins={[resourceTimeGridPlugin, interactionPlugin]}
+              plugins={[
+                resourceTimeGridPlugin,
+                interactionPlugin,
+                scrollGridPlugin,
+              ]}
               initialView="resourceTimeGridDay"
               locale="ru"
               slotMinTime={"07:00:00"}
@@ -250,10 +377,16 @@ const Home = () => {
                   text: "Настройки",
                   click: function () {},
                 },
+                backToDailyView: {
+                  text: "Вернуться к общему журналу",
+                  click: handleBackToDailyView,
+                },
               }}
               headerToolbar={{
                 left: "prev next today shiftReport",
-                center: "title",
+                center: ["weekly", "monthly"].includes(viewMode)
+                  ? "backToDailyView"
+                  : "title",
                 right: "weekButton burgetMenuButton settingsButton",
               }}
               slotLabelFormat={{
@@ -271,9 +404,17 @@ const Home = () => {
                 <ResourceCard
                   arg={arg.resource as ResourceApi}
                   handleResourceClick={handleResourceClick}
+                  viewMode={viewMode}
                 />
               )}
               events={events}
+              dayMinWidth={150}
+              resourceAreaWidth="150px"
+              viewDidMount={() => {
+                if (containerRef.current) {
+                  containerRef.current.style.overflowX = "scroll";
+                }
+              }}
             />
             <ResourceDropdownMenu
               anchorEl={anchorEl}
@@ -282,14 +423,8 @@ const Home = () => {
               username={selectedTitle || ""}
               date={selectedDate?.format("YYYY-MM-DD") || ""}
               handleOpenSchedule={handleOpenSchedule}
-            />
-            <ResourceDropdownMenu
-              anchorEl={anchorEl}
-              onClose={handleCloseDropdownMenu}
-              resourceId={selectedResourceId || ""}
-              username={selectedTitle || ""}
-              date={selectedDate?.format("YYYY-MM-DD") || ""}
-              handleOpenSchedule={handleOpenSchedule}
+              handleMonthSchedule={handleShowMonthlySchedule}
+              handleWeekSchedule={handleShowWeeklySchedule}
             />
             <Menu
               anchorEl={burgerMenuAnchorEl}
@@ -332,7 +467,7 @@ const Home = () => {
                     classes["u-rotate-270"],
                     classes["u-m-md"],
                     classes["u-text-blue"],
-                    classes["u-cursor-pointer"],
+                    classes["u-cursor-pointer"]
                   )}
                 >
                   <span>Развернуть</span>
@@ -348,7 +483,7 @@ const Home = () => {
                     className={classNames(
                       classes["u-flex-row"],
                       classes["u-text-blue"],
-                      classes["u-cursor-pointer"],
+                      classes["u-cursor-pointer"]
                     )}
                     onClick={handlePanelHide}
                   >
@@ -369,15 +504,22 @@ const Home = () => {
                       sx={{
                         height: "3  rem",
                         marginTop: "1rem",
+                        marginBottom: "1rem",
                       }}
                       options={employeeOptions}
                       getOptionLabel={(option) => option.nodeName}
                       isOptionEqualToValue={(option, value) =>
                         option.nodeId === value.nodeId
                       }
-                      onChange={(event, value) =>
-                        setSelectedEmployee(value?.nodeId)
+                      value={
+                        employeeOptions.find(
+                          (option) => option.nodeId === selectedEmployee
+                        ) || null
                       }
+                      onChange={(event, value) => {
+                        setSelectedEmployee(value?.nodeId);
+                        setSelectedEmployeeName(value?.nodeName || "");
+                      }}
                       renderOption={(props, option) => (
                         <li
                           {...props}
@@ -408,7 +550,12 @@ const Home = () => {
                         <div className={classes["main__lower__auto"]}>
                           <TextField
                             placeholder="Поиск"
-                            sx={{ height: "40px" }}
+                            sx={{
+                              height: "40px",
+                              "& .MuiInputBase-input": {
+                                fontSize: "1.6rem",
+                              },
+                            }}
                             {...params}
                             className={"main__lower__auto__input"}
                           />

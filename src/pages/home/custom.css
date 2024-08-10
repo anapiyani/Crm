@@ -87,3 +87,10 @@
 .fc-timegrid-col-events {
   margin: 0px 3px 0px 3px !important;
 }
+
+.fc-backToDailyView-button {
+  border: 1px solid #97c3f0 !important;
+  font-weight: 600 !important;
+  font-size: 1.2rem !important;
+  color: var(--brand-500) !important;
+}

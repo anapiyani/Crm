@@ -12,11 +12,12 @@ interface IResourceCardProps {
     username: string,
     e: React.MouseEvent<HTMLElement>
   ) => void;
+  viewMode: "daily" | "weekly" | "monthly";
 }
-
 const ResourceCard: React.FC<IResourceCardProps> = ({
   arg,
   handleResourceClick,
+  viewMode,
 }) => {
   return (
     <div
@@ -25,6 +26,9 @@ const ResourceCard: React.FC<IResourceCardProps> = ({
         handleResourceClick(arg.id, arg.title, e);
       }}
     >
+      {["weekly", "monthly"].includes(viewMode) && (
+        <p>{arg._resource.extendedProps.date}</p>
+      )}
       <Avatar>
         {arg.title
           .split(" ")
