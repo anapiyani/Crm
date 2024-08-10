@@ -53,17 +53,29 @@ const SalaryPage = () => {
     setNewTemplate({
       name: "",
       template_type: type,
-      subscription_sales: {
-        calculation_type: "",
-        from_percentage: "",
-        to_percentage: "",
-        constant_percentage: "",
-      },
-      certificate_sales: {
-        calculation_type: "",
-        from_percentage: "",
-        to_percentage: "",
-        constant_percentage: "",
+      item_sales: {
+        subscription_sales: {
+          calculation_type: "",
+          from_percentage: "",
+          to_percentage: "",
+          constant_percentage: "",
+        },
+        certificate_sales: {
+          calculation_type: "",
+          from_percentage: "",
+          to_percentage: "",
+          constant_percentage: "",
+          from_value: "",
+          to_value: "",
+        },
+        product_sales: {
+          revenue_type: "",
+          calculation_type: "",
+          percentage: "",
+          from_percentage: "",
+          to_percentage: "",
+        },
+        revenue_type: "",
       },
       fixed_part: {
         payroll_type: "",
@@ -85,11 +97,6 @@ const SalaryPage = () => {
         bonus_type: "",
         from_percentage: "",
         to_percentage: "",
-      },
-      product_sales: {
-        revenue_type: "",
-        calculation_type: "",
-        percentage: "",
       },
       client_attraction: {
         id: undefined,
