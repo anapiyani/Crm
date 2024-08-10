@@ -30,6 +30,8 @@ const SalaryPage = () => {
     enabled: !!choosenTemplate,
   });
 
+  console.log(editTemplate);
+
   useEffect(() => {
     if (templateList) {
       const firstProductionTemplate = templateList.find(
@@ -99,12 +101,24 @@ const SalaryPage = () => {
         to_percentage: "",
       },
       client_attraction: {
-        id: undefined,
+        calculation_type_client_of_master: "",
+        calculation_type_referred_client: "",
+        value_client_of_master: "",
+        value_referred_client: "",
       },
       client_development: {
-        id: undefined,
+        calcualtion_type: "",
+        value: "",
       },
-      services_with_different_percentage: [],
+      services_with_different_percentage: [
+        {
+          service: [],
+          root: [],
+          employee_percentage: "",
+          calculation_method: "",
+          fixed_amount: "",
+        },
+      ],
     });
   };
 

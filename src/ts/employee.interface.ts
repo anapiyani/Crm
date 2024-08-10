@@ -117,17 +117,22 @@ export interface IProductSales {
 }
 
 export interface IClientAttraction {
-  // currently empty
+  calculation_type_client_of_master: string;
+  calculation_type_referred_client: string;
+  value_client_of_master: string;
+  value_referred_client: string;
   id?: number;
 }
 
 export interface IClientDevelopment {
-  // currently empty
+  calcualtion_type: string;
+  value: string;
   id?: number;
 }
 
 export interface IServicesWithDifferentPercentage {
   service: number[];
+  root: string[];
   employee_percentage: string;
   calculation_method: string;
   fixed_amount: string;

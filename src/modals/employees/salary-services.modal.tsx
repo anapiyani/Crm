@@ -16,7 +16,11 @@ interface ITreeItemProps {
   parent: number | null;
   parent_name: string | null;
 }
-const SalaryServicesModal = (selected: ITreeItemProps[]) => {
+
+interface ISelectedId {
+  serviceIds: number[];
+}
+const SalaryServicesModal = (selected: ISelectedId) => {
   const modal = useModal();
 
   const [selectedItems, setSelectedItems] = useState<ITreeItemProps[]>([]);
@@ -31,7 +35,30 @@ const SalaryServicesModal = (selected: ITreeItemProps[]) => {
 
   useEffect(() => {
     setData(serviceData!);
+    console.log(selected);
+    handlePreSelectedIds();
   }, [serviceData]);
+
+  const handlePreSelectedIds = () => {
+    const preSelectedItems: IServiceCategory[] = [];
+    selected.serviceIds.forEach((id) => {
+      const item = serviceData?.find((i) => i.id === id);
+      if (item) {
+        preSelectedItems.push(item);
+        setSelectedItems((prev) => [
+          ...prev,
+          {
+            id: item.id,
+            isChecked: 1,
+            type: "service",
+            serviceName: item.name,
+            parent: item.parent!,
+            parent_name: item.parent_name!,
+          },
+        ]);
+      }
+    });
+  };
 
   const handleServiceChange = (
     id: number,
@@ -39,7 +66,7 @@ const SalaryServicesModal = (selected: ITreeItemProps[]) => {
     type: "service" | "category",
     serviceName: string,
     parent: number | null,
-    parent_name: string | null
+    parent_name: string | null,
   ) => {
     setSelectedItems((prev) => {
       if (isChecked === 1) {
@@ -74,7 +101,7 @@ const SalaryServicesModal = (selected: ITreeItemProps[]) => {
       serviceName: string;
       parent: number | null;
       parent_name: string;
-    }[]
+    }[],
   ) => {
     let result: ITreeItemProps = {
       id: 0,
@@ -103,7 +130,7 @@ const SalaryServicesModal = (selected: ITreeItemProps[]) => {
       serviceName: string;
       parent: number | null;
       parent_name: string;
-    }[]
+    }[],
   ) => {
     data.forEach((item) => {
       if (item.type === "service") {
@@ -117,10 +144,6 @@ const SalaryServicesModal = (selected: ITreeItemProps[]) => {
   const handleSave = () => {
     modal.resolve(selectedItems);
     modal.hide();
-  };
-
-  const handleReturn = () => {
-    selected = selectedItems;
   };
 
   return (

@@ -1,11 +1,12 @@
-import * as React from "react";
-import Box from "@mui/material/Box";
-import Stepper from "@mui/material/Stepper";
-import Step from "@mui/material/Step";
-import StepLabel from "@mui/material/StepLabel";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import {
+  Typography,
+  Button,
+  StepLabel,
+  Box,
+  Stepper,
+  Step,
+} from "@mui/material";
 import { Check, Close, Delete, East, West } from "@mui/icons-material";
 import { useForm, SubmitHandler } from "react-hook-form";
 import TemplateName from "../templateName/templateName.component";
@@ -13,12 +14,14 @@ import FixedPart from "../fixed-part/fixedPart.component";
 import FloatingPart from "../floating-part/floating-part.component";
 import SellingGoods from "../selling-goods/selling-goods.component";
 import { ITemplate } from "@/ts/employee.interface";
-import classes from "./styles.module.scss";
 import {
   useAddTemplate,
   useDeleteTemplate,
   useEditTemplate,
 } from "@/service/employee/employee.hook";
+import AttractingCliens from "../attracting-clients/attracting-clients.component";
+import CustomerDevelopment from "../customer-development/customer-development.component";
+import classes from "./styles.module.scss";
 
 const steps = [
   "Имя шаблона",
@@ -72,6 +75,10 @@ const StepForm: React.FC<IStepFormProps> = ({ toEdit }) => {
   };
 
   const handleNext = () => {
+    if (activeStep === steps.length - 1) {
+      return;
+    }
+
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
 
@@ -91,16 +98,23 @@ const StepForm: React.FC<IStepFormProps> = ({ toEdit }) => {
     reset();
   };
 
+  const componentMapping: Record<number, JSX.Element> = {
+    0: <TemplateName control={control} />,
+    1: <FixedPart control={control} />,
+    2: <FloatingPart control={control} />,
+    3: <SellingGoods control={control} />,
+    4: <AttractingCliens control={control} />,
+    5: <CustomerDevelopment control={control} />,
+  };
+
   const displayStep = () => {
-    if (activeStep === 0) {
-      return <TemplateName control={control} />;
-    } else if (activeStep === 1) {
-      return <FixedPart control={control} />;
-    } else if (activeStep === 2) {
-      return <FloatingPart control={control} />;
-    } else if (activeStep === 3) {
-      return <SellingGoods control={control} />;
-    }
+    return componentMapping[activeStep as keyof typeof componentMapping];
+  };
+
+  const buttonStyles = {
+    fontSize: "1.4rem",
+    display: "flex",
+    alignItems: "center",
   };
 
   return (
@@ -154,9 +168,7 @@ const StepForm: React.FC<IStepFormProps> = ({ toEdit }) => {
                 sx={{ mr: 1 }}
                 startIcon={<Delete />}
                 style={{
-                  fontSize: "1.4rem",
-                  display: "flex",
-                  alignItems: "center",
+                  ...buttonStyles,
                   textTransform: "capitalize",
                 }}
               >
@@ -169,9 +181,7 @@ const StepForm: React.FC<IStepFormProps> = ({ toEdit }) => {
                 onClick={handleStop}
                 startIcon={<Close />}
                 style={{
-                  fontSize: "1.4rem",
-                  display: "flex",
-                  alignItems: "center",
+                  ...buttonStyles,
                   textTransform: "capitalize",
                 }}
                 sx={{ mr: 1 }}
@@ -179,13 +189,11 @@ const StepForm: React.FC<IStepFormProps> = ({ toEdit }) => {
                 Отмена
               </Button>
             )}
-            {activeStep === steps.length - 1 ? null : (
+            {activeStep !== steps.length - 1 && (
               <Button
                 style={{
-                  fontSize: "1.4rem",
-                  alignItems: "center",
+                  ...buttonStyles,
                   textTransform: "capitalize",
-                  display: "flex",
                 }}
                 startIcon={<Check />}
                 variant="outlined"
@@ -202,22 +210,18 @@ const StepForm: React.FC<IStepFormProps> = ({ toEdit }) => {
               sx={{ mr: 1 }}
               variant="outlined"
               style={{
-                fontSize: "1.4rem",
-                display: "flex",
-                alignItems: "center",
+                ...buttonStyles,
                 textTransform: "capitalize",
               }}
               startIcon={<West />}
             >
               Предыдущий шаг
             </Button>
-            {activeStep === steps.length - 1 ? (
+            {activeStep === steps.length - 1 && (
               <Button
                 variant="contained"
                 style={{
-                  fontSize: "1.4rem",
-                  display: "flex",
-                  alignItems: "center",
+                  ...buttonStyles,
                   textTransform: "capitalize",
                 }}
                 color="success"
@@ -226,17 +230,16 @@ const StepForm: React.FC<IStepFormProps> = ({ toEdit }) => {
               >
                 Сохранить
               </Button>
-            ) : (
+            )}
+            {activeStep !== steps.length - 1 && (
               <Button
+                onClick={handleNext}
                 variant="outlined"
                 style={{
-                  fontSize: "1.4rem",
-                  display: "flex",
-                  alignItems: "center",
+                  ...buttonStyles,
                   textTransform: "capitalize",
                 }}
                 endIcon={<East />}
-                onClick={handleNext}
               >
                 Следующий шаг
               </Button>

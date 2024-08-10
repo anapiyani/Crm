@@ -39,6 +39,25 @@ interface FloatingPartProps {
 
 const FloatingPart: React.FC<FloatingPartProps> = ({ control }) => {
   const [devServices, setDevServices] = useState<DevServiceItem[]>([]);
+  const [serviceNames, setServiceNames] = useState<string[] | undefined>([]);
+  const [serviceIds, setServiceIds] = useState<number[] | undefined>([]);
+
+  const handleGetIds = () => {
+    control._defaultValues.services_with_different_percentage?.map((item) => {
+      item?.service?.map((id) => {
+        setServiceIds((prev) => [...prev!, id!]);
+      });
+    });
+    control._defaultValues.services_with_different_percentage?.map((item) => {
+      item?.root?.map((name) => {
+        setServiceNames((prev) => [...prev!, name!]);
+      });
+    });
+  };
+
+  useEffect(() => {
+    handleGetIds();
+  }, []);
 
   //Zhango's function to traverse from service to parent
   const treeTraverse = (data: IServiceTextProps[], item: IServiceTextProps) => {
@@ -65,9 +84,16 @@ const FloatingPart: React.FC<FloatingPartProps> = ({ control }) => {
     return uniqueResult;
   };
 
+  const getServicesFromList = (data: IServiceTextProps[]) => {
+    const services = data.filter((item) => item.type === "service");
+    return services.map((item) => item.id);
+  };
+
   const handleShowNewService = (
     selected: string[] = [], //default values made by Zhango
-    cost: string | undefined = undefined,
+    cost: string[] = control._defaultValues.services_with_different_percentage!.map(
+      (item) => item?.employee_percentage || "",
+    ),
     option: { label: string; value: string } = {
       label: "Фикс. сумма",
       value: "fixed_percent",
@@ -95,61 +121,67 @@ const FloatingPart: React.FC<FloatingPartProps> = ({ control }) => {
                   % сотрудника
                 </p>
                 <div style={{ display: "flex", marginBottom: "1rem" }}>
-                  <TextField
-                    size="small"
-                    type="text"
-                    placeholder="0"
-                    defaultValue={cost}
-                    style={{
-                      width: "12rem",
-                      marginRight: "1rem",
-                      fontSize: "1.4rem",
-                    }}
-                    onChange={(e) => {
-                      cost = e.target.value;
-                    }}
+                  <Controller
+                    name="services_with_different_percentage.0.employee_percentage"
+                    control={control}
+                    render={({ field }) => (
+                      <TextField
+                        size="small"
+                        type="text"
+                        placeholder="0"
+                        style={{
+                          width: "12rem",
+                          marginRight: "1rem",
+                          fontSize: "1.4rem",
+                        }}
+                        onChange={field.onChange}
+                        defaultValue={cost[0]}
+                      />
+                    )}
                   />
                   <p style={{ fontSize: "1.4rem" }}>руб.</p>
                 </div>
-                <Autocomplete
-                  size="small"
-                  options={[
-                    { label: "Фикс. сумма", value: "fixed_percent" },
-                    { label: "% от чека", value: "service_percent" },
-                    {
-                      label: "% - МТ без скидк",
-                      value: "service_materials_no_discount_percent",
-                    },
-                    {
-                      label: "% - МТ со скид",
-                      value: "service_materials_discount_percent",
-                    },
-                    {
-                      label:
-                        "% от (чека за услуги - бонусы клиента - материалы)",
-                      value: "service_minus_client_bonuses_materials_percent",
-                    },
-                  ]}
-                  defaultValue={option}
-                  onChange={(e, value) => {
-                    option = value as { label: string; value: string };
-                  }}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="Выберите опцию"
-                      variant="outlined"
-                      sx={{
-                        fontSize: "1.4rem",
-                        marginBottom: "1rem",
-                      }}
-                    />
-                  )}
-                  sx={{
-                    "& .MuiAutocomplete-inputRoot": {
-                      fontSize: "1rem",
-                      padding: "0.5rem",
-                    },
+                <Controller
+                  name="services_with_different_percentage.0.calculation_method"
+                  control={control}
+                  render={({ field }) => {
+                    const options = [
+                      {
+                        label: "По чеку (после всех скидок)",
+                        value: "check_total",
+                      },
+                      {
+                        label: "По прайсу (без учета скидок)",
+                        value: "price_list",
+                      },
+                    ];
+                    return (
+                      <Autocomplete
+                        size="small"
+                        options={options}
+                        defaultValue={option}
+                        onChange={(e, value) => {
+                          field.onChange(value?.value);
+                        }}
+                        renderInput={(params) => (
+                          <TextField
+                            {...params}
+                            label="Выберите опцию"
+                            variant="outlined"
+                            sx={{
+                              fontSize: "1.4rem",
+                              marginBottom: "1rem",
+                            }}
+                          />
+                        )}
+                        sx={{
+                          "& .MuiAutocomplete-inputRoot": {
+                            fontSize: "1rem",
+                            padding: "0.5rem",
+                          },
+                        }}
+                      />
+                    );
                   }}
                 />
               </div>
@@ -159,22 +191,25 @@ const FloatingPart: React.FC<FloatingPartProps> = ({ control }) => {
                 className={classes.linkBtn}
                 //Open Modal to chose services
                 onClick={() =>
-                  NiceModal.show(salaryServicesModal).then((res) => {
-                    const newServiceText: IServiceTextProps[] =
-                      res as IServiceTextProps[];
-                    handleShowNewService(
-                      handleListCreate(newServiceText),
-                      cost,
-                      option,
-                    );
-                    handleDeleteService(newId);
-                  })
+                  NiceModal.show(salaryServicesModal, { serviceIds }).then(
+                    (res) => {
+                      getServicesFromList(res as IServiceTextProps[]);
+                      const newServiceText: IServiceTextProps[] =
+                        res as IServiceTextProps[];
+                      handleShowNewService(
+                        handleListCreate(newServiceText),
+                        cost,
+                        option,
+                      );
+                      handleDeleteService(newId);
+                    },
+                  )
                 }
                 style={{ fontSize: "1.4rem" }}
               >
                 Выбрать услуги
               </a>
-              {selected.length > 0 ? ( //text if you want to change it's design
+              {selected.length > 0 && ( //text if you want to change it's design
                 <div>
                   <p style={{ fontSize: "1.4rem" }}>Выбранные услуги:</p>
                   {selected.map((item) => (
@@ -183,8 +218,15 @@ const FloatingPart: React.FC<FloatingPartProps> = ({ control }) => {
                     </p>
                   ))}
                 </div>
-              ) : (
-                <p style={{ fontSize: "1.4rem" }}>Услуги не выбраны</p>
+              )}
+              {serviceNames!.length > 0 && (
+                <div>
+                  {serviceNames?.map((item) => (
+                    <p key={item} style={{ fontSize: "1.4rem" }}>
+                      {item}
+                    </p>
+                  ))}
+                </div>
               )}
             </div>
 

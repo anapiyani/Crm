@@ -4,13 +4,21 @@ import StepInput from "../step-input/step-input.component";
 import classes from "./styles.module.scss";
 import { Autocomplete, Button, Divider, TextField } from "@mui/material";
 import { Delete } from "@mui/icons-material";
+import { Control, Controller } from "react-hook-form";
+import { ITemplate } from "@/ts/employee.interface";
 
 interface ServiceItem {
   id: string;
   element: React.ReactNode;
 }
 
-const CustomerDevelopment = () => {
+interface ICustomerDevelopmentProps {
+  control: Control<ITemplate>;
+}
+
+const CustomerDevelopment: React.FC<ICustomerDevelopmentProps> = ({
+  control,
+}) => {
   const [serviceWithOtherPercent, setServicesWithOtherPercent] = useState<
     ServiceItem[]
   >([]);
@@ -109,20 +117,46 @@ const CustomerDevelopment = () => {
 "
         />
         <div className={classes.selling__item__content}>
-          <StepInput
-            labelName="Система начисления"
-            isAutoComplete={true}
-            placeholder="Фиксирвано, в руб."
-            options={[]}
-            onChange={(value) => console.log(value)}
+          <Controller
+            name="client_development.calcualtion_type"
+            control={control}
+            render={(field) => {
+              const options = [
+                { label: "Процент от чека", value: "check_percent" },
+                { label: "Фикс. сумма", value: "fixed_value" },
+              ];
+              return (
+                <StepInput
+                  labelName="Система начисления"
+                  isAutoComplete={true}
+                  placeholder="Фиксирвано, в руб."
+                  options={options}
+                  onChange={(value) => field.field.onChange(value)}
+                  selectedOption={
+                    options.find(
+                      (option) => option.value === field.field.value,
+                    ) || null
+                  }
+                />
+              );
+            }}
           />
-          <StepInput
-            isNumber={true}
-            labelName="Объем з/п:"
-            plusMinusBtns={true}
-            placeholder="0"
-            onChange={(value) => console.log(value)}
-            afterChild={<p>%</p>}
+          <Controller
+            name="client_development.value"
+            control={control}
+            render={(field) => {
+              return (
+                <StepInput
+                  isNumber={true}
+                  labelName="Объем з/п:"
+                  plusMinusBtns={true}
+                  placeholder="0"
+                  onChange={field.field.onChange}
+                  dataValue={field.field.value || ""}
+                  afterChild={<p>%</p>}
+                />
+              );
+            }}
           />
         </div>
       </div>
