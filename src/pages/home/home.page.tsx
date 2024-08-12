@@ -283,33 +283,6 @@ const Home: React.FC = () => {
   ) => {
     setSelectedEmployee(employeeId);
     setViewMode("monthly");
-
-    // const startOfMonth = dayjs(selectedDate).startOf("month");
-    // const endOfMonth = dayjs(selectedDate).endOf("month");
-    // const daysInMonth = endOfMonth.date();
-
-    // const newResources = [];
-    // for (let i = 1; i <= daysInMonth; i++) {
-    //   const date = startOfMonth.add(i - 1, "day").format("YYYY-MM-DD");
-    //   const isWorkingDay =
-    //     getEmployeeMonthlyScheduleData?.results.find(
-    //       (schedule) =>
-    //         schedule.employee.id === employeeId && schedule.date === date
-    //     )?.day_status.status === "working_day";
-    //   newResources.push({
-    //     id: `${employeeId}-${date}`,
-    //     title: employeeName,
-    //     eventColor: "gray",
-    //     extendedProps: {
-    //       role: "employee",
-    //       resourceId: employeeId,
-    //       date: date,
-    //       working: isWorkingDay,
-    //     },
-    //   });
-    // }
-
-    // setResources(newResources);
   };
 
   function ServerDay(
@@ -678,13 +651,25 @@ const Home: React.FC = () => {
                     <h2 className={classes["u-h2"]}>Прогноз выручки</h2>
                     <Divider />
                     <div className={classes["prediction__date-picker"]}>
-                      <CustomDatePicker />
+                      <div
+                        style={{
+                          width: "11rem",
+                        }}
+                      >
+                        <CustomDatePicker />
+                      </div>
                       <span
                         className={classes["prediction__date-picker--dash"]}
                       >
                         -
                       </span>
-                      <CustomDatePicker />
+                      <div
+                        style={{
+                          width: "11rem",
+                        }}
+                      >
+                        <CustomDatePicker />
+                      </div>
                       <Button
                         variant="contained"
                         sx={{
