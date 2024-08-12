@@ -23,24 +23,33 @@ import AttractingCliens from "../attracting-clients/attracting-clients.component
 import CustomerDevelopment from "../customer-development/customer-development.component";
 import classes from "./styles.module.scss";
 
-const steps = [
-  "Имя шаблона",
-  "Фикс. часть",
-  "Плавающая часть",
-  "Продажа товаров",
-  "Привлечение клиентов",
-  "Развитие клиентов",
-];
+// const steps = [
+//   "Имя шаблона",
+//   "Фикс. часть",
+//   "Плавающая часть",
+//   "Продажа товаров",
+//   "Привлечение клиентов",
+//   "Развитие клиентов",
+// ];
 
 interface IStepFormProps {
   toEdit?: Partial<ITemplate>;
 }
 
 const StepForm: React.FC<IStepFormProps> = ({ toEdit }) => {
+  const managmentSteps = 3;
   const editMutation = useEditTemplate();
   const addMutation = useAddTemplate();
   const deleteMutation = useDeleteTemplate();
   const [activeStep, setActiveStep] = useState<number>(0);
+  const [steps, setSteps] = useState<string[]>([
+    "Имя шаблона",
+    "Фикс. часть",
+    "Плавающая часть",
+    "Продажа товаров",
+    "Привлечение клиентов",
+    "Развитие клиентов",
+  ]);
   const { register, handleSubmit, reset, control } = useForm<ITemplate>();
 
   useEffect(() => {
@@ -65,6 +74,11 @@ const StepForm: React.FC<IStepFormProps> = ({ toEdit }) => {
     setActiveStep(0);
     reset();
   }, [toEdit, reset]);
+
+  useEffect(() => {
+    toEdit?.template_type === "management" &&
+      setSteps(["Имя шаблона", "Фикс. часть", "Плавающая часть"]);
+  }, [toEdit]);
 
   const onSubmit: SubmitHandler<ITemplate> = (data) => {
     if (data.isEdit) {
@@ -149,11 +163,17 @@ const StepForm: React.FC<IStepFormProps> = ({ toEdit }) => {
             },
           }}
         >
-          {steps.map((label) => (
-            <Step key={label}>
-              <StepLabel>{label}</StepLabel>
-            </Step>
-          ))}
+          {toEdit?.template_type !== "management"
+            ? steps.map((label) => (
+                <Step key={label}>
+                  <StepLabel>{label}</StepLabel>
+                </Step>
+              ))
+            : steps.slice(0, managmentSteps).map((label) => (
+                <Step key={label}>
+                  <StepLabel>{label}</StepLabel>
+                </Step>
+              ))}
         </Stepper>
         <React.Fragment>
           <Typography sx={{ mt: 2, mb: 1 }} variant="h6">

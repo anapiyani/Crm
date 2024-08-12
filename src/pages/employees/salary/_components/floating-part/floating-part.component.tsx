@@ -5,7 +5,6 @@ import classes from "./styles.module.scss";
 import {
   Button,
   Autocomplete,
-  Checkbox,
   Divider,
   FormControlLabel,
   TextField,
@@ -15,8 +14,7 @@ import {
 import NiceModal from "@ebay/nice-modal-react";
 import salaryServicesModal from "@/modals/employees/salary-services.modal";
 import { Delete } from "@mui/icons-material";
-import { C, s } from "node_modules/@fullcalendar/core/internal-common";
-import { useForm, Controller, Control } from "react-hook-form";
+import { Controller, Control } from "react-hook-form";
 import { IOptions, ITemplate } from "@/ts/employee.interface";
 
 interface DevServiceItem {
@@ -74,7 +72,7 @@ const FloatingPart: React.FC<FloatingPartProps> = ({ control }) => {
     }
     return result;
   };
-  //Zhango's function to create List of services
+  // Zhango's function to create List of services
   const handleListCreate = (data: IServiceTextProps[]) => {
     const services = data.filter((item) => item.type === "service");
     let textResult: string[][] = [];
