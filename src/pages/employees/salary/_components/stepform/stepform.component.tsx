@@ -78,6 +78,15 @@ const StepForm: React.FC<IStepFormProps> = ({ toEdit }) => {
   useEffect(() => {
     toEdit?.template_type === "management" &&
       setSteps(["Имя шаблона", "Фикс. часть", "Плавающая часть"]);
+    toEdit?.template_type !== "management" &&
+      setSteps([
+        "Имя шаблона",
+        "Фикс. часть",
+        "Плавающая часть",
+        "Продажа товаров",
+        "Привлечение клиентов",
+        "Развитие клиентов",
+      ]);
   }, [toEdit]);
 
   const onSubmit: SubmitHandler<ITemplate> = (data) => {
