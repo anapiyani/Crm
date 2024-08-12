@@ -23,6 +23,11 @@ const EventContent: React.FC<IEventContentProps> = ({ eventInfo }) => {
           `fullcalendar__event--${eventInfo.event.extendedProps.status}`
         ]]: eventInfo.event.extendedProps.type === "appointment",
       })}
+      style={{
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        height: "100%",
+      }}
     >
       <div
         className={classNames(

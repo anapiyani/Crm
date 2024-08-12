@@ -61,7 +61,10 @@ import {
   getEmployeeWeeklySchedule,
   getScheduleByDate,
 } from "@/service/schedule/schedule.service";
-import { transformSchedulesToFullCalendar } from "@/utils/transform-data";
+import {
+  transformMonthlySchedulesToFullCalendar,
+  transformSchedulesToFullCalendar,
+} from "@/utils/transform-data";
 import EventContent from "./_components/event-content";
 import ResourceCard from "./_components/resource-card";
 import { getHierarchyEmployeesByDepartment } from "@/service/hierarchy/hierarchy.service";
@@ -128,8 +131,15 @@ const Home: React.FC = () => {
     staleTime: 1000 * 60 * 5,
   });
 
-  const { data: getEmployeeMonthlyScheduleData } = useQuery({
-    queryKey: ["employeeMonthlyScheduleData", selectedEmployee],
+  const {
+    data: getEmployeeMonthlyScheduleData,
+    refetch: refetchEmployeeMonthlySchedule,
+  } = useQuery({
+    queryKey: [
+      "employeeMonthlyScheduleData",
+      selectedEmployee,
+      selectedDate?.format("YYYY-MM"),
+    ],
     queryFn: () => getEmployeeMonthlySchedule(selectedEmployee || 0),
     enabled: viewMode === "monthly",
     staleTime: 1000 * 60 * 5,
@@ -153,6 +163,28 @@ const Home: React.FC = () => {
       setResources(resources);
     }
   }, [schedulesData]);
+
+  useEffect(() => {
+    if (viewMode === "monthly" && selectedEmployee) {
+      refetchEmployeeMonthlySchedule();
+    }
+  }, [
+    selectedDate,
+    selectedEmployee,
+    viewMode,
+    refetchEmployeeMonthlySchedule,
+  ]);
+
+  useEffect(() => {
+    if (getEmployeeMonthlyScheduleData && selectedDate) {
+      const { events, resources } = transformMonthlySchedulesToFullCalendar(
+        getEmployeeMonthlyScheduleData.results,
+        selectedDate
+      );
+      setEvents(events);
+      setResources(resources);
+    }
+  }, [getEmployeeMonthlyScheduleData, selectedDate]);
 
   const handleDateChange = useCallback((date: Dayjs | null) => {
     setSelectedDate(date);
@@ -251,33 +283,6 @@ const Home: React.FC = () => {
   ) => {
     setSelectedEmployee(employeeId);
     setViewMode("monthly");
-
-    const startOfMonth = dayjs(selectedDate).startOf("month");
-    const endOfMonth = dayjs(selectedDate).endOf("month");
-    const daysInMonth = endOfMonth.date();
-
-    const newResources = [];
-    for (let i = 1; i <= daysInMonth; i++) {
-      const date = startOfMonth.add(i - 1, "day").format("YYYY-MM-DD");
-      const isWorkingDay =
-        getEmployeeMonthlyScheduleData?.results.find(
-          (schedule) =>
-            schedule.employee.id === employeeId && schedule.date === date
-        )?.day_status.status === "working_day";
-      newResources.push({
-        id: `${employeeId}-${date}`,
-        title: employeeName,
-        eventColor: "gray",
-        extendedProps: {
-          role: "employee",
-          resourceId: employeeId,
-          date: date,
-          working: isWorkingDay,
-        },
-      });
-    }
-
-    setResources(newResources);
   };
 
   function ServerDay(
@@ -394,6 +399,28 @@ const Home: React.FC = () => {
                 minute: "2-digit",
                 omitZeroMinute: false,
                 meridiem: false,
+              }}
+              selectAllow={(selectInfo) => {
+                const [resourceEmployeeId, ...dateParts] = (
+                  selectInfo.resource?._resource.id ?? ""
+                ).split("-");
+                const resourceDate = dateParts.join("-");
+                const resource = resources.find(
+                  (res) => res.id === `${resourceEmployeeId}-${resourceDate}`
+                );
+                return resource?.extendedProps.working || false;
+              }}
+              dayCellDidMount={(info) => {
+                const [resourceEmployeeId, ...dateParts] = (
+                  info.resource?._resource.id ?? ""
+                ).split("-");
+                const resourceDate = dateParts.join("-");
+                const resource = resources.find(
+                  (res) => res.id === `${resourceEmployeeId}-${resourceDate}`
+                );
+                if (resource?.extendedProps.working !== true) {
+                  info.el.style.backgroundColor = "#DDE7EE";
+                }
               }}
               eventContent={(eventInfo) => (
                 <EventContent eventInfo={eventInfo} />
@@ -624,13 +651,25 @@ const Home: React.FC = () => {
                     <h2 className={classes["u-h2"]}>Прогноз выручки</h2>
                     <Divider />
                     <div className={classes["prediction__date-picker"]}>
-                      <CustomDatePicker />
+                      <div
+                        style={{
+                          width: "11rem",
+                        }}
+                      >
+                        <CustomDatePicker />
+                      </div>
                       <span
                         className={classes["prediction__date-picker--dash"]}
                       >
                         -
                       </span>
-                      <CustomDatePicker />
+                      <div
+                        style={{
+                          width: "11rem",
+                        }}
+                      >
+                        <CustomDatePicker />
+                      </div>
                       <Button
                         variant="contained"
                         sx={{

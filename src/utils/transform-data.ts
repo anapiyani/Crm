@@ -110,68 +110,67 @@ export const transformMonthlySchedulesToFullCalendar = (
   const startOfMonth = dayjs(date).startOf("month");
   const endOfMonth = dayjs(date).endOf("month");
   const daysInMonth = endOfMonth.date();
+
+  const workingDaysMap = new Map<string, ISchedule>();
+
+  schedules.forEach((schedule) => {
+    workingDaysMap.set(schedule.date, schedule);
+  });
+
   for (let i = 1; i <= daysInMonth; i++) {
-    const date = startOfMonth.add(i - 1, "day").format("YYYY-MM-DD");
+    const currentDay = startOfMonth.add(i - 1, "day");
+    const formattedDate = currentDay.format("YYYY-MM-DD");
+
+    const schedule = workingDaysMap.get(formattedDate);
+    const isWorkingDay =
+      schedule && schedule.day_status.status === "working_day";
 
     resources.push({
-      id: `${schedules[0].employee.id}-${date}`,
+      id: `${schedules[0].employee.id}-${formattedDate}`,
       title: `${schedules[0].employee.first_name} ${schedules[0].employee.last_name}`,
       extendedProps: {
         role: schedules[0].employee.role,
         employeeId: schedules[0].employee.id,
-        working: schedules[0].day_status.status === "working_day",
-        date: date,
+        working: isWorkingDay,
+        date: formattedDate,
       },
+      eventColor: isWorkingDay ? undefined : "#DDE7EE",
     });
-  }
-  // if the day status is working day, add appointments and breaks, otherwise mark the day as non-working
-  schedules.forEach((schedule) => {
-    const { breaks, appointments, employee, date, day_status } = schedule;
-    const isWorkingDay = day_status.status === "working_day";
-    const resourceId = `${employee.id}-${date}`;
-    if (isWorkingDay) {
-      appointments.forEach((appointment) => {
+
+    if (isWorkingDay && schedule) {
+      schedule.appointments.forEach((appointment) => {
         events.push({
           id: `${appointment.id}`,
           title: `${schedule.employee.first_name} ${schedule.employee.last_name}`,
-          start: `${date}T${appointment.start_time}`,
-          end: `${date}T${appointment.end_time}`,
-          resourceId: resourceId,
+          start: `${formattedDate}T${appointment.start_time}`,
+          end: `${formattedDate}T${appointment.end_time}`,
+          resourceId: `${schedule.employee.id}-${formattedDate}`,
           phoneNumber: schedule.employee.phone_number,
           extendedProps: {
             type: "appointment",
             status: appointment.status,
-            employeeId: employee.id,
-            date: date,
+            employeeId: schedule.employee.id,
+            date: formattedDate,
           },
         });
       });
-      breaks.forEach((breakItem) => {
+
+      schedule.breaks.forEach((breakItem) => {
         events.push({
           id: `${breakItem.id}`,
-          start: `${date}T${breakItem.start_time}`,
-          end: `${date}T${breakItem.end_time}`,
-          resourceId: resourceId,
+          start: `${formattedDate}T${breakItem.start_time}`,
+          end: `${formattedDate}T${breakItem.end_time}`,
+          resourceId: `${schedule.employee.id}-${formattedDate}`,
           break_note: breakItem.break_note,
           extendedProps: {
             type: "break",
-            date: date,
-            employeeId: employee.id,
+            date: formattedDate,
+            employeeId: schedule.employee.id,
           },
         });
       });
-    } else {
-      resources.push({
-        id: resourceId,
-        title: `${employee.first_name} ${employee.last_name}`,
-        extendedProps: {
-          role: employee.role,
-          employeeId: employee.id,
-          working: day_status.status === "working_day",
-          date: date,
-        },
-        eventColor: "#DDE7EE",
-      });
     }
-  });
+  }
+
+  return { events, resources };
 };
