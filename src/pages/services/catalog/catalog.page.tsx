@@ -41,6 +41,9 @@ import {
   IServiceParent,
 } from "@/ts/hierarchy.inteface";
 import dayjs from "dayjs";
+import CostTable from "./service/_components/table-price/table-price";
+import { costData, durationData, materialData } from "./service/_components/table-price/data";
+import MaterialTable from "./service/_components/table-materials/table-materials";
 
 const ServiceCatalog = () => {
   const [service, setService] = useState<IService | null>(null);
@@ -468,6 +471,9 @@ const ServiceCatalog = () => {
             </div>
           </div>
         )}
+        <CostTable title="Стоимость" unit="руб." data={costData} />
+        <CostTable title="Продолжительность" unit="мин" showIcons={false} data={durationData} hierarchy />
+        <MaterialTable title="Материалы" data={materialData}/>
       </div>
     </div>
   );
