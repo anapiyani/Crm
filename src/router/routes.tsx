@@ -7,7 +7,7 @@ import {
   EmployeeCard,
   Clients,
   ClientCard,
-  Activity,
+  SearchVisits,
   WorkSchedule,
   Department,
   ServiceCatalog,
@@ -75,9 +75,9 @@ export const ROUTES: IRoute[] = [
     component: <ClientCard />,
   },
   {
-    name: "Activity",
-    path: "/activity",
-    component: <Activity />,
+    name: "Search Visits",
+    path: "/visits",
+    component: <SearchVisits />,
   },
   {
     name: "Work schedule",
