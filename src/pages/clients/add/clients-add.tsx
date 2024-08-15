@@ -111,7 +111,6 @@ const ClientsAdd: React.FC = () => {
 
     addClient(clientData, {
       onSuccess: () => {
-        console.log("Client added successfully", clientData);
         reset();
       },
       onError: (error) => {
@@ -188,6 +187,7 @@ const ClientsAdd: React.FC = () => {
                       onChange={(value) => {
                         field.onChange(value?.value);
                       }}
+                      className="main__lower__autocomplete"
                       value={
                         categoryOptions?.find(
                           (option) => option.value === field.value

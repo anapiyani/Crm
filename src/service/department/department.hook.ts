@@ -13,7 +13,7 @@ export const useUpdateRole = () => {
   return useMutation<IRoleChange, Error, IRoleChange>({
     mutationFn: updateRole,
     onSuccess: () => {
-      toast.success("Role updated successfully.");
+      toast.success("Должность успешно обновлен.");
       queryClient.invalidateQueries({ queryKey: ["departmentData"] });
     },
     onError: () => {

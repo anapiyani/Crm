@@ -1,6 +1,6 @@
 import { Autocomplete, Paper, SxProps, TextField } from "@mui/material";
 import classNames from "classnames";
-import React from "react";
+import React, { forwardRef } from "react";
 import classes from "./styles.module.scss";
 
 interface IOption {
@@ -17,6 +17,7 @@ interface ICustomAutoCompleteProps<T extends IOption> {
   label?: string;
   placeholder?: string;
   className?: string;
+  labelClassName?: string;
   size?: "small" | "medium";
   sx?: SxProps;
   fullWidth?: boolean;
@@ -26,23 +27,30 @@ const isString = (item: unknown): item is string => {
   return typeof item === "string";
 };
 
-const CustomAutoComplete = <T extends IOption>({
-  name,
-  selectValue,
-  options,
-  label,
-  onChange,
-  value,
-  placeholder,
-  className,
-  size = "medium",
-  sx,
-  fullWidth,
-}: ICustomAutoCompleteProps<T>): React.ReactElement => {
+const CustomAutoComplete = <T extends IOption>(
+  {
+    name,
+    selectValue,
+    options,
+    label,
+    onChange,
+    value,
+    placeholder,
+    className,
+    labelClassName,
+    size = "medium",
+    sx,
+    fullWidth,
+  }: ICustomAutoCompleteProps<T>,
+  ref: React.Ref<HTMLDivElement>
+): React.ReactElement => {
   return (
-    <div className={classNames(classes["autocomplete"], className)}>
+    <div className={classNames(classes["autocomplete"], className)} ref={ref}>
       {label && (
-        <label htmlFor={name} className={classes["autocomplete__label"]}>
+        <label
+          htmlFor={name}
+          className={classNames(classes["autocomplete__label"], labelClassName)}
+        >
           {label}
         </label>
       )}
@@ -85,4 +93,4 @@ const CustomAutoComplete = <T extends IOption>({
   );
 };
 
-export default CustomAutoComplete;
+export default forwardRef(CustomAutoComplete);
