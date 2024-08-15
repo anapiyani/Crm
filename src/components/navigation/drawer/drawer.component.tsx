@@ -109,7 +109,11 @@ const ResponsiveDrawer = (props: IProps) => {
         { text: "Косвенные расчеты", link: "/cashdesk/indirect-costs" },
       ],
     },
-    { text: "Активности", icon: <Notifications />, link: "/activity" },
+    {
+      text: "Активности",
+      icon: <Notifications />,
+      children: [{ text: "Посещения", link: "/visits" }],
+    },
     {
       text: "Клиенты",
       icon: <Groups />,
