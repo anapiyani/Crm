@@ -1,6 +1,6 @@
+import React from "react";
 import { Autocomplete, Paper, SxProps, TextField } from "@mui/material";
 import classNames from "classnames";
-import React from "react";
 import classes from "./styles.module.scss";
 
 interface IOption {
@@ -17,6 +17,7 @@ interface ICustomAutoCompleteProps<T extends IOption> {
   label?: string;
   placeholder?: string;
   className?: string;
+  labelClassName?: string;
   size?: "small" | "medium";
   sx?: SxProps;
   fullWidth?: boolean;
@@ -35,6 +36,7 @@ const CustomAutoComplete = <T extends IOption>({
   value,
   placeholder,
   className,
+  labelClassName,
   size = "medium",
   sx,
   fullWidth,
@@ -42,7 +44,10 @@ const CustomAutoComplete = <T extends IOption>({
   return (
     <div className={classNames(classes["autocomplete"], className)}>
       {label && (
-        <label htmlFor={name} className={classes["autocomplete__label"]}>
+        <label
+          htmlFor={name}
+          className={classNames(classes["autocomplete__label"], labelClassName)}
+        >
           {label}
         </label>
       )}

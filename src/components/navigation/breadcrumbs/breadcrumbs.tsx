@@ -44,7 +44,7 @@ const BreadcrumbsCustom: React.FC<IBreadcrumbsCustomProps> = ({
     { path: "/employees/department", breadcrumb: "Редактирование должности" },
     {
       path: "/services",
-      breadcrumb: "Услуги", 
+      breadcrumb: "Услуги",
     },
     {
       path: "/employees/cabinet",
@@ -61,6 +61,10 @@ const BreadcrumbsCustom: React.FC<IBreadcrumbsCustomProps> = ({
     {
       path: "/clients",
       breadcrumb: "Клиенты",
+    },
+    {
+      path: "/clients/add",
+      breadcrumb: "Создание карты клиента",
     },
     {
       path: "/clients/client-card",

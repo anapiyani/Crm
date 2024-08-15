@@ -19,6 +19,7 @@ import {
   useCreateRole,
 } from "@/service/department/department.hook";
 import ModalWindow from "@/components/modal-window/modal-window";
+import classNames from "classnames";
 
 const Department = () => {
   const { data, isPending, isError } = useQuery({
@@ -130,6 +131,9 @@ const Department = () => {
                     className={
                       selectedDepartment === item.id ? classes["selected"] : ""
                     }
+                    sx={{
+                      textAlign: "left",
+                    }}
                   >
                     {item.name}
                   </Button>
@@ -138,7 +142,7 @@ const Department = () => {
             </ul>
           </div>
         </div>
-        <div className={classes["department__content__column"]}>
+        <div className={classNames(classes["department__content__column"])}>
           <div className={classes["department__content__column__header"]}>
             <h2>
               Должность <Button onClick={handleOpenModal}>+ Добавить</Button>

@@ -29,7 +29,7 @@ const VerticalTextField = forwardRef<HTMLInputElement, IProps>(
       register,
       ...props
     },
-    ref,
+    ref
   ) => {
     const renderTextField = () => {
       switch (type) {
@@ -44,7 +44,7 @@ const VerticalTextField = forwardRef<HTMLInputElement, IProps>(
                 placeholder={placeholder}
                 className={classNames(
                   classes["main__double__inputDouble"],
-                  addClassName,
+                  addClassName
                 )}
                 onChange={onChangeFrom}
                 InputProps={{
@@ -61,7 +61,7 @@ const VerticalTextField = forwardRef<HTMLInputElement, IProps>(
                 placeholder={placeholderOptional}
                 className={classNames(
                   classes["main__double__inputDouble"],
-                  addClassName,
+                  addClassName
                 )}
                 onChange={onChangeTo}
                 InputProps={{
@@ -81,7 +81,7 @@ const VerticalTextField = forwardRef<HTMLInputElement, IProps>(
               placeholder={placeholder}
               className={classNames(
                 classes["main__single__input"],
-                addClassName,
+                addClassName
               )}
               InputProps={{
                 style: { fontSize: "16px" },
@@ -98,7 +98,7 @@ const VerticalTextField = forwardRef<HTMLInputElement, IProps>(
         {renderTextField()}
       </div>
     );
-  },
+  }
 );
 
 export default VerticalTextField;
