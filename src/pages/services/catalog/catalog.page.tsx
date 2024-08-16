@@ -26,7 +26,6 @@ import {
   LanOutlined,
   Folder,
   ContentCut,
-  DeleteOutline,
 } from "@mui/icons-material";
 import classes from "./styles.module.scss";
 import CustomTextField from "@/components/textField/textField.component";
@@ -42,8 +41,13 @@ import {
 } from "@/ts/hierarchy.inteface";
 import dayjs from "dayjs";
 import CostTable from "./service/_components/table-price/table-price";
-import { costData, durationData, materialData } from "./service/_components/table-price/data";
+import {
+  costData,
+  durationData,
+  materialData,
+} from "./service/_components/table-price/data";
 import MaterialTable from "./service/_components/table-materials/table-materials";
+import Calculation from "./service/_components/calculation/calculation";
 
 const ServiceCatalog = () => {
   const [service, setService] = useState<IService | null>(null);
@@ -472,8 +476,20 @@ const ServiceCatalog = () => {
           </div>
         )}
         <CostTable title="Стоимость" unit="руб." data={costData} />
-        <CostTable title="Продолжительность" unit="мин" showIcons={false} data={durationData} hierarchy />
-        <MaterialTable title="Материалы" data={materialData}/>
+        <CostTable
+          title="Продолжительность"
+          unit="мин"
+          showIcons={false}
+          data={durationData}
+          hierarchy
+        />
+        <MaterialTable title="Материалы" data={materialData} />
+        <Calculation
+          material="Материалы салона"
+          employeePercentage="50%"
+          position="Универсал"
+          employeeName="Имя Фамилия"
+        />
       </div>
     </div>
   );

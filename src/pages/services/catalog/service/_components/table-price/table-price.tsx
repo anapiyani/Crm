@@ -13,7 +13,7 @@ import {
   IconButton,
   Divider,
 } from "@mui/material";
-import { SaveOutlined, Man3Outlined, Man } from "@mui/icons-material/";
+import { SaveOutlined, Man3Outlined, } from "@mui/icons-material/";
 
 interface CostData {
   position: string;
