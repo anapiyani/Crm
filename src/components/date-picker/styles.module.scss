@@ -1,6 +1,7 @@
 .date-picker {
   height: 4rem;
   width: 100%;
+  max-width: 100%;
   border: 1px solid rgba(0, 0, 0, 0.23);
   border-radius: 8px;
   font-size: 1.4rem;
@@ -8,4 +9,5 @@
   font-family: "Roboto", sans-serif;
   padding: 0 1rem;
   color: var(--text-secondary);
+  box-sizing: border-box;
 }
