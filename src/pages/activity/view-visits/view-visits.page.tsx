@@ -217,6 +217,82 @@ const ViewVisits = () => {
             </div>
           </div>
         </div>
+        <div className={classes.secondTable}>
+          <div className={classes.secondTable__header}>
+            <h1
+              style={{
+                paddingBottom: "1rem",
+                paddingTop: "3rem",
+                fontSize: "3.4rem",
+                fontWeight: 400,
+              }}
+            >
+              Зарплаты
+            </h1>
+          </div>
+          <div className={classes.view__tables__firstTable__table}>
+            <Table className={classes.table}>
+              <TableHead>
+                <TableRow>
+                  <TableCell>№</TableCell>
+                  <TableCell>Сотрудник</TableCell>
+                  <TableCell>Статья зарплаты</TableCell>
+                  <TableCell>Тип статьи</TableCell>
+                  <TableCell>Выручка</TableCell>
+                  <TableCell>Материалы</TableCell>
+                  <TableCell>Зарплата</TableCell>
+                  <TableCell>Формула з/п</TableCell>
+                  <TableCell>Начислено</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                <TableRow>
+                  <TableCell>1</TableCell>
+                  <TableCell>
+                    <Link className={classes.link} to="/">
+                      <p style={{ fontSize: "1.6rem" }}>
+                        Мужская стрижка <br />{" "}
+                      </p>
+                    </Link>
+                    <span style={{ fontSize: "1.2rem" }}>Для любой длины</span>
+                  </TableCell>
+                  <TableCell>Коррекция длины волос</TableCell>
+                  <TableCell>% от услуг</TableCell>
+                  <TableCell>1 шт.</TableCell>
+                  <TableCell>
+                    <p>3 400 руб.</p>{" "}
+                  </TableCell>
+                  <TableCell>
+                    <p>0 руб.</p>
+                  </TableCell>
+                  <TableCell>
+                    <p>+1 700 руб.</p>
+                  </TableCell>
+                  <TableCell>
+                    <p>50% от 3 400 руб.</p>
+                  </TableCell>
+                  <TableCell>
+                    <p>31 марта, 12:22</p> <br /> <span>Автоматически</span>
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+            <div
+              style={{
+                display: "flex",
+                width: "100%",
+                justifyContent: "end",
+                padding: "1rem",
+              }}
+            >
+              <div>
+                <p style={{ fontSize: "1.6rem" }}>
+                  Итого зарплаты начислено: <strong>1 700 руб</strong>.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
