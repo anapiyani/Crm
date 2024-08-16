@@ -2,6 +2,7 @@ import React, { forwardRef } from "react";
 import TextField, { TextFieldProps } from "@mui/material/TextField";
 import classNames from "classnames";
 import classes from "./styles.module.scss";
+import CustomDatePicker from "../date-picker/date-picker-custom";
 
 interface IProps extends Omit<TextFieldProps, "variant"> {
   label?: string;
@@ -13,6 +14,7 @@ interface IProps extends Omit<TextFieldProps, "variant"> {
   onChangeFrom?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onChangeTo?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   register?: any;
+  labelClassName?: string;
 }
 
 const VerticalTextField = forwardRef<HTMLInputElement, IProps>(
@@ -27,6 +29,7 @@ const VerticalTextField = forwardRef<HTMLInputElement, IProps>(
       onChangeTo,
       type = "text",
       register,
+      labelClassName,
       ...props
     },
     ref
@@ -71,6 +74,24 @@ const VerticalTextField = forwardRef<HTMLInputElement, IProps>(
               />
             </div>
           );
+        case "double-calendar":
+          return (
+            <div className={classNames(classes["main__double"], addClassName)}>
+              <CustomDatePicker
+                className={classNames(
+                  classes["main__double__inputDouble"],
+                  addClassName
+                )}
+              />
+              <p>{doubleDivier}</p>
+              <CustomDatePicker
+                className={classNames(
+                  classes["main__double__inputDouble"],
+                  addClassName
+                )}
+              />
+            </div>
+          );
         default:
           return (
             <TextField
@@ -94,7 +115,9 @@ const VerticalTextField = forwardRef<HTMLInputElement, IProps>(
 
     return (
       <div className={classes["main"]}>
-        <p style={{ fontSize: "16px" }}>{label}</p>
+        <p style={{ fontSize: "16px" }} className={classNames(labelClassName)}>
+          {label}
+        </p>
         {renderTextField()}
       </div>
     );
