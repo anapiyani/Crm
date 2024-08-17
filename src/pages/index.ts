@@ -10,6 +10,7 @@ import EmployeeVisits from "./employees/employee-visits/employee-visits.page";
 import Clients from "./clients/clients.page";
 import ClientCard from "@/pages/clients/client-card/client-card.page";
 import SearchVisits from "./activity/search-visit/search-visit.page";
+import ViewVisits from "./activity/view-visits/view-visits.page";
 import WorkSchedule from "./work-schedule/work-schedule";
 import Department from "./employees/department/department.page";
 import ServiceCatalog from "./services/catalog/catalog.page";
@@ -43,6 +44,7 @@ export {
   NotFound,
   Rating,
   ClientAdd,
+  ViewVisits,
   StorageSettings,
   EmployeeCabinet,
   EmployeeVisits,

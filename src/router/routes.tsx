@@ -20,6 +20,7 @@ import {
   SalaryPage,
   ClientSearch,
   IndirectCostsPage,
+  ViewVisits,
 } from "@/pages";
 import StoragePage from "@/pages/storage/storate.page";
 
@@ -133,5 +134,10 @@ export const ROUTES: IRoute[] = [
     name: "Employee Visits",
     path: "/employees/visits",
     component: <EmployeeVisits />,
+  },
+  {
+    name: "View Visits",
+    path: "/visits/view",
+    component: <ViewVisits />,
   },
 ];
