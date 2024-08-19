@@ -35,7 +35,7 @@ const SalaryPage = () => {
   useEffect(() => {
     if (templateList) {
       const firstProductionTemplate = templateList.find(
-        (template) => template.template_type === "production",
+        (template) => template.template_type === "production"
       );
       if (firstProductionTemplate) {
         setChoosenTemplate(firstProductionTemplate.id!);
@@ -119,12 +119,21 @@ const SalaryPage = () => {
           fixed_amount: "",
         },
       ],
+      products_with_different_percentage: [
+        {
+          material: [],
+          root: [],
+          employee_percentage: "",
+          calculation_method: "",
+          fixed_amount: "",
+        },
+      ],
     });
   };
 
   const renderTemplateList = (
     type: "production" | "management" | "admin",
-    title: string,
+    title: string
   ) => (
     <div className={classes.salary__content__list__items__item}>
       <div className={classes.salary__content__list__items__item__header}>
@@ -156,7 +165,7 @@ const SalaryPage = () => {
                   {template.name}
                 </p>
               </Button>
-            ),
+            )
         )}
       </div>
     </div>

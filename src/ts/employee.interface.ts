@@ -71,6 +71,7 @@ export interface ITemplate {
   client_attraction: IClientAttraction;
   client_development: IClientDevelopment;
   services_with_different_percentage: IServicesWithDifferentPercentage[];
+  products_with_different_percentage: IItemsWithDifferentPercentage[];
   item_sales: IItemSales;
   id?: number;
   isEdit?: boolean;
@@ -132,6 +133,15 @@ export interface IClientDevelopment {
 
 export interface IServicesWithDifferentPercentage {
   service: number[];
+  root: string[];
+  employee_percentage: string;
+  calculation_method: string;
+  fixed_amount: string;
+  id?: number;
+}
+
+export interface IItemsWithDifferentPercentage {
+  material: number[];
   root: string[];
   employee_percentage: string;
   calculation_method: string;

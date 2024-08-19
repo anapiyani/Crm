@@ -85,6 +85,7 @@ export interface IStorageCategory {
   name: string;
   level: string;
   parent: number | null;
+  parent_name: string | null;
   children: IStorageCategory[];
   materials: IMaterial[];
 }

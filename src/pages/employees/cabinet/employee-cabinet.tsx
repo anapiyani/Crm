@@ -16,13 +16,17 @@ const EmployeeCabinet = () => {
   const updateRoom = useUpdateRoom();
   const [selectedRoom, setSelectedRoom] = useState<number | null>(null);
   const [selectedItems, setSelectedItems] = useState<
-    { id: number; type: "service" | "category" }[]
+    { id: number; type: "service" | "category"; isChecked: number }[]
   >([]);
 
   const handleRoomClick = (room: IRoom) => {
     setSelectedRoom(room.id);
     setSelectedItems(
-      room.services.map((serviceId) => ({ id: serviceId, type: "service" }))
+      room.services.map((serviceId) => ({
+        id: serviceId,
+        type: "service",
+        isChecked: 2,
+      }))
     );
   };
 
@@ -38,7 +42,7 @@ const EmployeeCabinet = () => {
     setSelectedItems((prev) => {
       if (isChecked === 1) {
         // Add the item if it's checked
-        return [...prev, { id, type }];
+        return [...prev, { id, type, isChecked }];
       } else if (isChecked === 2) {
         // Remove the item if it's unchecked
         return prev.filter((item) => !(item.id === id && item.type === type));
