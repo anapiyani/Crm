@@ -16,7 +16,7 @@ export interface IUser {
 
 export interface IEmployeeAddForm {
   user: IUser;
-  position: string;
+  position: number;
   start_date: string;
   city: string;
   city_index: string;

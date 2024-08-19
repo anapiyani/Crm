@@ -39,7 +39,7 @@ const EmployeeAdd = () => {
       phone_number: "",
       phone_number_whatsapp: "",
     },
-    position: "",
+    position: 0,
     start_date: new Date().toISOString().split("T")[0],
     city: "",
     city_index: "",
@@ -171,12 +171,10 @@ const EmployeeAdd = () => {
                   options={node}
                   getOptionLabel={(option) => option.nodeName}
                   onChange={(event, value) => {
-                    if (value) {
-                      setForm((prev) => ({
-                        ...prev,
-                        position: value.nodeName,
-                      }));
-                    }
+                    setForm((prev) => ({
+                      ...prev,
+                      position: value?.nodeId!,
+                    }));
                   }}
                   renderOption={(props, option) => (
                     <li
