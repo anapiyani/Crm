@@ -8,12 +8,11 @@ import {
   TableRow,
   Paper,
   TextField,
-  Typography,
-  Box,
   IconButton,
   Divider,
 } from "@mui/material";
-import { SaveOutlined, Man3Outlined, } from "@mui/icons-material/";
+import { SaveOutlined, Man3Outlined } from "@mui/icons-material/";
+import classes from "./style.module.scss";
 
 interface CostData {
   position: string;
@@ -96,7 +95,7 @@ const CostTable: React.FC<CostTableProps> = ({
               border: "0.1rem solid rgba(99,107,116, 0.3)",
             }}
           >
-            <Box display="flex" alignItems="center">
+            <div className={classes.cellContainer}>
               <TextField
                 value={row.cost}
                 onChange={(e) =>
@@ -113,8 +112,8 @@ const CostTable: React.FC<CostTableProps> = ({
                 }}
                 size="small"
               />
-              <Typography fontSize="16px">{unit}</Typography>
-            </Box>
+              <p className={classes.cellContainer__text}>{unit}</p>
+            </div>
           </TableCell>
           <TableCell
             sx={{
@@ -122,7 +121,7 @@ const CostTable: React.FC<CostTableProps> = ({
               border: "0.1rem solid rgba(99,107,116, 0.3)",
             }}
           >
-            <Box display="flex" alignItems="center">
+            <div className={classes.cellContainer}>
               <TextField
                 value={row.costFrom}
                 sx={{
@@ -137,8 +136,8 @@ const CostTable: React.FC<CostTableProps> = ({
                 }}
                 size="small"
               />
-              <Typography fontSize="16px">{unit}</Typography>
-            </Box>
+              <p className={classes.cellContainer__text}>{unit}</p>
+            </div>
           </TableCell>
           <TableCell
             sx={{
@@ -146,7 +145,7 @@ const CostTable: React.FC<CostTableProps> = ({
               border: "0.1rem solid rgba(99,107,116, 0.3)",
             }}
           >
-            <Box display="flex" alignItems="center">
+            <div className={classes.cellContainer}>
               <TextField
                 value={row.costTo}
                 sx={{
@@ -161,8 +160,8 @@ const CostTable: React.FC<CostTableProps> = ({
                 }}
                 size="small"
               />
-              <Typography fontSize="16px">{unit}</Typography>
-            </Box>
+              <p className={classes.cellContainer__text}>{unit}</p>
+            </div>
           </TableCell>
           <TableCell
             sx={{
@@ -170,7 +169,7 @@ const CostTable: React.FC<CostTableProps> = ({
               border: "0.1rem solid rgba(99,107,116, 0.3)",
             }}
           >
-            <Box display="flex" alignItems="center">
+            <div className={classes.cellContainer}>
               <TextField
                 value={row.shortHair}
                 onChange={(e) =>
@@ -187,8 +186,8 @@ const CostTable: React.FC<CostTableProps> = ({
                 }}
                 size="small"
               />
-              <Typography fontSize="16px">{unit}</Typography>
-            </Box>
+              <p className={classes.cellContainer__text}>{unit}</p>
+            </div>
           </TableCell>
           <TableCell
             sx={{
@@ -196,7 +195,7 @@ const CostTable: React.FC<CostTableProps> = ({
               border: "0.1rem solid rgba(99,107,116, 0.3)",
             }}
           >
-            <Box display="flex" alignItems="center">
+            <div className={classes.cellContainer}>
               <TextField
                 value={row.mediumHair}
                 onChange={(e) =>
@@ -213,8 +212,8 @@ const CostTable: React.FC<CostTableProps> = ({
                 }}
                 size="small"
               />
-              <Typography fontSize="16px">{unit}</Typography>
-            </Box>
+              <p className={classes.cellContainer__text}>{unit}</p>
+            </div>
           </TableCell>
           <TableCell
             sx={{
@@ -222,7 +221,7 @@ const CostTable: React.FC<CostTableProps> = ({
               border: "0.1rem solid rgba(99,107,116, 0.3)",
             }}
           >
-            <Box display="flex" alignItems="center">
+            <div className={classes.cellContainer}>
               <TextField
                 value={row.longHair}
                 onChange={(e) =>
@@ -239,8 +238,8 @@ const CostTable: React.FC<CostTableProps> = ({
                 }}
                 size="small"
               />
-              <Typography fontSize="16px">{unit}</Typography>
-            </Box>
+              <p className={classes.cellContainer__text}>{unit}</p>
+            </div>
           </TableCell>
           <TableCell
             sx={{
@@ -249,7 +248,7 @@ const CostTable: React.FC<CostTableProps> = ({
               borderRight: "none",
             }}
           >
-            <Box display="flex" alignItems="center">
+            <div className={classes.cellContainer}>
               <TextField
                 value={row.roots}
                 onChange={(e) =>
@@ -266,8 +265,8 @@ const CostTable: React.FC<CostTableProps> = ({
                 }}
                 size="small"
               />
-              <Typography fontSize="16px">{unit}</Typography>
-            </Box>
+              <p className={classes.cellContainer__text}>{unit}</p>
+            </div>
           </TableCell>
         </TableRow>
         {row.children && renderRows(row.children, level + 1)}
@@ -287,13 +286,11 @@ const CostTable: React.FC<CostTableProps> = ({
         marginBottom: "2rem",
       }}
     >
-      <Box sx={{ p: " 1.6rem 0 1.6rem 0.8rem" }}>
-        <Box display="flex" justifyContent="space-between" alignItems="center">
-          <Typography fontSize="2.4rem" fontWeight={600}>
-            {title}
-          </Typography>
+      <div className={classes.tableTitleContainer}>
+        <div className={classes.tableTitleContainer__inner}>
+          <p className={classes.tableTitleContainer__inner__title}>{title}</p>
 
-          <Box>
+          <div>
             <IconButton>
               <SaveOutlined
                 sx={{ fontSize: "24px", color: "var(--primary-500)" }}
@@ -307,10 +304,10 @@ const CostTable: React.FC<CostTableProps> = ({
                 />
               </IconButton>
             )}
-          </Box>
-        </Box>
+          </div>
+        </div>
         <Divider />
-      </Box>
+      </div>
 
       <Table>
         <TableHead sx={{ borderBottom: "0.2rem solid var(--divider)" }}>

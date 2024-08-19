@@ -1,7 +1,7 @@
 import React from "react";
-import { Box, Typography, Button, IconButton, Divider } from "@mui/material";
-import PersonIcon from "@mui/icons-material/Person";
-import { Man3, Man3Outlined } from "@mui/icons-material";
+import { Button, IconButton, Divider } from "@mui/material";
+import { Man3Outlined } from "@mui/icons-material";
+import classes from "./style.module.scss";
 
 interface CalculationProps {
   material: string;
@@ -17,46 +17,18 @@ const Calculation: React.FC<CalculationProps> = ({
   employeeName,
 }) => {
   return (
-    <Box
-      sx={{
-        boxShadow:
-          "0 0 12px rgba(21, 21, 21, 0.08), 0 2px 8px rgba(21, 21, 21, 0.08)",
-        borderRadius: "16px",
-        border: "0.1rem solid rgba(99,107,116, 0.3)",
-        padding: "1.6rem",
-      }}
-    >
-      <Typography
-        sx={{ fontSize: "2.4rem", fontWeight: 600, marginBottom: "1rem" }}
-      >
-        Калькуляция
-      </Typography>
+    <div className={classes.calculation}>
+      <p className={classes.calculation__title}>Калькуляция</p>
       <Divider sx={{ marginBottom: "1.6rem" }} />
 
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          gap: "1.6rem",
-          width: "80%",
-        }}
-      >
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            flex: 1,
-            gap: "0.8rem",
-          }}
-        >
-          <Typography sx={{ fontSize: "1.6rem", fontWeight: 400 }}>
-            Материалы
-          </Typography>
+      <div className={classes.calculation__content}>
+        <div className={classes.calculation__content__item}>
+          <p className={classes.calculation__content__item__label}>Материалы</p>
           <Button
             variant="contained"
             sx={{
               width: "100%",
-     
+
               textTransform: "none",
               fontSize: "1.4rem",
               padding: "0.8rem",
@@ -67,24 +39,17 @@ const Calculation: React.FC<CalculationProps> = ({
           >
             {material}
           </Button>
-        </Box>
+        </div>
 
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            flex: 1,
-            gap: "0.8rem",
-          }}
-        >
-          <Typography sx={{ fontSize: "1.6rem", fontWeight: 400 }}>
+        <div className={classes.calculation__content__item}>
+          <p className={classes.calculation__content__item__label}>
             Процент сотрудника
-          </Typography>
+          </p>
           <Button
             variant="contained"
             sx={{
-      
               width: "100%",
+
               textTransform: "none",
               fontSize: "1.4rem",
               padding: "0.8rem",
@@ -95,24 +60,15 @@ const Calculation: React.FC<CalculationProps> = ({
           >
             {employeePercentage}
           </Button>
-        </Box>
+        </div>
 
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            flex: 1,
-            gap: "0.8rem",
-          }}
-        >
-          <Typography sx={{ fontSize: "1.6rem", fontWeight: 400 }}>
-            Должность
-          </Typography>
+        <div className={classes.calculation__content__item}>
+          <p className={classes.calculation__content__item__label}>Должность</p>
           <Button
             variant="contained"
             sx={{
               width: "100%",
-           
+
               textTransform: "none",
               fontSize: "1.4rem",
               padding: "0.8rem",
@@ -123,43 +79,25 @@ const Calculation: React.FC<CalculationProps> = ({
           >
             {position}
           </Button>
-        </Box>
+        </div>
 
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            flex: 1,
-            gap: "0.8rem",
-          }}
-        >
-          <Typography sx={{ fontSize: "1.6rem", fontWeight: 400 }}>
+        <div className={classes.calculation__content__item}>
+          <p className={classes.calculation__content__item__label}>
             Сотрудники
-          </Typography>
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-            }}
-          >
+          </p>
+          <div className={classes.calculation__content__item__employee}>
             <IconButton sx={{ padding: 0, marginRight: "0.8rem" }}>
               <Man3Outlined
                 sx={{ fontSize: "2.4rem", color: "var(--primary-500)" }}
               />
             </IconButton>
-            <Typography
-              sx={{
-                fontSize: "1.4rem",
-                fontWeight: 400,
-                color: "var(--primary-500)",
-              }}
-            >
+            <p className={classes.calculation__content__item__employee__name}>
               {employeeName}
-            </Typography>
-          </Box>
-        </Box>
-      </Box>
-    </Box>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 

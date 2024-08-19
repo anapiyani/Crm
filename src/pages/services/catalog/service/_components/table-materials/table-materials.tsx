@@ -8,14 +8,13 @@ import {
   TableRow,
   Paper,
   TextField,
-  Typography,
-  Box,
   IconButton,
   Divider,
   Checkbox,
   FormControlLabel,
 } from "@mui/material";
 import { SaveOutlined, ScienceOutlined } from "@mui/icons-material";
+import classes from "./style.module.scss";
 
 interface MaterialData {
   material: string;
@@ -83,13 +82,11 @@ const MaterialTable: React.FC<MaterialTableProps> = ({ data, title }) => {
         marginBottom: "2rem",
       }}
     >
-      <Box sx={{ p: " 1.6rem 0 1.6rem 0.8rem" }}>
-        <Box display="flex" justifyContent="space-between" alignItems="center">
-          <Typography fontSize="2.4rem" fontWeight={600}>
-            {title}
-          </Typography>
+      <div className={classes.tableContainer}>
+        <div className={classes.tableContainer__header}>
+          <p className={classes.tableContainer__header__title}>{title}</p>
 
-          <Box>
+          <div>
             <IconButton>
               <SaveOutlined
                 sx={{ fontSize: "24px", color: "var(--primary-500)" }}
@@ -101,10 +98,10 @@ const MaterialTable: React.FC<MaterialTableProps> = ({ data, title }) => {
                 sx={{ fontSize: "24px", color: "var(--primary-500)" }}
               />
             </IconButton>
-          </Box>
-        </Box>
+          </div>
+        </div>
         <Divider />
-      </Box>
+      </div>
 
       <Table>
         <TableHead sx={{ borderBottom: "0.2rem solid var(--divider)" }}>
@@ -156,13 +153,11 @@ const MaterialTable: React.FC<MaterialTableProps> = ({ data, title }) => {
                   padding: "0.8rem 1rem",
                 }}
               >
-                <Box display="flex" flexDirection="column">
-                  <Typography
-                    sx={{ color: "var(--text-secondary)", fontSize: "1.2rem" }}
-                  >
+                <div className={classes.tableContainer__content}>
+                  <p className={classes.tableContainer__content__material}>
                     {row.material}
-                  </Typography>
-                  <Box display="flex" flexDirection="column" ml={2}>
+                  </p>
+                  <div className={classes.tableContainer__content__checkboxes}>
                     <FormControlLabel
                       control={
                         <Checkbox
@@ -223,8 +218,8 @@ const MaterialTable: React.FC<MaterialTableProps> = ({ data, title }) => {
                         },
                       }}
                     />
-                  </Box>
-                </Box>
+                  </div>
+                </div>
               </TableCell>
               <TableCell
                 sx={{
@@ -232,7 +227,7 @@ const MaterialTable: React.FC<MaterialTableProps> = ({ data, title }) => {
                   border: "0.1rem solid rgba(99,107,116, 0.3)",
                 }}
               >
-                <Box display="flex" alignItems="center">
+                <div className={classes.cost}>
                   <TextField
                     value={row.cost}
                     onChange={(e) =>
@@ -249,8 +244,8 @@ const MaterialTable: React.FC<MaterialTableProps> = ({ data, title }) => {
                     }}
                     size="small"
                   />
-                  <Typography fontSize="16px">мл = 200 руб. </Typography>
-                </Box>
+                  <p className={classes.cost__text}>мл = 200 руб. </p>
+                </div>
               </TableCell>
               <TableCell
                 sx={{
@@ -258,7 +253,7 @@ const MaterialTable: React.FC<MaterialTableProps> = ({ data, title }) => {
                   border: "0.1rem solid rgba(99,107,116, 0.3)",
                 }}
               >
-                <Box display="flex" alignItems="center">
+                <div className={classes.cost}>
                   <TextField
                     value={row.costFrom}
                     sx={{
@@ -273,8 +268,8 @@ const MaterialTable: React.FC<MaterialTableProps> = ({ data, title }) => {
                     }}
                     size="small"
                   />
-                  <Typography fontSize="16px">мл</Typography>
-                </Box>
+                  <p className={classes.cost__text}>мл</p>
+                </div>
               </TableCell>
               <TableCell
                 sx={{
@@ -282,7 +277,7 @@ const MaterialTable: React.FC<MaterialTableProps> = ({ data, title }) => {
                   border: "0.1rem solid rgba(99,107,116, 0.3)",
                 }}
               >
-                <Box display="flex" alignItems="center">
+                <div className={classes.cost}>
                   <TextField
                     value={row.costTo}
                     sx={{
@@ -297,8 +292,8 @@ const MaterialTable: React.FC<MaterialTableProps> = ({ data, title }) => {
                     }}
                     size="small"
                   />
-                  <Typography fontSize="16px">мл</Typography>
-                </Box>
+                  <p className={classes.cost__text}>мл</p>
+                </div>
               </TableCell>
               <TableCell
                 sx={{
@@ -306,7 +301,7 @@ const MaterialTable: React.FC<MaterialTableProps> = ({ data, title }) => {
                   border: "0.1rem solid rgba(99,107,116, 0.3)",
                 }}
               >
-                <Box display="flex" alignItems="center">
+                <div className={classes.cost}>
                   <TextField
                     value={row.shortHair}
                     onChange={(e) =>
@@ -327,8 +322,8 @@ const MaterialTable: React.FC<MaterialTableProps> = ({ data, title }) => {
                     }}
                     size="small"
                   />
-                  <Typography fontSize="16px">мл</Typography>
-                </Box>
+                  <p className={classes.cost__text}>мл</p>
+                </div>
               </TableCell>
               <TableCell
                 sx={{
@@ -336,7 +331,7 @@ const MaterialTable: React.FC<MaterialTableProps> = ({ data, title }) => {
                   border: "0.1rem solid rgba(99,107,116, 0.3)",
                 }}
               >
-                <Box display="flex" alignItems="center">
+                <div className={classes.cost}>
                   <TextField
                     value={row.mediumHair}
                     onChange={(e) =>
@@ -357,8 +352,8 @@ const MaterialTable: React.FC<MaterialTableProps> = ({ data, title }) => {
                     }}
                     size="small"
                   />
-                  <Typography fontSize="16px">мл</Typography>
-                </Box>
+                  <p className={classes.cost__text}>мл</p>
+                </div>
               </TableCell>
               <TableCell
                 sx={{
@@ -366,7 +361,7 @@ const MaterialTable: React.FC<MaterialTableProps> = ({ data, title }) => {
                   border: "0.1rem solid rgba(99,107,116, 0.3)",
                 }}
               >
-                <Box display="flex" alignItems="center">
+                <div className={classes.cost}>
                   <TextField
                     value={row.longHair}
                     onChange={(e) =>
@@ -387,8 +382,8 @@ const MaterialTable: React.FC<MaterialTableProps> = ({ data, title }) => {
                     }}
                     size="small"
                   />
-                  <Typography fontSize="16px">мл</Typography>
-                </Box>
+                  <p className={classes.cost__text}>мл</p>
+                </div>
               </TableCell>
               <TableCell
                 sx={{
@@ -396,7 +391,7 @@ const MaterialTable: React.FC<MaterialTableProps> = ({ data, title }) => {
                   border: "0.1rem solid rgba(99,107,116, 0.3)",
                 }}
               >
-                <Box display="flex" alignItems="center">
+                <div className={classes.cost}>
                   <TextField
                     value={row.roots}
                     onChange={(e) =>
@@ -413,8 +408,8 @@ const MaterialTable: React.FC<MaterialTableProps> = ({ data, title }) => {
                     }}
                     size="small"
                   />
-                  <Typography fontSize="16px">мл</Typography>
-                </Box>
+                  <p className={classes.cost__text}>мл</p>
+                </div>
               </TableCell>
               <TableCell
                 sx={{
@@ -423,9 +418,9 @@ const MaterialTable: React.FC<MaterialTableProps> = ({ data, title }) => {
                   borderRight: "none",
                 }}
               >
-                <Typography fontSize="16px">
+                <p className={classes.cost__text}>
                   1 мл = {200 / row.cost} руб
-                </Typography>
+                </p>
               </TableCell>
             </TableRow>
           ))}

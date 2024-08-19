@@ -1,0 +1,39 @@
+.tableContainer {
+  padding: 1.6rem 0 1.6rem 0.8rem;
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    &__title {
+      font-size: 2.4rem;
+      font-weight: 600;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    gap: 1rem;
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    &__material {
+      color: var(--text-secondary);
+      font-size: 1.2rem;
+    }
+    &__checkboxes {
+      display: flex;
+      flex-direction: column;
+      margin-left: 2rem;
+    }
+  }
+}
+.cost {
+  display: flex;
+  align-items: center;
+  &__text {
+    font-size: 16px;
+  }
+}

@@ -1,0 +1,45 @@
+.calculation {
+  box-shadow:
+    0 0 12px rgba(21, 21, 21, 0.08),
+    0 2px 8px rgba(21, 21, 21, 0.08);
+  border-radius: 16px;
+  border: 0.1rem solid rgba(99, 107, 116, 0.3);
+  padding: 1.6rem;
+  background-color: #fff;
+
+  &__title {
+    font-size: 2.4rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+
+  &__content {
+    display: flex;
+    align-items: center;
+    gap: 1.6rem;
+    width: 80%;
+
+    &__item {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      gap: 0.8rem;
+
+      &__label {
+        font-size: 1.6rem;
+        font-weight: 400;
+      }
+
+      &__employee {
+        display: flex;
+        align-items: center;
+
+        &__name {
+          font-size: 1.4rem;
+          font-weight: 400;
+          color: var(--primary-500);
+        }
+      }
+    }
+  }
+}
