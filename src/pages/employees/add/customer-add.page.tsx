@@ -10,8 +10,9 @@ import {
   InputAdornment,
   Radio,
   RadioGroup,
+  TextField,
 } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import InputMask from "react-input-mask";
@@ -19,6 +20,12 @@ import InputCard from "@/components/input-card/input-card";
 import classes from "./styles.module.scss";
 import { IEmployeeAddForm } from "@/ts/types";
 import { useAddEmployee } from "@/service/employee/employee.hook";
+import {
+  getRolesByDepartments,
+  linkRoleToHierarchy,
+} from "@/service/hierarchy/hierarchy.service";
+import { useQuery } from "@tanstack/react-query";
+import { proccessRoleOptions } from "@/utils/process-role-options";
 
 const EmployeeAdd = () => {
   const [dateOfBirth, setDateOfBirth] = useState<Date | null>(null);
@@ -42,6 +49,13 @@ const EmployeeAdd = () => {
     comment: "",
   });
   const mutation = useAddEmployee();
+  const [node, setNode] = useState<
+    {
+      nodeType: string;
+      nodeName: string;
+      nodeId?: number;
+    }[]
+  >([]);
 
   const onFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -98,6 +112,21 @@ const EmployeeAdd = () => {
     mutation.mutate(formToSend);
   };
 
+  const { data } = useQuery({
+    queryKey: ["roles"],
+    queryFn: () => getRolesByDepartments(),
+  });
+
+  useEffect(() => {
+    if (data) {
+      setNode(proccessRoleOptions(data));
+    }
+  }, [data]);
+
+  const linkRole = (categoryId: number, roleId: number) => {
+    linkRoleToHierarchy({ department_id: categoryId, role_id: roleId });
+  };
+
   return (
     <div className={classes["main"]}>
       <div className={classes["main__upper"]}>
@@ -138,11 +167,59 @@ const EmployeeAdd = () => {
                   type="email"
                   onChange={onFormChange}
                 />
-                <CustomTextField
-                  label={"Должность"}
-                  name="position"
-                  required
-                  onChange={onFormChange}
+                <Autocomplete
+                  options={node}
+                  getOptionLabel={(option) => option.nodeName}
+                  onChange={(event, value) => {
+                    if (value) {
+                      setForm((prev) => ({
+                        ...prev,
+                        position: value.nodeName,
+                      }));
+                    }
+                  }}
+                  renderOption={(props, option) => (
+                    <li
+                      {...props}
+                      key={option.nodeId}
+                      style={{
+                        pointerEvents:
+                          option.nodeType === "department" ? "none" : "auto",
+                      }}
+                    >
+                      <p
+                        style={{
+                          fontSize: "1.6rem",
+                          fontWeight:
+                            option.nodeType === "department"
+                              ? "bold"
+                              : "normal",
+                          marginLeft:
+                            option.nodeType === "department" ? "0" : "1rem",
+                        }}
+                      >
+                        {option.nodeName}
+                      </p>
+                    </li>
+                  )}
+                  renderInput={(params) => (
+                    <TextField
+                      {...params}
+                      label="Выберите должность"
+                      variant="outlined"
+                      size="medium"
+                      sx={{
+                        "& .MuiOutlinedInput-root": {
+                          fontSize: "1.6rem",
+                          padding: "1rem",
+                        },
+                        "& .MuiInputLabel-root": {
+                          fontSize: "1.6rem",
+                          padding: "0 1rem",
+                        },
+                      }}
+                    />
+                  )}
                 />
               </div>
             }
