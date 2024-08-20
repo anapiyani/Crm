@@ -172,11 +172,12 @@ const ClientsAdd: React.FC = () => {
                     <CustomAutoComplete
                       sx={{
                         "& .MuiAutocomplete-inputRoot": {
+                          display: "flex",
                           padding: "3px 0px 3px 0px",
                           fontSize: "1.4rem",
-                          maxWidth: "30rem",
-                          width: "30rem",
-                          justifyContent: "flex-end",
+                          maxWidth: "40rem",
+                          width: "40rem",
+                          justifyContent: "end",
                         },
                       }}
                       {...field}
@@ -190,7 +191,7 @@ const ClientsAdd: React.FC = () => {
                       className="main__lower__autocomplete"
                       value={
                         categoryOptions?.find(
-                          (option) => option.value === field.value
+                          (option) => option.value === field.value,
                         ) || null
                       }
                     />
@@ -204,11 +205,12 @@ const ClientsAdd: React.FC = () => {
                     <CustomAutoComplete
                       sx={{
                         "& .MuiAutocomplete-inputRoot": {
+                          display: "flex",
                           padding: "3px 0px 3px 0px",
                           fontSize: "1.4rem",
-                          maxWidth: "30rem",
-                          width: "30rem",
-                          justifyContent: "flex-end",
+                          maxWidth: "40rem",
+                          width: "40rem",
+                          justifyContent: "end",
                         },
                       }}
                       {...field}
@@ -221,7 +223,7 @@ const ClientsAdd: React.FC = () => {
                       }}
                       value={
                         subcategoryOptions?.find(
-                          (option) => option.value === field.value
+                          (option) => option.value === field.value,
                         ) || null
                       }
                     />
@@ -234,11 +236,12 @@ const ClientsAdd: React.FC = () => {
                     <CustomAutoComplete
                       sx={{
                         "& .MuiAutocomplete-inputRoot": {
+                          display: "flex",
                           padding: "3px 0px 3px 0px",
                           fontSize: "1.4rem",
-                          maxWidth: "30rem",
-                          width: "30rem",
-                          justifyContent: "flex-end",
+                          maxWidth: "40rem",
+                          width: "40rem",
+                          justifyContent: "end",
                         },
                       }}
                       {...field}
@@ -251,7 +254,7 @@ const ClientsAdd: React.FC = () => {
                       }}
                       value={
                         cityOptions?.find(
-                          (option) => option.value === field.value
+                          (option) => option.value === field.value,
                         ) || null
                       }
                     />
@@ -448,7 +451,7 @@ const ClientsAdd: React.FC = () => {
                         }}
                         value={
                           sourceOptions?.find(
-                            (option) => option.value === field.value
+                            (option) => option.value === field.value,
                           ) || null
                         }
                       />
@@ -486,7 +489,7 @@ const ClientsAdd: React.FC = () => {
                       }}
                       value={
                         smsOptions?.find(
-                          (option) => option.value === field.value
+                          (option) => option.value === field.value,
                         ) || null
                       }
                     />
@@ -517,7 +520,7 @@ const ClientsAdd: React.FC = () => {
                       }}
                       value={
                         occupationOptions?.find(
-                          (option) => option.value === field.value
+                          (option) => option.value === field.value,
                         ) || null
                       }
                     />
@@ -548,7 +551,7 @@ const ClientsAdd: React.FC = () => {
                       }}
                       value={
                         salonLocationOptions?.find(
-                          (option) => option.value === field.value
+                          (option) => option.value === field.value,
                         ) || null
                       }
                     />
