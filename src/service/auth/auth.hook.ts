@@ -16,7 +16,7 @@ export const useLoginMutation = () => {
       } else {
         console.error(
           "Login response does not contain access and refresh tokens",
-          data
+          data,
         );
       }
     },

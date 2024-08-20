@@ -67,7 +67,6 @@ const CustomAutoComplete = <T extends IOption>({
           "& .MuiAutocomplete-inputRoot": {
             fontSize: "1.4rem",
           },
-          width: "100%",
           ...sx,
         }}
         onChange={(_, newValue) => {
