@@ -77,7 +77,7 @@ const FloatingPart: React.FC<FloatingPartProps> = ({ control }) => {
   };
   const treeTraverse = (
     data: IServiceTextProps[],
-    service: IServiceTextProps
+    service: IServiceTextProps,
   ) => {
     let result: string[] = [];
     console.log(service);
@@ -101,12 +101,12 @@ const FloatingPart: React.FC<FloatingPartProps> = ({ control }) => {
   const handleShowNewService = (
     selected: string[] = [], //default values made by Zhango
     cost: string[] = control._defaultValues.services_with_different_percentage!.map(
-      (item) => item?.employee_percentage || ""
+      (item) => item?.employee_percentage || "",
     ),
     option: { label: string; value: string } = {
       label: "Фикс. сумма",
       value: "fixed_percent",
-    }
+    },
   ) => {
     const newId = `devService-${Date.now()}`;
     console.log("NewService" + selected);
@@ -203,14 +203,15 @@ const FloatingPart: React.FC<FloatingPartProps> = ({ control }) => {
                   NiceModal.show(salaryServicesModal, { serviceIds }).then(
                     (res) => {
                       getServicesFromList(res as IServiceTextProps[]);
-                      const newServiceText: IServiceTextProps[] = res as IServiceTextProps[];
+                      const newServiceText: IServiceTextProps[] =
+                        res as IServiceTextProps[];
                       handleShowNewService(
                         handleListCreate(newServiceText),
                         cost,
-                        option
+                        option,
                       );
                       handleDeleteService(newId);
-                    }
+                    },
                   )
                 }
                 style={{ fontSize: "1.4rem" }}
@@ -254,7 +255,7 @@ const FloatingPart: React.FC<FloatingPartProps> = ({ control }) => {
 
   const handleDeleteService = (id: string) => {
     setDevServices((prevDevServices) =>
-      prevDevServices.filter((service) => service.id !== id)
+      prevDevServices.filter((service) => service.id !== id),
     );
   };
 

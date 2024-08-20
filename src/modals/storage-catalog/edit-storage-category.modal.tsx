@@ -1,11 +1,7 @@
 import ModalWindow from "@/components/modal-window/modal-window";
 import VerticalTextField from "@/components/textfield-vertical/textfield-vertical";
-import {
-  useUpdateHierarchy,
-  useUpdateStorageHierarchy,
-} from "@/service/hierarchy/hierarchy.hook";
+import { useUpdateStorageHierarchy } from "@/service/hierarchy/hierarchy.hook";
 import { IStorageCategory } from "@/ts/hierarchy.inteface";
-import { IServiceCategory } from "@/ts/service.interface";
 import NiceModal, { useModal } from "@ebay/nice-modal-react";
 import { useState } from "react";
 
