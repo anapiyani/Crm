@@ -16,6 +16,7 @@ import salaryServicesModal from "@/modals/employees/salary-services.modal";
 import { Delete } from "@mui/icons-material";
 import { Controller, Control } from "react-hook-form";
 import { IOptions, ITemplate } from "@/ts/employee.interface";
+import { co } from "node_modules/@fullcalendar/core/internal-common";
 
 interface DevServiceItem {
   id: string;
@@ -58,30 +59,40 @@ const FloatingPart: React.FC<FloatingPartProps> = ({ control }) => {
   }, []);
 
   //Zhango's function to traverse from service to parent
-  const treeTraverse = (data: IServiceTextProps[], item: IServiceTextProps) => {
-    let result: string[] = [];
-    if (item.parent === null) {
-      result.push(item.serviceName);
-      return result!;
-    }
 
-    const parent = data.find((el) => el.id === item.parent);
-    result = [...treeTraverse(data, parent!), ...result];
-    if (parent?.isChecked !== 1) {
-      result.push(item.serviceName);
-    }
-    return result;
-  };
   // Zhango's function to create List of services
   const handleListCreate = (data: IServiceTextProps[]) => {
     const services = data.filter((item) => item.type === "service");
+    console.log(services);
+
     let textResult: string[][] = [];
-    services.map((item) => textResult.push(treeTraverse(data, item)));
+    services.map((service) => {
+      console.log(service);
+      const result = treeTraverse(data, service);
+      textResult.push(result);
+    });
     const uniqueResult = [...new Set(textResult.map((item) => item.join(">")))];
 
     return uniqueResult;
   };
+  const treeTraverse = (
+    data: IServiceTextProps[],
+    service: IServiceTextProps
+  ) => {
+    let result: string[] = [];
+    console.log(service);
+    if (service.parent === null) {
+      result.push(service.serviceName);
+      return result!;
+    }
 
+    const parent = data.find((el) => el.id === service.parent);
+    result = [...treeTraverse(data, parent!), ...result];
+    if (parent?.isChecked !== 1) {
+      result.push(service.serviceName);
+    }
+    return result;
+  };
   const getServicesFromList = (data: IServiceTextProps[]) => {
     const services = data.filter((item) => item.type === "service");
     return services.map((item) => item.id);
@@ -90,12 +101,12 @@ const FloatingPart: React.FC<FloatingPartProps> = ({ control }) => {
   const handleShowNewService = (
     selected: string[] = [], //default values made by Zhango
     cost: string[] = control._defaultValues.services_with_different_percentage!.map(
-      (item) => item?.employee_percentage || "",
+      (item) => item?.employee_percentage || ""
     ),
     option: { label: string; value: string } = {
       label: "Фикс. сумма",
       value: "fixed_percent",
-    },
+    }
   ) => {
     const newId = `devService-${Date.now()}`;
     console.log("NewService" + selected);
@@ -192,15 +203,14 @@ const FloatingPart: React.FC<FloatingPartProps> = ({ control }) => {
                   NiceModal.show(salaryServicesModal, { serviceIds }).then(
                     (res) => {
                       getServicesFromList(res as IServiceTextProps[]);
-                      const newServiceText: IServiceTextProps[] =
-                        res as IServiceTextProps[];
+                      const newServiceText: IServiceTextProps[] = res as IServiceTextProps[];
                       handleShowNewService(
                         handleListCreate(newServiceText),
                         cost,
-                        option,
+                        option
                       );
                       handleDeleteService(newId);
-                    },
+                    }
                   )
                 }
                 style={{ fontSize: "1.4rem" }}
@@ -244,7 +254,7 @@ const FloatingPart: React.FC<FloatingPartProps> = ({ control }) => {
 
   const handleDeleteService = (id: string) => {
     setDevServices((prevDevServices) =>
-      prevDevServices.filter((service) => service.id !== id),
+      prevDevServices.filter((service) => service.id !== id)
     );
   };
 

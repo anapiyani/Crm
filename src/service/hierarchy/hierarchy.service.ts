@@ -153,6 +153,11 @@ export const getHierarchyByEmployeeId = (
 export const getHierarchyById = (id: number): Promise<IServiceCategory> => {
   return api.get(`/hierarchy/hierarchy/${id}/`).then((res) => res.data);
 };
+export const getHierarchyStorageById = (
+  id: number
+): Promise<IStorageCategory> => {
+  return api.get(`/hierarchy/hierarchy-storage/${id}/`).then((res) => res.data);
+};
 
 export const getHierarchyEmployeesByDepartment = (): Promise<
   IEmployeeDepartment[]

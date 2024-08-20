@@ -2,28 +2,32 @@ import React, { useState, useEffect } from "react";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import classes from "./styles.module.scss";
-import { IService, IServiceCategory } from "@/ts/service.interface";
-import { getHierarchyById } from "@/service/hierarchy/hierarchy.service";
+import { IMaterial } from "@/ts/storage.interface"; // Update the import to use the new interfaces
+import {
+  getHierarchyById,
+  getHierarchyStorageById,
+} from "@/service/hierarchy/hierarchy.service";
+import { IStorageCategory } from "@/ts/hierarchy.inteface";
 
 interface ITreeItemProps {
-  category: IServiceCategory;
+  category: IStorageCategory; // Update to use IStorageCategory
   onServiceChange: (
     id: number,
     isChecked: number,
-    type: "service" | "category",
+    type: "material" | "category", // Update types to "material" and "category"
     name: string,
     parent: number | null,
     parent_name: string | null
   ) => void;
   preCheckedItems: {
     id: number;
-    type: "service" | "category";
+    type: "material" | "category"; // Update types to "material" and "category"
     isChecked: number;
   }[];
   onParentChange?: (parentId: number | null, childCheckedState: number) => void;
 }
 
-const RecursiveCheckbox: React.FC<ITreeItemProps> = ({
+const RecursiveCheckboxMaterials: React.FC<ITreeItemProps> = ({
   category,
   onServiceChange,
   preCheckedItems,
@@ -34,19 +38,19 @@ const RecursiveCheckbox: React.FC<ITreeItemProps> = ({
 
   useEffect(() => {
     updateCheckedState();
-  }, [preCheckedItems, category.services, category.children]);
+  }, [preCheckedItems, category.materials, category.children]); // Update to use materials instead of services
 
   const updateCheckedState = () => {
-    if (category.children.length === 0 && category.services.length === 0) {
+    if (category.children.length === 0 && category.materials.length === 0) {
       setChecked(2);
       return;
     }
 
-    const allServicesChecked = category.services.every((service) =>
+    const allMaterialsChecked = category.materials.every((material) =>
       preCheckedItems.some(
         (preChecked) =>
-          preChecked.id === service.id &&
-          preChecked.type === "service" &&
+          preChecked.id === material.id &&
+          preChecked.type === "material" &&
           preChecked.isChecked === 1
       )
     );
@@ -60,11 +64,11 @@ const RecursiveCheckbox: React.FC<ITreeItemProps> = ({
       )
     );
 
-    const anyServicesChecked = category.services.some((service) =>
+    const anyMaterialsChecked = category.materials.some((material) =>
       preCheckedItems.some(
         (preChecked) =>
-          preChecked.id === service.id &&
-          preChecked.type === "service" &&
+          preChecked.id === material.id &&
+          preChecked.type === "material" &&
           preChecked.isChecked === 1
       )
     );
@@ -80,10 +84,10 @@ const RecursiveCheckbox: React.FC<ITreeItemProps> = ({
 
     let state = 2; // Default to unchecked
 
-    // Set state to 1 if all services and children are fully checked
-    if (allServicesChecked && allChildrenChecked) {
+    // Set state to 1 if all materials and children are fully checked
+    if (allMaterialsChecked && allChildrenChecked) {
       state = 1; // All checked
-    } else if (anyServicesChecked || anyChildrenChecked) {
+    } else if (anyMaterialsChecked || anyChildrenChecked) {
       state = 3; // Indeterminate
     }
 
@@ -100,35 +104,37 @@ const RecursiveCheckbox: React.FC<ITreeItemProps> = ({
     }
   };
 
-  const handleServiceCheckboxChange = (service: IService) => {
+  const handleMaterialCheckboxChange = (material: IMaterial) => {
+    // Update function name and parameters
     const newChecked = preCheckedItems.some(
       (preChecked) =>
-        preChecked.id === service.id &&
-        preChecked.type === "service" &&
+        preChecked.id === material.id &&
+        preChecked.type === "material" &&
         preChecked.isChecked === 1
     )
       ? 2
       : 1;
 
     onServiceChange(
-      service.id,
+      material.id,
       newChecked,
-      "service",
-      service.name,
-      service.parent!,
-      service.parent_name
+      "material", // Update to "material"
+      material.name,
+      material.parent_id!,
+      material.parent_name
     );
 
-    if (service.parent !== null) {
-      propagateParentChange(service.parent, newChecked);
+    if (material.parent_id !== null) {
+      propagateParentChange(material.parent_id, newChecked);
     }
   };
 
   const handleCategoryChange = (
-    category: IServiceCategory,
+    category: IStorageCategory, // Update to IStorageCategory
     isChecked: number // 1 = Checked, 2 = Unchecked
   ) => {
-    const updateItems = (cat: IServiceCategory, checked: number) => {
+    const updateItems = (cat: IStorageCategory, checked: number) => {
+      // Update to IStorageCategory
       onServiceChange(
         cat.id,
         checked,
@@ -138,14 +144,16 @@ const RecursiveCheckbox: React.FC<ITreeItemProps> = ({
         cat.parent_name
       );
 
-      cat.services.forEach((service) =>
+      cat.materials.forEach((
+        material // Update to materials
+      ) =>
         onServiceChange(
-          service.id,
+          material.id,
           checked,
-          "service",
-          service.name,
-          service.parent!,
-          service.parent_name
+          "material", // Update to "material"
+          material.name,
+          material.parent_id!,
+          material.parent_name
         )
       );
 
@@ -163,18 +171,20 @@ const RecursiveCheckbox: React.FC<ITreeItemProps> = ({
   ) => {
     if (!parentCategoryId) return;
 
-    const parentCategory = await getHierarchyById(parentCategoryId);
+    const parentCategory = await getHierarchyStorageById(parentCategoryId); // Update to getHierarchyStorageById
 
     const childStates = parentCategory.children.map((child) => {
       const isChecked = preCheckedItems.some(
         (item) => item.id === child.id && item.type === "category"
       );
 
-      const allServicesChecked = child.services.every((service) =>
+      const allMaterialsChecked = child.materials.every((
+        material // Update to materials
+      ) =>
         preCheckedItems.some(
           (item) =>
-            item.id === service.id &&
-            item.type === "service" &&
+            item.id === material.id &&
+            item.type === "material" &&
             item.isChecked === 1
         )
       );
@@ -188,11 +198,13 @@ const RecursiveCheckbox: React.FC<ITreeItemProps> = ({
         )
       );
 
-      const anyServicesChecked = child.services.some((service) =>
+      const anyMaterialsChecked = child.materials.some((
+        material // Update to materials
+      ) =>
         preCheckedItems.some(
           (item) =>
-            item.id === service.id &&
-            item.type === "service" &&
+            item.id === material.id &&
+            item.type === "material" &&
             item.isChecked === 1
         )
       );
@@ -206,9 +218,9 @@ const RecursiveCheckbox: React.FC<ITreeItemProps> = ({
         )
       );
 
-      if (allServicesChecked && allChildrenChecked) {
+      if (allMaterialsChecked && allChildrenChecked) {
         return 1; // Fully checked
-      } else if (anyServicesChecked || anyChildrenChecked) {
+      } else if (anyMaterialsChecked || anyChildrenChecked) {
         return 3; // Indeterminate
       } else {
         return 2; // Unchecked
@@ -253,7 +265,7 @@ const RecursiveCheckbox: React.FC<ITreeItemProps> = ({
         />
         <span onClick={toggle} className={classes["tree__label"]}>
           {category.name}
-          {(category.children.length > 0 || category.services.length > 0) && (
+          {(category.children.length > 0 || category.materials.length > 0) && ( // Update to materials
             <span>{isOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}</span>
           )}
         </span>
@@ -261,7 +273,7 @@ const RecursiveCheckbox: React.FC<ITreeItemProps> = ({
       {isOpen && (
         <div className={classes["tree__open"]}>
           {category.children.map((child) => (
-            <RecursiveCheckbox
+            <RecursiveCheckboxMaterials
               key={`category-${child.id}`}
               category={child}
               onServiceChange={onServiceChange}
@@ -269,24 +281,29 @@ const RecursiveCheckbox: React.FC<ITreeItemProps> = ({
               onParentChange={onParentChange}
             />
           ))}
-          {category.services.length > 0 && (
+          {category.materials.length > 0 && ( // Update to materials
             <ul className={classes["tree__service-list"]}>
-              {category.services.map((service) => (
+              {category.materials.map((
+                material // Update to materials
+              ) => (
                 <li
-                  key={`service-${service.id}`}
+                  key={`material-${material.id}`} // Update to materials
                   className={classes["tree__service"]}
                 >
                   <input
                     type="checkbox"
                     checked={preCheckedItems.some(
                       (preChecked) =>
-                        preChecked.id === service.id &&
-                        preChecked.type === "service" &&
+                        preChecked.id === material.id &&
+                        preChecked.type === "material" &&
                         preChecked.isChecked === 1
                     )}
-                    onChange={() => handleServiceCheckboxChange(service)}
+                    onChange={() => handleMaterialCheckboxChange(material)} // Update to materials
                   />
-                  <span className={classes["tree__label"]}>{service.name}</span>
+                  <span className={classes["tree__label"]}>
+                    {material.name}
+                  </span>{" "}
+                  // Update to materials
                 </li>
               ))}
             </ul>
@@ -297,4 +314,4 @@ const RecursiveCheckbox: React.FC<ITreeItemProps> = ({
   );
 };
 
-export default RecursiveCheckbox;
+export default RecursiveCheckboxMaterials;

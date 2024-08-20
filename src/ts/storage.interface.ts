@@ -28,6 +28,8 @@ export interface IMaterial {
   date_added: string;
   date_updated: string;
   service: string | null;
+  parent_id: number | null;
+  parent_name: string | null;
 }
 
 export interface IAddStorage {

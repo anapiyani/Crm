@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import HeaderTemplate from "../MultiStepHeader/MultiStepHeader.component";
 import StepInput from "../step-input/step-input.component";
 import classes from "./styles.module.scss";
@@ -6,10 +6,21 @@ import { Autocomplete, Button, Divider, TextField } from "@mui/material";
 import { Delete } from "@mui/icons-material";
 import { Control, Controller, set } from "react-hook-form";
 import { ITemplate } from "@/ts/employee.interface";
+import NiceModal from "@ebay/nice-modal-react";
+import salaryMaterialsModal from "@/modals/employees/salary-materials-modal";
 
 interface CertificateItem {
   id: string;
   element: React.ReactNode;
+}
+
+interface IStorageTextProps {
+  id: number;
+  isChecked: number;
+  type: "material" | "category";
+  serviceName: string;
+  parent: number | null;
+  parent_name: string | null;
 }
 
 interface GoodsPartProps {
@@ -18,15 +29,14 @@ interface GoodsPartProps {
 
 const SellingGoods: React.FC<GoodsPartProps> = ({ control }) => {
   const [choosenOption, setChoosenOption] = useState<string>(
-    control._defaultValues.item_sales?.certificate_sales?.calculation_type ||
-      "",
+    control._defaultValues.item_sales?.certificate_sales?.calculation_type || ""
   );
   const [choosenSubOption, setChoosenSubOption] = useState<string>(
     control._defaultValues.item_sales?.subscription_sales?.calculation_type ||
-      "",
+      ""
   );
   const [choosenGoodOption, setChoosenGoodOption] = useState<string>(
-    control._defaultValues.item_sales?.product_sales?.calculation_type || "",
+    control._defaultValues.item_sales?.product_sales?.calculation_type || ""
   );
 
   const [certificateContent, setCertificateContent] = useState<
@@ -38,6 +48,54 @@ const SellingGoods: React.FC<GoodsPartProps> = ({ control }) => {
   const [goodsWithOtherPercent, setGoodsWithOtherPercent] = useState<
     CertificateItem[]
   >([]);
+  const [goodsNames, setGoodsNames] = useState<string[] | undefined>([]);
+  const [goodIds, setGoodIds] = useState<number[] | undefined>([]);
+
+  const handleGetIds = () => {
+    control._defaultValues.products_with_different_percentage?.map((item) => {
+      item?.material?.map((el) => {
+        setGoodIds((prev) => [...prev!, el!]);
+      });
+    });
+    control._defaultValues.products_with_different_percentage?.map((item) => {
+      item?.root?.map((el) => {
+        setGoodsNames((prev) => [...prev!, el!]);
+      });
+    });
+  };
+
+  useEffect(() => {
+    handleGetIds();
+  }, []);
+
+  const treeTraverse = (data: IStorageTextProps[], item: IStorageTextProps) => {
+    let result: string[] = [];
+    if (item.parent === null) {
+      result.push(item.serviceName);
+      return result!;
+    }
+
+    const parent = data.find((el) => el.id === item.parent);
+    result = [...treeTraverse(data, parent!), ...result];
+    if (parent?.isChecked !== 1) {
+      result.push(item.serviceName);
+    }
+    return result;
+  };
+
+  const handleListCreate = (data: IStorageTextProps[]) => {
+    const services = data.filter((item) => item.type === "material");
+    let textResult: string[][] = [];
+    services.map((item) => textResult.push(treeTraverse(data, item)));
+    const uniqueResult = [...new Set(textResult.map((item) => item.join(">")))];
+
+    return uniqueResult;
+  };
+
+  const getServicesFromList = (data: IStorageTextProps[]) => {
+    const services = data.filter((item) => item.type === "material");
+    return services.map((item) => item.id);
+  };
 
   const handleOpenCertificateContent = () => {
     const newId = `devService-${Date.now()}`;
@@ -233,7 +291,14 @@ const SellingGoods: React.FC<GoodsPartProps> = ({ control }) => {
     ]);
   };
 
-  const handleOpenGoodsWithOtherPercent = () => {
+  const handleOpenGoodsWithOtherPercent = (
+    selected: string[] = [],
+    percent: number = 0,
+    option: { label: string; value: string } = {
+      label: "Фикс. сумма",
+      value: "fixed_percent",
+    }
+  ) => {
     const newId = `devGoods-${Date.now()}`;
     const newGoods: CertificateItem = {
       id: newId,
@@ -258,6 +323,7 @@ const SellingGoods: React.FC<GoodsPartProps> = ({ control }) => {
                     size="small"
                     type="text"
                     placeholder="0"
+                    defaultValue={percent}
                     style={{
                       width: "12rem",
                       marginRight: "1rem",
@@ -265,10 +331,11 @@ const SellingGoods: React.FC<GoodsPartProps> = ({ control }) => {
                     }}
                     onChange={(e) => console.log(e.target.value)}
                   />
-                  <p style={{ fontSize: "1.4rem" }}>руб.</p>
+                  <p style={{ fontSize: "1.4rem" }}>%</p>
                 </div>
                 <Autocomplete
                   size="small"
+                  defaultValue={option}
                   options={[
                     { label: "Фикс. сумма", value: "fixed_percent" },
                     { label: "% от чека", value: "service_percent" },
@@ -293,9 +360,49 @@ const SellingGoods: React.FC<GoodsPartProps> = ({ control }) => {
                 />
               </div>
             </div>
-            <a className={classes.linkBtn} style={{ fontSize: "1.4rem" }}>
+            <a
+              onClick={() =>
+                NiceModal.show(salaryMaterialsModal, {
+                  materialsIds: goodIds,
+                }).then((res) => {
+                  getServicesFromList(res as IStorageTextProps[]);
+                  const newServiceText: IStorageTextProps[] = res as IStorageTextProps[];
+                  handleOpenGoodsWithOtherPercent(
+                    handleListCreate(newServiceText),
+                    percent,
+                    option
+                  );
+                  handleDeleteGoods(newId);
+                })
+              }
+              className={classes.linkBtn}
+              style={{ fontSize: "1.4rem" }}
+            >
               Выбрать товары
             </a>
+            {selected.length > 0 && (
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "0.5rem",
+                  fontSize: "1.4rem",
+                }}
+              >
+                {selected.map((item) => (
+                  <p key={item}>{item}</p>
+                ))}
+              </div>
+            )}
+            {goodsNames!.length > 0 && (
+              <div>
+                {goodsNames?.map((item) => (
+                  <p key={item} style={{ fontSize: "1.4rem" }}>
+                    {item}
+                  </p>
+                ))}
+              </div>
+            )}
             <Button
               className={classes.deleteBtn}
               onClick={() => handleDeleteGoods(newId)}
@@ -315,19 +422,19 @@ const SellingGoods: React.FC<GoodsPartProps> = ({ control }) => {
 
   const handleDeleteCertificate = (id: string) => {
     setCertificateContent((prevDevServices) =>
-      prevDevServices.filter((service) => service.id !== id),
+      prevDevServices.filter((service) => service.id !== id)
     );
   };
 
   const handleDeleteAbonement = (id: string) => {
     setAbonementsWithOtherPercent((prevDevServices) =>
-      prevDevServices.filter((service) => service.id !== id),
+      prevDevServices.filter((service) => service.id !== id)
     );
   };
 
   const handleDeleteGoods = (id: string) => {
     setGoodsWithOtherPercent((prevDevServices) =>
-      prevDevServices.filter((service) => service.id !== id),
+      prevDevServices.filter((service) => service.id !== id)
     );
   };
 

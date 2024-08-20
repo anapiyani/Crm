@@ -1,9 +1,13 @@
 import ModalWindow from "@/components/modal-window/modal-window";
 import RecursiveCheckbox from "@/components/recursive-checkbox/recursive-checkbox";
+import RecursiveCheckboxMaterials from "@/components/recursive-checkbox/recursive-checkbox-materials/recursive-checkbox-materials";
 import {
   getHierarchy,
   getHierarchyById,
+  getHierarchyStorage,
+  getHierarchyStorageById,
 } from "@/service/hierarchy/hierarchy.service";
+import { IStorageCategory } from "@/ts/hierarchy.inteface";
 import { IServiceCategory } from "@/ts/service.interface";
 import NiceModal, { useModal } from "@ebay/nice-modal-react";
 import { Divider, TextField } from "@mui/material";
@@ -14,23 +18,23 @@ import { IService } from "src/ts/service.interface";
 interface ITreeItemProps {
   id: number;
   isChecked: number;
-  type: "service" | "category";
+  type: "material" | "category";
   serviceName: string;
   parent: number | null;
   parent_name: string | null;
 }
 
 interface ISelectedId {
-  serviceIds: number[];
+  materialsIds: number[];
 }
-const SalaryServicesModal = (selected: ISelectedId) => {
+const SalaryMaterialModal = (selected: ISelectedId) => {
   const modal = useModal();
 
   const [selectedItems, setSelectedItems] = useState<ITreeItemProps[]>([]);
-  const [data, setData] = useState<IServiceCategory[]>([]);
+  const [data, setData] = useState<IStorageCategory[]>([]);
   const { data: serviceData } = useQuery({
-    queryKey: ["ServiceData"],
-    queryFn: () => getHierarchy(),
+    queryKey: ["SalaryMaterialData"],
+    queryFn: () => getHierarchyStorage(),
 
     staleTime: Infinity,
     refetchOnWindowFocus: false,
@@ -43,8 +47,8 @@ const SalaryServicesModal = (selected: ISelectedId) => {
   }, [serviceData]);
 
   const handlePreSelectedIds = () => {
-    const preSelectedItems: IServiceCategory[] = [];
-    selected.serviceIds.forEach((id) => {
+    const preSelectedItems: IStorageCategory[] = [];
+    selected.materialsIds.forEach((id) => {
       const item = serviceData?.find((i) => i.id === id);
       if (item) {
         preSelectedItems.push(item);
@@ -53,7 +57,7 @@ const SalaryServicesModal = (selected: ISelectedId) => {
           {
             id: item.id,
             isChecked: 1,
-            type: "service",
+            type: "material",
             serviceName: item.name,
             parent: item.parent!,
             parent_name: item.parent_name!,
@@ -66,7 +70,7 @@ const SalaryServicesModal = (selected: ISelectedId) => {
   const handleServiceChange = (
     id: number,
     isChecked: number,
-    type: "service" | "category",
+    type: "material" | "category",
     serviceName: string,
     parent: number | null,
     parent_name: string | null
@@ -101,7 +105,7 @@ const SalaryServicesModal = (selected: ISelectedId) => {
   ) => {
     if (parentCategoryId === null) return;
 
-    const parentCategory = await getHierarchyById(parentCategoryId);
+    const parentCategory = await getHierarchyStorageById(parentCategoryId);
 
     // Determine the new state of the parent based on its children's states
     const childStates = parentCategory.children.map((child) => {
@@ -109,9 +113,9 @@ const SalaryServicesModal = (selected: ISelectedId) => {
         (item) => item.id === child.id && item.type === "category"
       );
 
-      const allServicesChecked = child.services.every((service) =>
+      const allServicesChecked = child.materials.every((service) =>
         selectedItems.some(
-          (item) => item.id === service.id && item.type === "service"
+          (item) => item.id === service.id && item.type === "material"
         )
       );
 
@@ -127,9 +131,9 @@ const SalaryServicesModal = (selected: ISelectedId) => {
         )
       );
 
-      const anyServicesChecked = child.services.some((service) =>
+      const anyServicesChecked = child.materials.some((service) =>
         selectedItems.some(
-          (item) => item.id === service.id && item.type === "service"
+          (item) => item.id === service.id && item.type === "material"
         )
       );
 
@@ -209,7 +213,7 @@ const SalaryServicesModal = (selected: ISelectedId) => {
           }}
         >
           {data?.map((service) => (
-            <RecursiveCheckbox
+            <RecursiveCheckboxMaterials
               key={`category-${service.id}`}
               category={service}
               onServiceChange={handleServiceChange}
@@ -223,4 +227,4 @@ const SalaryServicesModal = (selected: ISelectedId) => {
   );
 };
 
-export default NiceModal.create(SalaryServicesModal);
+export default NiceModal.create(SalaryMaterialModal);
