@@ -1,0 +1,148 @@
+.break-modal {
+  &__time {
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    gap: 3rem;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+}
+
+.create-appointment {
+  &__params-text {
+    font-size: 1.6rem;
+    font-weight: 400;
+    line-height: 2.4rem;
+    color: var(--brand-500);
+  }
+
+  &__services {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__buttons {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 4rem;
+
+    &--right {
+      gap: 0.5rem;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+    }
+  }
+}
+
+.delete-modal {
+  font-size: 1.6rem;
+  font-weight: 400;
+  line-height: 2.4rem;
+}
+
+.u-p-0 {
+  padding: 2rem 0;
+}
+
+.u-full-zero {
+  padding: 0;
+}
+
+.modalContent {
+  padding: 0;
+  &__content {
+    display: flex;
+    flex-direction: column;
+    margin-top: 1.5rem;
+    &__item {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      margin-bottom: 1.3rem;
+      p {
+        font-size: 1.6rem;
+        font-weight: 400;
+        color: var(--text-primary);
+        margin: 0;
+        width: 33%;
+        a {
+          font-size: 1.6rem;
+          font-weight: 400;
+          color: var(--brand-500);
+          text-decoration: none;
+        }
+      }
+      span {
+        font-size: 1.6rem;
+      }
+      button {
+        background: none;
+        font-size: 1.6rem;
+        font-weight: 400;
+        cursor: pointer;
+        margin-right: 1rem;
+      }
+      &:first-child {
+        margin-top: 0;
+      }
+    }
+    &:last-child {
+      margin-top: 1rem;
+    }
+  }
+}
+
+.info {
+  width: 400px;
+  &__content {
+    display: flex;
+    flex-direction: column;
+    &__date {
+      display: flex;
+      padding: 1rem;
+      align-items: center;
+      gap: 1rem;
+      justify-content: center;
+      p {
+        font-size: 1.6rem;
+        margin-right: 1rem;
+      }
+      input {
+        width: 13rem;
+      }
+    }
+    &__status {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      p {
+        font-size: 1.6rem;
+        margin-right: 1rem;
+      }
+      button {
+        font-size: 1.4rem;
+      }
+    }
+  }
+  &__textarea {
+    padding: 1rem;
+    font-size: 1.3rem;
+    margin-top: 1rem;
+    max-width: 100%;
+    min-width: 100%;
+    resize: none;
+    width: 100%;
+    border: 1px solid rgba(0, 0, 0, 0.23);
+    border-radius: 0.8rem;
+  }
+}
+
+.link {
+  color: var(--brand-500);
+}

@@ -21,8 +21,29 @@ import {
   Edit,
 } from "@mui/icons-material/";
 import { Link } from "react-router-dom";
+import NiceModal from "@ebay/nice-modal-react";
+import reportModal from "@/modals/activity/report.modal";
+import feedbackModal from "@/modals/activity/feedback.modal";
+import bonusesModule from "@/modals/activity/bonuses.modal";
+import fineModal from "@/modals/activity/fine.modal";
 
 const ViewVisits = () => {
+  const handleOpenReport = () => {
+    NiceModal.show(reportModal);
+  };
+
+  const handleOpenFeedBack = () => {
+    NiceModal.show(feedbackModal);
+  };
+
+  const handleOpenBonuse = () => {
+    NiceModal.show(bonusesModule);
+  };
+
+  const handleOpenFine = () => {
+    NiceModal.show(fineModal);
+  };
+
   return (
     <div className={classes.view}>
       <div className={classes.view__header}>
@@ -80,7 +101,6 @@ const ViewVisits = () => {
               <LabelInfo name={"До скидки"} info={"14 000 руб."} />
               <LabelInfo name={"Скидка"} info={"0 руб."} />
               <LabelInfo name={"Итого"} info={"Вчера, 15:21"} />
-
               <LabelInfo name={"Оплачено"} info={"14 000 руб."} />
             </div>
           </div>
@@ -105,24 +125,28 @@ const ViewVisits = () => {
                 colorIcon={"rgba(196, 28, 28, 1)"}
               />
               <CardButton
+                onButtonClick={handleOpenReport}
                 text={"Жалоба"}
                 icon={AnnouncementOutlined}
                 backgroundIcon={"rgba(239, 108, 0, 0.3)"}
                 colorIcon={"rgba(239, 108, 0, 1)"}
               />
               <CardButton
+                onButtonClick={handleOpenFeedBack}
                 text={"Отзыв"}
                 icon={RateReviewOutlined}
                 backgroundIcon={"rgba(199, 223, 247, 1)"}
                 colorIcon={"rgba(11, 107, 203, 1)"}
               />
               <CardButton
+                onButtonClick={handleOpenFine}
                 text={"Оштрафовать"}
                 icon={ThumbDownOutlined}
                 backgroundIcon={"rgba(156, 39, 176, 0.3)"}
                 colorIcon={"rgba(156, 39, 176, 1)"}
               />
               <CardButton
+                onButtonClick={handleOpenBonuse}
                 text={"Премировать"}
                 icon={ThumbUpOutlined}
                 backgroundIcon={"rgba(46, 125, 50, 0.3)"}

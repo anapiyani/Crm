@@ -6,14 +6,16 @@ const CardButton = ({
   icon: Icon,
   backgroundIcon,
   colorIcon,
+  onButtonClick,
 }: {
   text: string;
   icon: React.ElementType<SvgIconProps>;
   backgroundIcon: string;
   colorIcon: string;
+  onButtonClick?: () => void;
 }) => {
   return (
-    <div className={classes.card}>
+    <div onClick={onButtonClick} className={classes.card}>
       <div className={classes.card__content}>
         <div className={classes.card__content__icon}>
           <Icon

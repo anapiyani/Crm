@@ -59,6 +59,16 @@ const FloatingPart: React.FC<FloatingPartProps> = ({ control }) => {
   }, []);
 
   //Zhango's function to traverse from service to parent
+<<<<<<< HEAD
+=======
+  const treeTraverse = (data: IServiceTextProps[], item: IServiceTextProps) => {
+    let result: string[] = [];
+    console.log(item);
+    if (item.parent === null) {
+      result.push(item.serviceName);
+      return result!;
+    }
+>>>>>>> 04e6036 (Feat: Modals for Activity view page)
 
   // Zhango's function to create List of services
   const handleListCreate = (data: IServiceTextProps[]) => {
