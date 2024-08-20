@@ -10,6 +10,16 @@ interface CalculationProps {
   employeeName: string;
 }
 
+const buttonStyle = {
+  width: "100%",
+  textTransform: "none",
+  fontSize: "1.4rem",
+  padding: "0.8rem",
+  justifyContent: "flex-start",
+  backgroundColor: "rgba(11,107,203, 0.8)",
+  fontWeight: 400,
+};
+
 const Calculation: React.FC<CalculationProps> = ({
   material,
   employeePercentage,
@@ -27,14 +37,7 @@ const Calculation: React.FC<CalculationProps> = ({
           <Button
             variant="contained"
             sx={{
-              width: "100%",
-
-              textTransform: "none",
-              fontSize: "1.4rem",
-              padding: "0.8rem",
-              justifyContent: "flex-start",
-              backgroundColor: "rgba(11,107,203, 0.8)",
-              fontWeight: 400,
+              ...buttonStyle,
             }}
           >
             {material}
@@ -48,14 +51,7 @@ const Calculation: React.FC<CalculationProps> = ({
           <Button
             variant="contained"
             sx={{
-              width: "100%",
-
-              textTransform: "none",
-              fontSize: "1.4rem",
-              padding: "0.8rem",
-              justifyContent: "flex-start",
-              backgroundColor: "rgba(11,107,203, 0.8)",
-              fontWeight: 400,
+              ...buttonStyle,
             }}
           >
             {employeePercentage}
@@ -67,14 +63,7 @@ const Calculation: React.FC<CalculationProps> = ({
           <Button
             variant="contained"
             sx={{
-              width: "100%",
-
-              textTransform: "none",
-              fontSize: "1.4rem",
-              padding: "0.8rem",
-              justifyContent: "flex-start",
-              backgroundColor: "rgba(11,107,203, 0.8)",
-              fontWeight: 400,
+              ...buttonStyle,
             }}
           >
             {position}

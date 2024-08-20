@@ -34,6 +34,17 @@ interface CostTableProps {
   hierarchy?: boolean;
 }
 
+const tableHeaders = [
+  { name: "Материал" },
+  { name: "Стоимость" },
+  { name: "Стоимость от" },
+  { name: "Стоимость до" },
+  { name: "Короткие волосы" },
+  { name: "Средние волосы" },
+  { name: "Длинные волосы" },
+  { name: "Корни" },
+];
+
 const CostTable: React.FC<CostTableProps> = ({
   data,
   title,
@@ -312,30 +323,14 @@ const CostTable: React.FC<CostTableProps> = ({
       <Table>
         <TableHead sx={{ borderBottom: "0.2rem solid var(--divider)" }}>
           <TableRow sx={{ background: "var(--neutral-050)" }}>
-            <TableCell align="left" sx={{ fontSize: "14px", fontWeight: 600 }}>
-              Должность
-            </TableCell>
-            <TableCell align="left" sx={{ fontSize: "14px", fontWeight: 600 }}>
-              Стоимость
-            </TableCell>
-            <TableCell align="left" sx={{ fontSize: "14px", fontWeight: 600 }}>
-              Стоимость от
-            </TableCell>
-            <TableCell align="left" sx={{ fontSize: "14px", fontWeight: 600 }}>
-              Стоимость до
-            </TableCell>
-            <TableCell align="left" sx={{ fontSize: "14px", fontWeight: 600 }}>
-              Короткие волосы
-            </TableCell>
-            <TableCell align="left" sx={{ fontSize: "14px", fontWeight: 600 }}>
-              Средние волосы
-            </TableCell>
-            <TableCell align="left" sx={{ fontSize: "14px", fontWeight: 600 }}>
-              Длинные волосы
-            </TableCell>
-            <TableCell align="left" sx={{ fontSize: "14px", fontWeight: 600 }}>
-              Корни
-            </TableCell>
+            {tableHeaders.map((header, index) => (
+              <TableCell
+                align="left"
+                sx={{ fontSize: "14px", fontWeight: 600 }}
+              >
+                {header.name}
+              </TableCell>
+            ))}
           </TableRow>
         </TableHead>
         <TableBody>{renderRows(tableData)}</TableBody>
