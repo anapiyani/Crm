@@ -15,17 +15,21 @@ import dayjs from "dayjs";
 interface CustomTimePickerProps {
   value?: string;
   onChange: (value: string) => void;
+  size?: "small" | "medium";
+  withLabel?: boolean;
 }
 
 const CustomTimePicker: React.FC<CustomTimePickerProps> = ({
   value = "08:00",
   onChange,
+  size = "medium",
+  withLabel = true,
 }) => {
   const [selectedHour, setSelectedHour] = useState<string>(
-    dayjs(value, "HH:mm").format("HH"),
+    dayjs(value, "HH:mm").format("HH")
   );
   const [selectedMinute, setSelectedMinute] = useState<string>(
-    dayjs(value, "HH:mm").format("mm"),
+    dayjs(value, "HH:mm").format("mm")
   );
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
@@ -57,9 +61,10 @@ const CustomTimePicker: React.FC<CustomTimePickerProps> = ({
       <div>
         <TextField
           aria-describedby={id}
-          label="Выберите время"
+          label={withLabel ? "Выберите время" : ""}
           value={`${selectedHour}:${selectedMinute}`}
           onClick={handleClick}
+          size={size}
           sx={{
             "& .MuiInputBase-root": {
               fontSize: "1.6rem",

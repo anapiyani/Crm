@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   addBreakToSchedule,
+  addEmployeeToSchedule,
   addTimeOffToScheduleByDate,
   deleteBreakFromSchedule,
 } from "./schedule.service";
@@ -55,6 +56,20 @@ export const useTimeOffToSchedule = () => {
     },
     onError: () => {
       toast.error("Ошибка при добавлении отпуска");
+    },
+  });
+};
+
+export const useAddEmployeeToSchedule = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: addEmployeeToSchedule,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["schedules"] });
+      toast.success("Сотрудник успешно добавлен");
+    },
+    onError: () => {
+      toast.error("Ошибка при добавлении сотрудника");
     },
   });
 };

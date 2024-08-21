@@ -7,7 +7,6 @@ import React, {
 } from "react";
 import NiceModal from "@ebay/nice-modal-react";
 import toast from "react-hot-toast";
-
 import {
   Autocomplete,
   Divider,
@@ -44,12 +43,13 @@ import {
   DeleteBreakModal,
   EventDetailsModal,
   ShiftReportModal,
+  AddEmployeeScheduleModal,
+  ExportAppointmentsModal,
+  ShowDeletedAppointmentsModal,
 } from "@/modals";
 
 import Icons from "@/assets/icons/icons";
-
 import classNames from "classnames";
-
 import { calendarStatuses } from "./data";
 
 import classes from "./styles.module.scss";
@@ -86,8 +86,6 @@ const Home: React.FC = () => {
   const [resources, setResources] = useState<any[]>([]);
   const [selectedEmployee, setSelectedEmployee] = useState<number>();
   const [selectedEmployeeName, setSelectedEmployeeName] = useState<string>("");
-  // const [isMonthlyView, setIsMonthlyView] = useState<boolean>(false);
-  // const [isWeeklyView, setIsWeeklyView] = useState<boolean>(false);
   const [viewMode, setViewMode] = useState<"daily" | "weekly" | "monthly">(
     "daily"
   );
@@ -330,6 +328,21 @@ const Home: React.FC = () => {
     }
   };
 
+  const handleAddEmployeeToSchedule = () => {
+    NiceModal.show(AddEmployeeScheduleModal);
+    setBurgerMenuAnchorEl(null);
+  };
+
+  const handleExportAppointments = () => {
+    NiceModal.show(ExportAppointmentsModal);
+    setBurgerMenuAnchorEl(null);
+  };
+
+  const handleShowDeletedAppointments = () => {
+    NiceModal.show(ShowDeletedAppointmentsModal);
+    setBurgerMenuAnchorEl(null);
+  };
+
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <div className={classes["home"]}>
@@ -457,18 +470,31 @@ const Home: React.FC = () => {
               anchorEl={burgerMenuAnchorEl}
               open={Boolean(burgerMenuAnchorEl)}
               onClose={handleCloseBurgerMenu}
+              anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "center",
+              }}
             >
-              <MenuItem onClick={handleCloseBurgerMenu}>
-                <div>Добавить соотрудника в график</div>
+              <MenuItem onClick={handleAddEmployeeToSchedule}>
+                <div className={classNames(classes["u-font-lg"])}>
+                  Добавить соотрудника в график
+                </div>
               </MenuItem>
               <MenuItem onClick={handleCloseBurgerMenu}>
-                <div>Изменить порядок отображения соотрудников</div>
+                <div className={classNames(classes["u-font-lg"])}>
+                  Изменить порядок отображения соотрудников
+                </div>
               </MenuItem>
-              <MenuItem onClick={handleCloseBurgerMenu}>
-                <div>Скачать журнал записей</div>
+              <MenuItem onClick={handleExportAppointments}>
+                <div className={classNames(classes["u-font-lg"])}>
+                  Скачать журнал записей
+                </div>
               </MenuItem>
-              <MenuItem onClick={handleCloseBurgerMenu}>
-                <div>Посмотреть удаленные записи</div>
+              <MenuItem onClick={handleShowDeletedAppointments}>
+                <div className={classNames(classes["u-font-lg"])}>
+                  Посмотреть удаленные записи
+                </div>
               </MenuItem>
             </Menu>
           </div>

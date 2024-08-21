@@ -3,6 +3,7 @@ import TextField, { TextFieldProps } from "@mui/material/TextField";
 import classNames from "classnames";
 import classes from "./styles.module.scss";
 import CustomDatePicker from "../date-picker/date-picker-custom";
+import CustomTimePicker from "../time-picker/time-picker-custom";
 
 interface IProps extends Omit<TextFieldProps, "variant"> {
   label?: string;
@@ -92,6 +93,7 @@ const VerticalTextField = forwardRef<HTMLInputElement, IProps>(
               />
             </div>
           );
+
         default:
           return (
             <TextField
