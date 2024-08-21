@@ -1,15 +1,15 @@
 export type ISearchFormData = {
   search: string;
-  phoneNumber: string;
-  userId: string;
+  phone_number: string;
+  whatsapp: string;
+  card_number?: string;
+  user_id: string;
   email: string;
-  isActive: boolean | null;
+  is_active: boolean | null;
   employmentDateFrom: string;
   employmentDateTo: string;
-  birthDateFrom: string;
-  birthDateTo: string;
-  ageFrom: string;
-  ageTo: string;
+  age_from: string;
+  age_to: string;
   gender: "male" | "female" | "";
   role: string;
   roleEmployee: string;
@@ -19,6 +19,12 @@ export type ISearchFormData = {
   reviewDateTo: string;
   page: number;
   page_size: number;
+  first_visit_from?: string;
+  first_visit_to?: string;
+  date_of_birth_from: string;
+  date_of_birth_to: string;
+  works_from: string;
+  works_to: string;
 };
 
 export interface IUserDetails {
@@ -41,6 +47,17 @@ export interface IUserDetails {
   apartment: string;
   comment: string;
   is_active?: boolean;
+  card_number?: string;
+  category?: string;
+  description?: string | null;
+  description_as_main_characteristic?: boolean;
+  discount_card?: string | null;
+  employee?: string | null;
+  first_visit?: string;
+  invite_source?: string;
+  occupation?: string;
+  personal_discount?: string | null;
+  sms_notification?: boolean;
 }
 
 export interface IEmployeesData {

@@ -41,16 +41,15 @@ interface IOption {
 const EmployeeSearch = () => {
   const [formData, setFormData] = useState<ISearchFormData>({
     search: "",
-    phoneNumber: "",
-    userId: "",
+    phone_number: "",
+    whatsapp: "",
+    user_id: "",
     email: "",
-    isActive: null,
+    is_active: null,
     employmentDateFrom: "",
     employmentDateTo: "",
-    birthDateFrom: "",
-    birthDateTo: "",
-    ageFrom: "",
-    ageTo: "",
+    age_from: "",
+    age_to: "",
     gender: "",
     role: "employee",
     roleEmployee: "",
@@ -60,9 +59,13 @@ const EmployeeSearch = () => {
     reviewDateTo: "",
     page: 1,
     page_size: 10,
+    works_from: "",
+    works_to: "",
+    date_of_birth_from: "",
+    date_of_birth_to: "",
   });
   const [selectedRoles, setSelectedRoles] = useState(
-    formData.roleEmployee.split(", ").filter(Boolean)
+    formData.roleEmployee.split(", ").filter(Boolean),
   );
   const [pageSize, setPageSize] = useState<IOption>({ label: "10", value: 10 });
   const [page, setPage] = useState(1);
@@ -88,7 +91,7 @@ const EmployeeSearch = () => {
 
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
-    value: number
+    value: number,
   ) => {
     handleFormDataChange("page", value);
   };
@@ -129,7 +132,7 @@ const EmployeeSearch = () => {
   const handleRangeChange = (
     fieldPrefix: string,
     value: string,
-    boundary: "From" | "To"
+    boundary: "From" | "To",
   ) => {
     setFormData((prev) => ({
       ...prev,
@@ -152,16 +155,15 @@ const EmployeeSearch = () => {
   const handleClear = () => {
     setFormData({
       search: "",
-      phoneNumber: "",
-      userId: "",
+      phone_number: "",
+      whatsapp: "",
+      user_id: "",
       email: "",
-      isActive: null,
+      is_active: null,
       employmentDateFrom: "",
       employmentDateTo: "",
-      birthDateFrom: "",
-      birthDateTo: "",
-      ageFrom: "",
-      ageTo: "",
+      age_from: "",
+      age_to: "",
       gender: "",
       role: "employee",
       roleEmployee: "",
@@ -171,6 +173,10 @@ const EmployeeSearch = () => {
       reviewDateTo: "",
       page: 1,
       page_size: 10,
+      works_from: "",
+      works_to: "",
+      date_of_birth_from: "",
+      date_of_birth_to: "",
     });
   };
 
@@ -215,7 +221,7 @@ const EmployeeSearch = () => {
                   label="Телефон"
                   name="phoneNumber"
                   placeholder="Введите номер"
-                  value={formData.phoneNumber}
+                  value={formData.phone_number}
                   onChange={(event) =>
                     setFormData((prev) => ({
                       ...prev,
@@ -226,13 +232,13 @@ const EmployeeSearch = () => {
 
                 <VerticalTextField
                   label="ID сотрудника"
-                  name="userId"
+                  name="user_id"
                   placeholder="Введите ID"
-                  value={formData.userId}
+                  value={formData.user_id}
                   onChange={(event) =>
                     setFormData((prev) => ({
                       ...prev,
-                      userId: event.target.value,
+                      user_id: event.target.value,
                     }))
                   }
                 />
@@ -263,10 +269,10 @@ const EmployeeSearch = () => {
                   type="double"
                   doubleDivier="-"
                   onChangeFrom={(e) =>
-                    handleRangeChange("employmentDate", e.target.value, "From")
+                    handleRangeChange("works_from", e.target.value, "From")
                   }
                   onChangeTo={(e) =>
-                    handleRangeChange("employmentDate", e.target.value, "To")
+                    handleRangeChange("works_to", e.target.value, "To")
                   }
                 />
 
@@ -277,10 +283,14 @@ const EmployeeSearch = () => {
                   type="double"
                   doubleDivier="-"
                   onChangeFrom={(e) =>
-                    handleRangeChange("birthDate", e.target.value, "From")
+                    handleRangeChange(
+                      "date_of_birth_from",
+                      e.target.value,
+                      "From",
+                    )
                   }
                   onChangeTo={(e) =>
-                    handleRangeChange("birthDate", e.target.value, "To")
+                    handleRangeChange("date_of_birth_to", e.target.value, "To")
                   }
                 />
 
@@ -348,7 +358,7 @@ const EmployeeSearch = () => {
                         handleAutocompleteChange(newValue?.value, "role")
                       }
                       renderInput={(params) => (
-                        <TextField {...params} label="Статус"/>
+                        <TextField {...params} label="Статус" />
                       )}
                       size="medium"
                     />
@@ -375,13 +385,13 @@ const EmployeeSearch = () => {
                           onInputChange={(isChecked) =>
                             handleCheckboxChange(
                               position.name,
-                              isChecked ? true : false
+                              isChecked ? true : false,
                             )
                           }
                         />
                       ))}
                     </TriStateCheckbox>
-                  ) : null
+                  ) : null,
                 )}
               </div>
             }
