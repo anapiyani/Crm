@@ -22,7 +22,7 @@ import {
   IndirectCostsPage,
   ViewVisits,
 } from "@/pages";
-import StoragePage from "@/pages/storage/storate.page";
+import StoragePage from "@/pages/storage/storage.page";
 
 // import { Role } from "@/ts/types";
 

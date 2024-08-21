@@ -17,14 +17,14 @@
         cursor: pointer;
         &__icon {
           font-size: 2.4rem;
-          color: var(--text-secondary);
+          color: var(--neutral-500);
           margin-right: 1rem;
         }
         p {
           font-size: 1.4rem;
           font-weight: 500;
           opacity: 80%;
-          color: var(--text-secondary);
+          color: var(--neutral-500);
           letter-spacing: 0.4;
         }
       }
