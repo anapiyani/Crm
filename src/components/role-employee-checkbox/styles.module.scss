@@ -1,0 +1,31 @@
+.row {
+  display: flex;
+  flex-direction: row;
+  font-size: 1.6rem;
+  input {
+    margin-right: 1rem;
+  }
+}
+.department {
+  display: flex;
+  flex-direction: column;
+  &__roles {
+    display: flex;
+    flex-direction: column;
+    padding-left: 2rem;
+    &__employees {
+      display: flex;
+      flex-direction: column;
+      margin-left: 2rem;
+    }
+  }
+  button {
+    background-color: transparent;
+    border: none;
+
+    cursor: pointer;
+    &:hover {
+      background-color: #e0e0e0;
+    }
+  }
+}

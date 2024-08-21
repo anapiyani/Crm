@@ -6,6 +6,7 @@ import api from "../api";
 import {
   IAddHierarchy,
   IAddStorageHierarchy,
+  IDepartmentHierarchy,
   IfilterRequest,
   IfiltersResponse,
   IMoveHierarchy,
@@ -164,5 +165,13 @@ export const getHierarchyEmployeesByDepartment = (): Promise<
 > => {
   return api
     .get("/hierarchy/employees-by-departments/")
+    .then((res) => res.data);
+};
+
+export const getRoleEployeeByDepartment = (): Promise<
+  IDepartmentHierarchy[]
+> => {
+  return api
+    .get("/hierarchy/roles-departments-employees/")
     .then((res) => res.data);
 };

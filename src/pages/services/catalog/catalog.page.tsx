@@ -22,11 +22,7 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import { useQuery } from "@tanstack/react-query";
 import toast from "react-hot-toast";
-import {
-  LanOutlined,
-  Folder,
-  ContentCut,
-} from "@mui/icons-material";
+import { LanOutlined, Folder, ContentCut } from "@mui/icons-material";
 import classes from "./styles.module.scss";
 import CustomTextField from "@/components/textField/textField.component";
 import TreeView from "@/components/treeItem/treeItem";
@@ -453,43 +449,25 @@ const ServiceCatalog = () => {
                 }
               />
             </div>
-            <div className={classes.catalog__lower__service__wrapper}>
-              <div className={classes.catalog__lower__service__wrapper__header}>
-                <h1>Стоимость</h1>
-              </div>
-
-              <Table className={classes.table}>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Должность</TableCell>
-                    <TableCell>Стоимость</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  <TableRow>
-                    <TableCell>Мастер</TableCell>
-                    <TableCell>1000</TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
+            <div>
+              <CostTable title="Стоимость" unit="руб." data={costData} />
+              <CostTable
+                title="Продолжительность"
+                unit="мин"
+                showIcons={false}
+                data={durationData}
+                hierarchy
+              />
+              <MaterialTable title="Материалы" data={materialData} />
+              <Calculation
+                material="Материалы салона"
+                employeePercentage="50%"
+                position="Универсал"
+                employeeName="Имя Фамилия"
+              />
             </div>
           </div>
         )}
-        <CostTable title="Стоимость" unit="руб." data={costData} />
-        <CostTable
-          title="Продолжительность"
-          unit="мин"
-          showIcons={false}
-          data={durationData}
-          hierarchy
-        />
-        <MaterialTable title="Материалы" data={materialData} />
-        <Calculation
-          material="Материалы салона"
-          employeePercentage="50%"
-          position="Универсал"
-          employeeName="Имя Фамилия"
-        />
       </div>
     </div>
   );

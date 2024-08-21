@@ -86,8 +86,7 @@ const MaterialTable: React.FC<MaterialTableProps> = ({ data, title }) => {
     <TableContainer
       component={Paper}
       sx={{
-        boxShadow:
-          "0 0 12px rgba(21, 21, 21, 0.08), 0 2px 8px rgba(21, 21, 21, 0.08)",
+        boxShadow: "none",
         borderRadius: "16px",
         border: "0.1rem solid rgba(99,107,116, 0.3)",
         padding: "0.8rem",
