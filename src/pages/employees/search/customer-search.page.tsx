@@ -232,13 +232,13 @@ const EmployeeSearch = () => {
 
                 <VerticalTextField
                   label="ID сотрудника"
-                  name="userId"
+                  name="user_id"
                   placeholder="Введите ID"
                   value={formData.user_id}
                   onChange={(event) =>
                     setFormData((prev) => ({
                       ...prev,
-                      userId: event.target.value,
+                      user_id: event.target.value,
                     }))
                   }
                 />
