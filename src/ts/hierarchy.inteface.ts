@@ -96,3 +96,17 @@ export interface IServiceParent {
   level: string;
   parent: number | null;
 }
+
+export interface IDepartmentHierarchy {
+  department: string;
+  roles: IEmployeesRoles[];
+}
+export interface IEmployeesRoles {
+  id: number;
+  name: string;
+  employees: IEmployeeDepartment[];
+}
+export interface IEmployeeDepartment {
+  id: number;
+  full_name: string;
+}

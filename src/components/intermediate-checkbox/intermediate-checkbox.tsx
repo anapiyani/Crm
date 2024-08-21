@@ -10,11 +10,11 @@ const TriStateCheckbox: React.FC<TriStateCheckboxProps> = ({
   label,
   children,
 }) => {
-  const [checked, setChecked] = useState<boolean | null>(null);
+  const [checked, setChecked] = useState<boolean | null>(false);
   const checkboxRef = useRef<HTMLInputElement>(null);
 
   const handleCheckboxChange = () => {
-    setChecked((prev) => (prev === null ? true : prev ? false : null));
+    setChecked((prev) => (prev === null ? true : prev ? false : true));
   };
 
   useEffect(() => {

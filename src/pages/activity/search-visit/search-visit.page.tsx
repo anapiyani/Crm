@@ -9,8 +9,152 @@ import {
 import classes from "./styles.module.scss";
 import CustomAutoComplete from "@/components/autocomplete/custom-autocomplete.component";
 import VerticalTextField from "@/components/textfield-vertical/textfield-vertical";
+import RoleEmployeeCheckbox from "@/components/role-employee-checkbox/role-employee-checkbox";
+import { useState } from "react";
+import RecursiveCheckbox from "@/components/recursive-checkbox/recursive-checkbox";
+import { useQuery } from "@tanstack/react-query";
+import {
+  getHierarchy,
+  getHierarchyById,
+} from "@/service/hierarchy/hierarchy.service";
+import { IServiceCategory } from "@/ts/service.interface";
+
+interface ITreeItemProps {
+  id: number;
+  isChecked: number;
+  type: "service" | "category";
+  serviceName: string;
+  parent: number | null;
+  parent_name: string | null;
+}
 
 const SearchVisits = () => {
+  const [selectedEmployeeIds, setSelectedEmployeeIds] = useState<number[]>([]);
+  const [selectedItems, setSelectedItems] = useState<ITreeItemProps[]>([]);
+
+  const handleEmployeeSelectionChange = (ids: number[]) => {
+    setSelectedEmployeeIds(ids);
+    console.log("Selected Employee IDs:", ids);
+  };
+
+  const handleServiceChange = (
+    id: number,
+    isChecked: number,
+    type: "service" | "category",
+    serviceName: string,
+    parent: number | null,
+    parent_name: string | null
+  ) => {
+    setSelectedItems((prev) => {
+      if (isChecked === 1) {
+        // Add the item if it's checked
+        return [
+          ...prev,
+          { id, isChecked, type, serviceName, parent, parent_name },
+        ];
+      } else if (isChecked === 2) {
+        return prev.filter((item) => !(item.id === id && item.type === type));
+      } else if (isChecked === 3) {
+        if (!prev.some((item) => item.id === id && item.type === type)) {
+          return [
+            ...prev,
+            { id, isChecked, type, serviceName, parent, parent_name },
+          ];
+        } else {
+          return prev;
+        }
+      }
+
+      return prev;
+    });
+  };
+
+  const onParentChange = async (
+    parentCategoryId: number | null,
+    childCheckedState: number
+  ) => {
+    if (parentCategoryId === null) return;
+
+    const parentCategory = await getHierarchyById(parentCategoryId);
+
+    // Determine the new state of the parent based on its children's states
+    const childStates = parentCategory.children.map((child) => {
+      const isChecked = selectedItems.some(
+        (item) => item.id === child.id && item.type === "category"
+      );
+
+      const allServicesChecked = child.services.every((service) =>
+        selectedItems.some(
+          (item) => item.id === service.id && item.type === "service"
+        )
+      );
+
+      const allChildrenChecked = child.children.every((subChild) =>
+        selectedItems.some(
+          (item) => item.id === subChild.id && item.type === "category"
+        )
+      );
+
+      const anyChildrenChecked = child.children.some((subChild) =>
+        selectedItems.some(
+          (item) => item.id === subChild.id && item.type === "category"
+        )
+      );
+
+      const anyServicesChecked = child.services.some((service) =>
+        selectedItems.some(
+          (item) => item.id === service.id && item.type === "service"
+        )
+      );
+
+      if (allServicesChecked && allChildrenChecked) {
+        return 1; // Fully checked
+      } else if (
+        (anyServicesChecked || anyChildrenChecked) &&
+        !(allServicesChecked && allChildrenChecked)
+      ) {
+        return 3; // Indeterminate
+      } else {
+        return 2; // Unchecked
+      }
+    });
+
+    // Determine the overall state of the parent category
+    const allChecked = childStates.every((state) => state === 1);
+    const anyIndeterminate = childStates.some((state) => state === 3);
+
+    let parentState = 2; // Default to unchecked
+
+    if (allChecked) {
+      parentState = 1; // All checked
+    } else if (anyIndeterminate || childCheckedState === 3) {
+      parentState = 3; // Indeterminate
+    }
+
+    // Update the parent category's state
+    handleServiceChange(
+      parentCategory.id,
+      parentState,
+      "category",
+      parentCategory.name,
+      parentCategory.parent!,
+      parentCategory.parent_name
+    );
+
+    // Recursively propagate the state change to the parent's parent
+    onParentChange(parentCategory.parent, parentState);
+  };
+
+  const {
+    data: dataServices,
+    isLoading: isLoadingServices,
+    error: errorServices,
+  } = useQuery<IServiceCategory[], Error>({
+    queryKey: ["servicesAppointentSearch"],
+    queryFn: getHierarchy,
+    staleTime: Infinity,
+    refetchOnWindowFocus: false,
+  });
   const checkboxOptions = [
     {
       label: "Только неоплаченные",
@@ -188,46 +332,24 @@ const SearchVisits = () => {
             <h2 className={classes["u-header-text"]}>Основная информация</h2>
             <Divider />
           </div>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Ad
-          voluptatibus debitis, asperiores illo aspernatur excepturi hic
-          veritatis necessitatibus dolore, quaerat magnam provident unde
-          reiciendis qui nostrum distinctio quos ut ratione incidunt dicta
-          doloremque minima eum iusto! Explicabo nihil nemo quia consequatur,
-          mollitia beatae aliquam. Quas, saepe at soluta minus ab, laboriosam
-          tenetur fuga perspiciatis expedita, eius libero consequatur quia
-          voluptatem nostrum aliquam. Necessitatibus voluptas ut rerum
-          doloribus, voluptate neque qui, eligendi quidem nihil atque laudantium
-          a dolor vitae non quasi. Ducimus eum vitae enim et quod voluptate.
-          Corporis saepe ipsa dignissimos iure aut expedita, illo officiis,
-          quibusdam vel ratione fugit? Quia quaerat quo numquam doloremque
-          necessitatibus velit molestiae aspernatur fugit eaque ab, repudiandae
-          magni ipsam consectetur sit quae nam accusamus pariatur unde? Incidunt
-          expedita vitae asperiores quasi nulla ratione praesentium facere,
-          fuga, mollitia, dicta tempore veritatis maiores ex doloribus? Quae
-          eligendi minima iusto?
+          <RoleEmployeeCheckbox
+            onEmployeeSelectionChange={handleEmployeeSelectionChange}
+          />
         </div>
         <div className={classes.visits__content__infos}>
           <div className={classes.visits__content__infos__header}>
             <h2 className={classes["u-header-text"]}>Основная информация</h2>
             <Divider />
+            {dataServices?.map((service) => (
+              <RecursiveCheckbox
+                key={`category-${service.id}`}
+                category={service}
+                onServiceChange={handleServiceChange}
+                preCheckedItems={selectedItems}
+                onParentChange={onParentChange}
+              />
+            ))}
           </div>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit. Ad
-          voluptatibus debitis, asperiores illo aspernatur excepturi hic
-          veritatis necessitatibus dolore, quaerat magnam provident unde
-          reiciendis qui nostrum distinctio quos ut ratione incidunt dicta
-          doloremque minima eum iusto! Explicabo nihil nemo quia consequatur,
-          mollitia beatae aliquam. Quas, saepe at soluta minus ab, laboriosam
-          tenetur fuga perspiciatis expedita, eius libero consequatur quia
-          voluptatem nostrum aliquam. Necessitatibus voluptas ut rerum
-          doloribus, voluptate neque qui, eligendi quidem nihil atque laudantium
-          a dolor vitae non quasi. Ducimus eum vitae enim et quod voluptate.
-          Corporis saepe ipsa dignissimos iure aut expedita, illo officiis,
-          quibusdam vel ratione fugit? Quia quaerat quo numquam doloremque
-          necessitatibus velit molestiae aspernatur fugit eaque ab, repudiandae
-          magni ipsam consectetur sit quae nam accusamus pariatur unde? Incidunt
-          expedita vitae asperiores quasi nulla ratione praesentium facere,
-          fuga, mollitia, dicta tempore veritatis maiores ex doloribus? Quae
-          eligendi minima iusto?
         </div>
       </div>
       <div className={classes["visits__search-buttons"]}>
