@@ -43,15 +43,13 @@ const EmployeeSearch = () => {
     search: "",
     phone_number: "",
     whatsapp: "",
-    userId: "",
+    user_id: "",
     email: "",
-    isActive: null,
+    is_active: null,
     employmentDateFrom: "",
     employmentDateTo: "",
-    birthDateFrom: "",
-    birthDateTo: "",
-    ageFrom: "",
-    ageTo: "",
+    age_from: "",
+    age_to: "",
     gender: "",
     role: "employee",
     roleEmployee: "",
@@ -61,6 +59,10 @@ const EmployeeSearch = () => {
     reviewDateTo: "",
     page: 1,
     page_size: 10,
+    works_from: "",
+    works_to: "",
+    date_of_birth_from: "",
+    date_of_birth_to: "",
   });
   const [selectedRoles, setSelectedRoles] = useState(
     formData.roleEmployee.split(", ").filter(Boolean),
@@ -155,15 +157,13 @@ const EmployeeSearch = () => {
       search: "",
       phone_number: "",
       whatsapp: "",
-      userId: "",
+      user_id: "",
       email: "",
-      isActive: null,
+      is_active: null,
       employmentDateFrom: "",
       employmentDateTo: "",
-      birthDateFrom: "",
-      birthDateTo: "",
-      ageFrom: "",
-      ageTo: "",
+      age_from: "",
+      age_to: "",
       gender: "",
       role: "employee",
       roleEmployee: "",
@@ -173,6 +173,10 @@ const EmployeeSearch = () => {
       reviewDateTo: "",
       page: 1,
       page_size: 10,
+      works_from: "",
+      works_to: "",
+      date_of_birth_from: "",
+      date_of_birth_to: "",
     });
   };
 
@@ -221,7 +225,7 @@ const EmployeeSearch = () => {
                   onChange={(event) =>
                     setFormData((prev) => ({
                       ...prev,
-                      phone_number: event.target.value,
+                      phoneNumber: event.target.value,
                     }))
                   }
                 />
@@ -230,7 +234,7 @@ const EmployeeSearch = () => {
                   label="ID сотрудника"
                   name="userId"
                   placeholder="Введите ID"
-                  value={formData.userId}
+                  value={formData.user_id}
                   onChange={(event) =>
                     setFormData((prev) => ({
                       ...prev,
@@ -265,10 +269,10 @@ const EmployeeSearch = () => {
                   type="double"
                   doubleDivier="-"
                   onChangeFrom={(e) =>
-                    handleRangeChange("employmentDate", e.target.value, "From")
+                    handleRangeChange("works_from", e.target.value, "From")
                   }
                   onChangeTo={(e) =>
-                    handleRangeChange("employmentDate", e.target.value, "To")
+                    handleRangeChange("works_to", e.target.value, "To")
                   }
                 />
 
@@ -279,10 +283,14 @@ const EmployeeSearch = () => {
                   type="double"
                   doubleDivier="-"
                   onChangeFrom={(e) =>
-                    handleRangeChange("birthDate", e.target.value, "From")
+                    handleRangeChange(
+                      "date_of_birth_from",
+                      e.target.value,
+                      "From",
+                    )
                   }
                   onChangeTo={(e) =>
-                    handleRangeChange("birthDate", e.target.value, "To")
+                    handleRangeChange("date_of_birth_to", e.target.value, "To")
                   }
                 />
 

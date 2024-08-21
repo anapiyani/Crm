@@ -8,8 +8,6 @@ export type ISearchFormData = {
   is_active: boolean | null;
   employmentDateFrom: string;
   employmentDateTo: string;
-  birthDateFrom: string;
-  birthDateTo: string;
   age_from: string;
   age_to: string;
   gender: "male" | "female" | "";
@@ -21,7 +19,12 @@ export type ISearchFormData = {
   reviewDateTo: string;
   page: number;
   page_size: number;
-  first_visit?: string;
+  first_visit_from?: string;
+  first_visit_to?: string;
+  date_of_birth_from: string;
+  date_of_birth_to: string;
+  works_from: string;
+  works_to: string;
 };
 
 export interface IUserDetails {
@@ -44,6 +47,17 @@ export interface IUserDetails {
   apartment: string;
   comment: string;
   is_active?: boolean;
+  card_number?: string;
+  category?: string;
+  description?: string | null;
+  description_as_main_characteristic?: boolean;
+  discount_card?: string | null;
+  employee?: string | null;
+  first_visit?: string;
+  invite_source?: string;
+  occupation?: string;
+  personal_discount?: string | null;
+  sms_notification?: boolean;
 }
 
 export interface IEmployeesData {
