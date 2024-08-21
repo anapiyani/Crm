@@ -41,7 +41,8 @@ interface IOption {
 const EmployeeSearch = () => {
   const [formData, setFormData] = useState<ISearchFormData>({
     search: "",
-    phoneNumber: "",
+    phone_number: "",
+    whatsapp: "",
     userId: "",
     email: "",
     isActive: null,
@@ -62,7 +63,7 @@ const EmployeeSearch = () => {
     page_size: 10,
   });
   const [selectedRoles, setSelectedRoles] = useState(
-    formData.roleEmployee.split(", ").filter(Boolean)
+    formData.roleEmployee.split(", ").filter(Boolean),
   );
   const [pageSize, setPageSize] = useState<IOption>({ label: "10", value: 10 });
   const [page, setPage] = useState(1);
@@ -88,7 +89,7 @@ const EmployeeSearch = () => {
 
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
-    value: number
+    value: number,
   ) => {
     handleFormDataChange("page", value);
   };
@@ -129,7 +130,7 @@ const EmployeeSearch = () => {
   const handleRangeChange = (
     fieldPrefix: string,
     value: string,
-    boundary: "From" | "To"
+    boundary: "From" | "To",
   ) => {
     setFormData((prev) => ({
       ...prev,
@@ -152,7 +153,8 @@ const EmployeeSearch = () => {
   const handleClear = () => {
     setFormData({
       search: "",
-      phoneNumber: "",
+      phone_number: "",
+      whatsapp: "",
       userId: "",
       email: "",
       isActive: null,
@@ -215,11 +217,11 @@ const EmployeeSearch = () => {
                   label="Телефон"
                   name="phoneNumber"
                   placeholder="Введите номер"
-                  value={formData.phoneNumber}
+                  value={formData.phone_number}
                   onChange={(event) =>
                     setFormData((prev) => ({
                       ...prev,
-                      phoneNumber: event.target.value,
+                      phone_number: event.target.value,
                     }))
                   }
                 />
@@ -348,7 +350,7 @@ const EmployeeSearch = () => {
                         handleAutocompleteChange(newValue?.value, "role")
                       }
                       renderInput={(params) => (
-                        <TextField {...params} label="Статус"/>
+                        <TextField {...params} label="Статус" />
                       )}
                       size="medium"
                     />
@@ -375,13 +377,13 @@ const EmployeeSearch = () => {
                           onInputChange={(isChecked) =>
                             handleCheckboxChange(
                               position.name,
-                              isChecked ? true : false
+                              isChecked ? true : false,
                             )
                           }
                         />
                       ))}
                     </TriStateCheckbox>
-                  ) : null
+                  ) : null,
                 )}
               </div>
             }

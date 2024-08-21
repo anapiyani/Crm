@@ -1,15 +1,17 @@
 export type ISearchFormData = {
   search: string;
-  phoneNumber: string;
-  userId: string;
+  phone_number: string;
+  whatsapp: string;
+  card_number?: string;
+  user_id: string;
   email: string;
-  isActive: boolean | null;
+  is_active: boolean | null;
   employmentDateFrom: string;
   employmentDateTo: string;
   birthDateFrom: string;
   birthDateTo: string;
-  ageFrom: string;
-  ageTo: string;
+  age_from: string;
+  age_to: string;
   gender: "male" | "female" | "";
   role: string;
   roleEmployee: string;
@@ -19,6 +21,7 @@ export type ISearchFormData = {
   reviewDateTo: string;
   page: number;
   page_size: number;
+  first_visit?: string;
 };
 
 export interface IUserDetails {
