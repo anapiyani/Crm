@@ -9,6 +9,9 @@ import AddCategoryModal from "./cash-desk/indirect-category-add.modal";
 import DeleteAllBreaksConfirmationModal from "./home/delete-all-breaks-confirmation.modal";
 import DeleteEmployeeScheduleConfirmationModal from "./home/delete-employee-schedule-confirmation.modal";
 import TakeDayOffConfirmationModal from "./home/take-day-off-confirmation.modal";
+import AddEmployeeScheduleModal from "./home/add-employee-schedule.modal";
+import ExportAppointmentsModal from "./home/export-appointments.modal";
+import ShowDeletedAppointmentsModal from "./home/show-deleted-appointments.modal";
 
 export {
   AddBreakModal,
@@ -22,4 +25,7 @@ export {
   DeleteAllBreaksConfirmationModal,
   DeleteEmployeeScheduleConfirmationModal,
   TakeDayOffConfirmationModal,
+  AddEmployeeScheduleModal,
+  ExportAppointmentsModal,
+  ShowDeletedAppointmentsModal,
 };

@@ -39,7 +39,7 @@ const CustomAutoComplete = <T extends IOption>({
   labelClassName,
   size = "medium",
   sx,
-  fullWidth,
+  fullWidth = true,
 }: ICustomAutoCompleteProps<T>): React.ReactElement => {
   return (
     <div className={classNames(classes["autocomplete"], className)}>
@@ -61,7 +61,7 @@ const CustomAutoComplete = <T extends IOption>({
         getOptionKey={(option) => option.value as string}
         isOptionEqualToValue={(option, value) => option.value === value.value}
         PaperComponent={({ children }) => (
-          <Paper sx={{ fontSize: "1.4rem" }}>{children}</Paper>
+          <Paper sx={{ fontSize: "1.4rem", width: "100%" }}>{children}</Paper>
         )}
         sx={{
           "& .MuiAutocomplete-inputRoot": {

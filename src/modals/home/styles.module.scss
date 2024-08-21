@@ -157,3 +157,65 @@
     width: 120rem;
   }
 }
+
+.add-employees-schedule {
+  &--header {
+    font-size: 1.6rem;
+    font-weight: 400;
+    line-height: 2.4rem;
+    color: var(--brand-500);
+  }
+  &__container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 2rem;
+    &--data {
+      display: flex;
+      flex-direction: row;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    &--time {
+      display: flex;
+      flex-direction: row;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    &--label {
+      font-size: 1.6rem;
+      line-height: 2.4rem;
+      min-width: 10rem;
+    }
+  }
+}
+
+.export-appointments {
+  &--header {
+    font-size: 1.6rem;
+    font-weight: 400;
+    line-height: 2.4rem;
+    color: var(--brand-500);
+  }
+  &__container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 2rem;
+
+    &__item {
+      display: flex;
+      flex-direction: row;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    &--label {
+      font-size: 1.6rem;
+      line-height: 2.4rem;
+      min-width: 10rem;
+    }
+  }
+}

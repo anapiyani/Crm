@@ -70,3 +70,22 @@ export const getEmployeeWeeklySchedule = (
     .get(`/schedule/schedules/weekly/${employee_id}/`)
     .then((res) => res.data);
 };
+
+export const addEmployeeToSchedule = ({
+  date,
+  employee_id,
+  start_time,
+  end_time,
+}: {
+  date: string;
+  employee_id: number;
+  start_time: string;
+  end_time: string;
+}) => {
+  return api
+
+    .post(
+      `/schedule/schedules/add/?date=${date}&employee_id=${employee_id}&end_time=${end_time}&start_time=${start_time}`
+    )
+    .then((res) => res.data);
+};
