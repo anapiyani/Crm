@@ -29,7 +29,7 @@ import { getDepartment } from "@/service/department/department.service";
 import { searchEmployee } from "@/service/employee/employee.service";
 import { useQuery } from "@tanstack/react-query";
 import { IDepartmentData } from "@/ts/departments.interface";
-import { ISearchFormData, IUserDetails } from "@/ts/employee.interface";
+import { ISearchFormData } from "@/ts/employee.interface";
 import TextsmsOutlinedIcon from "@mui/icons-material/TextsmsOutlined";
 import { Link } from "react-router-dom";
 
