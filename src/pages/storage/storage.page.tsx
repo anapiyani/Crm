@@ -24,6 +24,8 @@ import {
   Box,
   Paper,
 } from "@mui/material";
+import Grid from "@mui/material/Unstable_Grid2";
+
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { DndProvider } from "react-dnd";
@@ -303,77 +305,114 @@ const StoragePage: React.FC = () => {
         </div>
       </div>
       <div className={classes.storage__lower}>
-  <div className={classes.storage__lower__grid}>
-    <div className={classes.storage__lower__section}>
-      <TableVertical data={overviewData} title="Обзор" />
-    </div>
-    <div className={classes.storage__lower__section}>
-      <TableVertical data={priceData} title="Цена" />
-    </div>
-    <div className={classes.storage__lower__section}>
-      <TableVertical data={productData} title="Товар" />
-    </div>
-    <div className={classes.storage__lower__section}>
-      <TableVertical data={measurementData} title="Измерение / объем" />
-    </div>
-    <div className={classes.storage__lower__section}>
-      <TableVertical
-        data={bonusData}
-        title="Бонус за продажу"
-      />
-    </div>
-    <div className={classes.storage__lower__section}>
-      <TableVertical
-        data={discountData}
-        title="Скидка"
-      />
-    </div>
-    <div className={classes.storage__lower__section}>
-      <TableVertical data={characteristicsData} title="Основные характеристики" />
-    </div>
-    <div className={classes.storage__lower__section}>
-      <Box
-        component={Paper}
-        sx={{
-          border: "0.1rem solid #CDD7E1",
-          borderRadius: "8px",
-          boxShadow: "0rem 0.1rem 0.2rem 0rem rgba(21, 21, 21, 0.08)",
-          p: 2,
-        }}
-      >
-        <h5 className={classes.storage__lower__section__title}>Плавающая цена</h5>
-        {/* Implement custom floating price table */}
-      </Box>
-    </div>
-    <div className={classes.storage__lower__section}>
-      <Box
-        component={Paper}
-        sx={{
-          border: "0.1rem solid #CDD7E1",
-          borderRadius: "8px",
-          boxShadow: "0rem 0.1rem 0.2rem 0rem rgba(21, 21, 21, 0.08)",
-          p: 2,
-        }}
-      >
-        <h5 className={classes.storage__lower__section__title}>Фотография</h5>
-        <Button
-          variant="outlined"
-          color="primary"
-          sx={{ fontSize: "1.6rem", fontWeight: "400" }}
-        >
-          + Добавить файлы
-        </Button>
-      </Box>
-    </div>
-    <div className={classes.storage__lower__section}>
-      <TableVertical
-        data={purchaseHistoryData}
-        title="История закупок и списаний"
-      />
-    </div>
-  </div>
-</div>
+        <Grid container spacing={3}>
+          <Grid container md={3.7}>
+            <Grid container xs={12}>
+              <Grid xs={12}>
+                <TableVertical data={overviewData} title="Обзор" />
+              </Grid>
 
+              <Grid xs={12}>
+                <TableVertical
+                  data={characteristicsData}
+                  title="Основные характеристики"
+                  noIcon
+                />
+              </Grid>
+
+              <Grid xs={12}>
+                <Box
+                  component={Paper}
+                  sx={{
+                    border: "0.1rem solid #CDD7E1",
+                    borderRadius: "8px",
+                    boxShadow: "0rem 0.1rem 0.2rem 0rem rgba(21, 21, 21, 0.08)",
+                    p: 2,
+                  }}
+                >
+                  <h5 className={classes.storage__lower__grid__section__title}>
+                    Плавающая цена
+                  </h5>
+                  {/* Implement custom floating price table */}
+                </Box>
+              </Grid>
+            </Grid>
+          </Grid>
+
+          <Grid container md={3.7}>
+            <Grid container xs={12}>
+              <Grid xs={12}>
+                <TableVertical data={priceData} title="Цена" />
+              </Grid>
+              <Grid xs={12}>
+                <TableVertical data={bonusData} title="Бонус за продажу" />
+              </Grid>
+              <Grid xs={12}>
+                <TableVertical data={discountData} title="Скидка" />
+              </Grid>
+              <Grid xs={12}>
+                <Box
+                  component={Paper}
+                  sx={{
+                    border: "0.1rem solid #CDD7E1",
+                    borderRadius: "8px",
+                    boxShadow: "0rem 0.1rem 0.2rem 0rem rgba(21, 21, 21, 0.08)",
+                    p: 2,
+                  }}
+                >
+                  <h5 className={classes.storage__lower__grid__section__title}>
+                    Нормативы в услугах
+                  </h5>
+
+                  {/* Implement custom floating price table */}
+                </Box>
+              </Grid>
+            </Grid>
+          </Grid>
+
+          <Grid container md={4.6}>
+            <Grid container xs={12}>
+              <Grid xs={12}>
+                <TableVertical data={productData} title="Товар" />
+              </Grid>
+              <Grid xs={12}>
+                <TableVertical
+                  data={measurementData}
+                  title="Измерение / объем"
+                />
+              </Grid>
+              <Grid xs={12}>
+                <Box
+                  component={Paper}
+                  sx={{
+                    border: "0.1rem solid #CDD7E1",
+                    borderRadius: "8px",
+                    boxShadow: "0rem 0.1rem 0.2rem 0rem rgba(21, 21, 21, 0.08)",
+                    p: 2,
+                  }}
+                >
+                  <h5 className={classes.storage__lower__grid__section__title}>
+                    Фотография
+                  </h5>
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    sx={{ fontSize: "1.6rem", fontWeight: "400" }}
+                  >
+                    + Добавить файлы
+                  </Button>
+                </Box>
+              </Grid>
+              <Grid xs={12}>
+                <TableVertical
+                  data={purchaseHistoryData}
+                  title="История закупок и списаний"
+                />
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+      </div>
     </div>
   );
 };

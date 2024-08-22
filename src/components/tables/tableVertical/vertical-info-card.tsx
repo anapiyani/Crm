@@ -46,6 +46,7 @@ interface TableVerticalProps {
   showLockIcon?: boolean;
   extraAction?: React.ReactNode;
   includeDropdown?: boolean;
+  noIcon?: boolean;
 }
 
 const TableVertical: React.FC<TableVerticalProps> = ({
@@ -54,6 +55,7 @@ const TableVertical: React.FC<TableVerticalProps> = ({
   showLockIcon = false,
   extraAction,
   includeDropdown = false,
+  noIcon = false,
 }) => {
   const [dropdownValue, setDropdownValue] = useState(
     data[data.length - 1].value
@@ -70,6 +72,7 @@ const TableVertical: React.FC<TableVerticalProps> = ({
         border: "0.1rem solid #CDD7E1",
         borderRadius: "8px",
         boxShadow: "0rem 0.1rem 0.2rem 0rem rgba(21, 21, 21, 0.08)",
+        width: "100%",
       }}
     >
       <Box
@@ -99,7 +102,7 @@ const TableVertical: React.FC<TableVerticalProps> = ({
             alignItems: "center",
           }}
         >
-          {!showLockIcon ? (
+          {noIcon ? null : !showLockIcon ? (
             <Box
               sx={{
                 padding: "0.8rem",
@@ -146,6 +149,7 @@ const TableVertical: React.FC<TableVerticalProps> = ({
               </Box>
             </Box>
           )}
+          
         </Box>
       </Box>
       <Table aria-label="customized table" sx={{ borderColor: "#CDD7E1" }}>

@@ -75,13 +75,21 @@
   }
 
   &__lower {
-    padding: 1rem 5.5rem 2rem 5.5rem;
-    display: flex;
+    padding: 2.4rem;
 
     &__grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 2rem;
+      gap: 2.4rem;
+      margin-top: 2rem;
+
+     
+
+      &__section__title {
+        font-size: 1.8rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+      }
 
       @media (max-width: 1200px) {
         grid-template-columns: repeat(2, 1fr);
@@ -90,16 +98,6 @@
       @media (max-width: 768px) {
         grid-template-columns: 1fr;
       }
-    }
-
-    &__section {
-      padding: 1rem;
-    }
-
-    &__section__title {
-      font-size: 1.8rem;
-      font-weight: 600;
-      margin-bottom: 1rem;
     }
   }
 }

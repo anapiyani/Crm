@@ -97,11 +97,11 @@ const EmployeeCard = () => {
           flexDirection: { xs: "column", md: "row" },
         }}
         columnSpacing={{ md: 6 }}
-        rowGap={{ xs: 3, md: 0 }}
+        rowGap={{ xs: 3}}
         xs={9}
         md={12}
       >
-        <Grid container lg={5} xl={3.5} sx={{ alignItems: "flex-start" }}>
+        <Grid container lg={5} xl={3.5} xs={10} sx={{ alignItems: "flex-start" }}>
           <TableVertical data={mainTableData} title="Главное" showLockIcon />
         </Grid>
 
@@ -109,16 +109,16 @@ const EmployeeCard = () => {
           container
           xl={7}
           lg={5}
-          md={6}
+          xs={10}
           sx={{ flexDirection: { xs: "column", xl: "row" } }}
-          columnSpacing={{ md: 0, xl: 6 }}
+          columnSpacing={{ xs:0 }}
           rowGap={{ xs: 3, xl: 0 }}
         >
-          <Grid xl={6}>
+          <Grid container xs={12} xl={6}>
             <TableVertical data={additionalTableData} title="Доп. информация" />
           </Grid>
 
-          <Grid container xl={6} sx={{ flexDirection: "column" }} rowGap={3}>
+          <Grid container xs={12} xl={6} sx={{ flexDirection: "column" }} rowGap={3}>
             <TableHorizontal data={contactsData} title="Контакты" />
             <TableVertical data={addressData} title="Адрес проживания" />
           </Grid>
