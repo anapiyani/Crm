@@ -11,9 +11,9 @@ export const useAddClient = () => {
       return data;
     },
     onError: (error) => {
-      const errorMessage =
-        "Произошла ошибка при добавлении клиента." || error.message;
+      const errorMessage = error.message;
       toast.error(errorMessage);
     },
+    // "Произошла ошибка при добавлении клиента." ||
   });
 };

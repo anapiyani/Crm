@@ -108,10 +108,7 @@ const RoleEmployeeCheckbox: React.FC<RoleEmployeeCheckboxProps> = ({
     <>
       {data?.map((item: IDepartmentHierarchy) => (
         <div className={classes.department} key={item.department}>
-          <div
-            className={classes.row}
-            onClick={() => toggleBranch(item.department)}
-          >
+          <div className={classes.row}>
             <input
               type="checkbox"
               id={item.department}
@@ -124,7 +121,9 @@ const RoleEmployeeCheckbox: React.FC<RoleEmployeeCheckboxProps> = ({
                 )
               }
             />
-            <label>{item.department}</label>
+            <label onClick={() => toggleBranch(item.department)}>
+              {item.department}
+            </label>
             {item.roles.length > 0 && (
               <button>
                 {openBranches[item.department] ? (
@@ -140,10 +139,7 @@ const RoleEmployeeCheckbox: React.FC<RoleEmployeeCheckboxProps> = ({
             <div className={classes.department__roles}>
               {item.roles.map((role) => (
                 <div key={role.id}>
-                  <div
-                    className={classes.row}
-                    onClick={() => toggleBranch(role.id.toString())}
-                  >
+                  <div className={classes.row}>
                     <input
                       type="checkbox"
                       id={role.id.toString()}
@@ -159,7 +155,9 @@ const RoleEmployeeCheckbox: React.FC<RoleEmployeeCheckboxProps> = ({
                         )
                       }
                     />
-                    <label>{role.name}</label>
+                    <label onClick={() => toggleBranch(role.id.toString())}>
+                      {role.name}
+                    </label>
                     {role.employees.length > 0 && (
                       <button>
                         {openBranches[role.id.toString()] ? (
