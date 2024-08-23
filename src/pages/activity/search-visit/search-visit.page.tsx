@@ -5,6 +5,7 @@ import {
   Divider,
   FormControlLabel,
   FormGroup,
+  Pagination,
 } from "@mui/material";
 import classes from "./styles.module.scss";
 import CustomAutoComplete from "@/components/autocomplete/custom-autocomplete.component";
@@ -18,6 +19,12 @@ import {
   getHierarchyById,
 } from "@/service/hierarchy/hierarchy.service";
 import { IServiceCategory } from "@/ts/service.interface";
+import { Adjust, Inventory, CardGiftcard } from "@mui/icons-material";
+import EmployeeVisitsTable from "@/pages/employees/employee-visits/visits-table/employee-visits-table";
+import { TableData } from "@/modals/home/event-details/data";
+import { Controller, SubmitHandler, useForm } from "react-hook-form";
+import { IVisitsInfo, IVisitsResponse } from "@/ts/activity.interface";
+import { searchVisits } from "@/service/activity/activity.service";
 
 interface ITreeItemProps {
   id: number;
@@ -28,13 +35,92 @@ interface ITreeItemProps {
   parent_name: string | null;
 }
 
+interface IOption {
+  label: string;
+  value: number;
+}
+
 const SearchVisits = () => {
+  const { register, handleSubmit, reset, control, setValue } =
+    useForm<IVisitsInfo>();
   const [selectedEmployeeIds, setSelectedEmployeeIds] = useState<number[]>([]);
   const [selectedItems, setSelectedItems] = useState<ITreeItemProps[]>([]);
+  const [visitsData, setVisitsData] = useState<IVisitsResponse | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
 
-  const handleEmployeeSelectionChange = (ids: number[]) => {
-    setSelectedEmployeeIds(ids);
-    console.log("Selected Employee IDs:", ids);
+  const {
+    data: visitsInfo,
+    refetch: refetchVistsData,
+    isPending: visitsPending,
+    isError: visitsError,
+  } = useQuery({
+    queryKey: [
+      "visitsData",
+      selectedEmployeeIds,
+      selectedItems,
+      currentPage,
+      pageSize,
+    ],
+    queryFn: () =>
+      searchVisits({
+        bonuses: false,
+        cashless_payment: false,
+        certificate: false,
+        bank_transfer: false,
+        employee_id: selectedEmployeeIds,
+        id: "",
+        service_id: selectedItems.map((item) => item.id),
+        status: "Любой",
+        subscription: false,
+        unapproved_materials: false,
+        unpaid: false,
+        with_products: false,
+        amount_from: 0,
+        amount_to: 0,
+        date_from: "",
+        date_to: "",
+        ascending_order: false,
+        sort_by_date: false,
+        sorting: "",
+        page: currentPage,
+        page_size: pageSize,
+      }).then((res) => {
+        setVisitsData(res);
+      }),
+  });
+
+  const handleSubmitSearch: SubmitHandler<IVisitsInfo> = async (data) => {
+    const { sorting, ...restData } = data;
+    const serviceIds = selectedItems.filter((item) => item.type === "service");
+    const serviceIdMapped = serviceIds.map((item) => item.id);
+
+    const formSearch: IVisitsInfo = {
+      ...restData,
+      service_id: serviceIdMapped.length > 0 ? serviceIdMapped : [],
+      employee_id: selectedEmployeeIds.length > 0 ? selectedEmployeeIds : [],
+      page: currentPage,
+      page_size: pageSize,
+      amount_from: restData.amount_from || 0,
+      amount_to: restData.amount_to || 0,
+      bank_transfer: restData.bank_transfer,
+      bonuses: restData.bonuses,
+      certificate: restData.certificate,
+      date_from: restData.date_from || "",
+      date_to: restData.date_to || "",
+      ascending_order: restData.ascending_order,
+      sort_by_date: restData.sort_by_date,
+      status: restData.status || "Любой",
+      subscription: restData.subscription,
+      unapproved_materials: restData.unapproved_materials,
+      unpaid: restData.unpaid,
+      with_products: restData.with_products,
+      cashless_payment: restData.cashless_payment,
+    };
+
+    searchVisits(formSearch).then((res) => {
+      setVisitsData(res);
+    });
   };
 
   const handleServiceChange = (
@@ -43,11 +129,10 @@ const SearchVisits = () => {
     type: "service" | "category",
     serviceName: string,
     parent: number | null,
-    parent_name: string | null
+    parent_name: string | null,
   ) => {
     setSelectedItems((prev) => {
       if (isChecked === 1) {
-        // Add the item if it's checked
         return [
           ...prev,
           { id, isChecked, type, serviceName, parent, parent_name },
@@ -71,40 +156,38 @@ const SearchVisits = () => {
 
   const onParentChange = async (
     parentCategoryId: number | null,
-    childCheckedState: number
+    childCheckedState: number,
   ) => {
     if (parentCategoryId === null) return;
 
     const parentCategory = await getHierarchyById(parentCategoryId);
-
-    // Determine the new state of the parent based on its children's states
     const childStates = parentCategory.children.map((child) => {
       const isChecked = selectedItems.some(
-        (item) => item.id === child.id && item.type === "category"
+        (item) => item.id === child.id && item.type === "category",
       );
 
       const allServicesChecked = child.services.every((service) =>
         selectedItems.some(
-          (item) => item.id === service.id && item.type === "service"
-        )
+          (item) => item.id === service.id && item.type === "service",
+        ),
       );
 
       const allChildrenChecked = child.children.every((subChild) =>
         selectedItems.some(
-          (item) => item.id === subChild.id && item.type === "category"
-        )
+          (item) => item.id === subChild.id && item.type === "category",
+        ),
       );
 
       const anyChildrenChecked = child.children.some((subChild) =>
         selectedItems.some(
-          (item) => item.id === subChild.id && item.type === "category"
-        )
+          (item) => item.id === subChild.id && item.type === "category",
+        ),
       );
 
       const anyServicesChecked = child.services.some((service) =>
         selectedItems.some(
-          (item) => item.id === service.id && item.type === "service"
-        )
+          (item) => item.id === service.id && item.type === "service",
+        ),
       );
 
       if (allServicesChecked && allChildrenChecked) {
@@ -138,11 +221,16 @@ const SearchVisits = () => {
       "category",
       parentCategory.name,
       parentCategory.parent!,
-      parentCategory.parent_name
+      parentCategory.parent_name,
     );
 
     // Recursively propagate the state change to the parent's parent
     onParentChange(parentCategory.parent, parentState);
+  };
+
+  const handleEmployeeSelectionChange = (ids: number[]) => {
+    setSelectedEmployeeIds(ids);
+    console.log("Selected Employee IDs:", ids);
   };
 
   const {
@@ -162,7 +250,7 @@ const SearchVisits = () => {
     },
     {
       label: "Только с несогласов. материал.",
-      value: "disapproved_material",
+      value: "unapproved_materials",
     },
     {
       label: "Только по абонементу",
@@ -174,7 +262,7 @@ const SearchVisits = () => {
     },
     {
       label: "Только оплаченные бонусами",
-      value: "bonus_payment",
+      value: "bonuses",
     },
     {
       label: "Оплаченные по безналу",
@@ -182,9 +270,60 @@ const SearchVisits = () => {
     },
     {
       label: "Только с товарами",
-      value: "with_goods",
+      value: "with_products",
     },
   ];
+
+  const pageSizeOptions: IOption[] = [
+    { label: "10", value: 10 },
+    { label: "20", value: 20 },
+    { label: "50", value: 50 },
+    { label: "100", value: 100 },
+  ];
+
+  const data: TableData[] =
+    visitsData?.results.map((visit, index) => {
+      return {
+        id: index + 1,
+        visit: "Посещение №" + visit.id,
+        visitTime: visit.date || "",
+        client:
+          `${visit.client.first_name} ${visit.client.last_name}` ||
+          "Нет данных",
+        clientNote: visit.notes || "",
+        services: visit.appointment_services.map((service) => {
+          return {
+            icon: Adjust,
+            name: service.service_name,
+            employee: visit.employee_name || "Нет данных",
+            employeeRole: visit.employee_role,
+            amount: Number(visit.service_amount) || 0,
+            discount: visit.discount_custom || 0,
+            total: Number(service.price) || 0,
+          };
+        }),
+        grandTotal: visit.total_price,
+        grandTotalCash: 0,
+        grandTotalCard: visit.total_price,
+      };
+    }) || [];
+
+  const handlePageChange = (
+    event: React.ChangeEvent<unknown>,
+    value: number,
+  ) => {
+    setCurrentPage(value);
+    refetchVistsData();
+  };
+
+  const handlePageSizeChange = (
+    event: React.ChangeEvent<HTMLSelectElement>,
+  ) => {
+    setPageSize(Number(event.target.value));
+    setCurrentPage(1);
+    refetchVistsData();
+  };
+
   return (
     <div className={classes.visits}>
       <div className={classes.visits__header}>
@@ -193,183 +332,304 @@ const SearchVisits = () => {
           <h1>Поиск посещений</h1>
         </div>
       </div>
-      <div className={classes.visits__content}>
-        <div className={classes.visits__content__infos}>
-          <div className={classes.visits__content__infos__header}>
-            <h2 className={classes["u-header-text"]}>Основная информация</h2>
-            <Divider />
-          </div>
-          <div className={classes.visits__content__infos__form}>
-            <CustomAutoComplete
-              name={"status"}
-              label={"Статус"}
-              placeholder="Любой"
-              selectValue={"label"}
-              options={[
-                {
-                  value: "1",
-                  label: "Любой",
-                },
-                {
-                  value: "2",
-                  label: "Посещение завершено и оплачено",
-                },
-                {
-                  value: "3",
-                  label: "Посещение идет, клиент в салоне",
-                },
-              ]}
-              size="small"
-              labelClassName={classes["u-label"]}
-            />
+      <form onSubmit={handleSubmit(handleSubmitSearch)}>
+        <div className={classes.visits__content}>
+          <div className={classes.visits__content__infos}>
+            <div className={classes.visits__content__infos__header}>
+              <h2 className={classes["u-header-text"]}>Основная информация</h2>
+              <Divider />
+            </div>
+            <div className={classes.visits__content__infos__form}>
+              <Controller
+                name="status"
+                control={control}
+                defaultValue="Любой"
+                render={({ field }) => {
+                  const options = [
+                    {
+                      value: "Любой",
+                      label: "Любой",
+                    },
+                    {
+                      value: "Посещение завершено и оплачено",
+                      label: "Посещение завершено и оплачено",
+                    },
+                    {
+                      value: "Посещение идет, клиент в салоне",
+                      label: "Посещение идет, клиент в салоне",
+                    },
+                  ];
 
-            <VerticalTextField
-              name={"date"}
-              label={"Сумма"}
-              placeholder="Начиная с"
-              placeholderOptional="Заканчивая"
-              size="small"
-              type="double"
-              doubleDivier="-"
-              labelClassName={classes["u-label"]}
-            />
+                  const selectedOption = field.value
+                    ? options.find((option) => option.value === field.value)
+                    : null;
 
-            <VerticalTextField
-              name={"date"}
-              label={"Дата"}
-              placeholder="01.01.2021"
-              size="small"
-              type="double-calendar"
-              doubleDivier="-"
-              labelClassName={classes["u-label"]}
-            />
-
-            <VerticalTextField
-              name={"number"}
-              label={"Номер"}
-              size="small"
-              labelClassName={classes["u-label"]}
-              placeholder={"№ посещения"}
-            />
-
-            <FormGroup
-              sx={{
-                marginLeft: "10rem",
-              }}
-            >
-              {checkboxOptions.map((option) => (
-                <FormControlLabel
-                  key={option.value}
-                  control={
-                    <Checkbox
-                      size="medium"
-                      sx={{
-                        "& .MuiSvgIcon-root": { fontSize: 20 },
+                  return (
+                    <CustomAutoComplete
+                      {...field}
+                      name={"status"}
+                      label={"Статус"}
+                      placeholder="Любой"
+                      selectValue={"label"}
+                      options={options}
+                      size="small"
+                      labelClassName={classes["u-label"]}
+                      value={selectedOption}
+                      onChange={(newValue) => {
+                        field.onChange(newValue?.value);
                       }}
                     />
-                  }
-                  label={option.label}
-                  sx={{
-                    "& .MuiTypography-root": { fontSize: "1.4rem" },
-                  }}
+                  );
+                }}
+              />
+
+              <VerticalTextField
+                name={"date"}
+                label={"Сумма"}
+                placeholder="Начиная с"
+                placeholderOptional="Заканчивая"
+                size="small"
+                type="double"
+                doubleDivier="-"
+                labelClassName={classes["u-label"]}
+                onChangeFrom={(e) => {
+                  setValue("amount_from", Number(e.target.value));
+                }}
+                onChangeTo={(e) => {
+                  setValue("amount_to", Number(e.target.value));
+                }}
+              />
+
+              <VerticalTextField
+                name={"date"}
+                label={"Дата"}
+                placeholder="01.01.2021"
+                size="small"
+                type="double-calendar"
+                doubleDivier="-"
+                labelClassName={classes["u-label"]}
+                onChangeFrom={(e) => {
+                  setValue("date_from", e.target.value);
+                }}
+                onChangeTo={(e) => {
+                  setValue("date_to", e.target.value);
+                }}
+              />
+
+              <VerticalTextField
+                label={"Номер"}
+                size="small"
+                labelClassName={classes["u-label"]}
+                placeholder={"№ посещения"}
+                {...register("id")}
+              />
+
+              <FormGroup
+                sx={{
+                  marginLeft: "10rem",
+                }}
+              >
+                {checkboxOptions.map((option) => (
+                  <FormControlLabel
+                    key={option.value}
+                    control={
+                      <Controller
+                        name={option.value as keyof IVisitsInfo}
+                        control={control}
+                        defaultValue={false}
+                        render={({ field }) => (
+                          <Checkbox
+                            {...field}
+                            checked={!!field.value}
+                            onChange={(e) => field.onChange(e.target.checked)}
+                            size="medium"
+                            sx={{
+                              "& .MuiSvgIcon-root": { fontSize: 20 },
+                            }}
+                          />
+                        )}
+                      />
+                    }
+                    label={option.label}
+                    sx={{
+                      "& .MuiTypography-root": { fontSize: "1.4rem" },
+                    }}
+                  />
+                ))}
+              </FormGroup>
+
+              <Controller
+                name={"sorting" as keyof IVisitsInfo}
+                control={control}
+                defaultValue=""
+                render={({ field }) => {
+                  const options = [
+                    {
+                      value: "1",
+                      label: "По дате, по убыванию",
+                    },
+                    {
+                      value: "2",
+                      label: "По дате, по возрастанию",
+                    },
+                    {
+                      value: "3",
+                      label: "По сумме, по возрастанию",
+                    },
+                    {
+                      value: "4",
+                      label: "По сумме, по убыванию",
+                    },
+                  ];
+
+                  const selectedOption = field.value
+                    ? options.find((option) => option.value === field.value)
+                    : null;
+
+                  return (
+                    <CustomAutoComplete
+                      {...field}
+                      value={selectedOption}
+                      label={"Сортировка"}
+                      placeholder="По дате, по убыванию"
+                      selectValue={"label"}
+                      options={options}
+                      size="small"
+                      labelClassName={classes["u-label"]}
+                      onChange={(newValue) => {
+                        field.onChange(newValue?.value);
+
+                        if (newValue?.value === "1") {
+                          setValue("sort_by_date", true);
+                          setValue("ascending_order", false);
+                        } else if (newValue?.value === "2") {
+                          setValue("sort_by_date", true);
+                          setValue("ascending_order", true);
+                        } else if (newValue?.value === "3") {
+                          setValue("sort_by_date", false);
+                          setValue("ascending_order", true);
+                        } else if (newValue?.value === "4") {
+                          setValue("sort_by_date", false);
+                          setValue("ascending_order", false);
+                        }
+                      }}
+                    />
+                  );
+                }}
+              />
+            </div>
+          </div>
+          <div className={classes.visits__content__infos}>
+            <div className={classes.visits__content__infos__header}>
+              <h2 className={classes["u-header-text"]}>Основная информация</h2>
+              <Divider />
+            </div>
+            <RoleEmployeeCheckbox
+              onEmployeeSelectionChange={handleEmployeeSelectionChange}
+            />
+          </div>
+          <div className={classes.visits__content__infos}>
+            <div className={classes.visits__content__infos__header}>
+              <h2 className={classes["u-header-text"]}>Основная информация</h2>
+              <Divider />
+              {dataServices?.map((service) => (
+                <RecursiveCheckbox
+                  key={`category-${service.id}`}
+                  category={service}
+                  onServiceChange={handleServiceChange}
+                  preCheckedItems={selectedItems}
+                  onParentChange={onParentChange}
                 />
               ))}
-            </FormGroup>
-
-            <CustomAutoComplete
-              name={"sorting"}
-              label={"Сортировка"}
-              placeholder="По дате, по убыванию"
-              selectValue={"label"}
-              options={[
-                {
-                  value: "1",
-                  label: "По дате, по убыванию",
-                },
-                {
-                  value: "2",
-                  label: "По дате, по возрастанию",
-                },
-                {
-                  value: "3",
-                  label: "По сумме, по возрастанию",
-                },
-                {
-                  value: "4",
-                  label: "По сумме, по убыванию",
-                },
-              ]}
-              size="small"
-              labelClassName={classes["u-label"]}
-            />
-
-            <CustomAutoComplete
-              name={"check"}
-              label={"Чек ККМ"}
-              placeholder="Не указано"
-              selectValue={"label"}
-              options={[
-                {
-                  value: "1",
-                  label: "Не указано",
-                },
-                {
-                  value: "2",
-                  label: "Напечатан",
-                },
-                {
-                  value: "3",
-                  label: "Не напечатан",
-                },
-              ]}
-              size="small"
-              labelClassName={classes["u-label"]}
-            />
+            </div>
           </div>
         </div>
-        <div className={classes.visits__content__infos}>
-          <div className={classes.visits__content__infos__header}>
-            <h2 className={classes["u-header-text"]}>Основная информация</h2>
-            <Divider />
-          </div>
-          <RoleEmployeeCheckbox
-            onEmployeeSelectionChange={handleEmployeeSelectionChange}
-          />
+        <div className={classes["visits__search-buttons"]}>
+          <Button
+            variant="outlined"
+            sx={{
+              fontSize: "1.4rem",
+            }}
+            onClick={() => reset()}
+            type="reset"
+          >
+            Сбросить
+          </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            sx={{
+              fontSize: "1.4rem",
+            }}
+            type="submit"
+          >
+            Искать
+          </Button>
         </div>
-        <div className={classes.visits__content__infos}>
-          <div className={classes.visits__content__infos__header}>
-            <h2 className={classes["u-header-text"]}>Основная информация</h2>
-            <Divider />
-            {dataServices?.map((service) => (
-              <RecursiveCheckbox
-                key={`category-${service.id}`}
-                category={service}
-                onServiceChange={handleServiceChange}
-                preCheckedItems={selectedItems}
-                onParentChange={onParentChange}
+      </form>
+      <div className={classes.visits__table}>
+        {visitsData && visitsData.results && visitsData.results.length > 0 ? (
+          <EmployeeVisitsTable data={data} />
+        ) : (
+          <p>Нет данныx</p>
+        )}
+        <div
+          style={{
+            border: "1px solid #e0e0e0",
+            borderBottomLeftRadius: "0.8rem",
+            borderBottomRightRadius: "0.8rem",
+            padding: "0.5rem",
+            backgroundColor: "white",
+            boxShadow:
+              "0px 1px 3px rgba(0, 0, 0, 0.12), 0px 1px 2px rgba(0, 0, 0, 0.24);",
+          }}
+        >
+          <div
+            style={{
+              padding: "2rem",
+              paddingBottom: "2rem",
+              display: "flex",
+              flexDirection: "row",
+              height: "50px",
+              fontSize: "1.6rem",
+              alignItems: "center",
+              justifyContent: "space-between",
+            }}
+          >
+            <p className={classes["main__cashDesk__lower__container__label"]}>
+              Показано {pageSize} из {visitsData?.count} записей
+            </p>
+            <div>
+              <div className={classes["tableSettings"]}>
+                Показывать
+                <select
+                  name="pageSize"
+                  id="pageSize"
+                  value={pageSize}
+                  onChange={handlePageSizeChange}
+                >
+                  {pageSizeOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+                записей
+              </div>
+            </div>
+            {visitsData && (
+              <Pagination
+                variant="outlined"
+                shape="rounded"
+                boundaryCount={1}
+                color="primary"
+                count={Math.ceil(visitsData?.count / pageSize)}
+                page={currentPage}
+                onChange={handlePageChange}
               />
-            ))}
+            )}
           </div>
         </div>
-      </div>
-      <div className={classes["visits__search-buttons"]}>
-        <Button
-          variant="outlined"
-          sx={{
-            fontSize: "1.4rem",
-          }}
-        >
-          Сбросить
-        </Button>
-        <Button
-          variant="contained"
-          color="primary"
-          sx={{
-            fontSize: "1.4rem",
-          }}
-        >
-          Искать
-        </Button>
       </div>
     </div>
   );
