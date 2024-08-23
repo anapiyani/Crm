@@ -48,6 +48,8 @@ export interface IVisitsResult {
   appointment_services: IAppointmentServices[];
   client: IClient;
   employee_role: string;
+  total_card: number;
+  total_cash: number;
   service_amount: number;
 }
 

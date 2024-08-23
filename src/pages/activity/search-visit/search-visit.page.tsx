@@ -285,7 +285,7 @@ const SearchVisits = () => {
     visitsData?.results.map((visit, index) => {
       return {
         id: index + 1,
-        visit: "Посещение №" + visit.id,
+        visit: visit.id.toString(),
         visitTime: visit.date || "",
         client:
           `${visit.client.first_name} ${visit.client.last_name}` ||
@@ -303,8 +303,8 @@ const SearchVisits = () => {
           };
         }),
         grandTotal: visit.total_price,
-        grandTotalCash: 0,
-        grandTotalCard: visit.total_price,
+        grandTotalCash: visit.total_cash,
+        grandTotalCard: visit.total_card,
       };
     }) || [];
 
@@ -569,7 +569,10 @@ const SearchVisits = () => {
       </form>
       <div className={classes.visits__table}>
         {visitsData && visitsData.results && visitsData.results.length > 0 ? (
-          <EmployeeVisitsTable data={data} />
+          <EmployeeVisitsTable
+            onClickVisit={(id) => window.location.assign(`/visits/${id}`)}
+            data={data}
+          />
         ) : (
           <p>Нет данныx</p>
         )}

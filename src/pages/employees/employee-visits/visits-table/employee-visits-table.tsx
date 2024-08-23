@@ -43,9 +43,10 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 
 interface TableDataProps {
   data: TableData[];
+  onClickVisit?: (id: string) => void;
 }
 
-const EmployeeTable: React.FC<TableDataProps> = ({ data }) => {
+const EmployeeTable: React.FC<TableDataProps> = ({ data, onClickVisit }) => {
   const hasClientData = data.some((row) => row.client);
 
   return (
@@ -121,8 +122,15 @@ const EmployeeTable: React.FC<TableDataProps> = ({ data }) => {
                             padding: "0.8rem",
                           }}
                         >
-                          <Typography color="var(--primary-500)" fontSize={14}>
-                            {row.visit}
+                          <Typography
+                            onClick={() =>
+                              onClickVisit && onClickVisit(row.visit)
+                            }
+                            color="var(--primary-500)"
+                            fontSize={14}
+                            sx={{ cursor: "pointer" }}
+                          >
+                            Посещение № {row.visit}
                           </Typography>
                           <Typography
                             color="#32383E"

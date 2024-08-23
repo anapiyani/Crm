@@ -78,6 +78,10 @@ const BreadcrumbsCustom: React.FC<IBreadcrumbsCustomProps> = ({
       path: "/visits/view",
       breadcrumb: "Просмотр посещения",
     },
+    {
+      path: "visits/:id",
+      breadcrumb: "Посещение",
+    },
   ];
 
   const breadcrumbs = useBreadcrumbs(routes);

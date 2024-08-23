@@ -141,4 +141,9 @@ export const ROUTES: IRoute[] = [
     path: "/employees/bonuses-fines",
     component: <EmployeeFines />,
   },
+  {
+    name: "View Visits",
+    path: "/visits/:id",
+    component: <ViewVisits />,
+  },
 ];
