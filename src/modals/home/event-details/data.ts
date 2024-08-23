@@ -84,23 +84,34 @@ export const eventTableData: TableData[] = [
   },
 ];
 
-export const header = ["ID", "Дата и время", "Сотрудник", "Действие", "Было", "Стало"];
+export const header = [
+  "ID",
+  "Дата и время",
+  "Сотрудник",
+  "Действие",
+  "Было",
+  "Стало",
+];
 export const bodyData = [
   {
     id: 8132,
     dateTime: "2 минуты назад",
     employee: "Имя Фамилия",
     action: "Редактирование",
-    before: [{
-      employee: " Имя Фамилия",
-      date: " 07.05.2020",
-      time: " 16:15 - 17:45",
-    }],
-    after: [{
-      employee: " Имя Фамилия",
-      date: " 07.05.2020",
-      time: " 16:00 - 17:30",
-    }],
+    before: [
+      {
+        employee: " Имя Фамилия",
+        date: " 07.05.2020",
+        time: " 16:15 - 17:45",
+      },
+    ],
+    after: [
+      {
+        employee: " Имя Фамилия",
+        date: " 07.05.2020",
+        time: " 16:00 - 17:30",
+      },
+    ],
   },
   // Add more rows as needed
 ];
