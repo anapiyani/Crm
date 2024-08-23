@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Edit, Lock } from "@mui/icons-material";
+import { Edit, Lock, Add } from "@mui/icons-material"; // Import the Add icon
 import {
   Box,
   Paper,
@@ -13,6 +13,7 @@ import {
   Select,
   MenuItem,
   SelectChangeEvent,
+  IconButton,
 } from "@mui/material";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -47,6 +48,7 @@ interface TableVerticalProps {
   extraAction?: React.ReactNode;
   includeDropdown?: boolean;
   noIcon?: boolean;
+  showAddIcon?: boolean; // New prop for the Add icon
 }
 
 const TableVertical: React.FC<TableVerticalProps> = ({
@@ -56,6 +58,7 @@ const TableVertical: React.FC<TableVerticalProps> = ({
   extraAction,
   includeDropdown = false,
   noIcon = false,
+  showAddIcon = false, // Default is false, meaning no Add icon by default
 }) => {
   const [dropdownValue, setDropdownValue] = useState(
     data[data.length - 1].value
@@ -103,20 +106,42 @@ const TableVertical: React.FC<TableVerticalProps> = ({
           }}
         >
           {noIcon ? null : !showLockIcon ? (
-            <Box
-              sx={{
-                padding: "0.8rem",
-                pr: "2.4rem",
-              }}
-            >
-              <Edit
+            <>
+              <Box
                 sx={{
-                  verticalAlign: "middle",
-                  fontSize: "2.4rem",
-                  color: "#2196F3",
+                  padding: "0.8rem",
+                  pr: "2.4rem",
                 }}
-              />
-            </Box>
+              >
+                <IconButton>
+                  <Edit
+                    sx={{
+                      verticalAlign: "middle",
+                      fontSize: "2.4rem",
+                      color: "#2196F3",
+                    }}
+                  />
+                </IconButton>
+              </Box>
+              {showAddIcon && (
+                <Box
+                  sx={{
+                    padding: "0.8rem",
+                    pr: "2.4rem",
+                  }}
+                >
+                  <IconButton>
+                    <Add
+                      sx={{
+                        verticalAlign: "middle",
+                        fontSize: "2.4rem",
+                        color: "#2196F3",
+                      }}
+                    />
+                  </IconButton>
+                </Box>
+              )}
+            </>
           ) : (
             <Box
               sx={{
@@ -130,26 +155,29 @@ const TableVertical: React.FC<TableVerticalProps> = ({
                   pr: "2.4rem",
                 }}
               >
-                <Edit
-                  sx={{
-                    verticalAlign: "middle",
-                    fontSize: "2.4rem",
-                    color: "#2196F3",
-                  }}
-                />
+                <IconButton>
+                  <Edit
+                    sx={{
+                      verticalAlign: "middle",
+                      fontSize: "2.4rem",
+                      color: "#2196F3",
+                    }}
+                  />
+                </IconButton>
               </Box>
               <Box sx={{ padding: "0.8rem" }}>
-                <Lock
-                  sx={{
-                    verticalAlign: "middle",
-                    fontSize: "2.4rem",
-                    color: "#2196F3",
-                  }}
-                />
+                <IconButton>
+                  <Lock
+                    sx={{
+                      verticalAlign: "middle",
+                      fontSize: "2.4rem",
+                      color: "#2196F3",
+                    }}
+                  />
+                </IconButton>
               </Box>
             </Box>
           )}
-          
         </Box>
       </Box>
       <Table aria-label="customized table" sx={{ borderColor: "#CDD7E1" }}>

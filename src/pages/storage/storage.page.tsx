@@ -10,20 +10,7 @@ import {
   getSearchResults,
 } from "@/service/hierarchy/hierarchy.service";
 import { IMaterial } from "@/ts/storage.interface";
-import {
-  Divider,
-  CircularProgress,
-  Autocomplete,
-  Button,
-  TextField,
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
-  Box,
-  Paper,
-} from "@mui/material";
+import { Divider, CircularProgress, Autocomplete, Button } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
 
 import { useQuery } from "@tanstack/react-query";
@@ -43,6 +30,8 @@ import {
   Science,
   TableChartOutlined,
   Settings,
+  Add,
+  Edit,
 } from "@mui/icons-material";
 import toast from "react-hot-toast";
 import ResponsiveTabs from "@/components/tabs/tabs.component";
@@ -59,6 +48,10 @@ import {
   productData,
   purchaseHistoryData,
 } from "./data";
+import FloatingPriceTable from "./_components/table-floatingPrice/tableFloatingPrice";
+import NormativeService from "./_components/table-normativeService/tableNormativeService";
+import PurchaseHistoryTable from "./_components/table-purchaseHistory/tablePurchaseHistory";
+import TablePhotography from "./_components/table-photography/tablePhotography";
 
 const StoragePage: React.FC = () => {
   const [material, setMaterial] = useState<IMaterial | null>(null);
@@ -305,7 +298,7 @@ const StoragePage: React.FC = () => {
         </div>
       </div>
       <div className={classes.storage__lower}>
-        <Grid container spacing={3}>
+        <Grid container columnSpacing={3} rowSpacing={3}>
           <Grid container md={3.7}>
             <Grid container xs={12}>
               <Grid xs={12}>
@@ -321,20 +314,7 @@ const StoragePage: React.FC = () => {
               </Grid>
 
               <Grid xs={12}>
-                <Box
-                  component={Paper}
-                  sx={{
-                    border: "0.1rem solid #CDD7E1",
-                    borderRadius: "8px",
-                    boxShadow: "0rem 0.1rem 0.2rem 0rem rgba(21, 21, 21, 0.08)",
-                    p: 2,
-                  }}
-                >
-                  <h5 className={classes.storage__lower__grid__section__title}>
-                    Плавающая цена
-                  </h5>
-                  {/* Implement custom floating price table */}
-                </Box>
+                <FloatingPriceTable />
               </Grid>
             </Grid>
           </Grid>
@@ -348,24 +328,13 @@ const StoragePage: React.FC = () => {
                 <TableVertical data={bonusData} title="Бонус за продажу" />
               </Grid>
               <Grid xs={12}>
-                <TableVertical data={discountData} title="Скидка" />
+                <TableVertical data={discountData} title="Скидка" showAddIcon />
               </Grid>
               <Grid xs={12}>
-                <Box
-                  component={Paper}
-                  sx={{
-                    border: "0.1rem solid #CDD7E1",
-                    borderRadius: "8px",
-                    boxShadow: "0rem 0.1rem 0.2rem 0rem rgba(21, 21, 21, 0.08)",
-                    p: 2,
-                  }}
-                >
-                  <h5 className={classes.storage__lower__grid__section__title}>
-                    Нормативы в услугах
-                  </h5>
-
-                  {/* Implement custom floating price table */}
-                </Box>
+                <NormativeService
+                  title="Нормативы в услугах"
+                  items={normativesData}
+                />
               </Grid>
             </Grid>
           </Grid>
@@ -382,29 +351,10 @@ const StoragePage: React.FC = () => {
                 />
               </Grid>
               <Grid xs={12}>
-                <Box
-                  component={Paper}
-                  sx={{
-                    border: "0.1rem solid #CDD7E1",
-                    borderRadius: "8px",
-                    boxShadow: "0rem 0.1rem 0.2rem 0rem rgba(21, 21, 21, 0.08)",
-                    p: 2,
-                  }}
-                >
-                  <h5 className={classes.storage__lower__grid__section__title}>
-                    Фотография
-                  </h5>
-                  <Button
-                    variant="outlined"
-                    color="primary"
-                    sx={{ fontSize: "1.6rem", fontWeight: "400" }}
-                  >
-                    + Добавить файлы
-                  </Button>
-                </Box>
+                <TablePhotography />
               </Grid>
               <Grid xs={12}>
-                <TableVertical
+                <PurchaseHistoryTable
                   data={purchaseHistoryData}
                   title="История закупок и списаний"
                 />

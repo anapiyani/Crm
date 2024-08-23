@@ -8,6 +8,7 @@
   }
   &__tabs {
     padding: 0 5.5rem;
+    background-color: #ffffff;
   }
 
   &__upper {
@@ -82,8 +83,6 @@
       grid-template-columns: repeat(3, 1fr);
       gap: 2.4rem;
       margin-top: 2rem;
-
-     
 
       &__section__title {
         font-size: 1.8rem;
