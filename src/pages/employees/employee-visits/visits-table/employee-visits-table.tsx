@@ -43,9 +43,17 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 
 interface TableDataProps {
   data: TableData[];
+  onClickVisit?: (id: string) => void;
+  onClickClient?: (id: string | undefined) => void;
+  onClickEmployee?: (id: string | undefined) => void;
 }
 
-const EmployeeTable: React.FC<TableDataProps> = ({ data }) => {
+const EmployeeTable: React.FC<TableDataProps> = ({
+  data,
+  onClickVisit,
+  onClickClient,
+  onClickEmployee,
+}) => {
   const hasClientData = data.some((row) => row.client);
 
   return (
@@ -121,8 +129,15 @@ const EmployeeTable: React.FC<TableDataProps> = ({ data }) => {
                             padding: "0.8rem",
                           }}
                         >
-                          <Typography color="var(--primary-500)" fontSize={14}>
-                            {row.visit}
+                          <Typography
+                            onClick={() =>
+                              onClickVisit && onClickVisit(row.visit)
+                            }
+                            color="var(--primary-500)"
+                            fontSize={14}
+                            sx={{ cursor: "pointer" }}
+                          >
+                            Посещение № {row.visit}
                           </Typography>
                           <Typography
                             color="#32383E"
@@ -144,6 +159,11 @@ const EmployeeTable: React.FC<TableDataProps> = ({ data }) => {
                             <Typography
                               color="var(--primary-500)"
                               fontSize={16}
+                              sx={{ cursor: "pointer" }}
+                              onClick={() =>
+                                onClickClient &&
+                                onClickClient(service.cliendId?.toString())
+                              }
                             >
                               {row.client}
                             </Typography>
@@ -200,7 +220,14 @@ const EmployeeTable: React.FC<TableDataProps> = ({ data }) => {
                         padding: "0.8rem",
                       }}
                     >
-                      <Typography color="var(--primary-500)" fontSize={14}>
+                      <Typography
+                        color="var(--primary-500)"
+                        fontSize={14}
+                        onClick={() =>
+                          onClickEmployee &&
+                          onClickEmployee(service.employeeId?.toString())
+                        }
+                      >
                         {service.employee}
                       </Typography>
                       <Typography

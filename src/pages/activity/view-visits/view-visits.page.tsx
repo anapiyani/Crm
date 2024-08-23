@@ -1,6 +1,7 @@
 import BreadcrumbsCustom from "@/components/navigation/breadcrumbs/breadcrumbs";
 import classes from "./styles.module.scss";
 import {
+  CircularProgress,
   Divider,
   Table,
   TableBody,
@@ -20,14 +21,37 @@ import {
   Comment,
   Edit,
 } from "@mui/icons-material/";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import NiceModal from "@ebay/nice-modal-react";
 import reportModal from "@/modals/activity/report.modal";
 import feedbackModal from "@/modals/activity/feedback.modal";
 import bonusesModule from "@/modals/activity/bonuses.modal";
 import fineModal from "@/modals/activity/fine.modal";
+import { useQuery } from "@tanstack/react-query";
+import { getVisit } from "@/service/activity/activity.service";
 
 const ViewVisits = () => {
+  const params = useParams<{ id: string }>();
+
+  const {
+    data: visitInfo,
+    isLoading: visitLoading,
+    isError: visitError,
+  } = useQuery({
+    queryKey: ["cardInfoEmplpyee", params.id],
+    queryFn: () => getVisit(params.id || ""),
+  });
+
+  if (visitLoading) {
+    return (
+      <div className={classes.loading}>
+        <CircularProgress />
+      </div>
+    );
+  }
+
+  console.log(visitInfo);
+
   const handleOpenReport = () => {
     NiceModal.show(reportModal);
   };
@@ -58,27 +82,28 @@ const ViewVisits = () => {
           </div>
           <div className={classes.view__main__content__body}>
             <div className={classes.view__main__content__body__item}>
-              <LabelInfo name={"Номер"} info={"Посещение №43025"} />
+              <LabelInfo name={"Номер"} info={`Посещение ${params.id}`} />
               <LabelInfo
                 name={"Клиент"}
-                info={"Тимур Тастанбеков"}
+                info={`${visitInfo?.client?.first_name} ${visitInfo?.client?.last_name}`}
                 isClick={true}
               />
+              {visitInfo?.notes === "no notes" ||
+              visitInfo?.notes === null ? null : (
+                <LabelInfo
+                  name={"Характеристика"}
+                  info={`${visitInfo?.notes}`}
+                />
+              )}
+              <LabelInfo name={"Начало"} info={`${visitInfo?.start_time}`} />
+              <LabelInfo name={"Окончание"} info={`${visitInfo?.end_time}`} />
               <LabelInfo
-                name={"Характеристика"}
-                info={"супруг Амины Оралбаевой"}
+                name={"Оплачено"}
+                info={visitInfo?.status === "completed" ? "Да" : "Нет"}
               />
-              <LabelInfo name={"Начало"} info={"Вчера, 15:21"} />
-              <LabelInfo name={"Окончание"} info={"Вчера, 16:21"} />
-              <LabelInfo name={"Оплачено"} info={"Да"} />
               <LabelInfo
                 name={"Оплату принял"}
-                info={"Марина Вишневская"}
-                isClick={true}
-              />
-              <LabelInfo
-                name={"Комментарий"}
-                info={"Посмотреть"}
+                info={`${visitInfo?.written_by.name}`}
                 isClick={true}
               />
               <LabelInfo
@@ -98,10 +123,10 @@ const ViewVisits = () => {
           </div>
           <div className={classes.view__main__content__body}>
             <div className={classes.view__main__content__body__item}>
-              <LabelInfo name={"До скидки"} info={"14 000 руб."} />
-              <LabelInfo name={"Скидка"} info={"0 руб."} />
-              <LabelInfo name={"Итого"} info={"Вчера, 15:21"} />
-              <LabelInfo name={"Оплачено"} info={"14 000 руб."} />
+              <LabelInfo name={"До скидки"} info={`${visitInfo?.do_skidki}`} />
+              <LabelInfo name={"Скидка"} info={`${visitInfo?.skidka}`} />
+              <LabelInfo name={"Итого"} info={`${visitInfo?.itogo}`} />
+              <LabelInfo name={"Оплачено"} info={`${visitInfo?.oplacheno}`} />
             </div>
           </div>
         </div>
