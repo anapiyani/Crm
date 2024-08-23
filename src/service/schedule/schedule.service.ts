@@ -88,3 +88,15 @@ export const addEmployeeToSchedule = ({
     )
     .then((res) => res.data);
 };
+
+export const updateEmployeePosition = ({
+  id,
+  position,
+}: {
+  id: number;
+  position: number;
+}) => {
+  return api
+    .post(`/schedule/schedules/employee/order/?employee_id=${id}&order=${position}`)
+    .then((res) => res.data);
+};

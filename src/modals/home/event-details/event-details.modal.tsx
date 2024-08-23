@@ -82,41 +82,35 @@ const EventDetails: React.FC<IEventDetailsModalProps> = ({ appointmentId }) => {
     refetchOnWindowFocus: false,
   });
 
-  const {
-    data: customerAppointmentNoShowData,
-    refetch: noDataRefetch,
-  } = useQuery({
-    queryKey: ["customerAppointmentNoShowData", clientId],
-    queryFn: () =>
-      clientId ? getCustomerAppointmentNoShowById(clientId) : undefined,
-    enabled: !!clientId,
-    staleTime: Infinity,
-    refetchOnWindowFocus: false,
-  });
+  const { data: customerAppointmentNoShowData, refetch: noDataRefetch } =
+    useQuery({
+      queryKey: ["customerAppointmentNoShowData", clientId],
+      queryFn: () =>
+        clientId ? getCustomerAppointmentNoShowById(clientId) : undefined,
+      enabled: !!clientId,
+      staleTime: Infinity,
+      refetchOnWindowFocus: false,
+    });
 
-  const {
-    data: customerAppointmentPlanned,
-    refetch: plannedRefetch,
-  } = useQuery({
-    queryKey: ["customerAppointmentPlanned", clientId],
-    queryFn: () =>
-      clientId ? getCustomerAppointmentPlannedById(clientId) : undefined,
-    enabled: !!clientId,
-    staleTime: Infinity,
-    refetchOnWindowFocus: false,
-  });
+  const { data: customerAppointmentPlanned, refetch: plannedRefetch } =
+    useQuery({
+      queryKey: ["customerAppointmentPlanned", clientId],
+      queryFn: () =>
+        clientId ? getCustomerAppointmentPlannedById(clientId) : undefined,
+      enabled: !!clientId,
+      staleTime: Infinity,
+      refetchOnWindowFocus: false,
+    });
 
-  const {
-    data: customerDeletedAppointments,
-    refetch: deletedRefetch,
-  } = useQuery({
-    queryKey: ["customerDeletedAppointments", clientId],
-    queryFn: () =>
-      clientId ? getCustomerDeletedAppointments(clientId) : undefined,
-    enabled: !!clientId,
-    staleTime: Infinity,
-    refetchOnWindowFocus: false,
-  });
+  const { data: customerDeletedAppointments, refetch: deletedRefetch } =
+    useQuery({
+      queryKey: ["customerDeletedAppointments", clientId],
+      queryFn: () =>
+        clientId ? getCustomerDeletedAppointments(clientId) : undefined,
+      enabled: !!clientId,
+      staleTime: Infinity,
+      refetchOnWindowFocus: false,
+    });
 
   useEffect(() => {
     if (appointmentId) {

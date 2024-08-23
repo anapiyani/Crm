@@ -12,6 +12,7 @@ import TakeDayOffConfirmationModal from "./home/take-day-off-confirmation.modal"
 import AddEmployeeScheduleModal from "./home/add-employee-schedule.modal";
 import ExportAppointmentsModal from "./home/export-appointments.modal";
 import ShowDeletedAppointmentsModal from "./home/show-deleted-appointments.modal";
+import ChangeEmployeeModal from "./home/change-employee-order.modal";
 
 export {
   AddBreakModal,
@@ -28,4 +29,5 @@ export {
   AddEmployeeScheduleModal,
   ExportAppointmentsModal,
   ShowDeletedAppointmentsModal,
+  ChangeEmployeeModal,
 };
