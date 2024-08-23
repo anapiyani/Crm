@@ -4,6 +4,7 @@ import {
   addEmployeeToSchedule,
   addTimeOffToScheduleByDate,
   deleteBreakFromSchedule,
+  updateEmployeePosition,
 } from "./schedule.service";
 import { IBreaks } from "@/ts/schedule.interface";
 import toast from "react-hot-toast";
@@ -70,6 +71,20 @@ export const useAddEmployeeToSchedule = () => {
     },
     onError: () => {
       toast.error("Ошибка при добавлении сотрудника");
+    },
+  });
+};
+
+export const useReorderEmployee = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: updateEmployeePosition,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["employeeData"] });
+      toast.success("Сотрудник успешно перемещен");
+    },
+    onError: () => {
+      toast.error("Ошибка при перемещении сотрудника");
     },
   });
 };

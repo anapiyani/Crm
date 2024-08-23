@@ -46,6 +46,7 @@ import {
   AddEmployeeScheduleModal,
   ExportAppointmentsModal,
   ShowDeletedAppointmentsModal,
+  ChangeEmployeeModal,
 } from "@/modals";
 
 import Icons from "@/assets/icons/icons";
@@ -70,16 +71,33 @@ import ResourceCard from "./_components/resource-card";
 import { getHierarchyEmployeesByDepartment } from "@/service/hierarchy/hierarchy.service";
 import { processEmployeeOptions } from "@/utils/process-employees-departments";
 
+const menuItems = [
+  {
+    label: "Добавить соотрудника в график",
+    modal: AddEmployeeScheduleModal,
+  },
+  {
+    label: "Изменить порядок отображения соотрудников",
+    modal: ChangeEmployeeModal,
+  },
+  {
+    label: "Скачать журнал записей",
+    modal: ExportAppointmentsModal,
+  },
+  {
+    label: "Посмотреть удаленные записи",
+    modal: ShowDeletedAppointmentsModal,
+  },
+];
+
 const Home: React.FC = () => {
   const [isHide, setIsHide] = useState<boolean>(false);
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(dayjs());
   const calendarRef = useRef<FullCalendar | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-  const [
-    burgerMenuAnchorEl,
-    setBurgerMenuAnchorEl,
-  ] = useState<HTMLElement | null>(null);
+  const [burgerMenuAnchorEl, setBurgerMenuAnchorEl] =
+    useState<HTMLElement | null>(null);
   const [selectedResourceId, setSelectedResourceId] = useState<string | null>(
     null
   );
@@ -157,9 +175,8 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     if (schedulesData) {
-      const { events, resources } = transformSchedulesToFullCalendar(
-        schedulesData
-      );
+      const { events, resources } =
+        transformSchedulesToFullCalendar(schedulesData);
       setEvents(events);
       setResources(resources);
     }
@@ -236,7 +253,6 @@ const Home: React.FC = () => {
     ).split("-");
     const start = dayjs(selectInfo.start).format("YYYY-MM-DD HH:mm:ss");
     const end = dayjs(selectInfo.end).format("YYYY-MM-DD HH:mm:ss");
-    // const resourceId = selectInfo.resource?._resource.id;
     NiceModal.show(CreateAppointmentModal, {
       start,
       end,
@@ -331,21 +347,13 @@ const Home: React.FC = () => {
     }
   };
 
-  const handleAddEmployeeToSchedule = () => {
-    NiceModal.show(AddEmployeeScheduleModal);
-    setBurgerMenuAnchorEl(null);
+  const handleMenuItemClick = (
+    modal: any,
+    setAnchorEl: React.Dispatch<React.SetStateAction<HTMLElement | null>>
+  ) => {
+    NiceModal.show(modal);
+    setAnchorEl(null);
   };
-
-  const handleExportAppointments = () => {
-    NiceModal.show(ExportAppointmentsModal);
-    setBurgerMenuAnchorEl(null);
-  };
-
-  const handleShowDeletedAppointments = () => {
-    NiceModal.show(ShowDeletedAppointmentsModal);
-    setBurgerMenuAnchorEl(null);
-  };
-
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <div className={classes["home"]}>
@@ -479,26 +487,18 @@ const Home: React.FC = () => {
                 horizontal: "center",
               }}
             >
-              <MenuItem onClick={handleAddEmployeeToSchedule}>
-                <div className={classNames(classes["u-font-lg"])}>
-                  Добавить соотрудника в график
-                </div>
-              </MenuItem>
-              <MenuItem onClick={handleCloseBurgerMenu}>
-                <div className={classNames(classes["u-font-lg"])}>
-                  Изменить порядок отображения соотрудников
-                </div>
-              </MenuItem>
-              <MenuItem onClick={handleExportAppointments}>
-                <div className={classNames(classes["u-font-lg"])}>
-                  Скачать журнал записей
-                </div>
-              </MenuItem>
-              <MenuItem onClick={handleShowDeletedAppointments}>
-                <div className={classNames(classes["u-font-lg"])}>
-                  Посмотреть удаленные записи
-                </div>
-              </MenuItem>
+              {menuItems.map(({ label, modal }) => (
+                <MenuItem
+                  key={label}
+                  onClick={() =>
+                    handleMenuItemClick(modal, setBurgerMenuAnchorEl)
+                  }
+                >
+                  <div className={classNames(classes["u-font-lg"])}>
+                    {label}
+                  </div>
+                </MenuItem>
+              ))}
             </Menu>
           </div>
           <div

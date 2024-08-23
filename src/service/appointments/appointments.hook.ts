@@ -49,7 +49,10 @@ export const useUpdateAppointmentStatus = () => {
     mutationFn: updateAppointmentStatus,
     onSuccess: () => {
       toast.success("Статус записи успешно обновлен!");
-      queryClient.invalidateQueries({ queryKey: ["appointmentByIdData"] });
+      queryClient.invalidateQueries({
+        queryKey: ["appointmentByIdData"],
+      });
+      queryClient.invalidateQueries({ queryKey: ["schedules"] });
     },
     onError: (error) => {
       const errorMessage =
