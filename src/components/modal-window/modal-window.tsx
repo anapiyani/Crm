@@ -13,6 +13,7 @@ interface ModalWindowProps {
   className?: string;
   withButtons?: boolean;
   titleStyles?: React.CSSProperties;
+  withoutTitle?: boolean;
 }
 
 const ModalWindow: React.FC<ModalWindowProps> = ({
@@ -24,6 +25,7 @@ const ModalWindow: React.FC<ModalWindowProps> = ({
   className,
   withButtons = true,
   titleStyles,
+  withoutTitle = false,
 }) => {
   return (
     <Backdrop
@@ -33,12 +35,19 @@ const ModalWindow: React.FC<ModalWindowProps> = ({
     >
       <div className={classes["modal"]} onClick={(e) => e.stopPropagation()}>
         <div className={classes["modal__window"]}>
-          <div className={classes["modal__window__header"]}>
-            <h2 className={classes["modal__window__title"]} style={titleStyles}>
-              {title}
-            </h2>{" "}
-          </div>
-          <Divider />
+          {!withoutTitle && (
+            <>
+              <div className={classes["modal__window__header"]}>
+                <h2
+                  className={classes["modal__window__title"]}
+                  style={titleStyles}
+                >
+                  {title}
+                </h2>{" "}
+              </div>
+              <Divider />
+            </>
+          )}
           <div
             className={classNames(classes["modal__window__content"], className)}
           >

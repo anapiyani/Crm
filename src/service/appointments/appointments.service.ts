@@ -4,6 +4,7 @@ import {
   IAppointmentCreateForm,
   IAppointmentHistory,
   IAppointmentReturn,
+  IDeletedAppointment,
   ISingleAppointmentReturn,
 } from "@/ts/appointments.interface";
 
@@ -56,5 +57,31 @@ export const getCustomerDeletedAppointments = (
 ): Promise<IAppointmentHistory[]> => {
   return api
     .get(`/appointments/appointments/is-deleted/${customer_id}/`)
+    .then((res) => res.data);
+};
+
+export const updateAppointmentStatus = ({
+  appointment_id,
+  status,
+}: {
+  appointment_id: number;
+  status: string;
+}) => {
+  return api
+    .put(`/appointments/appointments/${appointment_id}/update-status/`, {
+      status,
+    })
+    .then((res) => res.data);
+};
+
+export const getAllDeletedAppointments = (
+  page?: number
+): Promise<IDeletedAppointment[]> => {
+  const params = new URLSearchParams();
+  if (page) {
+    params.append("page", page.toString());
+  }
+  return api
+    .get(`/appointments/appointments/deleted-apppointments-all/?${params}`)
     .then((res) => res.data);
 };

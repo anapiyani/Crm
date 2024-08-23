@@ -5,6 +5,7 @@ import {
 import {
   createAppointments,
   temporaryDeleteAppointment,
+  updateAppointmentStatus,
 } from "./appointments.service";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
@@ -38,6 +39,22 @@ export const useTemporaryDeleteAppointment = () => {
       toast.success("Запись успешно удалена!");
       queryClient.invalidateQueries({ queryKey: ["schedules"] });
       modal.hide();
+    },
+  });
+};
+
+export const useUpdateAppointmentStatus = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: updateAppointmentStatus,
+    onSuccess: () => {
+      toast.success("Статус записи успешно обновлен!");
+      queryClient.invalidateQueries({ queryKey: ["appointmentByIdData"] });
+    },
+    onError: (error) => {
+      const errorMessage =
+        "Произошла ошибка при обновлении статуса записи." || error.message;
+      toast.error(errorMessage);
     },
   });
 };
