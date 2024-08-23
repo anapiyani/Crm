@@ -44,9 +44,16 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 interface TableDataProps {
   data: TableData[];
   onClickVisit?: (id: string) => void;
+  onClickClient?: (id: string | undefined) => void;
+  onClickEmployee?: (id: string | undefined) => void;
 }
 
-const EmployeeTable: React.FC<TableDataProps> = ({ data, onClickVisit }) => {
+const EmployeeTable: React.FC<TableDataProps> = ({
+  data,
+  onClickVisit,
+  onClickClient,
+  onClickEmployee,
+}) => {
   const hasClientData = data.some((row) => row.client);
 
   return (
@@ -152,6 +159,11 @@ const EmployeeTable: React.FC<TableDataProps> = ({ data, onClickVisit }) => {
                             <Typography
                               color="var(--primary-500)"
                               fontSize={16}
+                              sx={{ cursor: "pointer" }}
+                              onClick={() =>
+                                onClickClient &&
+                                onClickClient(service.cliendId?.toString())
+                              }
                             >
                               {row.client}
                             </Typography>
@@ -208,7 +220,14 @@ const EmployeeTable: React.FC<TableDataProps> = ({ data, onClickVisit }) => {
                         padding: "0.8rem",
                       }}
                     >
-                      <Typography color="var(--primary-500)" fontSize={14}>
+                      <Typography
+                        color="var(--primary-500)"
+                        fontSize={14}
+                        onClick={() =>
+                          onClickEmployee &&
+                          onClickEmployee(service.employeeId?.toString())
+                        }
+                      >
                         {service.employee}
                       </Typography>
                       <Typography

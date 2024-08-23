@@ -35,7 +35,7 @@ const EmployeeCard = () => {
   });
 
   const employeeNameData = {
-    name: `Карта сотрудника - ${location.state.username}`,
+    name: `Карта сотрудника - ${userInfoData?.last_name} ${userInfoData?.first_name}`,
   };
 
   const mainTableData = [

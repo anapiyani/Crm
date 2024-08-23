@@ -1,4 +1,8 @@
-import { IVisitsInfo, IVisitsResponse } from "@/ts/activity.interface";
+import {
+  IViewVistInfo,
+  IVisitsInfo,
+  IVisitsResponse,
+} from "@/ts/activity.interface";
 import api from "../api";
 
 export const searchVisits = (
@@ -12,4 +16,8 @@ export const searchVisits = (
   });
   const url = `/appointments/appointments/filter/?${params.toString()}`;
   return api.get(url).then((res) => res.data);
+};
+
+export const getVisit = (id: string): Promise<IViewVistInfo> => {
+  return api.get(`/appointments/appointments/${id}`).then((res) => res.data);
 };
