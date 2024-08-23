@@ -71,8 +71,9 @@ const CreateAppointment: React.FC<ICreateAppointmentModalProps> = ({
   employee,
 }) => {
   const modal = useModal();
-  const [appointmentForm, setAppointmentForm] =
-    useState<IAppointmentCreateForm>(initialAppointmentForm);
+  const [appointmentForm, setAppointmentForm] = useState<
+    IAppointmentCreateForm
+  >(initialAppointmentForm);
   const [selectedEmployee, setSelectedEmployee] = useState<IOption | null>(
     null
   );
@@ -290,6 +291,7 @@ const CreateAppointment: React.FC<ICreateAppointmentModalProps> = ({
           <div>
             <div className={classes["create-appointment__params"]}>
               <CustomAutoComplete
+                className={classes["u-w-full"]}
                 name="client"
                 selectValue={"label"}
                 label="Клиент"
@@ -449,6 +451,7 @@ const CreateAppointment: React.FC<ICreateAppointmentModalProps> = ({
             <Divider />
             <div className={classes["create-appointment__services--select"]}>
               <CustomAutoComplete
+                className={classes["u-w-full"]}
                 name="service"
                 selectValue={"label"}
                 size="small"
@@ -465,6 +468,7 @@ const CreateAppointment: React.FC<ICreateAppointmentModalProps> = ({
                 placeholder="Выберите услугу"
               />
               <CustomAutoComplete
+                className={classes["u-w-full"]}
                 name="parameter"
                 selectValue={"label"}
                 size="small"

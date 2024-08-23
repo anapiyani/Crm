@@ -37,7 +37,10 @@ import {
   PlayArrow,
   RemoveRedEye,
 } from "@mui/icons-material";
-import { useTemporaryDeleteAppointment } from "@/service/appointments/appointments.hook";
+import {
+  useTemporaryDeleteAppointment,
+  useUpdateAppointmentStatus,
+} from "@/service/appointments/appointments.hook";
 import EventDetailsThirdTab from "./_tabs/event-details-third-tab";
 import classNames from "classnames";
 
@@ -50,6 +53,8 @@ const EventDetails: React.FC<IEventDetailsModalProps> = ({ appointmentId }) => {
   const [currentTab, setCurrentTab] = useState(0);
   const [page, setPage] = useState(1);
   const TemporaryDeleteAppointment = useTemporaryDeleteAppointment();
+
+  const updateAppointmentStatus = useUpdateAppointmentStatus().mutate;
 
   const {
     data: singleAppointmentData,
@@ -77,35 +82,41 @@ const EventDetails: React.FC<IEventDetailsModalProps> = ({ appointmentId }) => {
     refetchOnWindowFocus: false,
   });
 
-  const { data: customerAppointmentNoShowData, refetch: noDataRefetch } =
-    useQuery({
-      queryKey: ["customerAppointmentNoShowData", clientId],
-      queryFn: () =>
-        clientId ? getCustomerAppointmentNoShowById(clientId) : undefined,
-      enabled: !!clientId,
-      staleTime: Infinity,
-      refetchOnWindowFocus: false,
-    });
+  const {
+    data: customerAppointmentNoShowData,
+    refetch: noDataRefetch,
+  } = useQuery({
+    queryKey: ["customerAppointmentNoShowData", clientId],
+    queryFn: () =>
+      clientId ? getCustomerAppointmentNoShowById(clientId) : undefined,
+    enabled: !!clientId,
+    staleTime: Infinity,
+    refetchOnWindowFocus: false,
+  });
 
-  const { data: customerAppointmentPlanned, refetch: plannedRefetch } =
-    useQuery({
-      queryKey: ["customerAppointmentPlanned", clientId],
-      queryFn: () =>
-        clientId ? getCustomerAppointmentPlannedById(clientId) : undefined,
-      enabled: !!clientId,
-      staleTime: Infinity,
-      refetchOnWindowFocus: false,
-    });
+  const {
+    data: customerAppointmentPlanned,
+    refetch: plannedRefetch,
+  } = useQuery({
+    queryKey: ["customerAppointmentPlanned", clientId],
+    queryFn: () =>
+      clientId ? getCustomerAppointmentPlannedById(clientId) : undefined,
+    enabled: !!clientId,
+    staleTime: Infinity,
+    refetchOnWindowFocus: false,
+  });
 
-  const { data: customerDeletedAppointments, refetch: deletedRefetch } =
-    useQuery({
-      queryKey: ["customerDeletedAppointments", clientId],
-      queryFn: () =>
-        clientId ? getCustomerDeletedAppointments(clientId) : undefined,
-      enabled: !!clientId,
-      staleTime: Infinity,
-      refetchOnWindowFocus: false,
-    });
+  const {
+    data: customerDeletedAppointments,
+    refetch: deletedRefetch,
+  } = useQuery({
+    queryKey: ["customerDeletedAppointments", clientId],
+    queryFn: () =>
+      clientId ? getCustomerDeletedAppointments(clientId) : undefined,
+    enabled: !!clientId,
+    staleTime: Infinity,
+    refetchOnWindowFocus: false,
+  });
 
   useEffect(() => {
     if (appointmentId) {
@@ -277,23 +288,96 @@ const EventDetails: React.FC<IEventDetailsModalProps> = ({ appointmentId }) => {
             Запись клиента
           </h2>{" "}
           <div>
-            {singleAppointmentData?.status === "scheduled" ? (
+            {singleAppointmentData?.status === "scheduled" && (
               <div className={classes["event-details__header--buttons"]}>
                 <Button
+                  sx={{ height: "4rem" }}
                   color="error"
                   variant="outlined"
                   startIcon={<PlayArrow />}
+                  onClick={() => {
+                    updateAppointmentStatus({
+                      appointment_id: appointmentId,
+                      status: "underway",
+                    });
+                  }}
                 >
                   Начать
                 </Button>
-                <Button variant="outlined" startIcon={<RemoveRedEye />}>
+                <Button
+                  sx={{ height: "4rem" }}
+                  variant="outlined"
+                  startIcon={<CreditCard />}
+                  onClick={() => {
+                    updateAppointmentStatus({
+                      appointment_id: appointmentId,
+                      status: "underway",
+                    });
+
+                    //TODO: Add payment logic after Nurik finishes
+                  }}
+                >
                   Начать и оплатить
                 </Button>
               </div>
-            ) : (
-              <div>
-                <Button variant="outlined" startIcon={<RemoveRedEye />}>
-                  Посмотреть посещение
+            )}
+            {singleAppointmentData?.status === "underway" && (
+              <div className={classes["event-details__header--buttons"]}>
+                <Button
+                  sx={{
+                    height: "4rem",
+                    color: "var(--neutral-500)",
+                    borderColor: "var(--neutral-500)",
+                  }}
+                  variant="outlined"
+                  onClick={() => {
+                    updateAppointmentStatus({
+                      appointment_id: appointmentId,
+                      status: "scheduled",
+                    });
+                  }}
+                >
+                  Отменить начало записи
+                </Button>
+                <Button
+                  sx={{ height: "4rem" }}
+                  variant="outlined"
+                  startIcon={<CreditCard />}
+                  onClick={() => {
+                    //TODO: Add payment logic after Nurik finishes
+                  }}
+                >
+                  Оплатить
+                </Button>
+              </div>
+            )}
+            {singleAppointmentData?.status === "completed" && (
+              <div className={classes["event-details__header--buttons"]}>
+                <Button
+                  sx={{
+                    height: "4rem",
+                    color: "var(--neutral-500)",
+                    borderColor: "var(--neutral-500)",
+                  }}
+                  variant="outlined"
+                  onClick={() => {
+                    updateAppointmentStatus({
+                      appointment_id: appointmentId,
+                      status: "scheduled",
+                    });
+                  }}
+                >
+                  Отменить начало записи
+                </Button>
+                <Button
+                  sx={{ height: "4rem" }}
+                  variant="outlined"
+                  startIcon={<RemoveRedEye />}
+                  onClick={() => {
+                    //TODO: AddCheckLogic after Nurik finishes
+                  }}
+                >
+                  Посмотреть запись
                 </Button>
               </div>
             )}
