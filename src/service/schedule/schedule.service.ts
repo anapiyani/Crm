@@ -83,7 +83,6 @@ export const addEmployeeToSchedule = ({
   end_time: string;
 }) => {
   return api
-
     .post(
       `/schedule/schedules/add/?date=${date}&employee_id=${employee_id}&end_time=${end_time}&start_time=${start_time}`
     )

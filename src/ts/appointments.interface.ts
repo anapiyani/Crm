@@ -121,3 +121,47 @@ export interface IAppointmentHistory {
   discount_custom: string;
   total_price: string;
 }
+
+export interface IDeletedAppointment {
+  id: number;
+  client: IClient;
+  written_by: {
+    [key: string]: string;
+  };
+  status: string;
+  discount_custom: string;
+  notes: string;
+  type: string;
+  appointment_services: Array<{
+    id: number;
+    service: number;
+    service_name: string;
+    price: string;
+    quantity: number;
+    materials: Array<{
+      id: number;
+      material: number;
+      material_name: string;
+      quantity_used: string;
+      price: string;
+      total_price: string;
+    }>;
+    parameter: string;
+  }>;
+  material_purchases: Array<{
+    id: number;
+    material: number;
+    material_name: string;
+    quantity: string;
+    price: string;
+  }>;
+  total_price: string;
+  created_at: string;
+  updated_at: string;
+  employee_name: string;
+  is_deleted: boolean;
+  reason_deleted: string;
+  date: string;
+  start_time: string;
+  end_time: string;
+}

@@ -156,6 +156,24 @@
     min-width: 100rem;
     width: 120rem;
   }
+
+  &__header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    &--text {
+      font-size: 1.6rem;
+      color: var(--text-primary);
+      font-weight: 400;
+    }
+
+    &--buttons {
+      display: flex;
+      flex-direction: row;
+      gap: 1rem;
+    }
+  }
 }
 
 .add-employees-schedule {

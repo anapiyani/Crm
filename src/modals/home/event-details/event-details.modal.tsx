@@ -5,7 +5,7 @@ import classes from "@/modals/home/styles.module.scss";
 import ResponsiveTabs from "@/components/tabs/tabs.component";
 import { eventTabs, header, bodyData } from "./data";
 import Grid from "@mui/material/Unstable_Grid2";
-import { Button, CircularProgress } from "@mui/material";
+import { Button, CircularProgress, Divider } from "@mui/material";
 import TableVertical from "@/components/tables/tableVertical/vertical-info-card";
 import TableHorizontal from "@/components/tables/table-horizontal/horizontal-info-card";
 import {
@@ -34,6 +34,8 @@ import {
   Delete,
   Mail,
   Notifications,
+  PlayArrow,
+  RemoveRedEye,
 } from "@mui/icons-material";
 import { useTemporaryDeleteAppointment } from "@/service/appointments/appointments.hook";
 import EventDetailsThirdTab from "./_tabs/event-details-third-tab";
@@ -267,8 +269,37 @@ const EventDetails: React.FC<IEventDetailsModalProps> = ({ appointmentId }) => {
         currentTab === 2 && classes["event-details__modal"]
       )}
       withButtons={false}
+      withoutTitle={true}
     >
       <div style={{ display: "flex", flexDirection: "column", gap: "1.6rem" }}>
+        <div className={classes["event-details__header"]}>
+          <h2 className={classes["event-details__header--text"]}>
+            Запись клиента
+          </h2>{" "}
+          <div>
+            {singleAppointmentData?.status === "scheduled" ? (
+              <div className={classes["event-details__header--buttons"]}>
+                <Button
+                  color="error"
+                  variant="outlined"
+                  startIcon={<PlayArrow />}
+                >
+                  Начать
+                </Button>
+                <Button variant="outlined" startIcon={<RemoveRedEye />}>
+                  Начать и оплатить
+                </Button>
+              </div>
+            ) : (
+              <div>
+                <Button variant="outlined" startIcon={<RemoveRedEye />}>
+                  Посмотреть посещение
+                </Button>
+              </div>
+            )}
+          </div>
+        </div>
+        <Divider />
         <ResponsiveTabs
           tabsData={eventTabs}
           currentTab={currentTab}
