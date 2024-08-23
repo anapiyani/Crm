@@ -50,7 +50,7 @@ import {
 
 import Icons from "@/assets/icons/icons";
 import classNames from "classnames";
-import { calendarStatuses } from "./data";
+import { appoinmentStatuses, calendarStatuses } from "./data";
 
 import classes from "./styles.module.scss";
 import "./custom.css";
@@ -76,8 +76,10 @@ const Home: React.FC = () => {
   const calendarRef = useRef<FullCalendar | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-  const [burgerMenuAnchorEl, setBurgerMenuAnchorEl] =
-    useState<HTMLElement | null>(null);
+  const [
+    burgerMenuAnchorEl,
+    setBurgerMenuAnchorEl,
+  ] = useState<HTMLElement | null>(null);
   const [selectedResourceId, setSelectedResourceId] = useState<string | null>(
     null
   );
@@ -155,8 +157,9 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     if (schedulesData) {
-      const { events, resources } =
-        transformSchedulesToFullCalendar(schedulesData);
+      const { events, resources } = transformSchedulesToFullCalendar(
+        schedulesData
+      );
       setEvents(events);
       setResources(resources);
     }
@@ -781,6 +784,27 @@ const Home: React.FC = () => {
                     >
                       Быстрая продажа
                     </Button>
+                  </div>
+                  <div className={classes["status--panel"]}>
+                    <h2 className={classes["u-h2"]}>Статус записи</h2>
+                    <Divider />
+                    <div className={classes["appointment--status"]}>
+                      {appoinmentStatuses.map((status) => (
+                        <div
+                          className={classes["appointment--status__item"]}
+                          key={status.value}
+                        >
+                          <div
+                            style={{
+                              backgroundColor: status.bgColor,
+                              height: "1.4rem",
+                              width: "1.4rem",
+                            }}
+                          ></div>
+                          <span>{status.label}</span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
                 </div>
               )}

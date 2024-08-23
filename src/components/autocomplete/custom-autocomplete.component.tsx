@@ -61,7 +61,7 @@ const CustomAutoComplete = <T extends IOption>({
         getOptionKey={(option) => option.value as string}
         isOptionEqualToValue={(option, value) => option.value === value.value}
         PaperComponent={({ children }) => (
-          <Paper sx={{ fontSize: "1.4rem", width: "80%" }}>{children}</Paper>
+          <Paper sx={{ fontSize: "1.4rem", width: "100%" }}>{children}</Paper>
         )}
         sx={{
           "& .MuiAutocomplete-inputRoot": {

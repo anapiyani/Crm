@@ -257,6 +257,22 @@
     line-height: 2.4rem;
   }
 }
+.status--panel {
+  margin-top: 2rem;
+}
+.appointment--status {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  &__item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.6rem;
+    line-height: 2.4rem;
+  }
+}
 
 .prediction {
   margin-top: 3rem;
