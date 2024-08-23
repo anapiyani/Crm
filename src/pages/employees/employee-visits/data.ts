@@ -16,6 +16,8 @@ export interface TableData {
     total: number;
     discountText?: string;
     paymentStatus?: string;
+    cliendId?: number;
+    employeeId?: number;
   }[];
   grandTotal: number;
   grandTotalCash: number;

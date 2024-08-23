@@ -69,3 +69,43 @@ export interface IClient {
   phone_number: string;
   email: string;
 }
+
+export interface IViewAppointmentService {
+  id: number;
+  parameter: string | null;
+  price: string;
+  quantity: number;
+  service: number;
+  service_name: string;
+}
+export interface IViewVistInfo {
+  appointment_services: IViewAppointmentService[];
+  client: IClient;
+  created_at: string;
+  date: string;
+  discount_custom: null | number;
+  employee_id: number;
+  employee_name: string;
+  employee_role: string;
+  end_time: string;
+  id: number;
+  material_purchases: any[];
+  notes: string;
+  reason_deleted: null | string;
+  service_amount: number;
+  start_time: string;
+  status: string;
+  total_card: number;
+  total_cash: number;
+  total_price: number;
+  type: string;
+  updated_at: string;
+  written_by: {
+    id: number;
+    name: string;
+  };
+  do_skidki: number;
+  itogo: number;
+  oplacheno: number;
+  skidka: number;
+}

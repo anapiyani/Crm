@@ -300,6 +300,8 @@ const SearchVisits = () => {
             amount: Number(visit.service_amount) || 0,
             discount: visit.discount_custom || 0,
             total: Number(service.price) || 0,
+            employeeId: visit.employee_id,
+            clientId: visit.client.id,
           };
         }),
         grandTotal: visit.total_price,
@@ -571,6 +573,8 @@ const SearchVisits = () => {
         {visitsData && visitsData.results && visitsData.results.length > 0 ? (
           <EmployeeVisitsTable
             onClickVisit={(id) => window.location.assign(`/visits/${id}`)}
+            onClickClient={(id) => window.location.assign(`/clients/${id}`)}
+            onClickEmployee={(id) => window.location.assign(`/employees/${id}`)}
             data={data}
           />
         ) : (
