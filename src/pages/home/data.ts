@@ -40,3 +40,27 @@ export const calendarStatuses = [
     bgColor: "#C7DFF7",
   },
 ];
+
+export const appoinmentStatuses = [
+  {
+    label: "Посещение запланировано",
+    value: "scheduled",
+    bgColor: "var(--primary-500)",
+  },
+  {
+    label: "Посещение завершено, оплачено",
+    value: "completed",
+    bgColor: "var(--success-500)",
+  },
+  {
+    label: "Посещение идет, клиент в салоне",
+    value: "underway",
+    bgColor: "var(--deep-purple-400)",
+  },
+  { label: "Клиент опаздывает", value: "late", bgColor: "var(--danger-500)" },
+  {
+    label: "Клиент не пришел",
+    value: "no_show",
+    bgColor: "var(--neutral-500)",
+  },
+];

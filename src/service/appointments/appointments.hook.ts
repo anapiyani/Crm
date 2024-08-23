@@ -24,7 +24,7 @@ export const useCreateAppointment = () => {
     },
     onError: (error) => {
       const errorMessage =
-        "Произошла ошибка при добавлении записи." || error.message;
+        error.message || "Произошла ошибка при добавлении записи.";
       toast.error(errorMessage);
     },
   });
@@ -53,7 +53,7 @@ export const useUpdateAppointmentStatus = () => {
     },
     onError: (error) => {
       const errorMessage =
-        "Произошла ошибка при обновлении статуса записи." || error.message;
+        error.message || "Произошла ошибка при обновлении статуса записи.";
       toast.error(errorMessage);
     },
   });

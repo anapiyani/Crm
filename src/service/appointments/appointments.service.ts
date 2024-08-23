@@ -68,7 +68,7 @@ export const updateAppointmentStatus = ({
   status: string;
 }) => {
   return api
-    .put(`/appointments/appointments/${appointment_id}/update-status/`, {
+    .post(`/appointments/appointments/${appointment_id}/update-status/`, {
       status,
     })
     .then((res) => res.data);

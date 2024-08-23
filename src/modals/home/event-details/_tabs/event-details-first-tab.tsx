@@ -203,6 +203,7 @@ const EventDetailsFirstTab: React.FC<IEventDetailsFirstTabProps> = ({
           <Divider />
           <div className={classNames(classes["first__params--client"])}>
             <CustomAutoComplete
+              className={classes["u-w-full"]}
               name="service"
               selectValue={"label"}
               size="small"
@@ -219,6 +220,7 @@ const EventDetailsFirstTab: React.FC<IEventDetailsFirstTabProps> = ({
               placeholder="Выберите услугу"
             />
             <CustomAutoComplete
+              className={classes["u-w-full"]}
               name="parameter"
               selectValue={"label"}
               size="small"
