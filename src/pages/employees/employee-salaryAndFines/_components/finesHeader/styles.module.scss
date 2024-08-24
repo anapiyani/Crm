@@ -1,0 +1,38 @@
+.main__header {
+  background-color: var(--common-white);
+  border-bottom: 1px solid var(--neutral-300);
+  &__upper {
+    display: flex;
+    flex-direction: column;
+    gap: 1.6rem;
+    padding: 2rem 0 2.4rem 0;
+    width: 100%;
+    &__title {
+      font-size: 3.4rem;
+      font-weight: 400;
+      color: var(--text-primary);
+    }
+    &__subtitle {
+      font-size: 1.6rem;
+      font-weight: 400;
+      color: var(--text-tertiary);
+    }
+    &__row {
+      margin-top: 0.8rem;
+      align-items: flex-start;
+      &__button {
+        display: flex;
+        justify-content: flex-end;
+        
+      }
+      &__cards {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        CounterCard {
+          flex: 1;
+        }
+      }
+    }
+  }
+}

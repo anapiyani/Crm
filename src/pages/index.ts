@@ -25,6 +25,8 @@ import Unauthorized from "./unauthorized/unauthorized.page";
 import EmployeeCabinet from "./employees/cabinet/employee-cabinet";
 import IndirectCostsPage from "./cash-desk/indirect-costs/indirect-costs.page";
 import SalaryPage from "./employees/salary/salary.page";
+import StoragePage from "./storage/storage.page";
+import EmployeeFines from "./employees/employee-salaryAndFines/employee-salaryAndFines";
 
 export {
   Home,
@@ -51,4 +53,6 @@ export {
   SalaryPage,
   ClientSearch,
   IndirectCostsPage,
+  StoragePage,
+  EmployeeFines,
 };

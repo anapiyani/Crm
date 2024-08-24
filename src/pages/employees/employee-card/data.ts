@@ -10,7 +10,7 @@ export const employeeTabsData = [
   { to: "/employees/:id", icon: HomeOutlined, label: "Обзор" },
   { to: "/employees/visits", icon: ExitToAppOutlined, label: "Посещения" },
   {
-    to: "/employees/balance",
+    to: "/employees/bonuses-fines",
     icon: AccountBalanceWalletOutlined,
     label: "Зарплата, штрафы, премии, авансы",
   },

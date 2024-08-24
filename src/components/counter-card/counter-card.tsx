@@ -1,23 +1,31 @@
 import React from "react";
 import { Card, Button, CardActions, CardContent } from "@mui/material";
-import { ContentCut, AddRounded } from "@mui/icons-material";
+import { AddRounded } from "@mui/icons-material";
 import classes from "./styles.module.scss";
 
 type CounterCardProps = {
   backgroundColor: string;
   iconColor: string;
+  icon: React.ReactNode;
   textTitle: string;
   textTitleFocus?: string;
   valueText: string | number | undefined;
   isButton?: boolean;
 };
 
-const CounterCard: React.FC<CounterCardProps> = (props) => {
+const CounterCard: React.FC<CounterCardProps> = ({
+  backgroundColor,
+  iconColor,
+  icon,
+  textTitle,
+  textTitleFocus,
+  valueText,
+  isButton = false,
+}) => {
   return (
     <Card
-
       sx={{
-        maxHeight: "14.8",
+        maxHeight: "14.8rem",
         width: { xs: "22rem", md: "30rem" },
         alignItems: "center",
       }}
@@ -27,13 +35,15 @@ const CounterCard: React.FC<CounterCardProps> = (props) => {
           <div
             className={classes["topItems__icon"]}
             style={{
-              backgroundColor: props.backgroundColor,
+              backgroundColor: backgroundColor,
             }}
           >
-            <ContentCut sx={{ color: props.iconColor, width: 24 }} />
+            {React.cloneElement(icon as React.ReactElement, {
+              sx: { color: iconColor, width: 24, height: 24 },
+            })}
           </div>
           <CardActions>
-            {props.isButton ? (
+            {isButton ? (
               <Button size="small" variant="outlined" sx={{ alignSelf: "end" }}>
                 Создать
                 <AddRounded />
@@ -42,12 +52,12 @@ const CounterCard: React.FC<CounterCardProps> = (props) => {
           </CardActions>
         </div>
 
-        <p className={classes["text"]}>{props.textTitle}</p>
-        {props.textTitleFocus ? (
-          <h2 className={classes["textValue"]}> {props.textTitleFocus}</h2>
-        ) : null}
+        <p className={classes["text"]}>{textTitle}</p>
+        <h2 className={classes["textValue"]}>{valueText}</h2>
 
-        <h2 className={classes["textValue"]}>{props.valueText}</h2>
+        {textTitleFocus ? (
+          <h2 className={classes["textValue"]}> {textTitleFocus}</h2>
+        ) : null}
       </CardContent>
     </Card>
   );
