@@ -117,7 +117,7 @@ const EventDetailsThirdTab: React.FC<IEventDetailsThirdTabProps> = ({
 
   return (
     <div
-      style={{ display: "flex", flexDirection: "column", gap: "1.6rem" }}
+      style={{ display: "flex", flexDirection: "column", gap: "1.6rem", }}
       className={classes[""]}
     >
       <div
@@ -125,6 +125,7 @@ const EventDetailsThirdTab: React.FC<IEventDetailsThirdTabProps> = ({
           display: "flex",
           flexDirection: "row",
           gap: "0.8rem",
+          
         }}
       >
         {tabsData.map((tab) => (

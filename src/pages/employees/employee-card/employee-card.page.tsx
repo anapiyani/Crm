@@ -1,7 +1,16 @@
+import React from "react";
+import {
+  Paper,
+  Box,
+  TextField,
+  IconButton,
+  Divider,
+  CircularProgress,
+} from "@mui/material";
+import Grid from "@mui/material/Unstable_Grid2";
+import { Add, Clear, SaveOutlined } from "@mui/icons-material";
 import TableVertical from "@/components/tables/tableVertical/vertical-info-card";
 import TableHorizontal from "@/components/tables/table-horizontal/horizontal-info-card";
-import Grid from "@mui/material/Unstable_Grid2";
-import classes from "./styles.module.scss";
 import InfoHeader from "@/components/navigation/header/info-header";
 import { employeeTabsData } from "./data";
 import { useLocation, useParams } from "react-router-dom";
@@ -10,7 +19,7 @@ import {
   cardInfoEmplpyee,
   mainInfoEmployee,
 } from "@/service/employee/employee.service";
-import { CircularProgress } from "@mui/material";
+import classes from "./styles.module.scss";
 
 const EmployeeCard = () => {
   const params = useParams<{ id: string }>();
@@ -91,36 +100,32 @@ const EmployeeCard = () => {
       />
       <Grid
         container
+        spacing={3}
         sx={{
           mb: "5rem",
           ml: { xs: "2rem", xl: "7.6rem" },
           flexDirection: { xs: "column", md: "row" },
         }}
-        columnSpacing={{ md: 6 }}
-        rowGap={{ xs: 3}}
-        xs={9}
-        md={12}
       >
-        <Grid container lg={5} xl={3.5} xs={10} sx={{ alignItems: "flex-start" }}>
+        {/* Main Info Grid */}
+        <Grid xs={10} md={6} lg={4}>
           <TableVertical data={mainTableData} title="Главное" showLockIcon />
         </Grid>
 
-        <Grid
-          container
-          xl={7}
-          lg={5}
-          xs={10}
-          sx={{ flexDirection: { xs: "column", xl: "row" } }}
-          columnSpacing={{ xs:0 }}
-          rowGap={{ xs: 3, xl: 0 }}
-        >
-          <Grid container xs={12} xl={6}>
-            <TableVertical data={additionalTableData} title="Доп. информация" />
-          </Grid>
+        {/* Additional Info Grid */}
+        <Grid xs={10} md={6} lg={4}>
+          <TableVertical data={additionalTableData} title="Доп. информация" />
+        </Grid>
 
-          <Grid container xs={12} xl={6} sx={{ flexDirection: "column" }} rowGap={3}>
-            <TableHorizontal data={contactsData} title="Контакты" />
-            <TableVertical data={addressData} title="Адрес проживания" />
+        {/* Contacts and Address Grid */}
+        <Grid xs={10} md={6} lg={4}>
+          <Grid xs={12} container spacing={2}>
+            <Grid xs={12}>
+              <TableHorizontal data={contactsData} title="Контакты" />
+            </Grid>
+            <Grid xs={12}>
+              <TableVertical data={addressData} title="Адрес проживания" />
+            </Grid>
           </Grid>
         </Grid>
       </Grid>
