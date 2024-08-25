@@ -146,3 +146,12 @@
 .link {
   color: var(--brand-500);
 }
+
+.buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+  button {
+    font-size: 1.4rem;
+  }
+}

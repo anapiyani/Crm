@@ -1,3 +1,5 @@
+import { IMaterialPurchases } from "./appointments.interface";
+
 export interface IVisitsInfo {
   amount_from: number;
   amount_to: number;
@@ -89,7 +91,8 @@ export interface IViewVistInfo {
   employee_role: string;
   end_time: string;
   id: number;
-  material_purchases: any[];
+  material_purchases: IMaterialPurchasesView[];
+  salary_info: ISalaryInfo[];
   notes: string;
   reason_deleted: null | string;
   service_amount: number;
@@ -108,4 +111,23 @@ export interface IViewVistInfo {
   itogo: number;
   oplacheno: number;
   skidka: number;
+}
+
+export interface ISalaryInfo {
+  id: number;
+  type: [string, string][];
+  revenue: number;
+  salary_change: number;
+  salary: string;
+  description: string;
+  date: string;
+  service: string;
+}
+
+export interface IMaterialPurchasesView {
+  id: number;
+  material: number;
+  material_name: string;
+  quantity: string;
+  price: string;
 }
