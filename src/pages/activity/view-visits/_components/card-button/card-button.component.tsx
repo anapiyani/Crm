@@ -9,7 +9,7 @@ const CardButton = ({
   onButtonClick,
 }: {
   text: string;
-  icon: React.ElementType<SvgIconProps>;
+  icon?: React.ElementType<SvgIconProps>;
   backgroundIcon: string;
   colorIcon: string;
   onButtonClick?: () => void;
@@ -18,15 +18,17 @@ const CardButton = ({
     <div onClick={onButtonClick} className={classes.card}>
       <div className={classes.card__content}>
         <div className={classes.card__content__icon}>
-          <Icon
-            sx={{
-              backgroundColor: backgroundIcon,
-              color: colorIcon,
-              padding: "8px",
-              fontSize: "42px",
-              borderRadius: "50px",
-            }}
-          />
+          {Icon && (
+            <Icon
+              sx={{
+                backgroundColor: backgroundIcon,
+                color: colorIcon,
+                padding: "8px",
+                fontSize: "42px",
+                borderRadius: "50px",
+              }}
+            />
+          )}
         </div>
         <div className={classes.card__content__text}>
           <p>{text}</p>

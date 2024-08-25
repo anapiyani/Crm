@@ -21,3 +21,7 @@ export const searchVisits = (
 export const getVisit = (id: string): Promise<IViewVistInfo> => {
   return api.get(`/appointments/appointments/${id}`).then((res) => res.data);
 };
+
+export const deleteVisit = (id: string): Promise<void> => {
+  return api.delete(`/appointments/appointments/${id}`).then((res) => res.data);
+};
