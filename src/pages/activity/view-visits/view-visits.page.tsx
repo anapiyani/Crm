@@ -20,6 +20,9 @@ import {
   ThumbUpOutlined,
   Comment,
   Edit,
+  CreditCardOutlined,
+  ContentCut,
+  Inventory2Outlined,
 } from "@mui/icons-material/";
 import { Link, useParams } from "react-router-dom";
 import NiceModal from "@ebay/nice-modal-react";
@@ -29,6 +32,8 @@ import bonusesModule from "@/modals/activity/bonuses.modal";
 import fineModal from "@/modals/activity/fine.modal";
 import { useQuery } from "@tanstack/react-query";
 import { getVisit } from "@/service/activity/activity.service";
+import { IViewVistInfo } from "@/ts/activity.interface";
+import deleteModal from "@/modals/activity/delete.modal";
 
 const ViewVisits = () => {
   const params = useParams<{ id: string }>();
@@ -37,8 +42,8 @@ const ViewVisits = () => {
     data: visitInfo,
     isLoading: visitLoading,
     isError: visitError,
-  } = useQuery({
-    queryKey: ["cardInfoEmplpyee", params.id],
+  } = useQuery<IViewVistInfo>({
+    queryKey: ["cardInfoEmployee", params.id],
     queryFn: () => getVisit(params.id || ""),
   });
 
@@ -51,6 +56,10 @@ const ViewVisits = () => {
   }
 
   console.log(visitInfo);
+
+  const handleDeleteVisit = (id: string | undefined) => {
+    NiceModal.show(deleteModal, { id });
+  };
 
   const handleOpenReport = () => {
     NiceModal.show(reportModal);
@@ -88,13 +97,12 @@ const ViewVisits = () => {
                 info={`${visitInfo?.client?.first_name} ${visitInfo?.client?.last_name}`}
                 isClick={true}
               />
-              {visitInfo?.notes === "no notes" ||
-              visitInfo?.notes === null ? null : (
+              {visitInfo?.notes && visitInfo?.notes !== "no notes" ? (
                 <LabelInfo
                   name={"Характеристика"}
                   info={`${visitInfo?.notes}`}
                 />
-              )}
+              ) : null}
               <LabelInfo name={"Начало"} info={`${visitInfo?.start_time}`} />
               <LabelInfo name={"Окончание"} info={`${visitInfo?.end_time}`} />
               <LabelInfo
@@ -136,213 +144,270 @@ const ViewVisits = () => {
             <Divider />
           </div>
           <div className={classes.view__main__content__body}>
-            <div className={classes.view__main__content__body__item}>
-              <CardButton
-                text={"Отменить оплату"}
-                icon={CreditCardOffOutlined}
-                backgroundIcon={"rgba(221, 231, 238, 1)"}
-                colorIcon={"rgba(99, 107, 116, 1)"}
-              />
-              <CardButton
-                text={"Удалить посещение"}
-                icon={DeleteOutlineOutlined}
-                backgroundIcon={"rgba(252, 228, 228, 1)"}
-                colorIcon={"rgba(196, 28, 28, 1)"}
-              />
-              <CardButton
-                onButtonClick={handleOpenReport}
-                text={"Жалоба"}
-                icon={AnnouncementOutlined}
-                backgroundIcon={"rgba(239, 108, 0, 0.3)"}
-                colorIcon={"rgba(239, 108, 0, 1)"}
-              />
-              <CardButton
-                onButtonClick={handleOpenFeedBack}
-                text={"Отзыв"}
-                icon={RateReviewOutlined}
-                backgroundIcon={"rgba(199, 223, 247, 1)"}
-                colorIcon={"rgba(11, 107, 203, 1)"}
-              />
-              <CardButton
-                onButtonClick={handleOpenFine}
-                text={"Оштрафовать"}
-                icon={ThumbDownOutlined}
-                backgroundIcon={"rgba(156, 39, 176, 0.3)"}
-                colorIcon={"rgba(156, 39, 176, 1)"}
-              />
-              <CardButton
-                onButtonClick={handleOpenBonuse}
-                text={"Премировать"}
-                icon={ThumbUpOutlined}
-                backgroundIcon={"rgba(46, 125, 50, 0.3)"}
-                colorIcon={"rgba(46, 125, 50, 1)"}
-              />
-            </div>
+            {visitInfo?.status === "completed" ? (
+              <div className={classes.view__main__content__body__item}>
+                <CardButton
+                  text={"Отменить оплату"}
+                  icon={CreditCardOffOutlined}
+                  backgroundIcon={"rgba(221, 231, 238, 1)"}
+                  colorIcon={"rgba(99, 107, 116, 1)"}
+                />
+                <CardButton
+                  text={"Удалить посещение"}
+                  icon={DeleteOutlineOutlined}
+                  backgroundIcon={"rgba(252, 228, 228, 1)"}
+                  colorIcon={"rgba(196, 28, 28, 1)"}
+                  onButtonClick={() => handleDeleteVisit(params.id)}
+                />
+                <CardButton
+                  onButtonClick={handleOpenReport}
+                  text={"Жалоба"}
+                  icon={AnnouncementOutlined}
+                  backgroundIcon={"rgba(239, 108, 0, 0.3)"}
+                  colorIcon={"rgba(239, 108, 0, 1)"}
+                />
+                <CardButton
+                  onButtonClick={handleOpenFeedBack}
+                  text={"Отзыв"}
+                  icon={RateReviewOutlined}
+                  backgroundIcon={"rgba(199, 223, 247, 1)"}
+                  colorIcon={"rgba(11, 107, 203, 1)"}
+                />
+                <CardButton
+                  onButtonClick={handleOpenFine}
+                  text={"Оштрафовать"}
+                  icon={ThumbDownOutlined}
+                  backgroundIcon={"rgba(156, 39, 176, 0.3)"}
+                  colorIcon={"rgba(156, 39, 176, 1)"}
+                />
+                <CardButton
+                  onButtonClick={handleOpenBonuse}
+                  text={"Премировать"}
+                  icon={ThumbUpOutlined}
+                  backgroundIcon={"rgba(46, 125, 50, 0.3)"}
+                  colorIcon={"rgba(46, 125, 50, 1)"}
+                />
+              </div>
+            ) : (
+              <div className={classes.view__main__content__body__item}>
+                <CardButton
+                  text={"Оплатить"}
+                  icon={CreditCardOutlined}
+                  backgroundIcon={"rgba(46, 125, 50, 0.3)"}
+                  colorIcon={"rgba(46, 125, 50, 1)"}
+                />
+                <CardButton
+                  text={"Добавить услуги"}
+                  icon={ContentCut}
+                  backgroundIcon={"rgba(199, 223, 247, 1)"}
+                  colorIcon={"rgba(11, 107, 203, 1)"}
+                />
+                <CardButton
+                  text={"Добавить товары"}
+                  icon={Inventory2Outlined}
+                  backgroundIcon={"rgba(239, 108, 0, 0.3)"}
+                  colorIcon={"rgba(239, 108, 0, 1)"}
+                />
+                <CardButton
+                  text={"Добавить абонементы/сертификаты"}
+                  backgroundIcon={"rgba(199, 223, 247, 1)"}
+                  colorIcon={"rgba(11, 107, 203, 1)"}
+                />
+              </div>
+            )}
           </div>
         </div>
       </div>
-      <div className={classes.view__tables}>
-        <div className={classes.view__tables__header}>
-          <h1>Услуги и товары</h1>
-        </div>
-        <div className={classes.view__tables__firstTable}>
-          <div className={classes.view__tables__firstTable__header}>
-            <h2>Парикмахерский зал</h2>
-            <Divider />
-          </div>
-          <div className={classes.view__tables__firstTable__table}>
-            <Table className={classes.table}>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Услуга</TableCell>
-                  <TableCell>Комментарий</TableCell>
-                  <TableCell>Материалы</TableCell>
-                  <TableCell>Сотрудник</TableCell>
-                  <TableCell>Кол-во</TableCell>
-                  <TableCell>Сумма</TableCell>
-                  <TableCell>Скидка</TableCell>
-                  <TableCell>Итого</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                <TableRow>
-                  <TableCell>
-                    <p style={{ fontSize: "1.6rem" }}>
-                      Мужская стрижка <br />{" "}
-                      <span style={{ fontSize: "1.2rem" }}>
-                        Для любой длины
-                      </span>
-                    </p>
-                  </TableCell>
-                  <TableCell>
-                    <Link className={classes.link} to="/">
-                      Добавить комментарий <Comment />
-                    </Link>
-                  </TableCell>
-                  <TableCell>
-                    <Link to="/" className={classes.link}>
-                      Добавить из посещения
-                    </Link>
-                  </TableCell>
-                  <TableCell>
-                    <Link to="/" className={classes.link}>
-                      Имя Фамилия
-                    </Link>
-                  </TableCell>
-                  <TableCell>1 шт.</TableCell>
-                  <TableCell>
-                    <p>2 200 руб</p>{" "}
-                    <Link to="/" className={classes.link}>
-                      <Edit
-                        sx={{
-                          fontSize: "1.5rem",
-                        }}
-                      />
-                      Редактировать
-                    </Link>{" "}
-                  </TableCell>
-                  <TableCell>
-                    <p>-</p>
-                  </TableCell>
-                  <TableCell>
-                    <p>2 200 руб.</p>
-                  </TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-            <div
-              style={{
-                display: "flex",
-                width: "100%",
-                justifyContent: "end",
-                padding: "1rem",
-              }}
-            >
-              <div>
-                <p style={{ fontSize: "1.6rem" }}>
-                  Итого по отделу: <strong>2 200 руб</strong>.
-                </p>
-              </div>
+      {(visitInfo && visitInfo?.material_purchases.length > 0) ||
+        (visitInfo && visitInfo?.salary_info.length > 0 && (
+          <div className={classes.view__tables}>
+            <div className={classes.view__tables__header}>
+              <h1>Услуги и товары</h1>
             </div>
-          </div>
-        </div>
-        <div className={classes.secondTable}>
-          <div className={classes.secondTable__header}>
-            <h1
-              style={{
-                paddingBottom: "1rem",
-                paddingTop: "3rem",
-                fontSize: "3.4rem",
-                fontWeight: 400,
-              }}
-            >
-              Зарплаты
-            </h1>
-          </div>
-          <div className={classes.view__tables__firstTable__table}>
-            <Table className={classes.table}>
-              <TableHead>
-                <TableRow>
-                  <TableCell>№</TableCell>
-                  <TableCell>Сотрудник</TableCell>
-                  <TableCell>Статья зарплаты</TableCell>
-                  <TableCell>Тип статьи</TableCell>
-                  <TableCell>Выручка</TableCell>
-                  <TableCell>Материалы</TableCell>
-                  <TableCell>Зарплата</TableCell>
-                  <TableCell>Формула з/п</TableCell>
-                  <TableCell>Начислено</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                <TableRow>
-                  <TableCell>1</TableCell>
-                  <TableCell>
-                    <Link className={classes.link} to="/">
+            {visitInfo && visitInfo?.material_purchases.length > 0 && (
+              <div className={classes.view__tables__firstTable}>
+                <div className={classes.view__tables__firstTable__header}>
+                  <h2>Парикмахерский зал</h2>
+                  <Divider />
+                </div>
+                <div className={classes.view__tables__firstTable__table}>
+                  <Table className={classes.table}>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Услуга</TableCell>
+                        <TableCell>Комментарий</TableCell>
+                        <TableCell>Материалы</TableCell>
+                        <TableCell>Сотрудник</TableCell>
+                        <TableCell>Кол-во</TableCell>
+                        <TableCell>Сумма</TableCell>
+                        <TableCell>Скидка</TableCell>
+                        <TableCell>Итого</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {visitInfo.material_purchases.map((purchase) => (
+                        <TableRow key={purchase.id}>
+                          <TableCell>
+                            <p style={{ fontSize: "1.6rem" }}>
+                              {purchase.material_name} <br />{" "}
+                              <span style={{ fontSize: "1.2rem" }}>
+                                {purchase.material || "Для любой длины"}
+                              </span>
+                            </p>
+                          </TableCell>
+                          <TableCell>
+                            <Link className={classes.link} to="/">
+                              Добавить комментарий <Comment />
+                            </Link>
+                          </TableCell>
+                          <TableCell>
+                            <Link to="/" className={classes.link}>
+                              Добавить из посещения
+                            </Link>
+                          </TableCell>
+                          <TableCell>
+                            <Link to="/" className={classes.link}>
+                              Имя Фамилия
+                            </Link>
+                          </TableCell>
+                          <TableCell>{purchase.quantity} шт.</TableCell>
+                          <TableCell>
+                            <p>{purchase.price} руб</p>{" "}
+                            <Link to="/" className={classes.link}>
+                              <Edit
+                                sx={{
+                                  fontSize: "1.5rem",
+                                }}
+                              />
+                              Редактировать
+                            </Link>{" "}
+                          </TableCell>
+                          <TableCell>
+                            <p>-</p>
+                          </TableCell>
+                          <TableCell>
+                            <p>{purchase.price} руб.</p>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                  <div
+                    style={{
+                      display: "flex",
+                      width: "100%",
+                      justifyContent: "end",
+                      padding: "1rem",
+                    }}
+                  >
+                    <div>
                       <p style={{ fontSize: "1.6rem" }}>
-                        Мужская стрижка <br />{" "}
+                        Итого по отделу: <strong>2 200 руб</strong>.
                       </p>
-                    </Link>
-                    <span style={{ fontSize: "1.2rem" }}>Для любой длины</span>
-                  </TableCell>
-                  <TableCell>Коррекция длины волос</TableCell>
-                  <TableCell>% от услуг</TableCell>
-                  <TableCell>1 шт.</TableCell>
-                  <TableCell>
-                    <p>3 400 руб.</p>{" "}
-                  </TableCell>
-                  <TableCell>
-                    <p>0 руб.</p>
-                  </TableCell>
-                  <TableCell>
-                    <p>+1 700 руб.</p>
-                  </TableCell>
-                  <TableCell>
-                    <p>50% от 3 400 руб.</p>
-                  </TableCell>
-                  <TableCell>
-                    <p>31 марта, 12:22</p> <br /> <span>Автоматически</span>
-                  </TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-            <div
-              style={{
-                display: "flex",
-                width: "100%",
-                justifyContent: "end",
-                padding: "1rem",
-              }}
-            >
-              <div>
-                <p style={{ fontSize: "1.6rem" }}>
-                  Итого зарплаты начислено: <strong>1 700 руб</strong>.
-                </p>
+                    </div>
+                  </div>
+                </div>
               </div>
-            </div>
+            )}
+            {visitInfo && visitInfo?.salary_info.length > 0 && (
+              <div className={classes.secondTable}>
+                <div className={classes.secondTable__header}>
+                  <h1
+                    style={{
+                      paddingBottom: "1rem",
+                      paddingTop: "3rem",
+                      fontSize: "3.4rem",
+                      fontWeight: 400,
+                    }}
+                  >
+                    Зарплаты
+                  </h1>
+                </div>
+                <div className={classes.view__tables__firstTable__table}>
+                  <Table className={classes.table}>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>№</TableCell>
+                        <TableCell>Сотрудник</TableCell>
+                        <TableCell>Статья зарплаты</TableCell>
+                        <TableCell>Тип статьи</TableCell>
+                        <TableCell>Выручка</TableCell>
+                        <TableCell>Материалы</TableCell>
+                        <TableCell>Зарплата</TableCell>
+                        <TableCell>Формула з/п</TableCell>
+                        <TableCell>Начислено</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {visitInfo.salary_info.map((item, index) => (
+                        <TableRow key={item.id}>
+                          <TableCell>{index + 1}</TableCell>
+                          <TableCell>
+                            <Link className={classes.link} to="/">
+                              <p style={{ fontSize: "1.6rem" }}>
+                                {item.service} <br />{" "}
+                              </p>
+                            </Link>
+                            <span style={{ fontSize: "1.2rem" }}>
+                              {item.description}
+                            </span>
+                          </TableCell>
+                          <TableCell>
+                            {item.type.map((typeItem, i) => (
+                              <div key={i}>{typeItem[1]}</div>
+                            ))}
+                          </TableCell>
+                          <TableCell>1 шт.</TableCell>
+                          <TableCell>
+                            <p>{item.revenue} руб.</p>{" "}
+                          </TableCell>
+                          <TableCell>
+                            <p>0 руб.</p>
+                          </TableCell>
+                          <TableCell>
+                            <p>+{item.salary_change} руб.</p>
+                          </TableCell>
+                          <TableCell>
+                            <p>{item.salary} руб.</p>
+                          </TableCell>
+                          <TableCell>
+                            <p>
+                              {new Date(item.date).toLocaleDateString("ru-RU")}
+                            </p>
+                            <br />
+                            <span>Автоматически</span>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                  <div
+                    style={{
+                      display: "flex",
+                      width: "100%",
+                      justifyContent: "end",
+                      padding: "1rem",
+                    }}
+                  >
+                    <div>
+                      <p style={{ fontSize: "1.6rem" }}>
+                        Итого зарплаты начислено:{" "}
+                        <strong>
+                          {visitInfo.salary_info.reduce(
+                            (total, item) => total + item.salary_change,
+                            0,
+                          )}{" "}
+                          руб
+                        </strong>
+                        .
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
-        </div>
-      </div>
+        ))}
     </div>
   );
 };
