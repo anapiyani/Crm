@@ -354,22 +354,6 @@ const EventDetails: React.FC<IEventDetailsModalProps> = ({ appointmentId }) => {
             {singleAppointmentData?.status === "completed" && (
               <div className={classes["event-details__header--buttons"]}>
                 <Button
-                  sx={{
-                    height: "4rem",
-                    color: "var(--neutral-500)",
-                    borderColor: "var(--neutral-500)",
-                  }}
-                  variant="outlined"
-                  onClick={() => {
-                    updateAppointmentStatus({
-                      appointment_id: appointmentId,
-                      status: "scheduled",
-                    });
-                  }}
-                >
-                  Отменить начало записи
-                </Button>
-                <Button
                   sx={{ height: "4rem" }}
                   variant="outlined"
                   startIcon={<RemoveRedEye />}
