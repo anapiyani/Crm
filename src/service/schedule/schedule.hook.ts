@@ -83,8 +83,8 @@ export const useReorderEmployee = () => {
       queryClient.invalidateQueries({ queryKey: ["employeeData"] });
       toast.success("Сотрудник успешно перемещен");
     },
-    onError: () => {
-      toast.error("Ошибка при перемещении сотрудника");
+    onError: (error) => {
+      toast.error(error.message || "Ошибка при перемещении сотрудника");
     },
   });
 };
