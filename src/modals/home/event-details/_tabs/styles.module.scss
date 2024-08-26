@@ -1,0 +1,32 @@
+.first {
+  &__header-text {
+    font-size: 1.6rem;
+    color: var(--brand-500);
+    font-weight: 400;
+    line-height: 2.4rem;
+    font-family: "Roboto", sans-serif;
+  }
+
+  &__params {
+    &--client {
+      @extend .first__header-text;
+      display: flex;
+      flex-direction: row;
+      gap: 1rem;
+      color: black;
+      margin-top: 1rem;
+      align-items: center;
+    }
+  }
+}
+
+.u-w-equal {
+  min-width: 13rem;
+}
+
+.u-mt-1 {
+  margin-top: 1rem;
+}
+.u-w-full {
+  width: 100%;
+}

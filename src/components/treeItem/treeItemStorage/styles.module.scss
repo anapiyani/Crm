@@ -1,0 +1,54 @@
+.tree {
+  &__branch {
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    font-size: 1.6rem;
+  }
+  &__material {
+    padding: 1rem 0 1rem 0;
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 2rem;
+    font-size: 1.6rem;
+  }
+  &__open {
+    padding-left: 20px;
+    display: flex;
+    flex-direction: column;
+    padding-top: 1rem;
+    gap: 1rem;
+  }
+}
+.selected {
+  background-color: #2196f314;
+}
+
+.window {
+  &__header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    p {
+      font-size: 1.6rem;
+      font-weight: 400;
+    }
+    div {
+      display: flex;
+      flex-direction: row;
+      gap: 0.2rem;
+      margin-right: 1rem;
+    }
+  }
+  &__content {
+    height: 50rem;
+    overflow: auto;
+
+    scrollbar-width: thin;
+    scroll-behavior: smooth;
+  }
+}

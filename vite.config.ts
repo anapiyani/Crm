@@ -10,4 +10,14 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  optimizeDeps: {
+    include: [
+      "@fullcalendar/core",
+      "@fullcalendar/daygrid",
+      "@fullcalendar/react",
+      "@mui/material/Radio",
+      "@mui/material/RadioGroup",
+      "@mui/material/FormControlLabel",
+    ],
+  },
 });

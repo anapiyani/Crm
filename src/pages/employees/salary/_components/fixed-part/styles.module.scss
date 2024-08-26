@@ -1,0 +1,7 @@
+.fixed {
+  width: 100%;
+  &__fixed__content {
+    display: flex;
+    flex-direction: column;
+  }
+}

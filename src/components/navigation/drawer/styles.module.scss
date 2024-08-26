@@ -1,9 +1,6 @@
-// .sidebar {
-//     margin: 0 auto;
-//     background-color: var(--primary-800);
-// }
-.aba{
-    &__collapse{
-        transition: height ease-out 500ms;
+
+  .link {
+    &.active {
+      background-color: #0B6BCB,
     }
-}
+  }

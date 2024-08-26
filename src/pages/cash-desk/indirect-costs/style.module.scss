@@ -1,0 +1,226 @@
+.main {
+  width: 100%;
+
+  background-color: #fbfcfe;
+  height: 100%;
+  &__upper {
+    padding: 30px 50px;
+    background-color: #ffffff;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid #cdd7e1;
+  }
+  &__header {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+
+    h1 {
+      font-size: 3.4rem;
+      font-weight: 400;
+      color: var(--text-primary);
+      margin-top: 1rem;
+    }
+    &__row {
+      display: flex;
+      flex-direction: row;
+      gap: 1rem;
+      align-items: center;
+
+      width: 100%;
+    }
+  }
+  &__content {
+    padding: 30px 50px;
+    overflow: auto;
+    scrollbar-width: thin;
+    scroll-behavior: smooth;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 1rem;
+    height: 80%;
+    &__control {
+      flex: 1;
+
+      &__item {
+        display: flex;
+        flex-direction: column;
+        width: 60%;
+        label {
+          font-size: 2.4rem;
+          font-weight: 400;
+        }
+        Button {
+          box-shadow: none;
+          height: 4rem;
+          margin-top: 1rem;
+          width: 100%;
+          font-size: 1.4rem;
+          font-weight: 600;
+        }
+      }
+    }
+    &__result {
+      flex: 3;
+
+      &__item {
+        width: 70%;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+      &__header {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        label {
+          font-size: 2.4rem;
+          font-weight: 400;
+        }
+        &__row {
+          display: flex;
+          flex-direction: row;
+          gap: 1rem;
+          align-items: center;
+          Button {
+            height: 3.2rem;
+          }
+        }
+      }
+      &__wrap {
+        display: flex;
+        flex-direction: column;
+        background-color: #ffffff;
+        padding: 1rem;
+        border-radius: 1rem;
+        border: 1px solid #cdd7e1;
+        &__header {
+          cursor: pointer;
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+          margin: 1rem 0;
+          h1 {
+            font-size: 2rem;
+            font-weight: 500;
+          }
+        }
+      }
+    }
+  }
+}
+
+.table {
+  width: 100%;
+  border: 1px solid #cdd7e1;
+  background-color: #fbfcfe;
+  thead tr th:first-child {
+    padding: 1rem;
+    text-align: left;
+    font-size: 1.4rem;
+    font-weight: 600;
+  }
+  thead tr th {
+    padding: 1rem;
+    text-align: end;
+    font-size: 1.4rem;
+    font-weight: 600;
+  }
+  td {
+    padding: 2rem;
+    text-align: end;
+    font-size: 1.4rem;
+    table {
+      width: 100%;
+      border: none;
+      border-collapse: collapse;
+      text-align: right;
+
+      tr {
+        background-color: #ffffff !important;
+      }
+      td {
+        border: none;
+        text-align: left; /* Align text to the left in nested table */
+      }
+    }
+  }
+
+  td tr {
+    width: 10rem;
+  }
+
+  th {
+    border-bottom: 2px solid #ddd; /* Add border only at the bottom of the header */
+  }
+
+  tbody tr:nth-child(even) {
+    background-color: #ffffff;
+    table {
+      width: 100%;
+      border: none;
+      border-collapse: collapse;
+      text-align: left;
+
+      tr {
+        background-color: #ffffff !important;
+      }
+      td {
+        border: none;
+        text-align: left; /* Align text to the left in nested table */
+      }
+    }
+  }
+  tbody tr:last-child td {
+    border-bottom: 0px;
+  }
+  tbody tr td:first-child {
+    text-align: start;
+  }
+  tbody tr:hover {
+    background-color: #f1f1f1;
+  }
+
+  tbody td {
+    border: 1px solid #cdd7e1; /* Add border only at the top of each cell in tbody */
+  }
+  tbody td:first-child {
+    border-left: 0px solid #ddd; /* Add border only at the left of the first cell in tbody */
+  }
+  tbody td:last-child {
+    border-right: 0px solid #ddd; /* Add border only at the left of the first cell in tbody */
+  }
+}
+
+.loading {
+  position: absolute;
+  top: 50%;
+  left: 53%;
+  transform: translate(-50%, -50%);
+}
+.name_link {
+  color: var(--primary-500);
+  text-decoration: none;
+}
+
+.tableSettings {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.editTable {
+  width: 30px;
+}
+.datePicker {
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  input {
+    width: 65%;
+  }
+  p {
+    font-size: 1.6rem;
+  }
+}

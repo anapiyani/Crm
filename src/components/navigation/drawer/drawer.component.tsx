@@ -1,92 +1,160 @@
-import * as React from "react";
 import {
-  AppBar,
   Box,
+  Collapse,
   CssBaseline,
   Drawer,
+  IconButton,
   List,
   ListItem,
   ListItemButton,
   ListItemIcon,
   ListItemText,
   styled,
-  Collapse,
 } from "@mui/material";
+import { Fragment, ReactNode, useEffect, useState } from "react";
 
-import classes from "./styles.module.scss";
 import logo from "@/assets/icons/icon_wise_white.svg";
 import {
-  Home,
   AttachMoney,
-  Notifications,
-  Groups,
-  Person,
+  Close,
   ContentCut,
-  Inventory2,
-  ShoppingCart,
   CreditCard,
-  Mail,
   Description,
-  Settings,
-  Info,
-  Store,
   ExpandLess,
   ExpandMore,
+  Groups,
+  Home,
+  Info,
+  Inventory2,
+  Mail,
+  Notifications,
+  Person,
+  Settings,
+  ShoppingCart,
+  Store,
 } from "@mui/icons-material";
+import { NavLink, useLocation } from "react-router-dom";
+import classes from "./styles.module.scss";
 
 const drawerWidth = "25.6rem";
 
-interface Props {
+interface IProps {
   window?: () => Window;
+  isOpen: boolean;
+  handleClose: () => void;
 }
 
-export default function ResponsiveDrawer(props: Props) {
+interface BaseItem {
+  text: string;
+  icon?: ReactNode;
+  link?: string;
+}
+
+interface Item extends BaseItem {
+  children?: BaseItem[];
+}
+
+const ResponsiveDrawer = (props: IProps) => {
   const { window } = props;
-  const [mobileOpen, setMobileOpen] = React.useState(false);
-  const [isClosing, setIsClosing] = React.useState(false);
-  const [open, setOpen] = React.useState<string | null>(null);
-  const [selectedIndex, setSelectedIndex] = React.useState<string | null>(null);
+  const location = useLocation();
+  const [open, setOpen] = useState<string | null>(null);
+  const [selectedParentIndex, setSelectedParentIndex] = useState<string | null>(
+    null,
+  );
+  const [selectedChildIndex, setSelectedChildIndex] = useState<string | null>(
+    null,
+  );
 
-  const handleDrawerClose = () => {
-    setIsClosing(true);
-    setMobileOpen(false);
-  };
+  useEffect(() => {
+    const path = location.pathname;
 
-  const handleDrawerTransitionEnd = () => {
-    setIsClosing(false);
-  };
+    items.forEach((item, index) => {
+      if (item.link === path) {
+        setSelectedParentIndex(`${index}`);
+        setSelectedChildIndex(null);
+      }
+      if (item.children) {
+        item.children.forEach((child, childIndex) => {
+          if (child.link === path) {
+            setSelectedParentIndex(`${index}`);
+            setSelectedChildIndex(`${index}-${childIndex}`);
+          }
+        });
+      }
+    });
+  }, [location]);
 
-  const handleClick = (text: string, index: number) => {
+  const handleParentClick = (text: string, index: number) => {
     setOpen(open === text ? null : text);
-    setSelectedIndex(`${index}`);
+    setSelectedParentIndex(`${index}`);
+    setSelectedChildIndex(null);
   };
 
   const handleChildClick = (parentIndex: number, childIndex: number) => {
-    setSelectedIndex(`${parentIndex}-${childIndex}`);
+    setSelectedParentIndex(`${parentIndex}`);
+    setSelectedChildIndex(`${parentIndex}-${childIndex}`);
+  };
+
+  const handleCloseMenu = () => {
+    props.handleClose();
   };
 
   const items = [
-    { text: "Рабочий стол", icon: <Home /> },
-    { text: "Касса", icon: <AttachMoney /> },
-    { text: "Активности", icon: <Notifications /> },
-    { text: "Клиенты", icon: <Groups /> },
+    { text: "Рабочий стол", icon: <Home />, link: "/" },
+    {
+      text: "Касса",
+      icon: <AttachMoney />,
+      children: [
+        { text: "Касса", link: "/cashdesk" },
+        { text: "Косвенные расчеты", link: "/cashdesk/indirect-costs" },
+      ],
+    },
+    {
+      text: "Активности",
+      icon: <Notifications />,
+      children: [{ text: "Посещения", link: "/visits" }],
+    },
+    {
+      text: "Клиенты",
+      icon: <Groups />,
+      children: [
+        { text: "Найти", link: "/clients" },
+        { text: "Добавить", link: "/clients/add" },
+        { text: "Настройки", link: "/clients/settings" },
+        { text: "Лист ожидания", link: "/clients/waiting-list" },
+      ],
+    },
     {
       text: "Сотрудники",
       icon: <Person />,
       children: [
-        { text: "Найти" },
-        { text: "Добавить" },
-        { text: "График работы" },
-        { text: "Зарплата" },
-        { text: "Отделы" },
+        { text: "Найти", link: "/employees" },
+        { text: "Добавить", link: "/employees/add" },
+        { text: "График работы", link: "/employees/work-schedule" },
+        { text: "Зарплата", link: "/employees/salary" },
+        { text: "Отделы", link: "/employees/department" },
         { text: "Кабинеты" },
         { text: "Права доступа" },
         { text: "Посещаемость" },
-        { text: "Рейтинг" },
+        { text: "Рейтинг", link: "/employees/rating" },
       ],
     },
-    { text: "Услуги", icon: <ContentCut /> },
-    { text: "Склад", icon: <Inventory2 /> },
+    {
+      text: "Услуги",
+      icon: <ContentCut />,
+      children: [
+        { text: "Каталог", link: "/services" },
+        { text: "Прейскурант", link: "/services/price-list" },
+      ],
+    },
+    {
+      text: "Склад",
+      icon: <Inventory2 />,
+      children: [
+        { text: "Склад", link: "/storage" },
+        { text: "Настройки", link: "/storage/settings" },
+      ],
+    },
     { text: "Поставщики", icon: <ShoppingCart /> },
     { text: "Карты и скидки", icon: <CreditCard /> },
     { text: "Рассылка", icon: <Mail /> },
@@ -122,99 +190,132 @@ export default function ResponsiveDrawer(props: Props) {
     },
   });
 
-  const StyledDrawerPaper = styled(Drawer)(({ theme }) => ({
+  const StyledDrawerPaper = styled(Drawer)(() => ({
     "& .MuiDrawer-paper": {
       boxSizing: "border-box",
       width: drawerWidth,
       backgroundColor: "#0a2744",
       overflowY: "auto",
-      scrollbarWidth: "none", // For Firefox
-      msOverflowStyle: "none", // For Internet Explorer and Edge
+      scrollbarWidth: "none",
+      msOverflowStyle: "none",
       "&::-webkit-scrollbar": {
-        display: "none", // For Chrome, Safari, and Opera
+        display: "none",
       },
     },
   }));
 
-  const renderListItems = (items: any[], parentIndex: number | null = null) => {
+  const renderListItems = (
+    items: Item[],
+    parentIndex: number | null = null,
+  ) => {
     return items.map((item, index) => {
       const uniqueIndex =
         parentIndex !== null ? `${parentIndex}-${index}` : `${index}`;
 
       return (
-        <React.Fragment key={uniqueIndex}>
-          <ListItem disablePadding className={classes["aba"]}>
+        <Fragment key={uniqueIndex}>
+          <ListItem disablePadding>
             <ListItemButton
-              selected={selectedIndex === uniqueIndex}
+              selected={
+                selectedParentIndex === uniqueIndex ||
+                selectedChildIndex?.startsWith(uniqueIndex)
+              }
               onClick={() =>
                 parentIndex === null
-                  ? handleClick(item.text, index)
+                  ? handleParentClick(item.text, index)
                   : handleChildClick(parentIndex, index)
               }
               sx={{
                 "&.Mui-selected": {
-                  backgroundColor: "#0B6BCB",
                   borderRadius: "4px",
                   color: "#97C3F0",
-                  transition: "background-color 0.5s ease",
+                  width: "100%",
+                  backgroundColor: "#0B6BCB",
                   "& .MuiListItemIcon-root": {
                     color: "#fff",
                   },
                   "&:hover": {
-                    backgroundColor: "#0B6BCB", // Ensure the background color remains the same on hover
+                    backgroundColor: "#0B6BCB",
                   },
                 },
                 color: "#97C3F0",
+                pl: parentIndex !== null ? "7.2rem" : undefined,
+                pr: "1.6rem",
+                pb: "0.4rem",
+                pt: "0.4rem",
+                ...(parentIndex !== null &&
+                  index === 0 && {
+                    borderTopLeftRadius: "0",
+                    borderTopRightRadius: "0",
+                  }),
               }}
             >
-              {parentIndex === null && (
-                <IconContainer>{item.icon}</IconContainer>
-              )}
-              <ListItemText
-                primary={item.text}
-                primaryTypographyProps={{
-                  color: "common.white",
-                  fontWeight: "400",
-                  variant: "body1",
-                  fontSize: "1.6rem",
-                  padding: "0.4rem 0 0.4rem 0",
+              <NavLink
+                to={item.link || "#"}
+                style={{
+                  textDecoration: "none",
+                  display: "flex",
+                  alignItems: "center",
+                  width: "100%",
                 }}
-              />
-              {item.children && parentIndex === null ? (
-                open === item.text ? (
-                  <ExpandLess />
-                ) : (
-                  <ExpandMore />
-                )
-              ) : null}
+                className={classes["link"]}
+              >
+                {parentIndex === null && (
+                  <IconContainer>{item.icon}</IconContainer>
+                )}
+                <ListItemText
+                  primary={item.text}
+                  primaryTypographyProps={{
+                    color: "common.white",
+                    fontWeight: "400",
+                    variant: parentIndex === null ? "body1" : "body2",
+                    fontSize: parentIndex === null ? "1.6rem" : "1.4rem",
+                    padding: "0.4rem 0 0.4rem 0",
+                  }}
+                />
+                {item.children && parentIndex === null ? (
+                  open === item.text ? (
+                    <ExpandLess sx={{ color: "#97C3F0", fontSize: "2.4rem" }} />
+                  ) : (
+                    <ExpandMore sx={{ color: "#97C3F0", fontSize: "2.4rem" }} />
+                  )
+                ) : null}
+              </NavLink>
             </ListItemButton>
           </ListItem>
           {item.children ? (
-            <Collapse
-              className={classes["collapse"]}
-              in={open === item.text}
-              timeout={1000}
-              unmountOnExit
-              sx={{ transition: "all 0.5s ease-out" }}
-            >
+            <Collapse in={open === item.text} unmountOnExit>
               <List
-                className={classes["collapse"]}
                 component="div"
                 disablePadding
+                sx={{
+                  backgroundColor: "#12467B",
+                  borderRadius: "4px",
+                }}
               >
                 {renderListItems(item.children, index)}
               </List>
             </Collapse>
           ) : null}
-        </React.Fragment>
+        </Fragment>
       );
     });
   };
 
   const drawer = (
     <div>
-      <LogoContainer>
+      <LogoContainer
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          mr: "1.6rem",
+        }}
+      >
         <LogoImage src={logo} alt="SuperWise" />
+
+        <IconButton sx={{ color: "#fff" }} onClick={handleCloseMenu}>
+          <Close sx={{ display: { sm: "none" } }} />
+        </IconButton>
       </LogoContainer>
       <List sx={{ padding: "0.8rem" }}>{renderListItems(items)}</List>
     </div>
@@ -226,26 +327,19 @@ export default function ResponsiveDrawer(props: Props) {
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
-      <AppBar
-        position="fixed"
-        sx={{
-          width: { sm: `calc(100% - ${drawerWidth}/10rem)` },
-          ml: { sm: `${drawerWidth}/10rem` },
-        }}
-      ></AppBar>
+
       <Box
         component="nav"
         sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
         aria-label="mailbox folders"
       >
         <StyledDrawerPaper
+          className={classes["sidebar"]}
           container={container}
+          open={props.isOpen}
           variant="temporary"
-          open={mobileOpen}
-          onTransitionEnd={handleDrawerTransitionEnd}
-          onClose={handleDrawerClose}
           ModalProps={{
-            keepMounted: true, // Better open performance on mobile.
+            keepMounted: true,
           }}
           sx={{
             display: { xs: "block", sm: "none" },
@@ -257,6 +351,7 @@ export default function ResponsiveDrawer(props: Props) {
         >
           {drawer}
         </StyledDrawerPaper>
+
         <StyledDrawerPaper
           className={classes["sidebar"]}
           variant="permanent"
@@ -273,14 +368,8 @@ export default function ResponsiveDrawer(props: Props) {
           {drawer}
         </StyledDrawerPaper>
       </Box>
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          p: "0.3rem",
-          width: { sm: `calc(100% - ${drawerWidth}/10rem)` },
-        }}
-      ></Box>
     </Box>
   );
-}
+};
+
+export default ResponsiveDrawer;

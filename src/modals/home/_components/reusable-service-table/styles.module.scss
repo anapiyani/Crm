@@ -1,0 +1,27 @@
+.table-container {
+  margin-top: 1rem;
+  table {
+    border-collapse: collapse;
+
+    th {
+      background-color: var(--neutral-050);
+      padding: 1rem;
+      font-size: 1.4rem;
+      font-weight: 600;
+      &:not(:first-child) {
+        text-align: center;
+      }
+    }
+    tr td {
+      font-size: 1.4rem;
+    }
+    tr td:first-child {
+      min-width: 20rem;
+      text-align: left;
+    }
+
+    tr:nth-child(even) {
+      background-color: var(--neutral-050);
+    }
+  }
+}

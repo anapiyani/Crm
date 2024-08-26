@@ -1,0 +1,239 @@
+.main {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  &__wrapper {
+    padding: 4rem 7rem 0rem 7rem;
+  }
+  &__title {
+    font-size: 3.4rem;
+    font-weight: 400;
+    color: var(--text-primary);
+  }
+  &__upper {
+    padding: 0rem 7rem 4rem 7rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    justify-content: right;
+    max-width: 80vw;
+
+    &__main {
+      display: flex;
+      flex: 2;
+      flex-direction: column;
+      gap: 3.2rem;
+    }
+    &__position {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      gap: 2rem;
+      height: auto;
+    }
+    &__reviews {
+      flex: 2;
+    }
+    &__checkboxes {
+      display: flex;
+      flex-direction: row;
+      width: 45rem;
+      gap: 1.6rem;
+      align-items: center;
+
+      svg {
+        font-size: 2.4rem;
+      }
+      span,
+      p {
+        font-size: 1.6rem;
+        color: var(--text-primary);
+      }
+    }
+    &__autocomplete {
+      display: flex;
+      flex-direction: row;
+      width: 100%;
+      align-items: center;
+      justify-content: right;
+      &__container {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        width: 40rem;
+      }
+    }
+    &__card {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+
+      &__field {
+        width: 100%;
+      }
+      &__doubleField {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5rem;
+
+        .MuiTextField-root {
+          flex: 1;
+        }
+
+        &__divider {
+          margin: 0 0.5rem;
+        }
+      }
+    }
+    &__buttons {
+      display: flex;
+      flex-direction: row;
+      padding: 1rem;
+      gap: 2rem;
+      justify-content: flex-end;
+      padding-right: 7rem;
+      button {
+        font-size: 1.6rem;
+        border-radius: 8px;
+        cursor: pointer;
+        text-transform: capitalize;
+        width: 12rem;
+      }
+    }
+  }
+  &__lower {
+    gap: 2rem;
+    background-color: var(--neutral-050);
+    padding: 2rem 7rem 2rem 7rem;
+    &__container {
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      padding: 0.5rem;
+      elevation: 1;
+      background-color: white;
+      box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.12),
+        0px 1px 2px rgba(0, 0, 0, 0.24);
+      &__label {
+        font-size: 1.6rem;
+        color: var(--text-secondary);
+        opacity: 60%;
+      }
+      &__row {
+        padding: 1rem;
+        padding-bottom: 2rem;
+        display: flex;
+        flex-direction: row;
+        height: 50px;
+        font-size: 1.6rem;
+        align-items: center;
+        justify-content: space-between;
+
+        p {
+          display: flex;
+          flex-direction: row;
+          height: 50px;
+          align-items: center;
+          gap: 1rem;
+        }
+      }
+    }
+  }
+}
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: white;
+
+  thead tr th:first-child {
+    padding: 1rem;
+    text-align: center;
+    font-size: 1.4rem;
+    font-weight: 600;
+  }
+  thead tr th {
+    padding: 1rem;
+    text-align: start;
+    font-size: 1.4rem;
+    font-weight: 600;
+  }
+  td {
+    padding: 2rem;
+    text-align: start;
+    font-size: 1.4rem;
+    table {
+      width: 100%;
+      border: none;
+      border-collapse: collapse;
+      text-align: left;
+      tr {
+        background-color: #ffffff !important;
+      }
+      td {
+        border: none;
+        text-align: left; /* Align text to the left in nested table */
+      }
+    }
+  }
+
+  td tr {
+    width: 10rem;
+  }
+
+  th {
+    border-bottom: 2px solid #ddd; /* Add border only at the bottom of the header */
+  }
+
+  tbody tr:nth-child(odd) {
+    background-color: #f9f9f9;
+    table {
+      width: 100%;
+      border: none;
+      border-collapse: collapse;
+      text-align: left;
+      tr {
+        background-color: #f9f9f9 !important;
+      }
+      td {
+        border: none;
+        text-align: left; /* Align text to the left in nested table */
+      }
+    }
+  }
+  tbody tr:last-child td {
+    border-bottom: 0px;
+  }
+  tbody tr:hover {
+    background-color: #f1f1f1;
+  }
+
+  tbody td {
+    border: 1px solid #cdd7e1; /* Add border only at the top of each cell in tbody */
+  }
+  tbody td:first-child {
+    border-left: 0px solid #ddd; /* Add border only at the left of the first cell in tbody */
+  }
+  tbody td:last-child {
+    border-right: 0px solid #ddd; /* Add border only at the left of the first cell in tbody */
+  }
+}
+
+.loading {
+  position: absolute;
+  top: 50%;
+  left: 53%;
+  transform: translate(-50%, -50%);
+}
+.name_link {
+  color: var(--primary-500);
+  text-decoration: none;
+}
+
+.tableSettings {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}

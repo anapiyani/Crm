@@ -1,0 +1,37 @@
+.modal {
+  overflow: hidden;
+  height: fit-content;
+  border-radius: 8px;
+  background-color: white;
+  z-index: 1000;
+  color: var(--text-primary);
+  &__window {
+    padding: 2rem;
+    max-height: 90vh;
+    overflow-y: auto;
+    &__content {
+      padding: 2rem 0rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    &__header {
+      height: 4rem;
+    }
+    &__title {
+      font-size: 1.6rem;
+      color: var(--text-primary);
+      font-weight: 400;
+    }
+    &__bottom {
+      display: flex;
+      justify-content: flex-end;
+      gap: 1rem;
+      button {
+        display: flex;
+        align-items: center;
+        font-size: 1.2rem;
+      }
+    }
+  }
+}

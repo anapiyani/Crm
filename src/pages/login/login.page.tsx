@@ -5,7 +5,8 @@ import classes from "./styles.module.scss";
 import eyes from "@/assets/images/background-image.svg";
 
 const LoginPage = () => {
-  const [registerWithEmail, setRegisterWithEmail] = useState<boolean>(!false);
+  const [registerWithEmail, setRegisterWithEmail] = useState<boolean>(true);
+
   return (
     <div className={classes["login"]}>
       <div className={classes["login__content"]}>

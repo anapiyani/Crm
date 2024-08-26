@@ -1,0 +1,75 @@
+.accordion {
+  border: 1px solid var(--neutral-300);
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  font-size: 1.6rem;
+  line-height: 2.4rem;
+  border-radius: 5px;
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    background-color: var(--neutral-100);
+    padding: 1rem;
+  }
+
+  &__content {
+    padding: 1rem;
+
+    &__item {
+      display: flex;
+      flex-direction: row;
+      cursor: pointer;
+      padding: 1.5rem 0;
+      border-bottom: 1px solid var(--neutral-300);
+      justify-content: space-between;
+      font-size: 1.4rem;
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      &__name {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      &__details {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+      &__input {
+        width: 50px;
+        height: 3rem;
+        padding-left: 1rem;
+      }
+
+      &__icon {
+        color: green;
+        margin-right: 0.5rem;
+      }
+
+      &__price {
+        margin-left: 4rem;
+        width: 11rem;
+      }
+    }
+  }
+}
+
+.quantity-controls {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  &__button {
+    padding: 1rem;
+    height: 3rem;
+    width: 3rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}

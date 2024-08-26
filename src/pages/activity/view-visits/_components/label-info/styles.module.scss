@@ -1,0 +1,30 @@
+.labelinfo {
+  display: flex;
+  width: 100%;
+  justify-content: end;
+  padding-top: 1rem;
+  padding-bottom: 0.2rem;
+
+  &__name {
+    display: flex;
+    align-items: center;
+    p {
+      margin-right: 2rem;
+      color: #00000099;
+      font-size: 1.6rem;
+    }
+  }
+
+  &__info {
+    width: 60%;
+    p {
+      color: #000000de;
+      font-size: 1.6rem;
+    }
+  }
+}
+
+.link {
+  color: var(--brand-500) !important;
+  cursor: pointer;
+}

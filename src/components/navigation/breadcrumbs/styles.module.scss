@@ -1,0 +1,28 @@
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 1.6rem;
+  line-height: 2.4rem;
+  letter-spacing: 0.15px;
+  color: var(--text-secondary);
+  text-decoration: none;
+  cursor: pointer;
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &__active {
+    color: var(--primary-500);
+    &:hover {
+      cursor: not-allowed;
+    }
+  }
+
+  &__not-active {
+    color: var(--text-tertiary);
+  }
+}

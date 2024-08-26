@@ -1,0 +1,13 @@
+.autocomplete {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  &__label {
+    font-size: 1.6rem;
+    font-weight: 400;
+    line-height: 2.4rem;
+    margin-right: 1rem;
+    max-lines: 1;
+    white-space: nowrap;
+  }
+}

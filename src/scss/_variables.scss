@@ -1,84 +1,98 @@
 :root {
-     /* Danger Colors */
-     --danger-050: #fef6f6;
-     --danger-100: #fde4da;
-     --danger-200: #f7e5e5;
-     --danger-300: #f08998;
-     --danger-400: #e74774;
-     --danger-500: #e41c1e;
-     --danger-600: #a51818;
-     --danger-700: #7c1212;
-     --danger-800: #a3403a;
-     --danger-900: #240505;
-     --danger-main: #D32F2F;
- 
-    /* Secondary */
-     --secondary-main:#9C27B0;
+  /* Danger Colors */
+  --danger-050: #fef6f6;
+  --danger-100: #fce4e4;
+  --danger-200: #f7e5e5;
+  --danger-300: #f09898;
+  --danger-400: #e47474;
+  --danger-500: #e41c1e;
+  --danger-600: #a51818;
+  --danger-700: #7c1212;
+  --danger-800: #a3403a;
+  --danger-900: #240505;
+  --danger-main: #d32f2f;
 
-     /* Neutral Colors */
-     --neutral-050: #fbfcfe;
-     --neutral-100: #d0d4d8;
-     --neutral-200: #dde7ee;
-     --neutral-300: #cfd7e1;
-     --neutral-400: #9f9fad;
-     --neutral-500: #636b7a;
-     --neutral-600: #555e68;
-     --neutral-700: #323a3e;
-     --neutral-800: #171a1c;
-     --neutral-900: #0b0d0e;
- 
-     /* Primary Colors */
-     --primary-050: #edf5fd;
-     --primary-100: #e3fffb;
-     --primary-200: #c7f1f7;
-     --primary-300: #97c3f0;
-     --primary-400: #4393e4;
-     --primary-500: #0b6cbb;
-     --primary-600: #1f85a5;
-     --primary-700: #12467b;
-     --primary-800: #0a2744;
-     --primary-900: #051423;
-     --primary-main: #2196F3;
- 
-     /* Success Colors */
-     --success-050: #e6fef6;
-     --success-100: #a7fee3;
-     --success-200: #97facc;
-     --success-300: #61ae61;
-     --success-400: #51be51;
-     --success-500: #17af11;
-     --success-600: #13e613;
-     --success-700: #0a470a;
-     --success-800: #042704;
-     --success-900: #021d02;
-     --success-main: #2E7D32;
+  /* Secondary */
+  --secondary-main: #9c27b0;
 
-      /* Warning Colors */
-    --warning-050: #fef4f6;
-    --warning-100: #fde0e1;
-    --warning-200: #fec2c5;
-    --warning-300: #fb896e;
-    --warning-400: #f94e3e;
-    --warning-500: #fb3119;
-    --warning-600: #c72430;
-    --warning-700: #9b2808;
-    --warning-800: #6e1405;
-    --warning-900: #f10602;
+  // Purple
+  --deep-purple-050: #ede7f6;
+  --deep-purple-200: #b39ddb;
+  --deep-purple-400: #7e57c2;
 
-    /* Text Colors */
-    --text-icon: #636b7a;
-    --text-primary: #171a1c;
-    --text-secondary: #323a3e;
-    --text-tertiary: #555e68;
+  /* Neutral Colors */
+  --neutral-050: #fbfcfe;
+  --neutral-100: #f0f4f8;
+  --neutral-200: #dde7ee;
+  --neutral-300: #cfd7e1;
+  --neutral-400: #9fa6ad;
+  --neutral-500: #636b74;
+  --neutral-600: #32383e;
+  --neutral-700: #323a3e;
+  --neutral-800: #171a1c;
+  --neutral-900: #0b0d0e;
 
-    /* Common Colors */
-    --common-white: #ffffff;
-    --common-black: #000000;
+  /* Primary Colors */
+  --primary-050: #edf5fd;
+  --primary-100: #e3effb;
+  --primary-200: #c7f1f7;
+  --primary-300: #97c3f0;
+  --primary-400: #4393e4;
+  --primary-500: #0b6bcb;
+  --primary-600: #1f85a5;
+  --primary-700: #12467b;
+  --primary-800: #0a2744;
+  --primary-900: #051423;
+  --primary-main: #2196f3;
 
-    /* Elevation Shadows (as examples, might adjust for your use) */
-    --shadow-xs: 'box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.12), 0px 1px 2px rgba(0, 0, 0, 0.24)';
-    --shadow-sm: 'box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16), 0px 3px 6px rgba(0, 0, 0, 0.23)';
-    --shadow-md: 'box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.19), 0px 6px 6px rgba(0, 0, 0, 0.23)';
-    --shadow-lg: 'box-shadow: 0px 15px 25px rgba(0, 0, 0, 0.22), 0px 10px 10px rgba(0, 0, 0, 0.25)';
-    --shadow-xl: 'box-shadow: 0px 20px 40px rgba(0, 0, 0, 0.25), 0px 15px 12px rgba(0, 0, 0, 0.22)';
+  /* Success Colors */
+  --success-050: #e6fef6;
+  --success-100: #a7fee3;
+  --success-200: #97facc;
+  --success-300: #a1e8a1;
+  --success-400: #51bc51;
+  --success-500: #17af11;
+  --success-600: #13e613;
+  --success-700: #0a470a;
+  --success-800: #042704;
+  --success-900: #021d02;
+  --success-main: #2e7d32;
+
+  /* Warning Colors */
+  --warning-050: #fef4f6;
+  --warning-100: #fde0e1;
+  --warning-200: #fec2c5;
+  --warning-300: #fb896e;
+  --warning-400: #f94e3e;
+  --warning-500: #fb3119;
+  --warning-600: #c72430;
+  --warning-700: #9b2808;
+  --warning-800: #6e1405;
+  --warning-900: #f10602;
+
+  /* Text Colors */
+  --text-icon: #636b7a;
+  --text-primary: #171a1c;
+  --text-secondary: #323a3e;
+  --text-tertiary: #555e68;
+
+  /* Common Colors */
+  --common-white: #ffffff;
+  --common-black: #000000;
+
+  /* Elevation Shadows (as examples, might adjust for your use) */
+  --shadow-xs: "box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.12), 0px 1px 2px rgba(0, 0, 0, 0.24)";
+  --shadow-sm: "box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.16), 0px 3px 6px rgba(0, 0, 0, 0.23)";
+  --shadow-md: "box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.19), 0px 6px 6px rgba(0, 0, 0, 0.23)";
+  --shadow-lg: "box-shadow: 0px 15px 25px rgba(0, 0, 0, 0.22), 0px 10px 10px rgba(0, 0, 0, 0.25)";
+  --shadow-xl: "box-shadow: 0px 20px 40px rgba(0, 0, 0, 0.25), 0px 15px 12px rgba(0, 0, 0, 0.22)";
+
+  /* Divider */
+  --divider: #636b744d;
+
+  --red-500: #c41c1c;
+  --link-500: #0b6bcb;
+  --grey-50: #fafafa;
+
+  --brand-500: #0b6bcb;
 }

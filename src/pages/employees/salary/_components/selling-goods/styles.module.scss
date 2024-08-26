@@ -1,0 +1,22 @@
+.selling {
+  &__item {
+    padding: 1rem;
+  }
+}
+
+.lonlyP {
+  margin-top: 1rem;
+  padding: 1rem;
+  font-size: 1.6rem;
+  font-weight: 400;
+  color: var(--primary-text);
+}
+
+.linkBtn {
+  color: var(--primary-500);
+  margin-left: 4rem;
+  margin-right: 2rem;
+  margin-top: 2rem;
+  cursor: pointer;
+  height: 100%;
+}
