@@ -23,7 +23,6 @@ import classes from "./styles.module.scss";
 
 const EmployeeCard = () => {
   const params = useParams<{ id: string }>();
-  const location = useLocation();
 
   const {
     data: counterCardData,

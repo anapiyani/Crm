@@ -8,6 +8,8 @@ export interface IMaterialPurchases {
   material: number;
   quantity: string;
   price: string;
+  id: number;
+  material_name: string;
 }
 
 export interface IAppointmentService {
