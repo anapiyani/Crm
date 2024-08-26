@@ -55,8 +55,6 @@ const ViewVisits = () => {
     );
   }
 
-  console.log(visitInfo);
-
   const handleDeleteVisit = (id: string | undefined) => {
     NiceModal.show(deleteModal, { id });
   };
@@ -227,7 +225,7 @@ const ViewVisits = () => {
             {visitInfo && visitInfo?.material_purchases.length > 0 && (
               <div className={classes.view__tables__firstTable}>
                 <div className={classes.view__tables__firstTable__header}>
-                  <h2>Парикмахерский зал</h2>
+                  <h2>Магазин</h2>
                   <Divider />
                 </div>
                 <div className={classes.view__tables__firstTable__table}>
@@ -303,6 +301,91 @@ const ViewVisits = () => {
                     <div>
                       <p style={{ fontSize: "1.6rem" }}>
                         Итого по отделу: <strong>2 200 руб</strong>.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+            {visitInfo && visitInfo?.appointment_services.length > 0 && (
+              <div className={classes.view__tables__firstTable}>
+                <div className={classes.view__tables__firstTable__header}>
+                  <h2>Услуги</h2>
+                  <Divider />
+                </div>
+                <div className={classes.view__tables__firstTable__table}>
+                  <Table className={classes.table}>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell>Услуга</TableCell>
+                        <TableCell>Материалы</TableCell>
+                        <TableCell>Сотрудник</TableCell>
+                        <TableCell>Кол-во</TableCell>
+                        <TableCell>Сумма</TableCell>
+                        <TableCell>Скидка</TableCell>
+                        <TableCell>Итого</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {visitInfo?.appointment_services.map((service) => (
+                        <TableRow key={service.id}>
+                          <TableCell>
+                            <p style={{ fontSize: "1.6rem" }}>
+                              {service.service_name} <br />{" "}
+                              <span style={{ fontSize: "1.2rem" }}>
+                                {service.parameter || "Для любой длины"}
+                              </span>
+                            </p>
+                          </TableCell>
+                          <TableCell>
+                            {service.materials?.map((material) => (
+                              <p key={material.id}>
+                                {material.material_name} - {material.quantity}
+                                шт.
+                              </p>
+                            ))}
+                            <Link to="/" className={classes.link}>
+                              Добавить материалы
+                            </Link>
+                          </TableCell>
+                          <TableCell>
+                            <Link to="/" className={classes.link}>
+                              {visitInfo.employee_name}
+                            </Link>
+                          </TableCell>
+                          <TableCell>{service.quantity} шт.</TableCell>
+                          <TableCell>
+                            <p>{service.summa} руб</p>{" "}
+                            <Link to="/" className={classes.link}>
+                              <Edit
+                                sx={{
+                                  fontSize: "1.5rem",
+                                }}
+                              />
+                              Редактировать
+                            </Link>{" "}
+                          </TableCell>
+                          <TableCell>
+                            <p>{service.discount_service || "-"}</p>
+                          </TableCell>
+                          <TableCell>
+                            <p>{service.total_summ} руб.</p>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                  <div
+                    style={{
+                      display: "flex",
+                      width: "100%",
+                      justifyContent: "end",
+                      padding: "1rem",
+                    }}
+                  >
+                    <div>
+                      <p style={{ fontSize: "1.6rem" }}>
+                        Итого по отделу: <strong>4950</strong>.
                       </p>
                     </div>
                   </div>

@@ -3,12 +3,76 @@ import HeaderTemplate from "@/pages/employees/salary/_components/MultiStepHeader
 import NiceModal, { useModal } from "@ebay/nice-modal-react";
 import classes from "./styles.module.scss";
 import CustomDatePicker from "@/components/date-picker/date-picker-custom";
-import StepInput from "@/pages/employees/salary/_components/step-input/step-input.component";
-import { Button, TextField } from "@mui/material";
-import { Add } from "@mui/icons-material";
+import { Button, IconButton } from "@mui/material";
+import { Add, Clear, Done, Delete } from "@mui/icons-material";
+import { IReviewFeedback } from "@/ts/activity.interface";
+import { Controller, useForm } from "react-hook-form";
+import { useQuery } from "@tanstack/react-query";
+import { searchEmployee } from "@/service/employee/employee.service";
+import CustomAutoComplete from "@/components/autocomplete/custom-autocomplete.component";
+import { useRef, useState } from "react";
+import { useFeedBack } from "@/service/activity/activity.hook";
 
 const FeedBackModal = () => {
+  const mutation = useFeedBack();
+  const { register, handleSubmit, control, setValue } =
+    useForm<IReviewFeedback>();
   const modal = useModal();
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [base64File, setBase64File] = useState<string | null>(null);
+
+  const { data: employeeData } = useQuery({
+    queryKey: ["employeeData"],
+    queryFn: () => searchEmployee({ role: "employee" }),
+  });
+
+  const onSubmit = (data: IReviewFeedback) => {
+    const sendForm: IReviewFeedback = {
+      ...data,
+      status: "review",
+      time: "00:00",
+    };
+
+    if (base64File) {
+      sendForm.scan_review = base64File;
+    }
+
+    mutation.mutate(sendForm);
+  };
+  const handleCloseModal = () => {
+    modal.hide();
+  };
+
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (files && files.length > 0) {
+      const file = files[0];
+      setSelectedFile(file);
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        setBase64File(reader.result as string);
+      };
+    }
+  };
+
+  const handleAddFileClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleRemoveFile = () => {
+    setSelectedFile(null);
+    setBase64File(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+
+  const employeeOptions = employeeData?.results.map((item) => ({
+    label: item.first_name + " " + item.last_name,
+    value: item.user_id,
+  }));
 
   return (
     <ModalWindow
@@ -19,45 +83,112 @@ const FeedBackModal = () => {
       handleClose={() => {
         modal.hide();
       }}
+      withButtons={false}
     >
-      <div className={classes.info}>
-        <HeaderTemplate children={"Общая информация"} />
-        <div className={classes.info__content}>
-          <div className={classes.info__content__date}>
-            <p>Дата подачи</p> <CustomDatePicker />
-          </div>
-          <div className={classes.info__content__status}>
-            <p>Статус</p> <p className={classes.link}>Рассматривается</p>
-          </div>
-        </div>
-      </div>
-      <div className={classes.info}>
-        <HeaderTemplate children={"Отзывы"} />
-        <div className={classes.info__content}>
-          <div className={classes.info__content__date}>
-            <StepInput
-              labelName={"Отозвались об"}
-              placeholder={"Имя Фамилия, Должность"}
-              isAutoComplete={true}
-              options={[]}
-              onChange={(value) => console.log(value)}
-            />
-          </div>
-          <div className={classes.info__content__status}>
-            <p>Скан отзыва</p>{" "}
-            <Button variant="outlined" startIcon={<Add />}>
-              Добавить файлы
-            </Button>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <div className={classes.info}>
+          <HeaderTemplate children={"Общая информация"} />
+          <div className={classes.info__content}>
+            <div className={classes.info__content__date}>
+              <p>Дата подачи</p>
+              <CustomDatePicker
+                onChange={(e) => {
+                  setValue("date", e.target.value);
+                }}
+              />
+            </div>
+            <div className={classes.info__content__status}>
+              <p>Статус</p> <p className={classes.link}>Рассматривается</p>
+            </div>
           </div>
         </div>
-      </div>
-      <div className={classes.info}>
-        <HeaderTemplate children={"Текст отзыва"} />
-        <textarea
-          placeholder="Введите текст отзыва"
-          className={classes.info__textarea}
-        />
-      </div>
+        <div className={classes.info}>
+          <HeaderTemplate children={"Отзывы"} />
+          <div className={classes.info__content}>
+            <div className={classes.info__content__date}>
+              <Controller
+                name="user"
+                control={control}
+                render={({ field }) => (
+                  <CustomAutoComplete
+                    sx={{ width: "240px" }}
+                    {...field}
+                    selectValue="label"
+                    placeholder="Имя Фамилия, Администратор"
+                    size="small"
+                    label="Сотрудник"
+                    options={employeeOptions || []}
+                    onChange={(value) => {
+                      field.onChange(value?.value);
+                    }}
+                    value={
+                      employeeOptions?.find(
+                        (option) => option.value === field.value,
+                      ) || null
+                    }
+                  />
+                )}
+              />
+            </div>
+            <div className={classes.info__content__status}>
+              <p>Скан отзыва</p>
+              {selectedFile ? (
+                <div className={classes.selectedFile}>
+                  <span>{selectedFile.name}</span>
+                  <IconButton
+                    color="error"
+                    size="small"
+                    onClick={handleRemoveFile}
+                  >
+                    <Delete />
+                  </IconButton>
+                </div>
+              ) : (
+                <>
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    style={{ display: "none" }}
+                    onChange={handleFileUpload}
+                  />
+                  <Button
+                    variant="outlined"
+                    startIcon={<Add />}
+                    onClick={handleAddFileClick}
+                  >
+                    Добавить файлы
+                  </Button>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+        <div className={classes.info}>
+          <HeaderTemplate children={"Текст отзыва"} />
+          <textarea
+            placeholder="Введите текст отзыва"
+            className={classes.info__textarea}
+            {...register("text_review")}
+          />
+        </div>
+        <div className={classes["buttons"]}>
+          <Button
+            variant="outlined"
+            onClick={handleCloseModal}
+            startIcon={<Clear />}
+          >
+            Отменить
+          </Button>
+          <Button
+            variant="contained"
+            disableElevation
+            startIcon={<Done />}
+            type="submit"
+          >
+            Сохранить
+          </Button>
+        </div>
+      </form>
     </ModalWindow>
   );
 };

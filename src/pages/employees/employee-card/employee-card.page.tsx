@@ -14,7 +14,6 @@ import { CircularProgress } from "@mui/material";
 
 const EmployeeCard = () => {
   const params = useParams<{ id: string }>();
-  const location = useLocation();
 
   const {
     data: counterCardData,
