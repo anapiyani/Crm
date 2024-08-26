@@ -73,12 +73,16 @@ export interface IClient {
 }
 
 export interface IViewAppointmentService {
+  discount_service: number;
   id: number;
-  parameter: string | null;
+  materials: IMaterialPurchases[];
+  parameter: string;
   price: string;
   quantity: number;
   service: number;
   service_name: string;
+  summa: number;
+  total_summ: number;
 }
 export interface IViewVistInfo {
   appointment_services: IViewAppointmentService[];
@@ -130,4 +134,14 @@ export interface IMaterialPurchasesView {
   material_name: string;
   quantity: string;
   price: string;
+}
+
+export interface IReviewFeedback {
+  scan_review?: string | null;
+  text_review: string;
+  date: string;
+  time: string;
+  status: string;
+  appointment?: number | null;
+  user: number;
 }

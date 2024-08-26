@@ -1,4 +1,5 @@
 import {
+  IReviewFeedback,
   IViewVistInfo,
   IVisitsInfo,
   IVisitsResponse,
@@ -24,4 +25,10 @@ export const getVisit = (id: string): Promise<IViewVistInfo> => {
 
 export const deleteVisit = (id: string): Promise<void> => {
   return api.delete(`/appointments/appointments/${id}`).then((res) => res.data);
+};
+
+export const feedback = (form: IReviewFeedback): Promise<IReviewFeedback> => {
+  return api
+    .post("/appointments/appointments/review/", form)
+    .then((res) => res.data);
 };

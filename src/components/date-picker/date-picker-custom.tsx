@@ -2,7 +2,7 @@ import React, { forwardRef } from "react";
 import classes from "./styles.module.scss";
 
 interface ICustomDatePickerProps
-  extends React.HTMLAttributes<HTMLInputElement> {}
+  extends React.InputHTMLAttributes<HTMLInputElement> {}
 
 const CustomDatePicker = forwardRef<HTMLInputElement, ICustomDatePickerProps>(
   (props, ref) => {
