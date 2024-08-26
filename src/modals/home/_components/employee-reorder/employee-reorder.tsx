@@ -14,7 +14,7 @@ interface IConvertedEmployee {
 
 interface EmployeeReorderProps {
   employees: IConvertedEmployee[];
-  onReorder: (updatedEmployee: IConvertedEmployee) => void;
+  onReorder: (updatedEmployees: IConvertedEmployee[]) => void;
   isLoading?: boolean;
 }
 
@@ -32,9 +32,6 @@ const EmployeeReorder: React.FC<EmployeeReorderProps> = ({
   isLoading,
 }) => {
   const [employeeList, setEmployeeList] = useState<IConvertedEmployee[]>([]);
-  const [draggedEmployeeIndex, setDraggedEmployeeIndex] = useState<
-    number | null
-  >(null);
 
   useEffect(() => {
     const sortedEmployees = [...employees].sort(
@@ -51,33 +48,23 @@ const EmployeeReorder: React.FC<EmployeeReorderProps> = ({
     updatedEmployees.forEach((employee, index) => {
       employee.position = index + 1;
     });
+
     setEmployeeList(updatedEmployees);
   };
 
-  //   const handleDragStart = (index: number) => {
-  //     setDraggedEmployeeIndex(index);
-  //   };
-
   const handleDragEnd = () => {
-    if (draggedEmployeeIndex !== null) {
-      const draggedEmployee = employeeList[draggedEmployeeIndex];
-      onReorder(draggedEmployee);
-      setDraggedEmployeeIndex(null);
-    }
+    onReorder(employeeList);
   };
 
-  const renderEmployee = (employee: IConvertedEmployee, index: number) => {
-    return (
-      <DraggableEmployee
-        key={employee.id}
-        index={index}
-        employee={employee}
-        moveEmployee={moveEmployee}
-        onDragStart={() => setDraggedEmployeeIndex(index)}
-        onDragEnd={handleDragEnd}
-      />
-    );
-  };
+  const renderEmployee = (employee: IConvertedEmployee, index: number) => (
+    <DraggableEmployee
+      key={employee.id}
+      index={index}
+      employee={employee}
+      moveEmployee={moveEmployee}
+      onDragEnd={handleDragEnd}
+    />
+  );
 
   if (isLoading) {
     return (
@@ -100,7 +87,6 @@ interface DraggableEmployeeProps {
   employee: IConvertedEmployee;
   index: number;
   moveEmployee: (dragIndex: number, hoverIndex: number) => void;
-  onDragStart: () => void;
   onDragEnd: () => void;
 }
 
@@ -108,7 +94,6 @@ const DraggableEmployee: React.FC<DraggableEmployeeProps> = ({
   employee,
   index,
   moveEmployee,
-  onDragStart,
   onDragEnd,
 }) => {
   const ref = React.useRef<HTMLDivElement>(null);
@@ -116,15 +101,12 @@ const DraggableEmployee: React.FC<DraggableEmployeeProps> = ({
   const [, drop] = useDrop<DragItem>({
     accept: ItemType,
     hover: (item, monitor) => {
-      if (!ref.current) {
-        return;
-      }
+      if (!ref.current) return;
+
       const dragIndex = item.index;
       const hoverIndex = index;
 
-      if (dragIndex === hoverIndex) {
-        return;
-      }
+      if (dragIndex === hoverIndex) return;
 
       const hoverBoundingRect = ref.current?.getBoundingClientRect();
       const hoverMiddleY =
@@ -132,13 +114,8 @@ const DraggableEmployee: React.FC<DraggableEmployeeProps> = ({
       const clientOffset = monitor.getClientOffset();
       const hoverClientY = clientOffset!.y - hoverBoundingRect.top;
 
-      if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
-        return;
-      }
-
-      if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
-        return;
-      }
+      if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) return;
+      if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) return;
 
       moveEmployee(dragIndex, hoverIndex);
       item.index = hoverIndex;
@@ -165,12 +142,7 @@ const DraggableEmployee: React.FC<DraggableEmployeeProps> = ({
       <IconButton className={classes.dragHandle}>
         <DragHandle />
       </IconButton>
-      <Typography
-        variant="body1"
-        sx={{
-          fontSize: "1.6rem",
-        }}
-      >
+      <Typography variant="body1" sx={{ fontSize: "1.6rem" }}>
         {employee.first_name} {employee.last_name}
       </Typography>
     </Paper>

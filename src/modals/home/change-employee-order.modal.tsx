@@ -25,17 +25,20 @@ const ChangeEmployee = () => {
   });
 
   const employeeReorderProps = data?.results.map((employee) => ({
-    id: employee.id,
+    id: employee.user_id,
     position: Number(employee.position),
     first_name: employee.first_name,
     last_name: employee.last_name,
   }));
 
-  const handleReorder = (updatedEmployee: IConvertedEmployee) => {
-    employeeReorderMutation.mutate({
-      id: updatedEmployee.id,
-      position: updatedEmployee.position,
-    });
+  const handleReorder = (updatedEmployees: IConvertedEmployee[]) => {
+    const order_data = updatedEmployees.map((employee) => ({
+      employee_id: employee.id,
+      order: employee.position,
+      is_hidden: false,
+    }));
+
+    employeeReorderMutation.mutate({ order_data: order_data });
   };
 
   return (
