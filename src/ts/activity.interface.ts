@@ -147,3 +147,15 @@ export interface IReviewFeedback {
   appointment?: number | null;
   user: number;
 }
+
+export interface IPaymentConfirm {
+  payments: IPayment[];
+  comment: string;
+  discount_custom: number;
+  on_deposit: boolean;
+}
+
+export interface IPayment {
+  money_type: string;
+  amount: number;
+}

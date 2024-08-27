@@ -1,7 +1,12 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
-import { deleteVisit, feedback, report } from "./activity.service";
-import { IReviewFeedback } from "@/ts/activity.interface";
+import {
+  confirmPayment,
+  deleteVisit,
+  feedback,
+  report,
+} from "./activity.service";
+import { IPaymentConfirm, IReviewFeedback } from "@/ts/activity.interface";
 
 export const useDeleteVisit = () => {
   const queryClient = useQueryClient();
@@ -43,6 +48,28 @@ export const useReport = () => {
     onError: (error) => {
       const errorMessage =
         error.message || "Произошла ошибка при отправке жалобы.";
+      toast.error(errorMessage);
+    },
+  });
+};
+
+export const useConfirmPayment = () => {
+  const queryClient = useQueryClient();
+  return useMutation<
+    any,
+    Error,
+    { id: string; paymentConfirm: IPaymentConfirm }
+  >({
+    mutationFn: ({ id, paymentConfirm }) => {
+      return confirmPayment({ id, paymentConfirm });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["visitsData"] });
+      toast.success("Платеж успешно подтвержден.");
+    },
+    onError: (error) => {
+      const errorMessage =
+        error.message || "Произошла ошибка при подтверждении платежа.";
       toast.error(errorMessage);
     },
   });

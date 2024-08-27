@@ -116,6 +116,22 @@
       input {
         width: 13rem;
       }
+      span {
+        font-size: 1.6rem;
+      }
+    }
+    &__pay {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      p {
+        font-size: 1.6rem;
+        margin-right: 1rem;
+      }
+      button {
+        font-size: 1.4rem;
+      }
     }
     &__status {
       display: flex;

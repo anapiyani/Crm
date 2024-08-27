@@ -1,4 +1,5 @@
 import {
+  IPaymentConfirm,
   IReviewFeedback,
   IViewVistInfo,
   IVisitsInfo,
@@ -40,5 +41,17 @@ export const report = (form: FormData): Promise<any> => {
         "Content-Type": "multipart/form-data",
       },
     })
+    .then((res) => res.data);
+};
+
+export const confirmPayment = ({
+  id,
+  paymentConfirm,
+}: {
+  id: string;
+  paymentConfirm: IPaymentConfirm;
+}): Promise<any> => {
+  return api
+    .post(`/appointments/appointments/${id}/confirm-payment/`, paymentConfirm)
     .then((res) => res.data);
 };
