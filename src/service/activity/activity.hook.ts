@@ -21,7 +21,7 @@ export const useDeleteVisit = () => {
 };
 
 export const useFeedBack = () => {
-  return useMutation<IReviewFeedback, Error, IReviewFeedback>({
+  return useMutation<any, Error, FormData>({
     mutationFn: feedback,
     onSuccess: () => {
       toast.success("Отзыв успешно отправлен.");
@@ -35,7 +35,7 @@ export const useFeedBack = () => {
 };
 
 export const useReport = () => {
-  return useMutation<IReviewFeedback, Error, FormData>({
+  return useMutation<any, Error, FormData>({
     mutationFn: report,
     onSuccess: () => {
       toast.success("Жалоба успешно отправлена.");

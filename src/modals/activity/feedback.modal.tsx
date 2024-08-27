@@ -28,13 +28,9 @@ const FeedBackModal = () => {
 
   const onSubmit = (data: IReviewFeedback) => {
     const formData = new FormData();
-
-    // Append the file if it exists
     if (selectedFile) {
       formData.append("scan_review", selectedFile);
     }
-
-    // Append other form data
     formData.append("text_review", data.text_complaint!);
     formData.append("user", data.user.toString());
     formData.append("date", data.date);

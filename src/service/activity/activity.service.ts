@@ -27,13 +27,13 @@ export const deleteVisit = (id: string): Promise<void> => {
   return api.delete(`/appointments/appointments/${id}`).then((res) => res.data);
 };
 
-export const feedback = (form: IReviewFeedback): Promise<IReviewFeedback> => {
+export const feedback = (form: FormData): Promise<any> => {
   return api
     .post("/appointments/appointments/review/", form)
     .then((res) => res.data);
 };
 
-export const report = (form: FormData): Promise<IReviewFeedback> => {
+export const report = (form: FormData): Promise<any> => {
   return api
     .post("/appointments/appointments/complaints/", form, {
       headers: {
