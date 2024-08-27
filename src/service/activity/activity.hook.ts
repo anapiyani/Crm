@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
-import { deleteVisit, feedback } from "./activity.service";
+import { deleteVisit, feedback, report } from "./activity.service";
 import { IReviewFeedback } from "@/ts/activity.interface";
 
 export const useDeleteVisit = () => {
@@ -29,6 +29,20 @@ export const useFeedBack = () => {
     onError: (error) => {
       const errorMessage =
         error.message || "Произошла ошибка при отправке отзыва.";
+      toast.error(errorMessage);
+    },
+  });
+};
+
+export const useReport = () => {
+  return useMutation<IReviewFeedback, Error, FormData>({
+    mutationFn: report,
+    onSuccess: () => {
+      toast.success("Жалоба успешно отправлена.");
+    },
+    onError: (error) => {
+      const errorMessage =
+        error.message || "Произошла ошибка при отправке жалобы.";
       toast.error(errorMessage);
     },
   });

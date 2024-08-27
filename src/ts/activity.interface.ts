@@ -137,8 +137,10 @@ export interface IMaterialPurchasesView {
 }
 
 export interface IReviewFeedback {
-  scan_review?: string | null;
-  text_review: string;
+  scan_review?: File | null;
+  scan_complaint?: File | null;
+  text_review?: string;
+  text_complaint?: string;
   date: string;
   time: string;
   status: string;

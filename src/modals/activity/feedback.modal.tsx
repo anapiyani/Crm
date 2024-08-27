@@ -20,7 +20,6 @@ const FeedBackModal = () => {
   const modal = useModal();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [base64File, setBase64File] = useState<string | null>(null);
 
   const { data: employeeData } = useQuery({
     queryKey: ["employeeData"],
@@ -28,20 +27,21 @@ const FeedBackModal = () => {
   });
 
   const onSubmit = (data: IReviewFeedback) => {
-    const sendForm: IReviewFeedback = {
-      ...data,
-      status: "review",
-      time: "00:00",
-    };
+    const formData = new FormData();
 
-    if (base64File) {
-      sendForm.scan_review = base64File;
+    // Append the file if it exists
+    if (selectedFile) {
+      formData.append("scan_review", selectedFile);
     }
 
-    mutation.mutate(sendForm);
-  };
-  const handleCloseModal = () => {
-    modal.hide();
+    // Append other form data
+    formData.append("text_review", data.text_complaint!);
+    formData.append("user", data.user.toString());
+    formData.append("date", data.date);
+    formData.append("status", "review");
+    formData.append("time", "00:00");
+
+    mutation.mutate(formData);
   };
 
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -49,11 +49,6 @@ const FeedBackModal = () => {
     if (files && files.length > 0) {
       const file = files[0];
       setSelectedFile(file);
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = () => {
-        setBase64File(reader.result as string);
-      };
     }
   };
 
@@ -63,7 +58,6 @@ const FeedBackModal = () => {
 
   const handleRemoveFile = () => {
     setSelectedFile(null);
-    setBase64File(null);
     if (fileInputRef.current) {
       fileInputRef.current.value = "";
     }
@@ -73,6 +67,10 @@ const FeedBackModal = () => {
     label: item.first_name + " " + item.last_name,
     value: item.user_id,
   }));
+
+  const handleCloseModal = () => {
+    modal.hide();
+  };
 
   return (
     <ModalWindow

@@ -217,7 +217,8 @@ const ViewVisits = () => {
         </div>
       </div>
       {(visitInfo && visitInfo?.material_purchases.length > 0) ||
-        (visitInfo && visitInfo?.salary_info.length > 0 && (
+        (visitInfo && visitInfo?.salary_info.length > 0) ||
+        (visitInfo && visitInfo.appointment_services.length > 0 && (
           <div className={classes.view__tables}>
             <div className={classes.view__tables__header}>
               <h1>Услуги и товары</h1>

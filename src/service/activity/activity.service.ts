@@ -32,3 +32,13 @@ export const feedback = (form: IReviewFeedback): Promise<IReviewFeedback> => {
     .post("/appointments/appointments/review/", form)
     .then((res) => res.data);
 };
+
+export const report = (form: FormData): Promise<IReviewFeedback> => {
+  return api
+    .post("/appointments/appointments/complaints/", form, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    })
+    .then((res) => res.data);
+};
