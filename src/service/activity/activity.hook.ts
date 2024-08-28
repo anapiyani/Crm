@@ -63,8 +63,8 @@ export const useConfirmPayment = () => {
     mutationFn: ({ id, paymentConfirm }) => {
       return confirmPayment({ id, paymentConfirm });
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["visitsData"] });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["visitInfo"] });
       toast.success("Платеж успешно подтвержден.");
     },
     onError: (error) => {
