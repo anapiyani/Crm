@@ -1,4 +1,6 @@
 import {
+  IClientBalance,
+  IPaymentConfirm,
   IReviewFeedback,
   IViewVistInfo,
   IVisitsInfo,
@@ -27,8 +29,34 @@ export const deleteVisit = (id: string): Promise<void> => {
   return api.delete(`/appointments/appointments/${id}`).then((res) => res.data);
 };
 
-export const feedback = (form: IReviewFeedback): Promise<IReviewFeedback> => {
+export const feedback = (form: FormData): Promise<any> => {
   return api
     .post("/appointments/appointments/review/", form)
     .then((res) => res.data);
+};
+
+export const report = (form: FormData): Promise<any> => {
+  return api
+    .post("/appointments/appointments/complaints/", form, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    })
+    .then((res) => res.data);
+};
+
+export const confirmPayment = ({
+  id,
+  paymentConfirm,
+}: {
+  id: string;
+  paymentConfirm: IPaymentConfirm;
+}): Promise<any> => {
+  return api
+    .post(`/appointments/appointments/${id}/confirm-payment/`, paymentConfirm)
+    .then((res) => res.data);
+};
+
+export const getBalance = (id: string): Promise<IClientBalance> => {
+  return api.get(`/deposit/${id}/`).then((res) => res.data);
 };

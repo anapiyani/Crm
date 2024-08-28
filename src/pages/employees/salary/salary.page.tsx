@@ -30,8 +30,6 @@ const SalaryPage = () => {
     enabled: !!choosenTemplate,
   });
 
-  console.log(editTemplate);
-
   useEffect(() => {
     if (templateList) {
       const firstProductionTemplate = templateList.find(

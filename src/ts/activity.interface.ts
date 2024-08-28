@@ -137,11 +137,31 @@ export interface IMaterialPurchasesView {
 }
 
 export interface IReviewFeedback {
-  scan_review?: string | null;
-  text_review: string;
+  scan_review?: File | null;
+  scan_complaint?: File | null;
+  text_review?: string;
+  text_complaint?: string;
   date: string;
   time: string;
   status: string;
   appointment?: number | null;
   user: number;
+}
+
+export interface IPaymentConfirm {
+  payments: IPayment[];
+  comment: string;
+  discount_custom: number;
+  on_deposit: boolean;
+}
+
+export interface IPayment {
+  money_type: string;
+  amount: number;
+}
+
+export interface IClientBalance {
+  balance: string;
+  user: number;
+  date_updated: string;
 }

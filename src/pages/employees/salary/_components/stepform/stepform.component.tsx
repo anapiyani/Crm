@@ -50,7 +50,8 @@ const StepForm: React.FC<IStepFormProps> = ({ toEdit }) => {
     "Привлечение клиентов",
     "Развитие клиентов",
   ]);
-  const { register, handleSubmit, reset, control } = useForm<ITemplate>();
+  const { register, handleSubmit, reset, control, setValue, getValues } =
+    useForm<ITemplate>();
 
   useEffect(() => {
     if (toEdit) {
@@ -90,6 +91,7 @@ const StepForm: React.FC<IStepFormProps> = ({ toEdit }) => {
   }, [toEdit]);
 
   const onSubmit: SubmitHandler<ITemplate> = (data) => {
+    console.log(data);
     if (data.isEdit) {
       editMutation.mutate({ form: data, id: toEdit!.id! });
     } else {
@@ -124,7 +126,13 @@ const StepForm: React.FC<IStepFormProps> = ({ toEdit }) => {
   const componentMapping: Record<number, JSX.Element> = {
     0: <TemplateName control={control} />,
     1: <FixedPart control={control} />,
-    2: <FloatingPart control={control} />,
+    2: (
+      <FloatingPart
+        control={control}
+        setValue={setValue}
+        getValues={getValues}
+      />
+    ),
     3: <SellingGoods control={control} />,
     4: <AttractingCliens control={control} />,
     5: <CustomerDevelopment control={control} />,
