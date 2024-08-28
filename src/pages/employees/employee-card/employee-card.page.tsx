@@ -8,12 +8,11 @@ import {
   CircularProgress,
 } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
-import { Add, Clear, SaveOutlined } from "@mui/icons-material";
 import TableVertical from "@/components/tables/tableVertical/vertical-info-card";
 import TableHorizontal from "@/components/tables/table-horizontal/horizontal-info-card";
 import InfoHeader from "@/components/navigation/header/info-header";
 import { employeeTabsData } from "./data";
-import { useLocation, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import {
   cardInfoEmplpyee,
@@ -91,12 +90,11 @@ const EmployeeCard = () => {
   return counterCardLoading && userInfoLoading ? (
     <CircularProgress className={classes.loading} />
   ) : (
-    <div className={classes["main"]}>
-      <InfoHeader
+      /* <InfoHeader
         tabsData={employeeTabsData}
         nameData={employeeNameData}
         counterCardData={counterCardData!}
-      />
+      /> */
       <Grid
         container
         spacing={3}
@@ -106,17 +104,14 @@ const EmployeeCard = () => {
           flexDirection: { xs: "column", md: "row" },
         }}
       >
-        {/* Main Info Grid */}
         <Grid xs={10} md={6} lg={4}>
           <TableVertical data={mainTableData} title="Главное" showLockIcon />
         </Grid>
 
-        {/* Additional Info Grid */}
         <Grid xs={10} md={6} lg={4}>
           <TableVertical data={additionalTableData} title="Доп. информация" />
         </Grid>
 
-        {/* Contacts and Address Grid */}
         <Grid xs={10} md={6} lg={4}>
           <Grid xs={12} container spacing={2}>
             <Grid xs={12}>
@@ -128,7 +123,6 @@ const EmployeeCard = () => {
           </Grid>
         </Grid>
       </Grid>
-    </div>
   );
 };
 

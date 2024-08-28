@@ -1,4 +1,4 @@
-import { NavLink } from "react-router-dom";
+import React from "react";
 import { SvgIconComponent } from "@mui/icons-material";
 import classNames from "classnames";
 import classes from "./styles.module.scss";
@@ -13,7 +13,6 @@ import {
 } from "@mui/material";
 
 interface TabData {
-  to: string;
   icon: SvgIconComponent;
   label: string;
 }
@@ -28,7 +27,7 @@ interface ResponsiveTabsProps {
 
 const ResponsiveTabs = ({
   tabsData,
-  currentTab,
+  currentTab = 0,
   onTabChange,
   isWithLink = true,
   className,
@@ -45,7 +44,7 @@ const ResponsiveTabs = ({
   return isSmallScreen ? (
     <Grid container xs={9}>
       <Select
-        value={currentTab?.toString()}
+        value={currentTab.toString()}
         onChange={handleTabChange}
         className={classes["dropdown"]}
         displayEmpty
@@ -60,7 +59,7 @@ const ResponsiveTabs = ({
         </MenuItem>
         {tabsData.map((tab, index) => (
           <MenuItem
-            key={tab.to}
+            key={index}
             value={index.toString()}
             sx={{ fontSize: "1.4rem" }}
           >
@@ -77,42 +76,23 @@ const ResponsiveTabs = ({
         className={classNames(classes["tabs__content"])}
       >
         <div className={classNames(classes["tabs__content__tab"])}>
-          {tabsData.map((tab, index) =>
-            isWithLink ? (
-              <NavLink
-                key={tab.to}
-                className={`${classes["tabs__content__tab__link"]} ${
-                  currentTab === index ? classes["active"] : ""
-                }`}
-                to={tab.to}
-                onClick={() => onTabChange && onTabChange(index)}
-              >
-                <tab.icon
-                  className={classNames(
-                    classes["tabs__content__tab__link__icon"]
-                  )}
-                  style={{ width: 22, height: 22 }}
-                />
-                <p>{tab.label}</p>
-              </NavLink>
-            ) : (
-              <div
-                key={tab.to}
-                className={classNames(classes["tabs__content__tab__link"], {
-                  [classes["active"]]: currentTab === index,
-                })}
-                onClick={() => onTabChange && onTabChange(index)}
-              >
-                <tab.icon
-                  className={classNames(
-                    classes["tabs__content__tab__link__icon"]
-                  )}
-                  style={{ width: 22, height: 22 }}
-                />
-                <p>{tab.label}</p>
-              </div>
-            )
-          )}
+          {tabsData.map((tab, index) => (
+            <div
+              key={index}
+              className={classNames(classes["tabs__content__tab__link"], {
+                [classes["active"]]: currentTab === index,
+              })}
+              onClick={() => onTabChange && onTabChange(index)}
+            >
+              <tab.icon
+                className={classNames(
+                  classes["tabs__content__tab__link__icon"]
+                )}
+                style={{ width: 22, height: 22 }}
+              />
+              <p>{tab.label}</p>
+            </div>
+          ))}
         </div>
         <hr className={classNames(classes["tabs__content__lineArrow"])} />
       </Box>

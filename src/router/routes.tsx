@@ -23,8 +23,8 @@ import {
   ViewVisits,
   StoragePage,
   EmployeeFines,
+  EmployeePage,
 } from "@/pages";
-
 // import { Role } from "@/ts/types";
 
 type IRoute = {
@@ -145,5 +145,10 @@ export const ROUTES: IRoute[] = [
     name: "View Visits",
     path: "/visits/:id",
     component: <ViewVisits />,
+  },
+  {
+    name: "Employee",
+    path: "/employees/main",
+    component: <EmployeePage />,
   },
 ];

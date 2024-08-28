@@ -7,15 +7,15 @@ import {
 } from "@mui/icons-material";
 
 export const employeeTabsData = [
-  { to: "/employees/:id", icon: HomeOutlined, label: "Обзор" },
-  { to: "/employees/visits", icon: ExitToAppOutlined, label: "Посещения" },
+  { to: "/employees/main", icon: HomeOutlined, label: "Обзор" },
+  { to: "/employees/", icon: ExitToAppOutlined, label: "Посещения" },
   {
-    to: "/employees/bonuses-fines",
+    to: "/employees/",
     icon: AccountBalanceWalletOutlined,
     label: "Зарплата, штрафы, премии, авансы",
   },
   {
-    to: "/employees/reviews",
+    to: "/employees/",
     icon: WarningAmberOutlined,
     label: "Отзывы / жалобы",
   },

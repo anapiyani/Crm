@@ -27,7 +27,7 @@ import IndirectCostsPage from "./cash-desk/indirect-costs/indirect-costs.page";
 import SalaryPage from "./employees/salary/salary.page";
 import StoragePage from "./storage/storage.page";
 import EmployeeFines from "./employees/employee-salaryAndFines/employee-salaryAndFines";
-
+import EmployeePage from "./employees/employee.page";
 export {
   Home,
   LoginPage,
@@ -55,4 +55,5 @@ export {
   IndirectCostsPage,
   StoragePage,
   EmployeeFines,
+  EmployeePage
 };
