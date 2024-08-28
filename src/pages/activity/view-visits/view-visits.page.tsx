@@ -76,8 +76,16 @@ const ViewVisits = () => {
     NiceModal.show(fineModal);
   };
 
-  const confirmPayment = (id: number | undefined) => {
-    NiceModal.show(confirmPaymentModal, { idPayment: id });
+  const confirmPayment = (
+    id: number | undefined,
+    toPay: number | undefined,
+    clientId: number | undefined,
+  ) => {
+    NiceModal.show(confirmPaymentModal, {
+      idPayment: id,
+      total: toPay,
+      client: clientId,
+    });
   };
 
   return (
@@ -196,7 +204,11 @@ const ViewVisits = () => {
                 <CardButton
                   text={"Оплатить"}
                   onButtonClick={() =>
-                    confirmPayment(visitInfo && visitInfo.id)
+                    confirmPayment(
+                      visitInfo && visitInfo.id,
+                      visitInfo && visitInfo.itogo,
+                      visitInfo && visitInfo.client.id,
+                    )
                   }
                   icon={CreditCardOutlined}
                   backgroundIcon={"rgba(46, 125, 50, 0.3)"}

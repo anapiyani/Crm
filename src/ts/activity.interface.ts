@@ -159,3 +159,9 @@ export interface IPayment {
   money_type: string;
   amount: number;
 }
+
+export interface IClientBalance {
+  balance: string;
+  user: number;
+  date_updated: string;
+}

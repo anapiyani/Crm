@@ -6,16 +6,35 @@ import { Button, Checkbox, FormControlLabel } from "@mui/material";
 import { Clear, Done } from "@mui/icons-material";
 import StepInput from "@/pages/employees/salary/_components/step-input/step-input.component";
 import { useState } from "react";
-import { IPayment, IPaymentConfirm } from "@/ts/activity.interface";
+import {
+  IClientBalance,
+  IPayment,
+  IPaymentConfirm,
+} from "@/ts/activity.interface";
 import { Controller, useForm } from "react-hook-form";
 import CustomAutoComplete from "@/components/autocomplete/custom-autocomplete.component";
 import { useConfirmPayment } from "@/service/activity/activity.hook";
+import { useQuery } from "@tanstack/react-query";
+import { getBalance } from "@/service/activity/activity.service";
 
 const ConfirmPaymentModal = ({
   idPayment,
+  total,
+  client,
 }: {
   idPayment: number | undefined;
+  total: number | undefined;
+  client: number | undefined;
 }) => {
+  const {
+    data: balanceData,
+    isLoading: balanceLoading,
+    isError: balanceError,
+  } = useQuery<IClientBalance>({
+    queryKey: ["balanceData", client],
+    queryFn: () => getBalance(client!.toString()),
+  });
+
   const [checkedValues, setCheckedValues] = useState({
     cash: true,
     card: false,
@@ -67,6 +86,8 @@ const ConfirmPaymentModal = ({
     if (idPayment) {
       mutation.mutate({ id: idPayment.toString(), paymentConfirm });
     }
+
+    modal.hide();
   };
 
   return (
@@ -80,7 +101,17 @@ const ConfirmPaymentModal = ({
     >
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className={classes.info}>
-          <HeaderTemplate children={"Тип оплаты"} />
+          <HeaderTemplate
+            children={"Тип оплаты"}
+            hasleftChildren={
+              <div>
+                <p className={classes.total}>Итого: {total}</p>{" "}
+                <p className={classes.total}>
+                  В депозите: {balanceData?.balance}
+                </p>
+              </div>
+            }
+          />
           <div className={classes.info__content}>
             <div className={classes.info__content__date}>
               <div className={classes.info__content__date__checkboxes}>
@@ -183,7 +214,7 @@ const ConfirmPaymentModal = ({
                   labelName={"Скидка"}
                   placeholder={"0"}
                   plusMinusBtns={true}
-                  afterChild={"руб."}
+                  afterChild={"%"}
                   onChange={(value) => {
                     setValue("discount_custom", value);
                   }}
