@@ -71,9 +71,8 @@ const CreateAppointment: React.FC<ICreateAppointmentModalProps> = ({
   employee,
 }) => {
   const modal = useModal();
-  const [appointmentForm, setAppointmentForm] = useState<
-    IAppointmentCreateForm
-  >(initialAppointmentForm);
+  const [appointmentForm, setAppointmentForm] =
+    useState<IAppointmentCreateForm>(initialAppointmentForm);
   const [selectedEmployee, setSelectedEmployee] = useState<IOption | null>(
     null
   );
@@ -89,6 +88,7 @@ const CreateAppointment: React.FC<ICreateAppointmentModalProps> = ({
       service: string;
       service_id: number;
       price?: string;
+      unitPrice: number;
       quantity: number;
       parameter: string;
       parameter_id: number;
@@ -206,17 +206,24 @@ const CreateAppointment: React.FC<ICreateAppointmentModalProps> = ({
 
   const handleAddService = () => {
     if (selectedServices && selectedParameters) {
-      setServiceTableData([
-        ...(serviceTableData || []),
-        {
-          id: Date.now(),
-          service: selectedServices.label,
-          service_id: selectedServices.value,
-          quantity: 1,
-          parameter: selectedParameters.label,
-          parameter_id: selectedParameters.value,
-        },
-      ]);
+      const service = servicesDataByEmployee?.find(
+        (service) => service.parameter.id === selectedServices.value
+      );
+      if (service) {
+        setServiceTableData([
+          ...(serviceTableData || []),
+          {
+            id: Date.now(),
+            service: selectedServices.label,
+            service_id: selectedServices.value,
+            quantity: 1,
+            price: service.price,
+            unitPrice: Number(service.price),
+            parameter: selectedParameters.label,
+            parameter_id: selectedParameters.value,
+          },
+        ]);
+      }
     }
     setSelectedParameters(null);
     setSelectedServices(null);
@@ -276,6 +283,7 @@ const CreateAppointment: React.FC<ICreateAppointmentModalProps> = ({
       handleClose={() => modal.hide()}
       className={classes["u-full-zero"]}
       withButtons={false}
+      afterClose={modal.remove}
     >
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <div className={classes["create-appointment"]}>

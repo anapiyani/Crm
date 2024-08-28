@@ -14,6 +14,7 @@ interface ModalWindowProps {
   withButtons?: boolean;
   titleStyles?: React.CSSProperties;
   withoutTitle?: boolean;
+  afterClose?: () => void;
 }
 
 const ModalWindow: React.FC<ModalWindowProps> = ({
@@ -26,12 +27,14 @@ const ModalWindow: React.FC<ModalWindowProps> = ({
   withButtons = true,
   titleStyles,
   withoutTitle = false,
+  afterClose,
 }) => {
   return (
     <Backdrop
       sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
       open={open}
       onClick={handleClose}
+      onExited={afterClose}
     >
       <div className={classes["modal"]} onClick={(e) => e.stopPropagation()}>
         <div className={classes["modal__window"]}>

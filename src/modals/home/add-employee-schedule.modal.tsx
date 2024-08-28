@@ -81,6 +81,7 @@ const AddEmployeeSchedule = () => {
       open={modal.visible}
       handleClose={() => modal.hide()}
       handleSave={handleSubmit}
+      afterClose={modal.remove}
     >
       <div className={classes["add-employees-schedule"]}>
         <h1 className={classes["add-employees-schedule--header"]}>
