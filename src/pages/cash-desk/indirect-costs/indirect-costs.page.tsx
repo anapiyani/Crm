@@ -205,7 +205,7 @@ const IndirectCostsPage: FC = () => {
               backgroundColor={"#FCE4E4"}
               icon={<FunctionsOutlined />}
               iconColor={"#C41C1C"}
-              textTitle={"Средняя сумма расходов в месяц"}
+              textTitle={"Средняя сумма расходов в месяцdsdd"}
               valueText={indirectCostsSumarryData?.average_expenses_per_month}
             />
           </div>
