@@ -14,7 +14,12 @@ import {
 import NiceModal from "@ebay/nice-modal-react";
 import salaryServicesModal from "@/modals/employees/salary-services.modal";
 import { Delete } from "@mui/icons-material";
-import { Controller, Control } from "react-hook-form";
+import {
+  Controller,
+  Control,
+  UseFormSetValue,
+  UseFormGetValues,
+} from "react-hook-form";
 import { IOptions, ITemplate } from "@/ts/employee.interface";
 import { co } from "node_modules/@fullcalendar/core/internal-common";
 
@@ -34,9 +39,15 @@ interface IServiceTextProps {
 
 interface FloatingPartProps {
   control: Control<ITemplate>;
+  setValue: UseFormSetValue<ITemplate>;
+  getValues: UseFormGetValues<ITemplate>;
 }
 
-const FloatingPart: React.FC<FloatingPartProps> = ({ control }) => {
+const FloatingPart: React.FC<FloatingPartProps> = ({
+  control,
+  getValues,
+  setValue,
+}) => {
   const [devServices, setDevServices] = useState<DevServiceItem[]>([]);
   const [serviceNames, setServiceNames] = useState<string[] | undefined>([]);
   const [serviceIds, setServiceIds] = useState<number[] | undefined>([]);
@@ -58,40 +69,77 @@ const FloatingPart: React.FC<FloatingPartProps> = ({ control }) => {
     handleGetIds();
   }, []);
 
-  //Zhango's function to traverse from service to parent
-
-  // Zhango's function to create List of services
-  const handleListCreate = (data: IServiceTextProps[]) => {
-    const services = data.filter((item) => item.type === "service");
-    console.log(services);
-
-    let textResult: string[][] = [];
-    services.map((service) => {
-      console.log(service);
-      const result = treeTraverse(data, service);
-      textResult.push(result);
-    });
-    const uniqueResult = [...new Set(textResult.map((item) => item.join(">")))];
-
-    return uniqueResult;
-  };
   const treeTraverse = (
     data: IServiceTextProps[],
     service: IServiceTextProps,
-  ) => {
+  ): string[] => {
     let result: string[] = [];
-    console.log(service);
+
+    // Check if service has no parent
     if (service.parent === null) {
       result.push(service.serviceName);
-      return result!;
+      return result;
     }
 
+    // Find the parent of the current service
     const parent = data.find((el) => el.id === service.parent);
-    result = [...treeTraverse(data, parent!), ...result];
-    if (parent?.isChecked !== 1) {
+
+    // If parent is not found, push the serviceName and return
+    if (!parent) {
+      console.warn(`Parent not found for service with id ${service.id}`);
       result.push(service.serviceName);
+      return result;
     }
+
+    // Recursively traverse up the tree
+    result = [...treeTraverse(data, parent), service.serviceName];
+
     return result;
+  };
+
+  const handleListCreate = (data: IServiceTextProps[]): string[] => {
+    const services = data.filter((item) => item.type === "service");
+
+    // Retrieve the current services_with_different_percentage array
+    const currentServices =
+      getValues("services_with_different_percentage") || [];
+
+    let updatedServices = [...currentServices]; // Clone the array to avoid mutation
+
+    let rootPaths: string[] = []; // Initialize an array to collect root paths
+
+    services.forEach((service) => {
+      // Find or create a service entry
+      let existingServiceEntry = updatedServices[0]; // Adjust index as needed
+
+      if (!existingServiceEntry) {
+        existingServiceEntry = {
+          service: [],
+          root: [],
+          employee_percentage: "",
+          calculation_method: "",
+          fixed_amount: "",
+        };
+        updatedServices.push(existingServiceEntry);
+      }
+
+      const root = treeTraverse(data, service); // Get the root path as an array of strings
+
+      existingServiceEntry.service = [
+        ...(existingServiceEntry.service || []),
+        service.id,
+      ];
+      existingServiceEntry.root = [
+        ...(existingServiceEntry.root || []),
+        root.join(">"), // Convert root array to a string path
+      ];
+
+      rootPaths.push(root.join(">")); // Collect root paths
+    });
+
+    setValue("services_with_different_percentage", updatedServices);
+
+    return rootPaths; // Return the collected root paths
   };
   const getServicesFromList = (data: IServiceTextProps[]) => {
     const services = data.filter((item) => item.type === "service");
@@ -109,7 +157,7 @@ const FloatingPart: React.FC<FloatingPartProps> = ({ control }) => {
     },
   ) => {
     const newId = `devService-${Date.now()}`;
-    console.log("NewService" + selected);
+    console.log(selected);
     const newService: DevServiceItem = {
       id: newId,
       element: (
