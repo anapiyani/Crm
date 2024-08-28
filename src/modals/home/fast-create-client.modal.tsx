@@ -8,6 +8,7 @@ const FastCreateClient = () => {
       title={"Event Details"}
       open={modal.visible}
       handleClose={() => modal.hide()}
+      afterClose={modal.remove}
     >
       <div>
         <h1>Event Details</h1>

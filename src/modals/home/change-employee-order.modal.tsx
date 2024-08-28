@@ -46,6 +46,7 @@ const ChangeEmployee = () => {
       title="Изменение порядка сотрудников"
       open={modal.visible}
       handleClose={() => modal.hide()}
+      afterClose={modal.remove}
     >
       <EmployeeReorder
         employees={employeeReorderProps || []}

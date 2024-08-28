@@ -79,6 +79,7 @@ const EventDetailsFirstTab: React.FC<IEventDetailsFirstTabProps> = ({
           service: service.service_name,
           service_id: service.service,
           price: service.price,
+          unitPrice: Number(service.price),
           quantity: service.quantity,
           parameter: service.parameter,
           parameter_id: service.service,
@@ -104,18 +105,24 @@ const EventDetailsFirstTab: React.FC<IEventDetailsFirstTabProps> = ({
 
   const handleAddService = () => {
     if (selectedService && selectedParameter) {
-      setServicesData([
-        ...servicesData,
-        {
-          id: Date.now(),
-          service: selectedService.label,
-          service_id: selectedService.value,
-          price: "",
-          quantity: 1,
-          parameter: selectedParameter.label,
-          parameter_id: selectedParameter.value,
-        },
-      ]);
+      const service = servicesDataByEmployee?.find(
+        (service) => service.parameter.id === selectedService.value
+      );
+      if (service) {
+        setServicesData([
+          ...servicesData,
+          {
+            id: Date.now(),
+            service: selectedService.label,
+            service_id: selectedService.value,
+            price: service.price,
+            unitPrice: Number(service.price),
+            quantity: 1,
+            parameter: selectedParameter.label,
+            parameter_id: selectedParameter.value,
+          },
+        ]);
+      }
       setSelectedService(null);
       setSelectedParameter(null);
     }

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import {
   Table,
   TableHead,
@@ -15,6 +15,7 @@ export interface ITableRowData {
   service: string;
   service_id: number;
   price?: string;
+  unitPrice: number;
   quantity: number;
   parameter: string;
   parameter_id: number;
@@ -66,7 +67,9 @@ const ReusableServiceTable: React.FC<IReusableTableProps> = ({
                   }}
                 />
               </TableCell>
-              <TableCell>{item.price}</TableCell>
+              <TableCell>
+                {(item.unitPrice * item.quantity).toFixed(2)}
+              </TableCell>
               <TableCell>
                 <div onClick={() => onDelete(item.id)}>
                   <Close />

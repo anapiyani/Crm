@@ -38,6 +38,7 @@ const AddBreak: React.FC<IAddBreakModalProps> = ({ resourceId, date }) => {
         modal.hide();
       }}
       className={classes["u-p-0"]}
+      afterClose={modal.remove}
     >
       <div className={classes["break-modal"]}>
         <div className={classes["break-modal__time"]}>

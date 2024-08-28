@@ -14,6 +14,7 @@ const ExportAppointments = () => {
       title={"Скачивание журнала записей"}
       open={modal.visible}
       handleClose={() => modal.hide()}
+      afterClose={modal.remove}
     >
       <div className={classes["export-appointments"]}>
         <h1 className={classes["export-appointments--header"]}>
