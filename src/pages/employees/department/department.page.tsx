@@ -20,6 +20,9 @@ import {
 } from "@/service/department/department.hook";
 import ModalWindow from "@/components/modal-window/modal-window";
 import classNames from "classnames";
+import CreateDepartmentModal from "@/modals/employees/create-department.modal";
+import { useCreateHierarchy } from "@/service/hierarchy/hierarchy.hook";
+import NiceModal from "@ebay/nice-modal-react";
 
 const Department = () => {
   const { data, isPending, isError } = useQuery({
@@ -118,7 +121,16 @@ const Department = () => {
       <div className={classes["department__content"]}>
         <div className={classes["department__content__column"]}>
           <div className={classes["department__content__column__header"]}>
-            <h2>Отделы</h2>
+            <h2>
+              Отделы
+              <Button
+                onClick={() => {
+                  NiceModal.show(CreateDepartmentModal);
+                }}
+              >
+                + Добавить
+              </Button>
+            </h2>
             <Divider />
           </div>
           <div className={classes["department__content__column__items"]}>

@@ -1,5 +1,6 @@
 import {
   IEmployeeServiceHierarchy,
+  IService,
   IServiceCategory,
 } from "@/ts/service.interface";
 import api from "../api";
@@ -68,6 +69,19 @@ export const moveHierarchy = (
   }).toString();
   return api
     .post("/hierarchy/hierarchical-items/move/?" + params)
+    .then((res) => res.data);
+};
+
+export const createServiceBasic = (data: {
+  parent: number;
+  name: string;
+}): Promise<IService> => {
+  const params = new URLSearchParams({
+    hierarchical_item_id: data.parent?.toString(),
+    name: data.name,
+  }).toString();
+  return api
+    .post("/services/services/create_basic/?" + params)
     .then((res) => res.data);
 };
 

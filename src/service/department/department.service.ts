@@ -1,4 +1,4 @@
-import { IRoleChange, IRoleCreate } from "@/ts/types";
+import { IDepartmentData, IRoleChange, IRoleCreate } from "@/ts/types";
 import { IDepartments } from "@/ts/departments.interface";
 import api from "../api";
 
