@@ -698,7 +698,10 @@ const CashDesk = () => {
                   <TableRow key={result.id}>
                     <TableCell>{index + 1}</TableCell>
                     <TableCell>
-                      <Link to="/" className={classes.name_link}>
+                      <Link
+                        to={`/transactions/${result.id}`}
+                        className={classes.name_link}
+                      >
                         {result.operation_name} №{result.id} <br />{" "}
                         {dayjs(result.operation_date).format("DD.MM.YYYY")}
                       </Link>

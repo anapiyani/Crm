@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import {
+  cancelPayment,
   confirmPayment,
   deleteVisit,
   feedback,
@@ -70,6 +71,25 @@ export const useConfirmPayment = () => {
     onError: (error) => {
       const errorMessage =
         error.message || "Произошла ошибка при подтверждении платежа.";
+      toast.error(errorMessage);
+    },
+  });
+};
+
+export const useCancelPayment = () => {
+  const queryClient = useQueryClient();
+  return useMutation<{ message: string }, Error, string>({
+    mutationFn: (id) => {
+      return cancelPayment(id);
+    },
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["visitInfo"] });
+      toast.success("Платеж успешно отменен.");
+    },
+
+    onError: (error) => {
+      const errorMessage =
+        error.message || "Произошла ошибка при отмене платежа.";
       toast.error(errorMessage);
     },
   });

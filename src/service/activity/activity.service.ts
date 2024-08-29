@@ -60,3 +60,7 @@ export const confirmPayment = ({
 export const getBalance = (id: string): Promise<IClientBalance> => {
   return api.get(`/deposit/${id}/`).then((res) => res.data);
 };
+
+export const cancelPayment = (id: string): Promise<{ message: string }> => {
+  return api.post(`/cancel_payment/${id}/`).then((res) => res.data);
+};
