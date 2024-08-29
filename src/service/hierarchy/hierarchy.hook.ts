@@ -1,4 +1,4 @@
-import { IServiceCategory } from "@/ts/service.interface";
+import { IService, IServiceCategory } from "@/ts/service.interface";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   addHierarchy,
@@ -9,6 +9,7 @@ import {
   moveStorageHierarchy,
   updateStorageHierarchy,
   deleteStorageHierarchy,
+  createServiceBasic,
 } from "./hierarchy.service";
 import toast from "react-hot-toast";
 import {
@@ -18,10 +19,24 @@ import {
   IStorageCategory,
 } from "@/ts/hierarchy.inteface";
 
-export const useCreateHierarchy = () => {
+export const useCreateHierarchy = (queryKey: string[] = ["hierarchyData"]) => {
   const queryClient = useQueryClient();
   return useMutation<IServiceCategory, Error, IAddHierarchy>({
     mutationFn: addHierarchy,
+    onSuccess: () => {
+      toast.success("Иерархия успешно добавлена.");
+      queryClient.invalidateQueries({ queryKey: queryKey });
+    },
+    onError: (error: Error) => {
+      toast.error(`Упс! ошибка при добавлении: ${error.message}`);
+    },
+  });
+};
+
+export const useCreateServiceBasic = () => {
+  const queryClient = useQueryClient();
+  return useMutation<IService, Error, { parent: number; name: string }>({
+    mutationFn: createServiceBasic,
     onSuccess: () => {
       toast.success("Иерархия успешно добавлена.");
       queryClient.invalidateQueries({ queryKey: ["hierarchyData"] });

@@ -212,9 +212,6 @@ const ClientsAdd: React.FC = () => {
                           width: "40rem",
                           justifyContent: "end",
                         },
-                        "&MuiFormControl-root": {
-                          alignItems: "end",
-                        },
                       }}
                       {...field}
                       selectValue="label"

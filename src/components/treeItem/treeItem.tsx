@@ -21,6 +21,7 @@ import EditCategoryModal from "@/modals/service-catalog/edit-category.modal";
 import classes from "./styles.module.scss";
 import {
   useCreateHierarchy,
+  useCreateServiceBasic,
   useDeleteHierarchy,
   useMoveHierarchy,
 } from "@/service/hierarchy/hierarchy.hook";
@@ -261,6 +262,7 @@ const TreeView: React.FC<TreeViewProps> = ({
 
   const moveHierarchyItems = useMoveHierarchy();
   const deleteHierarchyItems = useDeleteHierarchy();
+  const addService = useCreateServiceBasic();
 
   const handleClickAnchor = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -272,6 +274,7 @@ const TreeView: React.FC<TreeViewProps> = ({
     });
     setAnchorEl(null);
   };
+
   const handleCloseAnchor = () => {
     setAnchorEl(null);
   };
@@ -428,7 +431,14 @@ const TreeView: React.FC<TreeViewProps> = ({
                 Подкатегория
               </ListItemText>
             </MenuItem>
-            <MenuItem onClick={handleCloseAnchor}>
+            <MenuItem
+              onClick={() =>
+                addService.mutate({
+                  parent: selectedCategoryId!.id,
+                  name: "New Service",
+                })
+              }
+            >
               <ListItemIcon>
                 <ContentCutIcon
                   sx={{

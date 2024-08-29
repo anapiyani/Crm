@@ -33,13 +33,14 @@ const SalaryModal: React.FC = () => {
     value: number;
   } | null>(null);
   const [employeeInfo, setEmployeeInfo] = useState<IEmployeeWalletInfo>();
-  const { register, handleSubmit, reset, control, watch } =
-    useForm<ISalaryPayment>();
+  const { register, handleSubmit, reset, control, watch } = useForm<
+    ISalaryPayment
+  >();
 
   const type = watch("type");
 
   const onSubmit: SubmitHandler<ISalaryPayment> = async (
-    data: ISalaryPayment,
+    data: ISalaryPayment
   ) => {
     await mutation.mutate(data);
     reset();
@@ -55,7 +56,7 @@ const SalaryModal: React.FC = () => {
     if (selectedEmployee) {
       const fetchEmployeeInfo = async () => {
         const resultEmployee = await getEmployeeSalaryWallet(
-          selectedEmployee.value,
+          selectedEmployee.value
         );
         setEmployeeInfo(resultEmployee);
       };
@@ -92,6 +93,7 @@ const SalaryModal: React.FC = () => {
               control={control}
               render={({ field }) => (
                 <CustomAutoComplete
+                  className={classes["u-w-full"]}
                   {...field}
                   selectValue="label"
                   placeholder="Имя Фамилия, Администратор"
@@ -104,7 +106,7 @@ const SalaryModal: React.FC = () => {
                   }}
                   value={
                     employeeOptions?.find(
-                      (option) => option.value === field.value,
+                      (option) => option.value === field.value
                     ) || null
                   }
                 />
@@ -192,6 +194,7 @@ const SalaryModal: React.FC = () => {
                 control={control}
                 render={({ field }) => (
                   <CustomAutoComplete
+                    className={classes["u-w-full"]}
                     {...field}
                     selectValue="label"
                     placeholder="Все начисления"
@@ -223,6 +226,7 @@ const SalaryModal: React.FC = () => {
               control={control}
               render={({ field }) => (
                 <CustomAutoComplete
+                  className={classes["u-w-full"]}
                   {...field}
                   selectValue="label"
                   placeholder="Наличными"
@@ -271,6 +275,7 @@ const SalaryModal: React.FC = () => {
               control={control}
               render={({ field }) => (
                 <CustomAutoComplete
+                  className={classes["u-w-full"]}
                   {...field}
                   selectValue="label"
                   placeholder="Юридическое лицо"
@@ -283,7 +288,7 @@ const SalaryModal: React.FC = () => {
                   }}
                   value={
                     employeeOptions?.find(
-                      (option) => option.value === field.value,
+                      (option) => option.value === field.value
                     ) || null
                   }
                 />
