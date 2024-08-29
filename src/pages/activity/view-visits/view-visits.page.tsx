@@ -16,8 +16,6 @@ import {
   DeleteOutlineOutlined,
   AnnouncementOutlined,
   RateReviewOutlined,
-  ThumbDownOutlined,
-  ThumbUpOutlined,
   Comment,
   Edit,
   CreditCardOutlined,
@@ -28,16 +26,16 @@ import { Link, useParams } from "react-router-dom";
 import NiceModal from "@ebay/nice-modal-react";
 import reportModal from "@/modals/activity/report.modal";
 import feedbackModal from "@/modals/activity/feedback.modal";
-import bonusesModule from "@/modals/activity/bonuses.modal";
-import fineModal from "@/modals/activity/fine.modal";
 import { useQuery } from "@tanstack/react-query";
 import { getVisit } from "@/service/activity/activity.service";
 import { IViewVistInfo } from "@/ts/activity.interface";
 import deleteModal from "@/modals/activity/delete.modal";
 import confirmPaymentModal from "@/modals/activity/confirm-payment.modal";
+import { useCancelPayment } from "@/service/activity/activity.hook";
 
 const ViewVisits = () => {
   const params = useParams<{ id: string }>();
+  const cancelMutation = useCancelPayment();
 
   const {
     data: visitInfo,
@@ -68,12 +66,8 @@ const ViewVisits = () => {
     NiceModal.show(feedbackModal);
   };
 
-  const handleOpenBonuse = () => {
-    NiceModal.show(bonusesModule);
-  };
-
-  const handleOpenFine = () => {
-    NiceModal.show(fineModal);
+  const handleCancelPayment = (id: number | undefined) => {
+    cancelMutation.mutate(id!.toString());
   };
 
   const confirmPayment = (
@@ -158,6 +152,7 @@ const ViewVisits = () => {
             {visitInfo?.status === "completed" ? (
               <div className={classes.view__main__content__body__item}>
                 <CardButton
+                  onButtonClick={() => handleCancelPayment(visitInfo.id)}
                   text={"Отменить оплату"}
                   icon={CreditCardOffOutlined}
                   backgroundIcon={"rgba(221, 231, 238, 1)"}
@@ -183,20 +178,6 @@ const ViewVisits = () => {
                   icon={RateReviewOutlined}
                   backgroundIcon={"rgba(199, 223, 247, 1)"}
                   colorIcon={"rgba(11, 107, 203, 1)"}
-                />
-                <CardButton
-                  onButtonClick={handleOpenFine}
-                  text={"Оштрафовать"}
-                  icon={ThumbDownOutlined}
-                  backgroundIcon={"rgba(156, 39, 176, 0.3)"}
-                  colorIcon={"rgba(156, 39, 176, 1)"}
-                />
-                <CardButton
-                  onButtonClick={handleOpenBonuse}
-                  text={"Премировать"}
-                  icon={ThumbUpOutlined}
-                  backgroundIcon={"rgba(46, 125, 50, 0.3)"}
-                  colorIcon={"rgba(46, 125, 50, 1)"}
                 />
               </div>
             ) : (
