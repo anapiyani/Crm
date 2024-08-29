@@ -29,7 +29,17 @@ const WorkSchedule = () => {
               plugins={[dayGridPlugin]}
               initialView="dayGridMonth"
               locale="ru"
-              events={[{ title: "Event 1", date: "2024-07-02" }]}
+              events={[
+                {
+                  title: "Event 1",
+                  date: "2024-08-28",
+                },
+
+                {
+                  title: "Event 2",
+                  date: "2024-08-29",
+                },
+              ]}
             />
           </div>
         </div>
