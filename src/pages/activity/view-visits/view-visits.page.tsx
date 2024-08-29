@@ -16,8 +16,6 @@ import {
   DeleteOutlineOutlined,
   AnnouncementOutlined,
   RateReviewOutlined,
-  ThumbDownOutlined,
-  ThumbUpOutlined,
   Comment,
   Edit,
   CreditCardOutlined,
