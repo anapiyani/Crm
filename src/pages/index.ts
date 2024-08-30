@@ -11,14 +11,13 @@ import Clients from "./clients/clients.page";
 import ClientCard from "@/pages/clients/client-card/client-card.page";
 import SearchVisits from "./activity/search-visit/search-visit.page";
 import ViewVisits from "./activity/view-visits/view-visits.page";
-import WorkSchedule from "./employees/work-schedule/work-schedule";
+import WorkSchedule from "./work-schedule/work-schedule";
 import Department from "./employees/department/department.page";
 import ServiceCatalog from "./services/catalog/catalog.page";
 import ServicePriceList from "./services/price-list/price-list.page";
 import ClientAdd from "./clients/add/clients-add";
 import StorageSettings from "./storage/settings/settings-storage.page";
 import ClientSearch from "./clients/search/clients-search.page";
-
 import Rating from "./employees/rating/rating-page";
 import NotFound from "./not-found/not-found-page";
 import Unauthorized from "./unauthorized/unauthorized.page";

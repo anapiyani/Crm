@@ -11,11 +11,15 @@ import {
 } from "@mui/icons-material";
 
 interface RoleEmployeeCheckboxProps {
-  onEmployeeSelectionChange: (selectedEmployeeIds: number[]) => void;
+  onEmployeeSelectionChange: (
+    selectedEmployeeIds: { id: number; color?: string }[],
+  ) => void;
+  generateColors?: () => string;
 }
 
 const RoleEmployeeCheckbox: React.FC<RoleEmployeeCheckboxProps> = ({
   onEmployeeSelectionChange,
+  generateColors,
 }) => {
   const { data, isPending, error } = useQuery({
     queryKey: ["roleEmployeeCheckbox"],
@@ -31,7 +35,7 @@ const RoleEmployeeCheckbox: React.FC<RoleEmployeeCheckboxProps> = ({
     id: string,
     checked: boolean,
     childrenIds?: string[],
-    parentId?: string
+    parentId?: string,
   ) => {
     setCheckedItems((prev) => {
       const updated = { ...prev, [id]: checked };
@@ -49,21 +53,34 @@ const RoleEmployeeCheckbox: React.FC<RoleEmployeeCheckboxProps> = ({
           department.roles.every((role) => {
             if (role.id.toString() === parentId) {
               return role.employees.every(
-                (employee) => updated[`emp_${employee.id.toString()}`]
+                (employee) => updated[`emp_${employee.user_id.toString()}`],
               );
             }
             return true;
-          })
+          }),
         );
         updated[parentId] = !!parentChecked;
       }
 
-      const selectedEmployeeIds = Object.keys(updated)
+      const selectedEmployees = Object.keys(updated)
         .filter((key) => updated[key])
         .filter((key) => key.startsWith("emp_"))
-        .map((key) => parseInt(key.replace("emp_", ""), 10));
+        .map((key) => {
+          const employeeId = parseInt(key.replace("emp_", ""), 10);
+          const employee = data
+            ?.flatMap((department) =>
+              department.roles.flatMap((role) => role.employees),
+            )
+            .find((emp) => emp.user_id === employeeId);
+          return employee
+            ? { id: employee.user_id, color: employee.color }
+            : null;
+        })
+        .filter((employee) => employee !== null);
 
-      onEmployeeSelectionChange(selectedEmployeeIds);
+      onEmployeeSelectionChange(
+        selectedEmployees as { id: number; color?: string }[],
+      );
 
       return updated;
     });
@@ -87,7 +104,8 @@ const RoleEmployeeCheckbox: React.FC<RoleEmployeeCheckboxProps> = ({
           initialState[role.id.toString()] = false;
           initialOpenState[role.id.toString()] = true;
           role.employees.forEach((employee) => {
-            initialState[`emp_${employee.id}`] = false;
+            initialState[`emp_${employee.user_id}`] = false;
+            generateColors && (employee.color = generateColors());
           });
         });
       });
@@ -106,8 +124,8 @@ const RoleEmployeeCheckbox: React.FC<RoleEmployeeCheckboxProps> = ({
 
   return (
     <>
-      {data?.map((item: IDepartmentHierarchy) => (
-        <div className={classes.department} key={item.department}>
+      {data?.map((item: IDepartmentHierarchy, index) => (
+        <div className={classes.department} key={index}>
           <div className={classes.row}>
             <input
               type="checkbox"
@@ -117,7 +135,7 @@ const RoleEmployeeCheckbox: React.FC<RoleEmployeeCheckboxProps> = ({
                 handleCheck(
                   item.department,
                   e.target.checked,
-                  item.roles.map((role) => role.id.toString())
+                  item.roles.map((role) => role.id.toString()),
                 )
               }
             />
@@ -149,9 +167,9 @@ const RoleEmployeeCheckbox: React.FC<RoleEmployeeCheckboxProps> = ({
                           role.id.toString(),
                           e.target.checked,
                           role.employees.map(
-                            (employee) => `emp_${employee.id}`
+                            (employee) => `emp_${employee.user_id}`,
                           ),
-                          item.department
+                          item.department,
                         )
                       }
                     />
@@ -171,17 +189,27 @@ const RoleEmployeeCheckbox: React.FC<RoleEmployeeCheckboxProps> = ({
                   {openBranches[role.id.toString()] && (
                     <div className={classes.department__roles__employees}>
                       {role.employees.map((employee) => (
-                        <div className={classes.row} key={employee.id}>
+                        //employee ROW
+                        <div
+                          style={{
+                            backgroundColor: employee.color,
+                            width: "100%",
+                            padding: "0.5rem",
+                            borderRadius: "0.5rem",
+                          }}
+                          className={classes.row}
+                          key={employee.user_id}
+                        >
                           <input
                             type="checkbox"
-                            id={`emp_${employee.id}`}
-                            checked={!!checkedItems[`emp_${employee.id}`]}
+                            id={`emp_${employee.user_id}`}
+                            checked={!!checkedItems[`emp_${employee.user_id}`]}
                             onChange={(e) =>
                               handleCheck(
-                                `emp_${employee.id}`,
+                                `emp_${employee.user_id}`,
                                 e.target.checked,
                                 [],
-                                role.id.toString()
+                                role.id.toString(),
                               )
                             }
                           />

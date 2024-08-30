@@ -45,3 +45,16 @@ export interface ISchedule {
   breaks: IBreaks[];
   appointments: IAppointment[];
 }
+
+export interface IResponseScheduleData {
+  notes: string | null;
+  id: number;
+  employee: IEmployee;
+  date: string;
+  day_status: {
+    id: number;
+    status: string;
+  };
+  breaks: IBreaks[];
+  appointments: IAppointment[];
+}
