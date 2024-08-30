@@ -83,6 +83,7 @@ const VerticalTextField = forwardRef<HTMLInputElement, IProps>(
                   classes["main__double__inputDouble"],
                   addClassName,
                 )}
+                onChange={onChangeFrom}
               />
               <p>{doubleDivier}</p>
               <CustomDatePicker
@@ -90,6 +91,7 @@ const VerticalTextField = forwardRef<HTMLInputElement, IProps>(
                   classes["main__double__inputDouble"],
                   addClassName,
                 )}
+                onChange={onChangeTo}
               />
             </div>
           );
