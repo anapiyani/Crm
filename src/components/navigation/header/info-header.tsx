@@ -45,6 +45,7 @@ const InfoHeader: React.FC<InfoHeaderProps> = ({
               <div className={classes["main__header__upper__row__cards"]}>
                 <CounterCard
                   backgroundColor="rgba(76, 175, 80, 0.3)"
+                  icon={<HomeOutlined />}
                   iconColor="var(--success-main)"
                   textTitle="Выручка за все время"
                   valueText={
@@ -53,6 +54,7 @@ const InfoHeader: React.FC<InfoHeaderProps> = ({
                 />
                 <CounterCard
                   backgroundColor="rgba(33, 150, 243, 0.3)"
+                  icon={<HomeOutlined />}
                   iconColor="var(--primary-main)"
                   textTitle="Обслуженные посещения"
                   valueText={
@@ -64,6 +66,7 @@ const InfoHeader: React.FC<InfoHeaderProps> = ({
 
                 <CounterCard
                   backgroundColor="rgba(156,39,176, 0.3)"
+                  icon={<HomeOutlined />}
                   iconColor="var(--secondary-main)"
                   textTitle="Является сотрудником"
                   valueText="8 месяцев 3 дня"
