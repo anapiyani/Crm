@@ -57,4 +57,6 @@ export interface IResponseScheduleData {
   };
   breaks: IBreaks[];
   appointments: IAppointment[];
+  start_time: string;
+  end_time: string;
 }

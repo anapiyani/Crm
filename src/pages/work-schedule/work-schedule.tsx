@@ -60,6 +60,7 @@ const WorkSchedule = () => {
           selectedEmployeeIds.find((emp) => emp.id === employee.employee.id)
             ?.color || generateColors(),
         textColor: "black",
+        start: employee.start_time,
       };
     });
   }, [employeesData, selectedEmployeeIds]);
