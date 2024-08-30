@@ -59,7 +59,7 @@ const ResponsiveTabs = ({
         </MenuItem>
         {tabsData.map((tab, index) => (
           <MenuItem
-            key={index}
+            key={index} 
             value={index.toString()}
             sx={{ fontSize: "1.4rem" }}
           >
@@ -94,6 +94,7 @@ const ResponsiveTabs = ({
             </div>
           ))}
         </div>
+        <hr className={classNames(classes["tabs__content__lineArrow"])} />
         <hr className={classNames(classes["tabs__content__lineArrow"])} />
       </Box>
     </div>
