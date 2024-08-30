@@ -28,6 +28,7 @@ import EmployeeFines from "./employees/employee-salaryAndFines/employeeSalaryAnd
 import EmployeePage from "./employees/employee.page";
 import StoragePage from "./storage/storate.page";
 import AnalyticsPage from "./analytics/analytics";
+import Report from "./reports/report.page";
 
 export {
   Home,
@@ -58,4 +59,5 @@ export {
   EmployeePage,
   StoragePage,
   AnalyticsPage,
+  Report,
 };

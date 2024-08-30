@@ -157,11 +157,14 @@ const ResponsiveDrawer = (props: IProps) => {
     },
     { text: "Поставщики", icon: <ShoppingCart /> },
     { text: "Карты и скидки", icon: <CreditCard /> },
-    { text: "Рассылка", icon: <Mail /> },
-    { text: "Отчеты", icon: <Description /> },
-    { text: "Настройки", icon: <Settings /> },
-    { text: "Поддержка", icon: <Info /> },
-    { text: "Маркет", icon: <Store /> },
+    {
+      text: "Анал",
+      icon: <Description />,
+      children: [
+        { text: "Аналитика", link: "/analytics/" },
+        { text: "Отчеты", link: "/analytics/reports" },
+      ],
+    },
   ];
 
   const LogoContainer = styled("div")({

@@ -1,0 +1,28 @@
+.report {
+  width: 100%;
+
+  background-color: #fbfcfe;
+  height: 100%;
+  &__upper {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 2rem 7rem 4rem 7rem;
+    border-bottom: 1px solid #e0e0e0;
+    &__title {
+      font-size: 3.4rem;
+      font-weight: 400;
+      color: var(--text-primary);
+    }
+    &__subtitle {
+      font-size: 1.6rem;
+      font-weight: 400;
+      color: var(--text-tertiary);
+    }
+    &__search {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+  }
+}
