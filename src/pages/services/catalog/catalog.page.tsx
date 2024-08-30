@@ -436,7 +436,11 @@ const ServiceCatalog = () => {
                         className={classes.catalog__lower__info__row__input}
                         disabled
                         variant="standard"
-                        defaultValue={service?.discount.size + "%"}
+                        defaultValue={
+                          service?.discount
+                            ? service.discount.size + "%"
+                            : "Нет скидки"
+                        }
                         sx={{
                           "& .MuiInputBase-root.Mui-disabled:before": {
                             fontSize: "1.6rem",
