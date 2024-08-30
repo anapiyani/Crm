@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Edit, Lock } from "@mui/icons-material";
+import { Edit, Lock, Add } from "@mui/icons-material"; // Import the Add icon
 import {
   Box,
   Paper,
@@ -13,6 +13,7 @@ import {
   Select,
   MenuItem,
   SelectChangeEvent,
+  IconButton,
 } from "@mui/material";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -46,6 +47,8 @@ interface TableVerticalProps {
   showLockIcon?: boolean;
   extraAction?: React.ReactNode;
   includeDropdown?: boolean;
+  noIcon?: boolean;
+  showAddIcon?: boolean; // New prop for the Add icon
 }
 
 const TableVertical: React.FC<TableVerticalProps> = ({
@@ -54,6 +57,8 @@ const TableVertical: React.FC<TableVerticalProps> = ({
   showLockIcon = false,
   extraAction,
   includeDropdown = false,
+  noIcon = false,
+  showAddIcon = false, // Default is false, meaning no Add icon by default
 }) => {
   const [dropdownValue, setDropdownValue] = useState(
     data[data.length - 1].value
@@ -70,6 +75,7 @@ const TableVertical: React.FC<TableVerticalProps> = ({
         border: "0.1rem solid #CDD7E1",
         borderRadius: "8px",
         boxShadow: "0rem 0.1rem 0.2rem 0rem rgba(21, 21, 21, 0.08)",
+        width: "100%",
       }}
     >
       <Box
@@ -99,21 +105,43 @@ const TableVertical: React.FC<TableVerticalProps> = ({
             alignItems: "center",
           }}
         >
-          {!showLockIcon ? (
-            <Box
-              sx={{
-                padding: "0.8rem",
-                pr: "2.4rem",
-              }}
-            >
-              <Edit
+          {noIcon ? null : !showLockIcon ? (
+            <>
+              <Box
                 sx={{
-                  verticalAlign: "middle",
-                  fontSize: "2.4rem",
-                  color: "#2196F3",
+                  padding: "0.8rem",
+                  pr: "2.4rem",
                 }}
-              />
-            </Box>
+              >
+                <IconButton>
+                  <Edit
+                    sx={{
+                      verticalAlign: "middle",
+                      fontSize: "2.4rem",
+                      color: "#2196F3",
+                    }}
+                  />
+                </IconButton>
+              </Box>
+              {showAddIcon && (
+                <Box
+                  sx={{
+                    padding: "0.8rem",
+                    pr: "2.4rem",
+                  }}
+                >
+                  <IconButton>
+                    <Add
+                      sx={{
+                        verticalAlign: "middle",
+                        fontSize: "2.4rem",
+                        color: "#2196F3",
+                      }}
+                    />
+                  </IconButton>
+                </Box>
+              )}
+            </>
           ) : (
             <Box
               sx={{
@@ -127,22 +155,26 @@ const TableVertical: React.FC<TableVerticalProps> = ({
                   pr: "2.4rem",
                 }}
               >
-                <Edit
-                  sx={{
-                    verticalAlign: "middle",
-                    fontSize: "2.4rem",
-                    color: "#2196F3",
-                  }}
-                />
+                <IconButton>
+                  <Edit
+                    sx={{
+                      verticalAlign: "middle",
+                      fontSize: "2.4rem",
+                      color: "#2196F3",
+                    }}
+                  />
+                </IconButton>
               </Box>
               <Box sx={{ padding: "0.8rem" }}>
-                <Lock
-                  sx={{
-                    verticalAlign: "middle",
-                    fontSize: "2.4rem",
-                    color: "#2196F3",
-                  }}
-                />
+                <IconButton>
+                  <Lock
+                    sx={{
+                      verticalAlign: "middle",
+                      fontSize: "2.4rem",
+                      color: "#2196F3",
+                    }}
+                  />
+                </IconButton>
               </Box>
             </Box>
           )}

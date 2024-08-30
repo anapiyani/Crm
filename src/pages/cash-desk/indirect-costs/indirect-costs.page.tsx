@@ -14,6 +14,9 @@ import {
   Check,
   Close,
   DeleteOutline,
+  PaymentsOutlined,
+  BarChartOutlined,
+  FunctionsOutlined,
 } from "@mui/icons-material";
 import {
   Button,
@@ -184,12 +187,14 @@ const IndirectCostsPage: FC = () => {
           <div className={classes.main__header__row}>
             <CounterCard
               backgroundColor={"#2196F34D"}
+              icon={<PaymentsOutlined />}
               iconColor={"var(--primary-main)"}
               textTitle={"Разходы за отчетный период"}
               valueText={indirectCostsSumarryData?.expenses_all_time}
             />
             <CounterCard
               backgroundColor={"#2E7D324D"}
+              icon={<BarChartOutlined />}
               iconColor={"var(--success-main)"}
               textTitle={"Накопленная статистика доходов"}
               valueText={
@@ -198,6 +203,7 @@ const IndirectCostsPage: FC = () => {
             />
             <CounterCard
               backgroundColor={"#FCE4E4"}
+              icon={<FunctionsOutlined />}
               iconColor={"#C41C1C"}
               textTitle={"Средняя сумма расходов в месяц"}
               valueText={indirectCostsSumarryData?.average_expenses_per_month}
@@ -503,7 +509,7 @@ const IndirectCostsPage: FC = () => {
                                     <TableCell>{itemDetail.name}</TableCell>
                                     <TableCell>
                                       {dayjs(operation.date).format(
-                                        "DD.MM.YYYY",
+                                        "DD.MM.YYYY"
                                       )}
                                     </TableCell>
                                     <TableCell>
@@ -520,7 +526,7 @@ const IndirectCostsPage: FC = () => {
                                       </TableCell>
                                     )}
                                   </TableRow>
-                                ),
+                                )
                               )
                             ) : (
                               <TableRow key={detailIndex}>
@@ -536,7 +542,7 @@ const IndirectCostsPage: FC = () => {
                                   </TableCell>
                                 )}
                               </TableRow>
-                            ),
+                            )
                           )}
                         </TableBody>
                       </Table>
