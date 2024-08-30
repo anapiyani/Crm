@@ -228,8 +228,8 @@ const SearchVisits = () => {
     onParentChange(parentCategory.parent, parentState);
   };
 
-  const handleEmployeeSelectionChange = (ids: number[]) => {
-    setSelectedEmployeeIds(ids);
+  const handleEmployeeSelectionChange = (ids: { id: number }[]) => {
+    setSelectedEmployeeIds(ids.map((item) => item.id));
     console.log("Selected Employee IDs:", ids);
   };
 

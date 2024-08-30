@@ -76,7 +76,7 @@ export interface IRolesbyDepartment {
     {
       id: number;
       name: string;
-    }
+    },
   ];
 }
 
@@ -107,6 +107,7 @@ export interface IEmployeesRoles {
   employees: IEmployeeDepartment[];
 }
 export interface IEmployeeDepartment {
-  id: number;
+  user_id: number;
   full_name: string;
+  color?: string;
 }

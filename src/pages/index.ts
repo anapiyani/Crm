@@ -18,7 +18,6 @@ import ServicePriceList from "./services/price-list/price-list.page";
 import ClientAdd from "./clients/add/clients-add";
 import StorageSettings from "./storage/settings/settings-storage.page";
 import ClientSearch from "./clients/search/clients-search.page";
-
 import Rating from "./employees/rating/rating-page";
 import NotFound from "./not-found/not-found-page";
 import Unauthorized from "./unauthorized/unauthorized.page";

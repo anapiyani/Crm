@@ -1,5 +1,9 @@
 import api from "../api";
-import { IBreaks, ISchedule } from "@/ts/schedule.interface";
+import {
+  IBreaks,
+  IResponseScheduleData,
+  ISchedule,
+} from "@/ts/schedule.interface";
 import { IResponseData } from "@/ts/types";
 
 export const getSchedules = (): Promise<IResponseData<ISchedule[]>> => {
@@ -23,18 +27,18 @@ export const deleteBreakFromSchedule = (id: number) => {
 export const addTimeOffToSchedule = (
   employee_id: number,
   data: { status: string },
-  date: string
+  date: string,
 ) => {
   return api
     .post(
       `/schedule/day-statuses/add-time-off/${employee_id}/date/?date=${date}`,
-      data
+      data,
     )
     .then((res) => res.data);
 };
 
 export const getEmployeeScheduleDates = (
-  employee_id: number
+  employee_id: number,
 ): Promise<{ date: string }[]> => {
   return api
     .get(`/schedule/schedules/employee/dates/?employee_id=${employee_id}`)
@@ -43,7 +47,7 @@ export const getEmployeeScheduleDates = (
 
 export const addTimeOffToScheduleByDate = (
   employee_id: string,
-  date: string
+  date: string,
 ): Promise<{
   id: number;
   status: string;
@@ -56,7 +60,7 @@ export const addTimeOffToScheduleByDate = (
 };
 
 export const getEmployeeMonthlySchedule = (
-  employee_id: number
+  employee_id: number,
 ): Promise<IResponseData<ISchedule[]>> => {
   return api
     .get(`/schedule/schedules/monthly/${employee_id}/`)
@@ -64,7 +68,7 @@ export const getEmployeeMonthlySchedule = (
 };
 
 export const getEmployeeWeeklySchedule = (
-  employee_id: number
+  employee_id: number,
 ): Promise<IResponseData<ISchedule[]>> => {
   return api
     .get(`/schedule/schedules/weekly/${employee_id}/`)
@@ -84,7 +88,7 @@ export const addEmployeeToSchedule = ({
 }) => {
   return api
     .post(
-      `/schedule/schedules/add/?date=${date}&employee_id=${employee_id}&end_time=${end_time}&start_time=${start_time}`
+      `/schedule/schedules/add/?date=${date}&employee_id=${employee_id}&end_time=${end_time}&start_time=${start_time}`,
     )
     .then((res) => res.data);
 };
@@ -95,4 +99,10 @@ export const updateEmployeePosition = (orderData: {
   return api
     .post(`/schedule/schedules/employee/order/`, orderData)
     .then((res) => res.data);
+};
+
+export const getEmployeeScheduleEachDay = (
+  id: number,
+): Promise<IResponseScheduleData> => {
+  return api.get(`/schedule/schedules/employee/${id}/`).then((res) => res.data);
 };
