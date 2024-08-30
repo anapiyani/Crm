@@ -103,7 +103,7 @@ export const materialData = [
     alwaysUse: true,
     canChange: false,
     paidByClient: false,
-    finalCost: "1 мл = 200 руб.",
+    finalCost: "1 мл = 200 ₸",
   },
   {
     material: "Парикмахерский зал > Эстель > Эстель делюкс",
@@ -117,6 +117,6 @@ export const materialData = [
     alwaysUse: true,
     canChange: false,
     paidByClient: false,
-    finalCost: "1 мл = 200 руб.",
+    finalCost: "1 мл = 200 ₸",
   },
 ];

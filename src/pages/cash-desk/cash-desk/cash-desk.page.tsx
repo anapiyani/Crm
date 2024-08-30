@@ -637,7 +637,7 @@ const CashDesk = () => {
                 <TextField
                   variant="outlined"
                   size="small"
-                  placeholder="От, руб."
+                  placeholder="От, ₸"
                   style={{ width: "42%" }}
                   {...register("from_amount")}
                 />
@@ -645,7 +645,7 @@ const CashDesk = () => {
                 <TextField
                   variant="outlined"
                   size="small"
-                  placeholder="До, руб."
+                  placeholder="До, ₸"
                   style={{ width: "41%" }}
                   {...register("to_amount")}
                 />
@@ -699,7 +699,7 @@ const CashDesk = () => {
                     <TableCell>{index + 1}</TableCell>
                     <TableCell>
                       <Link
-                        to={`/transactions/${result.id}`}
+                        to={`/visits/${result.id}`}
                         className={classes.name_link}
                       >
                         {result.operation_name} №{result.id} <br />{" "}
@@ -715,7 +715,7 @@ const CashDesk = () => {
                             : classes.expense
                         }
                       >
-                        {result.amount} руб.
+                        {result.amount} ₸
                       </p>
                     </TableCell>
                     <TableCell>
@@ -728,7 +728,7 @@ const CashDesk = () => {
                             gap: "0.5rem",
                           }}
                         >
-                          {result.overall_change_in_cash_register.card} руб.
+                          {result.overall_change_in_cash_register.card} ₸
                           <CreditCard />
                         </p>
                       )}
@@ -741,7 +741,7 @@ const CashDesk = () => {
                             gap: "0.5rem",
                           }}
                         >
-                          {result.overall_change_in_cash_register.cash} руб.{" "}
+                          {result.overall_change_in_cash_register.cash} ₸{" "}
                           <Public />
                         </p>
                       )}
@@ -754,7 +754,7 @@ const CashDesk = () => {
                             gap: "0.5rem",
                           }}
                         >
-                          {result.overall_change_in_cash_register.check} руб.{" "}
+                          {result.overall_change_in_cash_register.check} ₸{" "}
                           <LocalActivity />
                         </p>
                       )}
@@ -771,7 +771,7 @@ const CashDesk = () => {
                             result.overall_change_in_cash_register
                               .checking_account
                           }
-                          руб. <MenuBook />
+                          ₸ <MenuBook />
                         </p>
                       )}
                     </TableCell>

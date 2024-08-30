@@ -452,7 +452,7 @@ const IndirectCostsPage: FC = () => {
                           alignItems: "center",
                         }}
                       >
-                        <h1>-{item.total_expenses} руб</h1>
+                        <h1>-{item.total_expenses} ₸</h1>
                         <span style={{ paddingTop: "8px" }}>
                           {openTables[tableKey] ? (
                             <ExpandLess style={{ fontSize: "24px" }} />
@@ -509,7 +509,7 @@ const IndirectCostsPage: FC = () => {
                                     <TableCell>{itemDetail.name}</TableCell>
                                     <TableCell>
                                       {dayjs(operation.date).format(
-                                        "DD.MM.YYYY"
+                                        "DD.MM.YYYY",
                                       )}
                                     </TableCell>
                                     <TableCell>
@@ -526,7 +526,7 @@ const IndirectCostsPage: FC = () => {
                                       </TableCell>
                                     )}
                                   </TableRow>
-                                )
+                                ),
                               )
                             ) : (
                               <TableRow key={detailIndex}>
@@ -542,7 +542,7 @@ const IndirectCostsPage: FC = () => {
                                   </TableCell>
                                 )}
                               </TableRow>
-                            )
+                            ),
                           )}
                         </TableBody>
                       </Table>

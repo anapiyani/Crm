@@ -29,7 +29,7 @@ const WorkSchedule = () => {
   const employeesData = useMemo(() => {
     return employeeQueries
       .filter((query) => query.isSuccess)
-      .map((query) => query.data as IResponseScheduleData);
+      .map((query) => query.data.results as IResponseScheduleData[]);
   }, [employeeQueries]);
 
   const renderEventContent = (eventInfo: any) => {
@@ -52,8 +52,8 @@ const WorkSchedule = () => {
   };
 
   const eventData = useMemo(() => {
-    return employeesData.map((employee) => {
-      return {
+    return employeesData.flatMap((employeeArray) =>
+      employeeArray.map((employee) => ({
         title: `${employee.employee.first_name} ${employee.employee.last_name}`,
         date: employee.date,
         backgroundColor:
@@ -61,8 +61,8 @@ const WorkSchedule = () => {
             ?.color || generateColors(),
         textColor: "black",
         start: employee.start_time,
-      };
-    });
+      })),
+    );
   }, [employeesData, selectedEmployeeIds]);
 
   const generateColors = () => {

@@ -57,7 +57,7 @@ const MaterialTable: React.FC<MaterialTableProps> = ({ data, title }) => {
       MaterialData,
       "material" | "finalCost" | "alwaysUse" | "canChange" | "paidByClient"
     >,
-    value: number
+    value: number,
   ) => {
     const newData = [...tableData];
     newData[index][field] = value;
@@ -67,7 +67,7 @@ const MaterialTable: React.FC<MaterialTableProps> = ({ data, title }) => {
   const handleCheckboxChange = (
     index: number,
     field: keyof Pick<MaterialData, "alwaysUse" | "canChange" | "paidByClient">,
-    value: boolean
+    value: boolean,
   ) => {
     const newData = [...tableData];
     newData[index][field] = value;
@@ -159,7 +159,7 @@ const MaterialTable: React.FC<MaterialTableProps> = ({ data, title }) => {
                             handleCheckboxChange(
                               index,
                               "alwaysUse",
-                              e.target.checked
+                              e.target.checked,
                             )
                           }
                         />
@@ -179,7 +179,7 @@ const MaterialTable: React.FC<MaterialTableProps> = ({ data, title }) => {
                             handleCheckboxChange(
                               index,
                               "canChange",
-                              e.target.checked
+                              e.target.checked,
                             )
                           }
                         />
@@ -199,7 +199,7 @@ const MaterialTable: React.FC<MaterialTableProps> = ({ data, title }) => {
                             handleCheckboxChange(
                               index,
                               "paidByClient",
-                              e.target.checked
+                              e.target.checked,
                             )
                           }
                         />
@@ -237,7 +237,7 @@ const MaterialTable: React.FC<MaterialTableProps> = ({ data, title }) => {
                     }}
                     size="small"
                   />
-                  <p className={classes.cost__text}>мл = 200 руб. </p>
+                  <p className={classes.cost__text}>мл = 200 ₸ </p>
                 </div>
               </TableCell>
               <TableCell
@@ -301,7 +301,7 @@ const MaterialTable: React.FC<MaterialTableProps> = ({ data, title }) => {
                       handleInputChange(
                         index,
                         "shortHair",
-                        Number(e.target.value)
+                        Number(e.target.value),
                       )
                     }
                     sx={{
@@ -331,7 +331,7 @@ const MaterialTable: React.FC<MaterialTableProps> = ({ data, title }) => {
                       handleInputChange(
                         index,
                         "mediumHair",
-                        Number(e.target.value)
+                        Number(e.target.value),
                       )
                     }
                     sx={{
@@ -361,7 +361,7 @@ const MaterialTable: React.FC<MaterialTableProps> = ({ data, title }) => {
                       handleInputChange(
                         index,
                         "longHair",
-                        Number(e.target.value)
+                        Number(e.target.value),
                       )
                     }
                     sx={{
@@ -411,9 +411,7 @@ const MaterialTable: React.FC<MaterialTableProps> = ({ data, title }) => {
                   borderRight: "none",
                 }}
               >
-                <p className={classes.cost__text}>
-                  1 мл = {200 / row.cost} руб
-                </p>
+                <p className={classes.cost__text}>1 мл = {200 / row.cost} ₸</p>
               </TableCell>
             </TableRow>
           ))}

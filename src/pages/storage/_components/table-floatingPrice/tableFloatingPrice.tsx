@@ -66,7 +66,7 @@ const FloatingPriceTable = () => {
                   sx: { fontSize: "1.4rem" },
                 }}
               />
-              <span>руб.</span>
+              <span>₸</span>
             </div>
           </div>
         </Box>
@@ -119,7 +119,7 @@ const FloatingPriceTable = () => {
                   sx: { fontSize: "1.4rem" },
                 }}
               />
-              <span>руб.</span>
+              <span>₸</span>
             </div>
           </div>
         </Box>
@@ -159,7 +159,7 @@ const FloatingPriceTable = () => {
                   sx: { fontSize: "1.4rem" },
                 }}
               />
-              <span>руб.</span>
+              <span>₸</span>
             </div>
           </div>
         </Box>

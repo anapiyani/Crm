@@ -37,18 +37,18 @@ const FinesHeader: React.FC<InfoHeaderProps> = ({
   nameData,
   counterCardData,
 }) => {
-    const location = useLocation();
-    const [activeTab, setActiveTab] = useState<number>(0);
-  
-    useEffect(() => {
-      const currentPath = location.pathname;
-      const tabIndex = tabsData.findIndex(tab => tab.to === currentPath);
-      setActiveTab(tabIndex !== -1 ? tabIndex : 0);
-    }, [location.pathname, tabsData]);
-  
-    const handleTabChange = (index: number) => {
-      setActiveTab(index);
-    };
+  const location = useLocation();
+  const [activeTab, setActiveTab] = useState<number>(0);
+
+  useEffect(() => {
+    const currentPath = location.pathname;
+    const tabIndex = tabsData.findIndex((tab) => tab.to === currentPath);
+    setActiveTab(tabIndex !== -1 ? tabIndex : 0);
+  }, [location.pathname, tabsData]);
+
+  const handleTabChange = (index: number) => {
+    setActiveTab(index);
+  };
 
   return (
     <div className={classes["main__header"]}>
@@ -60,10 +60,10 @@ const FinesHeader: React.FC<InfoHeaderProps> = ({
               {nameData.name}
             </h1>
           </div>
-          <ResponsiveTabs 
-            tabsData={tabsData} 
-            currentTab={activeTab} 
-            onTabChange={handleTabChange} 
+          <ResponsiveTabs
+            tabsData={tabsData}
+            currentTab={activeTab}
+            onTabChange={handleTabChange}
           />
           <div className={classes["main__header__upper__row"]}>
             <Grid container xl={12} sx={{ gap: "0.8rem" }}>
@@ -88,7 +88,7 @@ const FinesHeader: React.FC<InfoHeaderProps> = ({
                   iconColor="#607D8B"
                   textTitle="Фикс. часть"
                   valueText="За смену"
-                  textTitleFocus="0 руб."
+                  textTitleFocus="0 ₸"
                 />
                 <CounterCard
                   backgroundColor="rgba(33, 150, 243, 0.3)"
@@ -113,7 +113,7 @@ const FinesHeader: React.FC<InfoHeaderProps> = ({
                   iconColor="var(--primary-main)"
                   textTitle="Привл. клиентов"
                   valueText="За клиента"
-                  textTitleFocus="0 руб."
+                  textTitleFocus="0 ₸"
                 />
                 <CounterCard
                   backgroundColor="rgba(156, 39, 176, 0.3)"
@@ -121,7 +121,7 @@ const FinesHeader: React.FC<InfoHeaderProps> = ({
                   iconColor="var(--secondary-main)"
                   textTitle="Развитие клиентов"
                   valueText="От продаж"
-                  textTitleFocus="0 руб."
+                  textTitleFocus="0 ₸"
                 />
               </div>
             </Grid>

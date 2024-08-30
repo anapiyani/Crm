@@ -113,7 +113,7 @@ const FixedPart: React.FC<FixedPartProps> = ({ control }) => {
                 placeholder={"0"}
                 onChange={(value) => field.onChange(value)}
                 plusMinusBtns={true}
-                afterChild={<p>руб.</p>}
+                afterChild={<p>₸</p>}
                 dataValue={field.value || ""}
               />
             )}

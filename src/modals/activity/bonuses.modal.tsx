@@ -40,7 +40,7 @@ const BonuseModal = () => {
             dataValue="0"
             isNumber={true}
             plusMinusBtns={true}
-            afterChild={"руб."}
+            afterChild={"₸"}
             onChange={(value) => console.log(value)}
           />
           <StepInput

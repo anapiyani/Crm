@@ -110,6 +110,25 @@ const EmployeeAdd = () => {
       },
     };
     mutation.mutate(formToSend);
+    setForm({
+      user: {
+        email: "",
+        first_name: "",
+        last_name: "",
+        gender: "",
+        date_of_birth: "",
+        phone_number: "",
+        phone_number_whatsapp: "",
+      },
+      position: 0,
+      start_date: new Date().toISOString().split("T")[0],
+      city: "",
+      city_index: "",
+      street: "",
+      house: "",
+      apartment: "",
+      comment: "",
+    });
   };
 
   const { data } = useQuery({

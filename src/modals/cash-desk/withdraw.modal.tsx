@@ -200,7 +200,7 @@ const WithdrawModal: React.FC = () => {
             >
               -
             </Button>
-            <span>руб.</span>
+            <span>₸</span>
           </div>
           <div className={classes.modalContent__content__item}>
             <p>Назначение платежа</p>

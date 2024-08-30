@@ -18,7 +18,7 @@ const AttractingClients: React.FC<IAttractingClientsProps> = ({ control }) => {
           control={control}
           render={({ field }) => {
             const options = [
-              { label: "Фиксированно, в рублях", value: "fixed" },
+              { label: "Фиксированно, в ₸ях", value: "fixed" },
               {
                 label: "Процент от первого чека",
                 value: "percent_first_check",
@@ -28,7 +28,7 @@ const AttractingClients: React.FC<IAttractingClientsProps> = ({ control }) => {
               <StepInput
                 labelName="Система начислений"
                 isAutoComplete={true}
-                placeholder="Фиксирвано, в руб."
+                placeholder="Фиксирвано, в ₸"
                 options={options}
                 onChange={(selectedOption) =>
                   field.onChange(selectedOption.value)
@@ -70,7 +70,7 @@ const AttractingClients: React.FC<IAttractingClientsProps> = ({ control }) => {
               <StepInput
                 labelName="Система начислений"
                 isAutoComplete={true}
-                placeholder="Фиксирвано, в руб."
+                placeholder="Фиксирвано, в ₸"
                 options={options}
                 onChange={(selectedOption) =>
                   field.onChange(selectedOption.value)

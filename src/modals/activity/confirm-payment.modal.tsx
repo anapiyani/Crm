@@ -163,7 +163,7 @@ const ConfirmPaymentModal = ({
                   labelName={"Сумма наличными"}
                   placeholder={"0"}
                   plusMinusBtns={true}
-                  afterChild={"руб."}
+                  afterChild={"₸"}
                   onChange={(value) => {
                     setValue("payments.0.amount", value);
                   }}
@@ -174,7 +174,7 @@ const ConfirmPaymentModal = ({
                   labelName={"Сумма картой"}
                   placeholder={"0"}
                   plusMinusBtns={true}
-                  afterChild={"руб."}
+                  afterChild={"₸"}
                   onChange={(value) => {
                     setValue("payments.1.amount", value);
                   }}
@@ -185,7 +185,7 @@ const ConfirmPaymentModal = ({
                   labelName={"Сумма чеками"}
                   placeholder={"0"}
                   plusMinusBtns={true}
-                  afterChild={"руб."}
+                  afterChild={"₸"}
                   onChange={(value) => {
                     setValue("payments.2.amount", value);
                   }}
@@ -196,7 +196,7 @@ const ConfirmPaymentModal = ({
                   labelName={"Сумма со счета"}
                   placeholder={"0"}
                   plusMinusBtns={true}
-                  afterChild={"руб."}
+                  afterChild={"₸"}
                   onChange={(value) => {
                     setValue("payments.3.amount", value);
                   }}

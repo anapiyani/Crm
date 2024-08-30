@@ -26,13 +26,13 @@ const ChooseService: React.FC<ChooseServiceModalProps> = ({
   const handleServiceSelect = (selectedService: any) => {
     setTempSelectedServices((prevData) => {
       const existingService = prevData.find(
-        (item) => item.service_id === selectedService.service_id
+        (item) => item.service_id === selectedService.service_id,
       );
       if (existingService) {
         return prevData.map((item) =>
           item.service_id === selectedService.service_id
             ? { ...item, quantity: selectedService.quantity }
-            : item
+            : item,
         );
       } else {
         return [...prevData, selectedService];
@@ -50,6 +50,7 @@ const ChooseService: React.FC<ChooseServiceModalProps> = ({
       }}
       handleClose={() => modal.hide()}
       className={classNames(classes["u-p-0"], classes["choose-service-modal"])}
+      isFront={true}
     >
       <div className={classes["choose-service-modal__accordions"]}>
         {services.map((service, index) => (

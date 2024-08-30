@@ -195,7 +195,7 @@ const EmployeePage = () => {
                 iconColor="#607D8B"
                 textTitle="Фикс. часть"
                 valueText="За смену"
-                textTitleFocus="0 руб."
+                textTitleFocus="0 ₸"
               />
               <CounterCard
                 backgroundColor="rgba(33, 150, 243, 0.3)"
@@ -220,7 +220,7 @@ const EmployeePage = () => {
                 iconColor="var(--primary-main)"
                 textTitle="Привл. клиентов"
                 valueText="За клиента"
-                textTitleFocus="0 руб."
+                textTitleFocus="0 ₸"
               />
               <CounterCard
                 backgroundColor="rgba(156, 39, 176, 0.3)"
@@ -228,7 +228,7 @@ const EmployeePage = () => {
                 iconColor="var(--secondary-main)"
                 textTitle="Развитие клиентов"
                 valueText="От продаж"
-                textTitleFocus="0 руб."
+                textTitleFocus="0 ₸"
               />
             </div>
           </Grid>

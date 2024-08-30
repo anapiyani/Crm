@@ -2,6 +2,7 @@ import api from "../api";
 import {
   IBreaks,
   IResponseScheduleData,
+  IResponseScheduleDataCounts,
   ISchedule,
 } from "@/ts/schedule.interface";
 import { IResponseData } from "@/ts/types";
@@ -103,6 +104,6 @@ export const updateEmployeePosition = (orderData: {
 
 export const getEmployeeScheduleEachDay = (
   id: number,
-): Promise<IResponseScheduleData> => {
+): Promise<IResponseScheduleDataCounts> => {
   return api.get(`/schedule/schedules/employee/${id}/`).then((res) => res.data);
 };

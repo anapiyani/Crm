@@ -119,7 +119,7 @@ export interface IViewVistInfo {
 
 export interface ISalaryInfo {
   id: number;
-  type: [string, string][];
+  type: string;
   revenue: number;
   salary_change: number;
   salary: string;

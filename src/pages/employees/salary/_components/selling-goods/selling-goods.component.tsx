@@ -29,14 +29,15 @@ interface GoodsPartProps {
 
 const SellingGoods: React.FC<GoodsPartProps> = ({ control }) => {
   const [choosenOption, setChoosenOption] = useState<string>(
-    control._defaultValues.item_sales?.certificate_sales?.calculation_type || ""
+    control._defaultValues.item_sales?.certificate_sales?.calculation_type ||
+      "",
   );
   const [choosenSubOption, setChoosenSubOption] = useState<string>(
     control._defaultValues.item_sales?.subscription_sales?.calculation_type ||
-      ""
+      "",
   );
   const [choosenGoodOption, setChoosenGoodOption] = useState<string>(
-    control._defaultValues.item_sales?.product_sales?.calculation_type || ""
+    control._defaultValues.item_sales?.product_sales?.calculation_type || "",
   );
 
   const [certificateContent, setCertificateContent] = useState<
@@ -130,7 +131,7 @@ const SellingGoods: React.FC<GoodsPartProps> = ({ control }) => {
                     }}
                     onChange={(e) => console.log(e.target.value)}
                   />
-                  <p style={{ fontSize: "1.4rem" }}>руб.</p>
+                  <p style={{ fontSize: "1.4rem" }}>₸</p>
                 </div>
                 <Autocomplete
                   size="small"
@@ -215,7 +216,7 @@ const SellingGoods: React.FC<GoodsPartProps> = ({ control }) => {
                     }}
                     onChange={(e) => console.log(e.target.value)}
                   />
-                  <p style={{ fontSize: "1.4rem" }}>руб.</p>
+                  <p style={{ fontSize: "1.4rem" }}>₸</p>
                 </div>
                 <Autocomplete
                   size="small"
@@ -297,7 +298,7 @@ const SellingGoods: React.FC<GoodsPartProps> = ({ control }) => {
     option: { label: string; value: string } = {
       label: "Фикс. сумма",
       value: "fixed_percent",
-    }
+    },
   ) => {
     const newId = `devGoods-${Date.now()}`;
     const newGoods: CertificateItem = {
@@ -366,11 +367,12 @@ const SellingGoods: React.FC<GoodsPartProps> = ({ control }) => {
                   materialsIds: goodIds,
                 }).then((res) => {
                   getServicesFromList(res as IStorageTextProps[]);
-                  const newServiceText: IStorageTextProps[] = res as IStorageTextProps[];
+                  const newServiceText: IStorageTextProps[] =
+                    res as IStorageTextProps[];
                   handleOpenGoodsWithOtherPercent(
                     handleListCreate(newServiceText),
                     percent,
-                    option
+                    option,
                   );
                   handleDeleteGoods(newId);
                 })
@@ -422,19 +424,19 @@ const SellingGoods: React.FC<GoodsPartProps> = ({ control }) => {
 
   const handleDeleteCertificate = (id: string) => {
     setCertificateContent((prevDevServices) =>
-      prevDevServices.filter((service) => service.id !== id)
+      prevDevServices.filter((service) => service.id !== id),
     );
   };
 
   const handleDeleteAbonement = (id: string) => {
     setAbonementsWithOtherPercent((prevDevServices) =>
-      prevDevServices.filter((service) => service.id !== id)
+      prevDevServices.filter((service) => service.id !== id),
     );
   };
 
   const handleDeleteGoods = (id: string) => {
     setGoodsWithOtherPercent((prevDevServices) =>
-      prevDevServices.filter((service) => service.id !== id)
+      prevDevServices.filter((service) => service.id !== id),
     );
   };
 

@@ -101,7 +101,7 @@
 
 .choose-service-modal {
   min-width: 80rem;
-
+  z-index: 99999;
   &__accordions {
     display: flex;
     flex-direction: column;

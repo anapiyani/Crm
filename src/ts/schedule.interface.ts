@@ -60,3 +60,8 @@ export interface IResponseScheduleData {
   start_time: string;
   end_time: string;
 }
+
+export interface IResponseScheduleDataCounts {
+  results: IResponseScheduleData[];
+  count: number;
+}

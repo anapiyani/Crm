@@ -195,7 +195,7 @@ const FloatingPart: React.FC<FloatingPartProps> = ({
                       />
                     )}
                   />
-                  <p style={{ fontSize: "1.4rem" }}>руб.</p>
+                  <p style={{ fontSize: "1.4rem" }}>₸</p>
                 </div>
                 <Controller
                   name="services_with_different_percentage.0.calculation_method"

@@ -139,7 +139,10 @@ const ViewVisits = () => {
               <LabelInfo name={"До скидки"} info={`${visitInfo?.do_skidki}`} />
               <LabelInfo name={"Скидка"} info={`${visitInfo?.skidka}`} />
               <LabelInfo name={"Итого"} info={`${visitInfo?.itogo}`} />
-              <LabelInfo name={"Оплачено"} info={`${visitInfo?.oplacheno}`} />
+              <LabelInfo
+                name={"Оплачено"}
+                info={visitInfo?.oplacheno ? `${visitInfo?.oplacheno}` : "0"}
+              />
             </div>
           </div>
         </div>
@@ -269,7 +272,7 @@ const ViewVisits = () => {
                       </TableCell>
                       <TableCell>{purchase.quantity} шт.</TableCell>
                       <TableCell>
-                        <p>{purchase.price} руб</p>{" "}
+                        <p>{purchase.price} ₸</p>{" "}
                         <Link to="/" className={classes.link}>
                           <Edit
                             sx={{
@@ -283,7 +286,7 @@ const ViewVisits = () => {
                         <p>-</p>
                       </TableCell>
                       <TableCell>
-                        <p>{purchase.price} руб.</p>
+                        <p>{purchase.price} ₸</p>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -299,7 +302,7 @@ const ViewVisits = () => {
               >
                 <div>
                   <p style={{ fontSize: "1.6rem" }}>
-                    Итого по отделу: <strong>2 200 руб</strong>.
+                    Итого по отделу: <strong>2 200 ₸</strong>.
                   </p>
                 </div>
               </div>
@@ -354,7 +357,7 @@ const ViewVisits = () => {
                       </TableCell>
                       <TableCell>{service.quantity} шт.</TableCell>
                       <TableCell>
-                        <p>{service.summa} руб</p>{" "}
+                        <p>{service.summa} ₸</p>{" "}
                         <Link to="/" className={classes.link}>
                           <Edit
                             sx={{
@@ -368,7 +371,7 @@ const ViewVisits = () => {
                         <p>{service.discount_service || "-"}</p>
                       </TableCell>
                       <TableCell>
-                        <p>{service.total_summ} руб.</p>
+                        <p>{service.total_summ} ₸</p>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -430,27 +433,20 @@ const ViewVisits = () => {
                             {item.service} <br />{" "}
                           </p>
                         </Link>
-                        <span style={{ fontSize: "1.2rem" }}>
-                          {item.description}
-                        </span>
+                      </TableCell>
+                      <TableCell>{item.description}</TableCell>
+                      <TableCell> {item.type}</TableCell>
+                      <TableCell>
+                        <p>{item.revenue} ₸</p>{" "}
                       </TableCell>
                       <TableCell>
-                        {item.type.map((typeItem, i) => (
-                          <div key={i}>{typeItem[1]}</div>
-                        ))}
-                      </TableCell>
-                      <TableCell>1 шт.</TableCell>
-                      <TableCell>
-                        <p>{item.revenue} руб.</p>{" "}
+                        <p>0 ₸</p>
                       </TableCell>
                       <TableCell>
-                        <p>0 руб.</p>
+                        <p>+{item.salary_change} ₸</p>
                       </TableCell>
                       <TableCell>
-                        <p>+{item.salary_change} руб.</p>
-                      </TableCell>
-                      <TableCell>
-                        <p>{item.salary} руб.</p>
+                        <p>{item.salary} ₸</p>
                       </TableCell>
                       <TableCell>
                         <p>{new Date(item.date).toLocaleDateString("ru-RU")}</p>
@@ -477,9 +473,8 @@ const ViewVisits = () => {
                         (total, item) => total + item.salary_change,
                         0,
                       )}{" "}
-                      руб
+                      ₸
                     </strong>
-                    .
                   </p>
                 </div>
               </div>

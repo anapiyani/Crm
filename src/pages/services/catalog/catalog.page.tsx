@@ -450,7 +450,7 @@ const ServiceCatalog = () => {
               />
             </div>
             <div>
-              <CostTable title="Стоимость" unit="руб." data={costData} />
+              <CostTable title="Стоимость" unit="₸" data={costData} />
               <CostTable
                 title="Продолжительность"
                 unit="мин"

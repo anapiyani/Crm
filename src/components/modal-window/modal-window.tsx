@@ -15,6 +15,7 @@ interface ModalWindowProps {
   titleStyles?: React.CSSProperties;
   withoutTitle?: boolean;
   afterClose?: () => void;
+  isFront?: boolean;
 }
 
 const ModalWindow: React.FC<ModalWindowProps> = ({
@@ -28,10 +29,14 @@ const ModalWindow: React.FC<ModalWindowProps> = ({
   titleStyles,
   withoutTitle = false,
   afterClose,
+  isFront = false,
 }) => {
   return (
     <Backdrop
-      sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+      sx={{
+        color: "#fff",
+        zIndex: isFront ? 9999999 : (theme) => theme.zIndex.drawer + 1,
+      }}
       open={open}
       onClick={handleClose}
       onExited={afterClose}

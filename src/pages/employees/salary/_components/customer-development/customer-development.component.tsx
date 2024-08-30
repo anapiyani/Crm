@@ -55,7 +55,7 @@ const CustomerDevelopment: React.FC<ICustomerDevelopmentProps> = ({
                     }}
                     onChange={(e) => console.log(e.target.value)}
                   />
-                  <p style={{ fontSize: "1.4rem" }}>руб.</p>
+                  <p style={{ fontSize: "1.4rem" }}>₸</p>
                 </div>
                 <Autocomplete
                   size="small"
@@ -129,7 +129,7 @@ const CustomerDevelopment: React.FC<ICustomerDevelopmentProps> = ({
                 <StepInput
                   labelName="Система начисления"
                   isAutoComplete={true}
-                  placeholder="Фиксирвано, в руб."
+                  placeholder="Фиксирвано, в ₸"
                   options={options}
                   onChange={(value) => field.field.onChange(value)}
                   selectedOption={
