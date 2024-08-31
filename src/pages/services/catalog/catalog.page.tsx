@@ -307,6 +307,9 @@ const ServiceCatalog = () => {
                             fontSize: "1.6rem",
                             borderBottom: "0.5px solid #636b744d",
                           },
+                          "& .MuiInputBase-input": {
+                            overflow: "visible",
+                          },
                         }}
                       />
                     </div>
