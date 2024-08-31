@@ -1,5 +1,3 @@
-import MaterialData from "../table-materials/table-materials";
-
 export const costData = [
   {
     position: "Универсал",

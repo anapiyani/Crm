@@ -59,7 +59,7 @@ const CostTable: React.FC<CostTableProps> = ({
       CostData,
       "position" | "costFrom" | "costTo" | "children"
     >,
-    value: number
+    value: number,
   ) => {
     const newData: CostData[] = [...tableData];
     newData[index][field] = value;
