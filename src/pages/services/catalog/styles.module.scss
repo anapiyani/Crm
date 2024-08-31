@@ -33,12 +33,12 @@
         margin-top: 1.6rem;
         display: grid;
         grid-template-columns: 1fr 1fr 1fr 1fr;
-        gap: 2rem;
+        gap: 3rem;
         &__row {
           display: flex;
           flex-direction: row;
           font-size: 1.6rem;
-          gap: 3rem;
+          gap: 1rem;
           align-items: center;
         }
       }
@@ -117,14 +117,20 @@
         align-items: center;
         gap: 1rem;
         font-size: 1.6rem;
+
         p {
           opacity: 0.6;
           width: 30%;
           white-space: nowrap;
           max-lines: 1;
           align-content: end;
+          margin-right: 2rem;
         }
         &__input {
+          margin-left: 3rem;
+          align-self: end;
+          justify-self: end;
+          width: 60%;
           :disabled {
             width: "100%";
             color: black;

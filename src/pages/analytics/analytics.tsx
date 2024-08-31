@@ -80,7 +80,7 @@ const AnalyticsPage = () => {
           <ImageViewer
             src={images}
             backgroundStyle={{
-              backgroundColor: "rgba(0, 0, 0, 0.9)",
+              backgroundColor: "rgba(255, 255, 255, 0.8)",
             }}
             currentIndex={currentImage}
             disableScroll={false}
