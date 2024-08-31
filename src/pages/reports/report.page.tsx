@@ -30,14 +30,13 @@ const Report = () => {
           date_to: dayjs(dateSecond).format("DD.MM.YYYY"),
         });
 
-        // Create a link element
         const url = window.URL.createObjectURL(new Blob([blob]));
         const link = document.createElement("a");
         link.href = url;
         link.setAttribute(
           "download",
-          `report_${dateFirst}_to_${dateSecond}.xlsx`,
-        ); // Filename
+          `Отчет_${dayjs(dateFirst).format("DD.MM.YYYY")}_to_${dayjs(dateSecond).format("DD.MM.YYYY")}.xlsx`,
+        );
         document.body.appendChild(link);
         link.click();
         link.remove();

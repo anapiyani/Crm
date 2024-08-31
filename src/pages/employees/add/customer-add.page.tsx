@@ -401,11 +401,29 @@ const EmployeeAdd = () => {
                         value="female"
                         control={<Radio size="medium" />}
                         label="Жен."
+                        sx={{
+                          "& .MuiFormControlLabel-label": {
+                            fontSize: "1.6rem",
+                          },
+                          "& .MuiSvgIcon-root": {
+                            height: "2rem",
+                            width: "2rem",
+                          },
+                        }}
                       />
                       <FormControlLabel
                         value="male"
                         control={<Radio />}
                         label="Муж."
+                        sx={{
+                          "& .MuiFormControlLabel-label": {
+                            fontSize: "1.6rem",
+                          },
+                          "& .MuiSvgIcon-root": {
+                            height: "2rem",
+                            width: "2rem",
+                          },
+                        }}
                       />
                     </RadioGroup>
                   </FormControl>

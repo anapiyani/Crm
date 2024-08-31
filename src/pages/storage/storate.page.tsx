@@ -14,24 +14,15 @@ import { Divider, CircularProgress, Autocomplete, Button } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
 
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import { getServiceParent } from "@/service/services/services.service";
-import {
-  ISearchResult,
-  IServiceParent,
-  IfiltersResponse,
-} from "@/ts/hierarchy.inteface";
-import { IService } from "@/ts/service.interface";
 import {
   LanOutlined,
   Folder,
   Science,
   TableChartOutlined,
   Settings,
-  Add,
-  Edit,
 } from "@mui/icons-material";
 import toast from "react-hot-toast";
 import ResponsiveTabs from "@/components/tabs/tabs.component";

@@ -143,7 +143,8 @@ const ClientsAdd: React.FC = () => {
                 <VerticalTextField
                   type="text"
                   label={"Фамилия"}
-                  placeholder={""}
+                  placeholder={"Фамилия"}
+                  required
                   {...register("surname")}
                   error={!!errors.surname}
                   helperText={errors.surname?.message}
@@ -151,7 +152,8 @@ const ClientsAdd: React.FC = () => {
 
                 <VerticalTextField
                   label={"Имя"}
-                  placeholder={""}
+                  placeholder={"Имя"}
+                  required
                   {...register("name")}
                   error={!!errors.name}
                   helperText={errors.name?.message}
@@ -159,7 +161,7 @@ const ClientsAdd: React.FC = () => {
 
                 <VerticalTextField
                   label={"Отчество"}
-                  placeholder={""}
+                  placeholder={"Отчество"}
                   {...register("middlename")}
                   error={!!errors.middlename}
                   helperText={errors.middlename?.message}
@@ -189,9 +191,10 @@ const ClientsAdd: React.FC = () => {
                         field.onChange(value?.value);
                       }}
                       className="main__lower__autocomplete"
+                      placeholder="Выберите категорию"
                       value={
                         categoryOptions?.find(
-                          (option) => option.value === field.value
+                          (option) => option.value === field.value,
                         ) || null
                       }
                     />
@@ -218,12 +221,13 @@ const ClientsAdd: React.FC = () => {
                       size="small"
                       label="Доп. категория"
                       options={subcategoryOptions || []}
+                      placeholder="Выберите доп. категорию"
                       onChange={(value) => {
                         field.onChange(value?.value);
                       }}
                       value={
                         subcategoryOptions?.find(
-                          (option) => option.value === field.value
+                          (option) => option.value === field.value,
                         ) || null
                       }
                     />
@@ -248,13 +252,14 @@ const ClientsAdd: React.FC = () => {
                       selectValue="label"
                       size="small"
                       label="Город"
+                      placeholder="Выберите город"
                       options={cityOptions || []}
                       onChange={(value) => {
                         field.onChange(value?.value);
                       }}
                       value={
                         cityOptions?.find(
-                          (option) => option.value === field.value
+                          (option) => option.value === field.value,
                         ) || null
                       }
                     />
@@ -268,7 +273,7 @@ const ClientsAdd: React.FC = () => {
               title={"Контакты"}
               children={
                 <div className={classes["main__lower__container__cardgrid"]}>
-                  <InputMask mask="+7 999 999 9999" {...register("whatsapp")}>
+                  <InputMask mask="+7(999)999 9999" {...register("whatsapp")}>
                     {(inputProps: any) => (
                       <CustomTextField
                         {...(inputProps as any)}
@@ -280,6 +285,7 @@ const ClientsAdd: React.FC = () => {
                             height: "40px",
                           },
                         }}
+                        placeholder="+7(999)999 9999"
                         label={"WhatsApp"}
                         InputProps={{
                           startAdornment: (
@@ -293,11 +299,10 @@ const ClientsAdd: React.FC = () => {
                           ),
                         }}
                         error={!!errors.whatsapp}
-                        helperText={errors.whatsapp?.message}
                       />
                     )}
                   </InputMask>
-                  <InputMask mask="+7 999 999 9999" {...register("mobile")}>
+                  <InputMask mask="+7(999)999 9999" {...register("mobile")}>
                     {(inputProps: any) => (
                       <CustomTextField
                         {...inputProps}
@@ -310,6 +315,7 @@ const ClientsAdd: React.FC = () => {
                           },
                         }}
                         label={"Моб. телефон"}
+                        placeholder="+7(999)999 9999"
                         InputProps={{
                           startAdornment: (
                             <InputAdornment position="start">
@@ -322,14 +328,12 @@ const ClientsAdd: React.FC = () => {
                           ),
                         }}
                         error={!!errors.mobile}
-                        helperText={errors.mobile?.message}
                       />
                     )}
                   </InputMask>
                   <CustomTextField
                     {...register("email")}
                     error={!!errors.email}
-                    helperText={errors.email?.message}
                     size="small"
                     sx={{
                       height: "40px",
@@ -343,7 +347,6 @@ const ClientsAdd: React.FC = () => {
                   <CustomTextField
                     {...register("instagram")}
                     error={!!errors.instagram}
-                    helperText={errors.instagram?.message}
                     size="small"
                     sx={{
                       height: "40px",
@@ -420,7 +423,7 @@ const ClientsAdd: React.FC = () => {
                               {...params}
                               className={"main__lower__auto__input"}
                               error={!!errors.employee}
-                              helperText={errors.employee?.message}
+                              placeholder="Выберите сотрудника"
                             />
                           </div>
                         )}
@@ -445,13 +448,14 @@ const ClientsAdd: React.FC = () => {
                         selectValue="label"
                         size="small"
                         label="Источник"
+                        placeholder="Выберите источник"
                         options={sourceOptions || []}
                         onChange={(value) => {
                           field.onChange(value?.value);
                         }}
                         value={
                           sourceOptions?.find(
-                            (option) => option.value === field.value
+                            (option) => option.value === field.value,
                           ) || null
                         }
                       />
@@ -483,13 +487,14 @@ const ClientsAdd: React.FC = () => {
                       selectValue="label"
                       size="small"
                       label="Рассылка SMS"
+                      placeholder='Выберите "Да" или "Нет"'
                       options={smsOptions || []}
                       onChange={(value) => {
                         field.onChange(value?.value);
                       }}
                       value={
                         smsOptions?.find(
-                          (option) => option.value === field.value
+                          (option) => option.value === field.value,
                         ) || null
                       }
                     />
@@ -514,13 +519,14 @@ const ClientsAdd: React.FC = () => {
                       selectValue="label"
                       size="small"
                       label="Род занятий"
+                      placeholder="Выберите род занятий"
                       options={occupationOptions || []}
                       onChange={(value) => {
                         field.onChange(value?.value);
                       }}
                       value={
                         occupationOptions?.find(
-                          (option) => option.value === field.value
+                          (option) => option.value === field.value,
                         ) || null
                       }
                     />
@@ -545,13 +551,14 @@ const ClientsAdd: React.FC = () => {
                       selectValue="label"
                       size="small"
                       label="Расп. салона"
+                      placeholder="Не указано"
                       options={salonLocationOptions || []}
                       onChange={(value) => {
                         field.onChange(value?.value);
                       }}
                       value={
                         salonLocationOptions?.find(
-                          (option) => option.value === field.value
+                          (option) => option.value === field.value,
                         ) || null
                       }
                     />
@@ -615,7 +622,6 @@ const ClientsAdd: React.FC = () => {
                             {...params}
                             className={"main__lower__auto__input"}
                             error={!!errors.employee}
-                            helperText={errors.employee?.message}
                           />
                         </div>
                       )}
