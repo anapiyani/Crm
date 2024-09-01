@@ -26,6 +26,8 @@ import {
   Add,
   Edit,
   PlayArrow,
+  DoNotDisturbAltOutlined,
+  Check,
 } from "@mui/icons-material";
 import toast from "react-hot-toast";
 import ResponsiveTabs from "@/components/tabs/tabs.component";
@@ -109,6 +111,21 @@ const StoragePage: React.FC = () => {
   function handleAutocompleteChange(value: any, fieldName: string): void {
     setFormData((prev) => ({ ...prev, [fieldName]: value }));
   }
+
+  const [isEditing, setIsEditing] = useState(false);
+
+  const handleEditClick = () => {
+    setIsEditing(true);
+  };
+
+  const handleCancelClick = () => {
+    setIsEditing(false);
+  };
+
+  const handleSaveClick = () => {
+    // Add your save logic here
+    setIsEditing(false);
+  };
 
   const renderUpperContent = () => {
     switch (currentTab) {
@@ -255,6 +272,7 @@ const StoragePage: React.FC = () => {
               </div>
             </div>
             <Divider />
+            <TableView />
           </div>
         );
       case 2:
@@ -279,29 +297,76 @@ const StoragePage: React.FC = () => {
                 </p>
               </div>
               <div className={classes.storage__upper__lower__column__button}>
-                <Button
-                  variant="text"
-                  color="primary"
-                  sx={{
-                    fontSize: "1.4rem",
-                    textTransform: "none",
-                    width: "fit-content",
-                    p: "0.4rem 1.6rem",
-                  }}
-                  startIcon={
-                    <Edit
+                {!isEditing ? (
+                  <Button
+                    variant="text"
+                    color="primary"
+                    sx={{
+                      fontSize: "1.4rem",
+                      textTransform: "none",
+                      width: "fit-content",
+                      p: "0.4rem 1.6rem",
+                    }}
+                    startIcon={
+                      <Edit
+                        sx={{
+                          fontSize: "2.4rem",
+                        }}
+                      />
+                    }
+                    onClick={handleEditClick}
+                  >
+                    Редактировать лимиты
+                  </Button>
+                ) : (
+                  <>
+                    <Button
+                      variant="text"
+                      color="primary"
                       sx={{
-                        fontSize: "2.4rem",
+                        fontSize: "1.4rem",
+                        textTransform: "none",
+                        width: "fit-content",
+                        p: "0.4rem 1.6rem",
+                        mr: "1.6rem",
                       }}
-                    />
-                  }
-                  onClick={() => {}}
-                >
-                  Редатировать лимиты
-                </Button>
+                      startIcon={
+                        <DoNotDisturbAltOutlined
+                          sx={{
+                            fontSize: "2.4rem",
+                          }}
+                        />
+                      }
+                      onClick={handleCancelClick}
+                    >
+                      Отменить изменения
+                    </Button>
+                    <Button
+                      variant="text"
+                      color="primary"
+                      sx={{
+                        fontSize: "1.4rem",
+                        textTransform: "none",
+                        width: "fit-content",
+                        p: "0.4rem 1.6rem",
+                      }}
+                      startIcon={
+                        <Check
+                          sx={{
+                            fontSize: "2.4rem",
+                          }}
+                        />
+                      }
+                      onClick={handleSaveClick}
+                    >
+                      Сохранить изменения
+                    </Button>
+                  </>
+                )}
               </div>
             </div>
             <Divider />
+            <TableStock />
           </div>
         );
       default:
@@ -313,81 +378,79 @@ const StoragePage: React.FC = () => {
     switch (currentTab) {
       case 0:
         return (
-          <Grid container columnSpacing={3} rowSpacing={3}>
-            <Grid container md={3.7}>
-              <Grid container xs={12}>
-                <Grid xs={12}>
-                  <TableVertical data={overviewData} title="Обзор" />
-                </Grid>
+          <div className={classes.storage__lower}>
+            <Grid container columnSpacing={3} rowSpacing={3}>
+              <Grid container md={3.7}>
+                <Grid container xs={12}>
+                  <Grid xs={12}>
+                    <TableVertical data={overviewData} title="Обзор" />
+                  </Grid>
 
-                <Grid xs={12}>
-                  <TableVertical
-                    data={characteristicsData}
-                    title="Основные характеристики"
-                    noIcon
-                  />
-                </Grid>
+                  <Grid xs={12}>
+                    <TableVertical
+                      data={characteristicsData}
+                      title="Основные характеристики"
+                      noIcon
+                    />
+                  </Grid>
 
-                <Grid xs={12}>
-                  <FloatingPriceTable />
+                  <Grid xs={12}>
+                    <FloatingPriceTable />
+                  </Grid>
+                </Grid>
+              </Grid>
+
+              <Grid container md={3.7}>
+                <Grid container xs={12}>
+                  <Grid xs={12}>
+                    <TableVertical data={priceData} title="Цена" />
+                  </Grid>
+                  <Grid xs={12}>
+                    <TableVertical data={bonusData} title="Бонус за продажу" />
+                  </Grid>
+                  <Grid xs={12}>
+                    <TableVertical
+                      data={discountData}
+                      title="Скидка"
+                      showAddIcon
+                    />
+                  </Grid>
+                  <Grid xs={12}>
+                    <NormativeService
+                      title="Нормативы в услугах"
+                      items={normativesData}
+                    />
+                  </Grid>
+                </Grid>
+              </Grid>
+
+              <Grid container md={4.6}>
+                <Grid container xs={12}>
+                  <Grid xs={12}>
+                    <TableVertical data={productData} title="Товар" />
+                  </Grid>
+                  <Grid xs={12}>
+                    <TableVertical
+                      data={measurementData}
+                      title="Измерение / объем"
+                    />
+                  </Grid>
+                  <Grid xs={12}>
+                    <TablePhotography />
+                  </Grid>
+                  <Grid xs={12}>
+                    <PurchaseHistoryTable
+                      data={purchaseHistoryData}
+                      title="История закупок и списаний"
+                    />
+                  </Grid>
                 </Grid>
               </Grid>
             </Grid>
-
-            <Grid container md={3.7}>
-              <Grid container xs={12}>
-                <Grid xs={12}>
-                  <TableVertical data={priceData} title="Цена" />
-                </Grid>
-                <Grid xs={12}>
-                  <TableVertical data={bonusData} title="Бонус за продажу" />
-                </Grid>
-                <Grid xs={12}>
-                  <TableVertical
-                    data={discountData}
-                    title="Скидка"
-                    showAddIcon
-                  />
-                </Grid>
-                <Grid xs={12}>
-                  <NormativeService
-                    title="Нормативы в услугах"
-                    items={normativesData}
-                  />
-                </Grid>
-              </Grid>
-            </Grid>
-
-            <Grid container md={4.6}>
-              <Grid container xs={12}>
-                <Grid xs={12}>
-                  <TableVertical data={productData} title="Товар" />
-                </Grid>
-                <Grid xs={12}>
-                  <TableVertical
-                    data={measurementData}
-                    title="Измерение / объем"
-                  />
-                </Grid>
-                <Grid xs={12}>
-                  <TablePhotography />
-                </Grid>
-                <Grid xs={12}>
-                  <PurchaseHistoryTable
-                    data={purchaseHistoryData}
-                    title="История закупок и списаний"
-                  />
-                </Grid>
-              </Grid>
-            </Grid>
-          </Grid>
+          </div>
         );
-      case 1:
-        return <TableView />;
-      case 2:
-        return <TableStock />;
       default:
-        return <div></div>;
+        return null;
     }
   };
 
@@ -698,7 +761,7 @@ const StoragePage: React.FC = () => {
         </div>
         {renderUpperContentMain()}
       </div>
-      <div className={classes.storage__lower}>{renderLowerContent()}</div>
+      {renderLowerContent()}
     </div>
   );
 };

@@ -110,7 +110,7 @@
         &__button {
           flex: 1;
           display: flex;
-          flex-direction: column;
+          flex-direction: row;
           justify-content: flex-end;
           align-items: flex-end;
         }
@@ -120,7 +120,6 @@
 
   &__lower {
     padding: 2.4rem;
-
     &__grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);

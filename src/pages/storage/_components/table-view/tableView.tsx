@@ -13,16 +13,17 @@ import {
 import { Visibility } from "@mui/icons-material";
 import { styled } from "@mui/material/styles";
 import { tableViewHeaders, tableViewData } from "../../data";
+import { Link } from "react-router-dom"; // Import Link if using react-router-dom
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   fontSize: "1.4rem",
   borderBottom: "0.1rem solid #CDD7E1",
   padding: "0.4rem 0.8rem",
   "&:first-of-type": {
-    borderLeft: "none", // Remove left border for the first cell
+    borderLeft: "none",
   },
   "&:last-of-type": {
-    borderRight: "none", // Remove right border for the last cell
+    borderRight: "none",
   },
 }));
 
@@ -31,6 +32,8 @@ const HeaderTableCell = styled(TableCell)(({ theme }) => ({
   fontWeight: "bold",
   borderBottom: "none",
   padding: "0.8rem",
+  whiteSpace: "nowrap",
+  minWidth: "min-content",
 }));
 
 const TableView = () => {
@@ -41,21 +44,13 @@ const TableView = () => {
         borderTop: "none",
         borderLeft: "none",
         borderRight: "none",
+        borderBottom: "0.1rem solid #CDD7E1",
         overflowX: "auto",
         background: "#FBFCFE",
         borderRadius: "0",
+        boxShadow: "none",
       }}
     >
-      <div
-        style={{
-          padding: "0.8rem",
-          backgroundColor: "rgba(33,150,243,0.08)",
-        }}
-      >
-        <p style={{ fontSize: "1.4rem", color: "#32383E" }}>
-          Парикмахерский зал {">"} Estel
-        </p>
-      </div>
       <Table>
         <TableHead>
           <TableRow>
@@ -70,6 +65,10 @@ const TableView = () => {
                   variant="outlined"
                   size="small"
                   placeholder={header.label}
+                  sx={{
+                    minWidth: "min-content",
+                    "& input": { fontSize: "1.4rem", padding: "0.8rem" },
+                  }}
                 />
               </StyledTableCell>
             ))}
@@ -77,11 +76,22 @@ const TableView = () => {
         </TableHead>
 
         <TableBody>
+          <TableRow>
+            <StyledTableCell
+              colSpan={tableViewHeaders.length}
+              sx={{
+                backgroundColor: "rgba(33,150,243,0.08)",
+                padding: "0.8rem",
+              }}
+            >
+              Парикмахерский зал {">"} Estel
+            </StyledTableCell>
+          </TableRow>
           {tableViewData.map((row, index) => (
             <TableRow
               key={index}
               sx={{
-                "&:last-child td": { borderBottom: "none" }, // Remove bottom border of the last row
+                "&:last-child td": { borderBottom: "none" },
               }}
             >
               {tableViewHeaders.map((header) => (
@@ -89,22 +99,27 @@ const TableView = () => {
                   key={header.id}
                   sx={{
                     backgroundColor: "#FAFAFA",
-                    border: "0.1rem solid #CDD7E1", 
+                    border: "0.1rem solid #CDD7E1",
                   }}
                 >
-                  {row[header.id as keyof typeof row]}
+                  <div style={{ display: "flex", justifyContent: "center" }}>
+                    {header.id === "actions" ? (
+                      <IconButton color="primary">
+                        <Visibility sx={{ fontSize: "2rem" }} />
+                      </IconButton>
+                    ) : header.id === "name" ? (
+                      <Link
+                        to={`/product/${row.number}`}
+                        style={{ textDecoration: "none", color: "#1976d2" }}
+                      >
+                        {row[header.id as keyof typeof row]}
+                      </Link>
+                    ) : (
+                      row[header.id as keyof typeof row]
+                    )}
+                  </div>
                 </StyledTableCell>
               ))}
-              <StyledTableCell
-                sx={{
-                  backgroundColor: "#FAFAFA",
-                  border: "0.1rem solid #CDD7E1", 
-                }}
-              >
-                <IconButton>
-                  <Visibility />
-                </IconButton>
-              </StyledTableCell>
             </TableRow>
           ))}
         </TableBody>

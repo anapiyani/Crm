@@ -135,7 +135,7 @@ export const tableViewHeaders = [
   { id: "unit", label: "Ед. измерения" },
   { id: "volume", label: "Объем" },
   { id: "tara", label: "Тара" },
-  { id: "actions", label: "Действия" },
+  { id: "actions", label: "Действия" }, // Add this header for actions
 ];
 
 export const tableViewData = [
@@ -149,46 +149,10 @@ export const tableViewData = [
     wholesalePrice: "1 100 руб.",
     canBeProduct: "Да",
     unit: "шт.",
-    volume: "120 мл.",
+    volume: "120 мл",
     tara: "0 г",
+    actions: "", // This field can be empty as it is handled in the component
   },
-  {
-    number: 2,
-    article: "99756522",
-    barcode: "4057806700700",
-    name: "Estel шампунь",
-    purchaseCost: "1 100 руб.",
-    retailCost: "1 100 руб.",
-    wholesalePrice: "1 100 руб.",
-    canBeProduct: "Да",
-    unit: "шт.",
-    volume: "120 мл.",
-    tara: "0 г",
-  },
-  {
-    number: 3,
-    article: "99756522",
-    barcode: "4057806700700",
-    name: "Estel шампунь",
-    purchaseCost: "1 100 руб.",
-    retailCost: "1 100 руб.",
-    wholesalePrice: "1 100 руб.",
-    canBeProduct: "Да",
-    unit: "шт.",
-    volume: "120 мл.",
-    tara: "0 г",
-  },
-  {
-    number: 4,
-    article: "99756522",
-    barcode: "4057806700700",
-    name: "Estel шампунь",
-    purchaseCost: "1 100 руб.",
-    retailCost: "1 100 руб.",
-    wholesalePrice: "1 100 руб.",
-    canBeProduct: "Да",
-    unit: "шт.",
-    volume: "120 мл.",
-    tara: "0 г",
-  },
+  // Add more data rows as needed
 ];
+

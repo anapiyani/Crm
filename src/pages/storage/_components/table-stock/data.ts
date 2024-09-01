@@ -3,7 +3,6 @@ export const tableHeaders = [
     { id: "article", label: "Артикул" },
     { id: "name", label: "Название" },
     { id: "limit", label: "Лимит" },
-    { id: "unit", label: "Ед. изм." },
     { id: "storage", label: "Склад" },
     { id: "hall", label: "Зал" },
     { id: "display", label: "Витрина" },
