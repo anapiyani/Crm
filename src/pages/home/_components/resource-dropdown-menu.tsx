@@ -57,7 +57,10 @@ const ResourceDropdownMenu: React.FC<IResourceDropdownMenuProps> = ({
   };
 
   const handleDeleteEmployeeSchedule = () => {
-    NiceModal.show(DeleteEmployeeScheduleConfirmationModal, {});
+    NiceModal.show(DeleteEmployeeScheduleConfirmationModal, {
+      schedule_id: resourceId,
+      date: date,
+    });
   };
 
   const handleTakeDayoff = () => {

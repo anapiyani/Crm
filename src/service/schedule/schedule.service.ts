@@ -107,3 +107,14 @@ export const getEmployeeScheduleEachDay = (
 ): Promise<IResponseScheduleDataCounts> => {
   return api.get(`/schedule/schedules/employee/${id}/`).then((res) => res.data);
 };
+
+export const deleteEmployeeSchedule = (formData: {
+  id: number;
+  date: string;
+}): Promise<any> => {
+  return api
+    .get(
+      `/schedule/schedules/employee/delete/?date=${formData.date}&employee_id=${formData.id}`,
+    )
+    .then((res) => res.data);
+};
