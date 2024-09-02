@@ -29,10 +29,13 @@
         }
       }
     }
+    &__lineArrow {
+      border: 0;
+      height: 0.1rem;
+      background-color: #ddd;
+    }
   }
 }
-
-
 
 .tabs__content__tab__link.active {
   border-bottom-color: var(--primary-main);

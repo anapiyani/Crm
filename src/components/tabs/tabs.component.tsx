@@ -95,7 +95,6 @@ const ResponsiveTabs = ({
           ))}
         </div>
         <hr className={classNames(classes["tabs__content__lineArrow"])} />
-        <hr className={classNames(classes["tabs__content__lineArrow"])} />
       </Box>
     </div>
   );
