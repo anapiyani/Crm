@@ -35,7 +35,7 @@ const Department = () => {
   const createRoleMutation = useCreateRole();
 
   const [selectedDepartment, setSelectedDepartment] = useState<number | null>(
-    null
+    null,
   );
   const [selectedPosition, setSelectedPosition] = useState<number | null>(null);
   const [positionName, setPositionName] = useState<string>("");
@@ -54,24 +54,25 @@ const Department = () => {
 
   const handlePositionClick = (positionId: number) => {
     const department = data?.results.find(
-      (dept: IDepartmentData) => dept.id === selectedDepartment
+      (dept: IDepartmentData) => dept.id === selectedDepartment,
     );
 
     const position = department?.role.find(
-      (role: IRoles) => role.id === positionId
+      (role: IRoles) => role.id === positionId,
     );
     setSelectedPosition(positionId);
     setPositionName(position ? position.name : "");
+    setPositionName("");
   };
 
   const handlePositionNameChange = (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     setPositionName(event.target.value);
   };
 
   const selectedDepartmentData = data?.results.find(
-    (dept: IDepartmentData) => dept.id === selectedDepartment
+    (dept: IDepartmentData) => dept.id === selectedDepartment,
   );
 
   const handleSaveClick = () => {

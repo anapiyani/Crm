@@ -27,6 +27,7 @@ const CreateDepartmentModal = () => {
       services: [],
       role: [],
     });
+    setDepartmentName("");
   };
 
   const options: IOption[] = [
@@ -49,7 +50,6 @@ const CreateDepartmentModal = () => {
           placeholder="Введите название отдела"
           onChange={(e) => setDepartmentName(e.target.value)}
         />
-        {/* <CustomAutoComplete name="Тип" selectValue="label" options={options} /> */}
       </div>
     </ModalWindow>
   );
