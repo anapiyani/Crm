@@ -30,6 +30,29 @@ export interface IService {
   parent: number | null;
   parent_name: string;
 }
+export interface IServicePrices {
+  service: string;
+  roles: {
+    role: string;
+    parameters: string[];
+    prices: {
+      parameter: string;
+      price: number;
+      type: string;
+    }[];
+  }[];
+}
+
+export interface IServiceCostData {
+  position: string;
+  cost?: number;
+  costFrom?: number;
+  costTo?: number;
+  shortHair?: number;
+  mediumHair?: number;
+  longHair?: number;
+  roots?: number;
+}
 
 export interface IServiceCategory {
   id: number;

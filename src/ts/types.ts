@@ -38,13 +38,6 @@ export interface IDepartment {
   name: string;
 }
 
-export interface IDepartmentData {
-  count: number;
-  next: null;
-  previous: null;
-  results: IDepartment[];
-}
-
 export interface IRoleChange {
   id: number;
   name: string;

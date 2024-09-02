@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -13,37 +13,18 @@ import {
 } from "@mui/material";
 import { SaveOutlined, Man3Outlined } from "@mui/icons-material/";
 import classes from "./style.module.scss";
-
-interface CostData {
-  position: string;
-  cost: number;
-  costFrom: number;
-  costTo: number;
-  shortHair: number;
-  mediumHair: number;
-  longHair: number;
-  roots: number;
-  children?: CostData[];
-}
+import { IServiceCostData, IServiceParameters } from "@/ts/service.interface";
+import { maxHeaderSize } from "http";
+import { useQuery } from "@tanstack/react-query";
 
 interface CostTableProps {
-  data: CostData[];
+  data: IServiceCostData[];
   title: string;
   unit: string;
   showIcons?: boolean;
   hierarchy?: boolean;
+  tableHeaders?: { name: string; key?: string }[];
 }
-
-const tableHeaders = [
-  { name: "Материал" },
-  { name: "Стоимость" },
-  { name: "Стоимость от" },
-  { name: "Стоимость до" },
-  { name: "Короткие волосы" },
-  { name: "Средние волосы" },
-  { name: "Длинные волосы" },
-  { name: "Корни" },
-];
 
 const CostTable: React.FC<CostTableProps> = ({
   data,
@@ -51,17 +32,19 @@ const CostTable: React.FC<CostTableProps> = ({
   unit,
   showIcons = true,
   hierarchy = false,
+  tableHeaders = [{ name: "Должность" }, { name: "Стоимость" }],
 }) => {
-  const [tableData, setTableData] = useState<CostData[]>(data);
+  const [tableData, setTableData] = useState<IServiceCostData[]>(data);
+
   const handleInputChange = (
     index: number,
     field: keyof Omit<
-      CostData,
+      IServiceCostData,
       "position" | "costFrom" | "costTo" | "children"
     >,
-    value: number,
+    value: number
   ) => {
-    const newData: CostData[] = [...tableData];
+    const newData: IServiceCostData[] = [...tableData];
     newData[index][field] = value;
 
     newData[index].costFrom = calculateCostFrom(newData[index]);
@@ -70,15 +53,22 @@ const CostTable: React.FC<CostTableProps> = ({
     setTableData(newData);
   };
 
-  const calculateCostFrom = (row: CostData) => {
-    return row.cost;
+  useEffect(() => {
+    data.forEach((row) => {
+      row.costFrom = calculateCostFrom(row);
+      row.costTo = calculateCostTo(row);
+    });
+  }, [data]);
+
+  const calculateCostFrom = (row: IServiceCostData) => {
+    return Math.min(row.shortHair!, row.mediumHair!, row.longHair!, row.roots!);
   };
 
-  const calculateCostTo = (row: CostData) => {
-    return row.cost + row.shortHair + row.mediumHair + row.longHair + row.roots;
+  const calculateCostTo = (row: IServiceCostData) => {
+    return Math.max(row.shortHair!, row.mediumHair!, row.longHair!, row.roots!);
   };
 
-  const renderRows = (rowData: CostData[], level: number = 0) => {
+  const renderRows = (rowData: IServiceCostData[], level: number = 0) => {
     return rowData.map((row, index) => (
       <React.Fragment key={index}>
         <TableRow
@@ -280,7 +270,6 @@ const CostTable: React.FC<CostTableProps> = ({
             </div>
           </TableCell>
         </TableRow>
-        {row.children && renderRows(row.children, level + 1)}
       </React.Fragment>
     ));
   };
