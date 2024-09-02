@@ -21,16 +21,22 @@ const ServiceAccordion: React.FC<ServiceAccordionProps> = ({
 }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [quantities, setQuantities] = useState<Record<string, number>>(
-    childrenServices.reduce((acc, service) => {
-      acc[service.service] = service.quantity;
-      return acc;
-    }, {} as Record<string, number>)
+    childrenServices.reduce(
+      (acc, service) => {
+        acc[service.service] = service.quantity;
+        return acc;
+      },
+      {} as Record<string, number>,
+    ),
   );
   const [selectedItems, setSelectedItems] = useState<Record<string, boolean>>(
-    childrenServices.reduce((acc, service) => {
-      acc[service.service] = false;
-      return acc;
-    }, {} as Record<string, boolean>)
+    childrenServices.reduce(
+      (acc, service) => {
+        acc[service.service] = false;
+        return acc;
+      },
+      {} as Record<string, boolean>,
+    ),
   );
 
   const handleQuantityChange = (service: ChildService, amount: number) => {
@@ -129,7 +135,7 @@ const ServiceAccordion: React.FC<ServiceAccordionProps> = ({
                     <div className={classes["accordion__content__item__price"]}>
                       {calculateTotalPrice(
                         childService.price,
-                        quantities[childService.service]
+                        quantities[childService.service],
                       )}{" "}
                       тенге
                     </div>

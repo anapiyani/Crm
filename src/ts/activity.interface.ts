@@ -165,3 +165,15 @@ export interface IClientBalance {
   user: number;
   date_updated: string;
 }
+
+export interface IServicesChoose {
+  id: number;
+  name: string;
+  parameter: string;
+  parameter_id: number;
+  price: number;
+  quantity: number;
+  service: number;
+  serviceName: string;
+  service_id: number;
+}

@@ -22,12 +22,14 @@ interface InfoHeaderProps {
   tabsData: TabData[];
   nameData: NameData;
   counterCardData?: ICardInfoEmployee;
+  startedWork?: string;
 }
 
 const InfoHeader: React.FC<InfoHeaderProps> = ({
   tabsData,
   nameData,
   counterCardData,
+  startedWork,
 }) => {
   return (
     <div className={classes["main__header"]}>
@@ -69,7 +71,7 @@ const InfoHeader: React.FC<InfoHeaderProps> = ({
                   icon={<HomeOutlined />}
                   iconColor="var(--secondary-main)"
                   textTitle="Является сотрудником"
-                  valueText="8 месяцев 3 дня"
+                  valueText={startedWork ? startedWork : "Дата не указана"}
                 />
               </div>
               <RevenueChart />

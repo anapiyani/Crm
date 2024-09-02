@@ -87,6 +87,7 @@ const EmployeeCard = () => {
         tabsData={employeeTabsData}
         nameData={employeeNameData}
         counterCardData={counterCardData!}
+        startedWork={userInfoData?.first_visit}
       />
       <Grid
         container

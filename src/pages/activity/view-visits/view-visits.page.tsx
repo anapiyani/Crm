@@ -28,10 +28,13 @@ import reportModal from "@/modals/activity/report.modal";
 import feedbackModal from "@/modals/activity/feedback.modal";
 import { useQuery } from "@tanstack/react-query";
 import { getVisit } from "@/service/activity/activity.service";
-import { IViewVistInfo } from "@/ts/activity.interface";
+import { IServicesChoose, IViewVistInfo } from "@/ts/activity.interface";
 import deleteModal from "@/modals/activity/delete.modal";
 import confirmPaymentModal from "@/modals/activity/confirm-payment.modal";
 import { useCancelPayment } from "@/service/activity/activity.hook";
+import addServiceModal from "@/modals/activity/add-service.modal";
+import { flattenEmployeeHierarchy } from "@/utils/flatten-employee-hierarchy";
+import { getHierarchyByEmployeeId } from "@/service/hierarchy/hierarchy.service";
 
 const ViewVisits = () => {
   const params = useParams<{ id: string }>();
@@ -44,6 +47,13 @@ const ViewVisits = () => {
   } = useQuery<IViewVistInfo>({
     queryKey: ["visitInfo", params.id],
     queryFn: () => getVisit(params.id || ""),
+  });
+
+  const { data: employeeHierarchyData } = useQuery({
+    queryKey: ["employeeHierarchyData", visitInfo?.employee_id],
+    queryFn: () => getHierarchyByEmployeeId(visitInfo!.employee_id.toString()),
+    staleTime: Infinity,
+    refetchOnWindowFocus: false,
   });
 
   if (visitLoading) {
@@ -68,6 +78,17 @@ const ViewVisits = () => {
 
   const handleCancelPayment = (id: number | undefined) => {
     cancelMutation.mutate(id!.toString());
+  };
+
+  const handleSaveSelectedServices = (services: IServicesChoose[]) => {
+    console.log(services);
+  };
+
+  const onAddServiceHandler = () => {
+    NiceModal.show(addServiceModal, {
+      flattenData: flattenEmployeeHierarchy(employeeHierarchyData || []),
+      onSave: handleSaveSelectedServices,
+    });
   };
 
   const confirmPayment = (
@@ -199,6 +220,7 @@ const ViewVisits = () => {
                   colorIcon={"rgba(46, 125, 50, 1)"}
                 />
                 <CardButton
+                  onButtonClick={onAddServiceHandler}
                   text={"Добавить услуги"}
                   icon={ContentCut}
                   backgroundIcon={"rgba(199, 223, 247, 1)"}
