@@ -34,6 +34,7 @@ import SalaryTable, {
 } from "../employee-salaryAndFines/_components/bonusesTable/tableBonuses";
 import { searchVisits } from "@/service/activity/activity.service";
 import { TableData } from "../employee-visits/data";
+import YearlyCalendar from "@/components/calendar/yearly-calendar/yearly-calendar";
 
 const EmployeePage = () => {
   const [currentTab, setCurrentTab] = useState<number>(0);
@@ -410,10 +411,39 @@ const EmployeePage = () => {
             xs={9}
             md={10.5}
           >
-            {/* salary table is here */}
             <SalaryTable data={salaryData} />
           </Grid>
         );
+      case 3:
+        return (
+          <Grid
+            container
+            sx={{
+              mb: "5rem",
+              ml: { xs: "2rem", xl: "7.6rem" },
+            }}
+            xs={9}
+            md={10.5}
+          >
+            <h1>Reports n shit</h1>
+          </Grid>
+        );
+      case 4:
+        return (
+          <Grid
+            container
+            sx={{
+              mb: "5rem",
+              ml: { xs: "2rem", xl: "7.6rem" },
+            }}
+            xs={9}
+            md={10.5}
+          >
+            calendar
+            <YearlyCalendar />
+          </Grid>
+        );
+
       default:
         return <div></div>;
     }

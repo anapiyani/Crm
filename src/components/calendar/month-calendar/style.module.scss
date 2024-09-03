@@ -1,65 +1,86 @@
 .calendar {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    max-width: 500px;
-    margin: 0 auto;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding-bottom: 1rem;
 }
 
 .header {
-    display: flex;
-    justify-content: space-between;
-    padding: 20px 20px;
-    color: #000000;
-    font-family: "Roboto", sans-serif;
-    text-transform: capitalize;
-    font-size: 1.6rem;
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 20px;
+  color: #000000;
+  font-family: "Roboto", sans-serif;
+  text-transform: capitalize;
+  font-size: 1.6rem;
 }
 
 .weekdays {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    padding: 5px 0;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  padding: 5px 0;
+  cursor: pointer;
+  :nth-child(1) {
+    margin-left: 1.9rem;
+  }
+  :nth-child(2) {
+    margin-left: 2rem;
+  }
+  :nth-child(3) {
+    margin-left: 1.5rem;
+  }
+  :nth-child(4) {
+    margin-left: 1rem;
+  }
+  :nth-child(5) {
+    margin-left: 1rem;
+  }
+  :nth-child(6) {
+    margin-left: 0.5rem;
+  }
 }
 
 .weekdays div {
-    text-align: center;
-    padding: 5px 0;
-    font-weight: 400;
-    color: #00000099;
-    font-family: "Roboto", sans-serif;
-    font-size: 1.6rem;
+  text-align: center;
+  padding: 5px 0;
+  font-weight: 400;
+  color: #00000099;
+  font-family: "Roboto", sans-serif;
+  font-size: 1.6rem;
 }
 
 .days {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 5px;
-    padding-left: 10px;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  padding-left: 10px;
 }
 
 .day {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    margin: 5px;
-    font-size: 14px;
-    color: #666;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin: 5px;
+  font-size: 14px;
+  color: #666;
 }
 
 .day.notCurrent {
-    opacity: 0.4;
+  opacity: 0.4;
 }
 
 .day.selected {
-    border: 2px solid blue;
+  background-color: #a5d6a7;
+  color: var(--text-primary);
+  font-weight: 500;
+  font-size: 1.5rem;
 }
 
 .day.today {
-    background-color: #e0f7fa;
+  background-color: #e0f7fa;
 }

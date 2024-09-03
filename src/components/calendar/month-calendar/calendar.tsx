@@ -5,14 +5,20 @@ interface Day {
   date: Date;
   isCurrentMonth: boolean;
   isToday: boolean;
+  isSelected: boolean;
 }
 
 interface MonthProps {
   month: number;
   year: number;
+  selectedDates?: string[]; // Array of selected dates as strings
 }
 
-const MonthlyCalendar: React.FC<MonthProps> = ({ month, year }) => {
+const MonthlyCalendar: React.FC<MonthProps> = ({
+  month,
+  year,
+  selectedDates,
+}) => {
   const today = new Date();
   const currentMonth = new Date(year, month);
 
@@ -32,24 +38,38 @@ const MonthlyCalendar: React.FC<MonthProps> = ({ month, year }) => {
     const prevMonth = new Date(year, month - 1);
     const daysInPrevMonth = daysInMonth(prevMonth);
 
+    const formattedSelectedDates = selectedDates?.map((date) => {
+      const [day, month, year] = date.split(".");
+      return new Date(`${year}-${month}-${day}`);
+    });
+
     for (let i = 1; i <= firstDay; i++) {
       days.push({
         date: new Date(
           prevMonth.getFullYear(),
           prevMonth.getMonth(),
-          daysInPrevMonth - firstDay + i
+          daysInPrevMonth - firstDay + i,
         ),
         isCurrentMonth: false,
         isToday: false,
+        isSelected: false,
       });
     }
 
     for (let i = 1; i <= totalDays; i++) {
+      const currentDate = new Date(year, month, i);
+      const isSelected = formattedSelectedDates?.some(
+        (selectedDate) =>
+          selectedDate.getDate() === currentDate.getDate() &&
+          selectedDate.getMonth() === currentDate.getMonth() &&
+          selectedDate.getFullYear() === currentDate.getFullYear(),
+      );
+
       days.push({
-        date: new Date(year, month, i),
+        date: currentDate,
         isCurrentMonth: true,
-        isToday:
-          today.toDateString() === new Date(year, month, i).toDateString(),
+        isToday: today.toDateString() === currentDate.toDateString(),
+        isSelected: isSelected || false,
       });
     }
 
@@ -60,6 +80,7 @@ const MonthlyCalendar: React.FC<MonthProps> = ({ month, year }) => {
         date: new Date(year, month + 1, i),
         isCurrentMonth: false,
         isToday: false,
+        isSelected: false,
       });
     }
 
@@ -87,7 +108,9 @@ const MonthlyCalendar: React.FC<MonthProps> = ({ month, year }) => {
             key={index}
             className={`${styles.day} ${
               !day.isCurrentMonth ? styles.notCurrent : ""
-            } ${day.isToday ? styles.today : ""}`}
+            } ${day.isToday ? styles.today : ""} ${
+              day.isSelected ? styles.selected : ""
+            }`}
           >
             {day.date.getDate()}
           </div>
