@@ -4,6 +4,8 @@ import classNames from "classnames";
 import classes from "./styles.module.scss";
 import CustomDatePicker from "../date-picker/date-picker-custom";
 import CustomTimePicker from "../time-picker/time-picker-custom";
+import { IconButton } from "@mui/material";
+import { ExpandLess, ExpandMore } from "@mui/icons-material";
 
 interface IProps extends Omit<TextFieldProps, "variant"> {
   label?: string;
@@ -33,7 +35,7 @@ const VerticalTextField = forwardRef<HTMLInputElement, IProps>(
       labelClassName,
       ...props
     },
-    ref,
+    ref
   ) => {
     const renderTextField = () => {
       switch (type) {
@@ -48,7 +50,7 @@ const VerticalTextField = forwardRef<HTMLInputElement, IProps>(
                 placeholder={placeholder}
                 className={classNames(
                   classes["main__double__inputDouble"],
-                  addClassName,
+                  addClassName
                 )}
                 onChange={onChangeFrom}
                 InputProps={{
@@ -65,7 +67,7 @@ const VerticalTextField = forwardRef<HTMLInputElement, IProps>(
                 placeholder={placeholderOptional}
                 className={classNames(
                   classes["main__double__inputDouble"],
-                  addClassName,
+                  addClassName
                 )}
                 onChange={onChangeTo}
                 InputProps={{
@@ -81,7 +83,7 @@ const VerticalTextField = forwardRef<HTMLInputElement, IProps>(
               <CustomDatePicker
                 className={classNames(
                   classes["main__double__inputDouble"],
-                  addClassName,
+                  addClassName
                 )}
                 onChange={onChangeFrom}
               />
@@ -89,13 +91,85 @@ const VerticalTextField = forwardRef<HTMLInputElement, IProps>(
               <CustomDatePicker
                 className={classNames(
                   classes["main__double__inputDouble"],
-                  addClassName,
+                  addClassName
                 )}
                 onChange={onChangeTo}
               />
             </div>
           );
+        case "double-number":
+          return (
+            <div className={classNames(classes["main__double"])}>
+              <div className={classes.numberTextfield}>
+                <TextField
+                  {...props}
+                  variant="outlined"
+                  size="small"
+                  placeholder={placeholder}
+                  className={classNames(
+                    classes["main__double__inputDouble"],
+                    addClassName
+                  )}
+                  onChange={onChangeFrom}
+                  InputProps={{
+                    style: { fontSize: "16px" },
+                  }}
+                  inputRef={ref}
+                />
+                <div className={classes.numberTextfield__iconButton}>
+                  <IconButton
+                    sx={{ w: "1.8rem", h: "1.8rem", borderRadius: "4px", p: 0 }}
+                  >
+                    <div className={classes.numberTextfield__iconButton__icon}>
+                      <ExpandLess />
+                    </div>
+                  </IconButton>
+                  <IconButton
+                    sx={{ w: "1.8rem", h: "1.8rem", borderRadius: "4px", p: 0 }}
+                  >
+                    <div className={classes.numberTextfield__iconButton__icon}>
+                      <ExpandMore />
+                    </div>
+                  </IconButton>
+                </div>
+              </div>
 
+              <p>{doubleDivier}</p>
+              <div className={classes.numberTextfield}>
+                <TextField
+                  {...props}
+                  variant="outlined"
+                  size="small"
+                  placeholder={placeholderOptional}
+                  className={classNames(
+                    classes["main__double__inputDouble"],
+                    addClassName
+                  )}
+                  onChange={onChangeTo}
+                  InputProps={{
+                    style: { fontSize: "16px" },
+                  }}
+                  inputRef={ref}
+                />
+                <div className={classes.numberTextfield__iconButton}>
+                  <IconButton
+                    sx={{ w: "1.8rem", h: "1.8rem", borderRadius: "4px", p: 0 }}
+                  >
+                    <div className={classes.numberTextfield__iconButton__icon}>
+                      <ExpandLess />
+                    </div>
+                  </IconButton>
+                  <IconButton
+                    sx={{ w: "1.8rem", h: "1.8rem", borderRadius: "4px", p: 0 }}
+                  >
+                    <div className={classes.numberTextfield__iconButton__icon}>
+                      <ExpandMore />
+                    </div>
+                  </IconButton>
+                </div>
+              </div>
+            </div>
+          );
         default:
           return (
             <TextField
@@ -106,7 +180,7 @@ const VerticalTextField = forwardRef<HTMLInputElement, IProps>(
               placeholder={placeholder}
               className={classNames(
                 classes["main__single__input"],
-                addClassName,
+                addClassName
               )}
               InputProps={{
                 style: { fontSize: "16px" },
@@ -125,7 +199,7 @@ const VerticalTextField = forwardRef<HTMLInputElement, IProps>(
         {renderTextField()}
       </div>
     );
-  },
+  }
 );
 
 export default VerticalTextField;

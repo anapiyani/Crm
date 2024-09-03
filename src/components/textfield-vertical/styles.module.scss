@@ -35,3 +35,23 @@
     }
   }
 }
+
+.numberTextfield {
+  display: flex;
+  gap: 0.4rem;
+  &__iconButton {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    &__icon {
+      border-radius: 4px;
+      width: 1.8rem;
+      height: 1.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 0.1rem solid rgba(0, 0, 0, 0.23);
+    }
+  }
+}

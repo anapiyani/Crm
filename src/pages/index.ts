@@ -28,6 +28,7 @@ import StoragePage from "./storage/storate.page";
 import AnalyticsPage from "./analytics/analytics";
 import Report from "./reports/report.page";
 import EmployeePage from "./employees/employee-card/employee.page";
+import DiscountPage from "./discounts/discounts.page";
 
 export {
   Home,
@@ -58,4 +59,5 @@ export {
   StoragePage,
   AnalyticsPage,
   Report,
+  DiscountPage,
 };

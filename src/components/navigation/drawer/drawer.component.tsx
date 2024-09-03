@@ -156,7 +156,7 @@ const ResponsiveDrawer = (props: IProps) => {
       ],
     },
     // { text: "Поставщики", icon: <ShoppingCart /> },
-    // { text: "Карты и скидки", icon: <CreditCard /> },
+    { text: "Карты и скидки", icon: <CreditCard />, link: "/discounts" },
     {
       text: "Аналитика",
       icon: <Description />,
