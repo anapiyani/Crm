@@ -65,7 +65,7 @@ const EmployeeSearch = () => {
     date_of_birth_to: "",
   });
   const [selectedRoles, setSelectedRoles] = useState(
-    formData.roleEmployee.split(", ").filter(Boolean),
+    formData.roleEmployee.split(", ").filter(Boolean)
   );
   const [pageSize, setPageSize] = useState<IOption>({ label: "10", value: 10 });
   const [page, setPage] = useState(1);
@@ -91,7 +91,7 @@ const EmployeeSearch = () => {
 
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
-    value: number,
+    value: number
   ) => {
     handleFormDataChange("page", value);
   };
@@ -132,7 +132,7 @@ const EmployeeSearch = () => {
   const handleRangeChange = (
     fieldPrefix: string,
     value: string,
-    boundary: "From" | "To",
+    boundary: "From" | "To"
   ) => {
     setFormData((prev) => ({
       ...prev,
@@ -286,7 +286,7 @@ const EmployeeSearch = () => {
                     handleRangeChange(
                       "date_of_birth_from",
                       e.target.value,
-                      "From",
+                      "From"
                     )
                   }
                   onChangeTo={(e) =>
@@ -373,7 +373,7 @@ const EmployeeSearch = () => {
             title={"Должность"}
             children={
               <div className={classes["main__upper__card"]}>
-                {departmentData?.results.map((item: IDepartmentData) =>
+                {departmentData?.map((item: IDepartmentData) =>
                   item.role.length > 0 ? (
                     <TriStateCheckbox key={item.name} label={item.name}>
                       {item.role.map((position) => (
@@ -385,13 +385,13 @@ const EmployeeSearch = () => {
                           onInputChange={(isChecked) =>
                             handleCheckboxChange(
                               position.name,
-                              isChecked ? true : false,
+                              isChecked ? true : false
                             )
                           }
                         />
                       ))}
                     </TriStateCheckbox>
-                  ) : null,
+                  ) : null
                 )}
               </div>
             }

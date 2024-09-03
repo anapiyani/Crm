@@ -4,8 +4,11 @@ import {
   getHierarchySearchOption,
   getSearchResults,
 } from "@/service/hierarchy/hierarchy.service";
-import { getServiceParent } from "@/service/services/services.service";
-import { IService } from "@/ts/service.interface";
+import {
+  getServiceParent,
+  getServicePrices,
+} from "@/service/services/services.service";
+import { IService, IServiceCostData } from "@/ts/service.interface";
 import {
   Autocomplete,
   Button,
@@ -65,6 +68,12 @@ const ServiceCatalog = () => {
     getHierarchySearchOption().then((data) => setFilterOptions(data));
   };
   const [filterOptions, setFilterOptions] = useState<IfiltersResponse>();
+  const [costData, setCostData] = useState<IServiceCostData[]>([
+    {
+      position: "Unknown",
+      cost: 0,
+    },
+  ]);
   const { data, isPending, isError } = useQuery({
     queryKey: ["hierarchyData"],
     queryFn: getHierarchy,
@@ -75,7 +84,40 @@ const ServiceCatalog = () => {
   const handleServiceSelect = (service: IService) => {
     setService(service);
     getServiceParent(service.id).then((data) => setServiceParents(data));
-
+    getServicePrices(service.id).then((data) => {
+      const prices: IServiceCostData[] = [];
+      data.roles.map((role) => {
+        if (role.prices.length === 1) {
+          return {
+            position: role.role,
+            cost: role.prices[0].price,
+          };
+        } else {
+          let oneRolePrice: IServiceCostData = {
+            position: role.role,
+            cost: 0,
+            shortHair: 0,
+            mediumHair: 0,
+            longHair: 0,
+            roots: 0,
+          };
+          role.prices.map((price) => {
+            if (price.parameter === "Короткие от 10 см") {
+              oneRolePrice.shortHair = price.price;
+            } else if (price.parameter === "Средние 15-20 см") {
+              oneRolePrice.mediumHair = price.price;
+            } else if (price.parameter === "Длинные 30-40 см") {
+              oneRolePrice.longHair = price.price;
+            } else if (price.parameter === "Очень длинные 50-60 см") {
+              oneRolePrice.roots = price.price;
+            }
+          });
+          prices.push(oneRolePrice);
+        }
+      });
+      setCostData(prices);
+      console.log(prices);
+    });
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
@@ -457,14 +499,28 @@ const ServiceCatalog = () => {
               />
             </div>
             <div>
-              <CostTable title="Стоимость" unit="₸" data={costData} />
               <CostTable
+                title="Стоимость"
+                unit="₸"
+                data={costData}
+                tableHeaders={[
+                  { name: "Должность", key: "position" },
+                  { name: "Цена", key: "cost" },
+                  { name: "Стоимость от", key: "costFrom" },
+                  { name: "Стоимость до", key: "costTo" },
+                  { name: "Короткие от 10 см", key: "shortHair" },
+                  { name: "Средние 15-20 см", key: "mediumHair" },
+                  { name: "Длинные 30-40 см", key: "longHair" },
+                  { name: "Очень длинные от 50 см", key: "roots" },
+                ]}
+              />
+              {/* <CostTable
                 title="Продолжительность"
                 unit="мин"
                 showIcons={false}
                 data={durationData}
                 hierarchy
-              />
+              /> */}
               <MaterialTable title="Материалы" data={materialData} />
               <Calculation
                 material="Материалы салона"

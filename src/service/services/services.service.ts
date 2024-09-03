@@ -1,6 +1,7 @@
 import {
   IService,
   IServiceParameters,
+  IServicePrices,
   IUserService,
 } from "@/ts/service.interface";
 import api from "../api";
@@ -39,9 +40,11 @@ export const getServiceParent = (
     .then((res) => res.data);
 };
 
-export const getServicePrices = (service_id: number): Promise<IService> => {
+export const getServicePrices = (
+  service_id: number
+): Promise<IServicePrices> => {
   return api
-    .get(`/services/service-prices/${service_id}/`)
+    .get(`/services/services-prices/${service_id}`)
     .then((res) => res.data);
 };
 

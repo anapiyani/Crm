@@ -1,8 +1,9 @@
-import { IDepartmentData, IRoleChange, IRoleCreate } from "@/ts/types";
-import { IDepartments } from "@/ts/departments.interface";
+import { IRoleChange, IRoleCreate } from "@/ts/types";
+import { IDepartmentData } from "@/ts/departments.interface";
+
 import api from "../api";
 
-export const getDepartment = (): Promise<IDepartments> => {
+export const getDepartment = (): Promise<IDepartmentData[]> => {
   return api.get("/hierarchy/hierarchy-departments/").then((res) => res.data);
 };
 

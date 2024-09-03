@@ -8,11 +8,7 @@ import BreadcrumbsCustom from "@/components/navigation/breadcrumbs/breadcrumbs";
 import VerticalTextField from "@/components/textfield-vertical/textfield-vertical";
 import { getDepartment } from "@/service/department/department.service";
 import toast from "react-hot-toast";
-import {
-  IDepartmentData,
-  IDepartments,
-  IRoles,
-} from "@/ts/departments.interface";
+import { IDepartmentData, IRoles } from "@/ts/departments.interface";
 import {
   useUpdateRole,
   useDeleteRole,
@@ -53,7 +49,7 @@ const Department = () => {
   };
 
   const handlePositionClick = (positionId: number) => {
-    const department = data?.results.find(
+    const department = data?.find(
       (dept: IDepartmentData) => dept.id === selectedDepartment
     );
 
@@ -70,8 +66,8 @@ const Department = () => {
     setPositionName(event.target.value);
   };
 
-  const selectedDepartmentData = data?.results.find(
-    (dept: IDepartmentData) => dept.id === selectedDepartment
+  const selectedDepartmentData = data?.find(
+    (department: IDepartmentData) => department.id === selectedDepartment
   );
 
   const handleSaveClick = () => {
@@ -136,7 +132,7 @@ const Department = () => {
           <div className={classes["department__content__column__items"]}>
             {isPending ? <CircularProgress /> : ""}
             <ul>
-              {data?.results.map((item: IDepartmentData) => (
+              {data?.map((item: IDepartmentData) => (
                 <li key={item.id}>
                   <Button
                     onClick={() => handleDepartmentClick(item.id)}
