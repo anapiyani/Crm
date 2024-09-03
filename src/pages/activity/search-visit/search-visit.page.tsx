@@ -68,7 +68,7 @@ const SearchVisits = () => {
         cashless_payment: false,
         certificate: false,
         bank_transfer: false,
-        employee_id: selectedEmployeeIds,
+        employee_ids: selectedEmployeeIds,
         id: "",
         service_id: selectedItems.map((item) => item.id),
         status: "Любой",
@@ -98,7 +98,7 @@ const SearchVisits = () => {
     const formSearch: IVisitsInfo = {
       ...restData,
       service_id: serviceIdMapped.length > 0 ? serviceIdMapped : [],
-      employee_id: selectedEmployeeIds.length > 0 ? selectedEmployeeIds : [],
+      employee_ids: selectedEmployeeIds.length > 0 ? selectedEmployeeIds : [],
       page: currentPage,
       page_size: pageSize,
       amount_from: restData.amount_from || 0,
@@ -243,6 +243,7 @@ const SearchVisits = () => {
     staleTime: Infinity,
     refetchOnWindowFocus: false,
   });
+
   const checkboxOptions = [
     {
       label: "Только неоплаченные",

@@ -4,6 +4,7 @@ import { IDepartments } from "@/ts/departments.interface";
 import {
   ICardInfoEmployee,
   IEmployeesData,
+  ISalaryWalletResponse,
   ISearchFormData,
   ITemplate,
   IUserDetails,
@@ -79,4 +80,13 @@ export const deleteTemplate = (id: number): Promise<void> => {
 
 export const addTemplate = (form: ITemplate): Promise<ITemplate> => {
   return api.post("/templates/", form).then((res) => res.data);
+};
+
+export const getWalletHistory = (
+  id: string,
+  page: number,
+): Promise<ISalaryWalletResponse> => {
+  return api
+    .get(`/salary-wallet-history/?page=${page}&user_id=${id}`)
+    .then((res) => res.data);
 };

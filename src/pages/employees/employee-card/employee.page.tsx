@@ -13,6 +13,7 @@ import {
   PersonOutlined,
   PollOutlined,
   PushPinOutlined,
+  Adjust,
 } from "@mui/icons-material";
 import { Box, Button } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
@@ -22,14 +23,17 @@ import TableHorizontal from "@/components/tables/table-horizontal/horizontal-inf
 import TableVertical from "@/components/tables/tableVertical/vertical-info-card";
 import {
   cardInfoEmplpyee,
+  getWalletHistory,
   mainInfoEmployee,
 } from "@/service/employee/employee.service";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
-import { data } from "../employee-visits/data";
 import EmployeeVisitsTable from "../employee-visits/visits-table/employee-visits-table";
-import { salaryData } from "../employee-salaryAndFines/_components/bonusesTable/data";
-import SalaryTable from "../employee-salaryAndFines/_components/bonusesTable/tableBonuses";
+import SalaryTable, {
+  SalaryData,
+} from "../employee-salaryAndFines/_components/bonusesTable/tableBonuses";
+import { searchVisits } from "@/service/activity/activity.service";
+import { TableData } from "../employee-visits/data";
 
 const EmployeePage = () => {
   const [currentTab, setCurrentTab] = useState<number>(0);
@@ -38,23 +42,50 @@ const EmployeePage = () => {
   };
 
   const params = useParams<{ id: string }>();
-  const {
-    data: counterCardData,
-    isLoading: counterCardLoading,
-    isError: counterCardError,
-  } = useQuery({
+
+  const { data: counterCardData, isLoading: counterCardLoading } = useQuery({
     queryKey: ["cardInfoEmplpyee", params.id],
     queryFn: () => cardInfoEmplpyee(Number(params.id)),
   });
 
-  const {
-    data: userInfoData,
-    isLoading: userInfoLoading,
-    isError: userInfoError,
-  } = useQuery({
+  const { data: userInfoData, isLoading: userInfoLoading } = useQuery({
     queryKey: ["mainInfoEmployee", params.id],
     queryFn: () => mainInfoEmployee(Number(params.id)),
   });
+
+  const { data: visitsInfo, isPending: visitsPending } = useQuery({
+    queryKey: ["visitsData"],
+    queryFn: () =>
+      searchVisits({
+        bonuses: false,
+        cashless_payment: false,
+        certificate: false,
+        bank_transfer: false,
+        employee_ids: params.id,
+        id: "",
+        service_id: "",
+        status: "Любой",
+        subscription: false,
+        unapproved_materials: false,
+        unpaid: false,
+        with_products: false,
+        amount_from: 0,
+        amount_to: 0,
+        date_from: "",
+        date_to: "",
+        ascending_order: false,
+        sort_by_date: false,
+        sorting: "",
+        page: 1,
+        page_size: 100,
+      }),
+  });
+
+  const { data: salaryInfo, isPending: salaryPending } = useQuery({
+    queryKey: ["salaryData"],
+    queryFn: () => getWalletHistory(params.id!, 1),
+  });
+
   const mainTableData = [
     { property: "ID сотрудника", value: userInfoData?.user_id },
     {
@@ -69,15 +100,16 @@ const EmployeePage = () => {
       value: userInfoData?.is_active ? "Да" : "Нет",
     },
     { property: "Моб. телефон", value: userInfoData?.phone_number },
-    // { property: "Отчество", value: userInfoData?.middle_name }, // there is no middle name in the response
-    // { property: "Push-уведомления", value: "Да" }, // there is no push notifications in the response
   ];
 
   const additionalTableData = [
     { property: "Работает с.", value: userInfoData?.start_date },
-    { property: "Пол", value: userInfoData?.gender },
-    { property: "Интервал", value: "По умолчанию" }, // there is no interval in the response
-    { property: "Блокировать", value: "Да" }, // there is no block in the response
+    {
+      property: "Пол",
+      value: userInfoData?.gender ? userInfoData?.gender : "Не указан",
+    },
+    { property: "Интервал", value: "По умолчанию" },
+    { property: "Блокировать", value: "Да" },
   ];
 
   const contactsData = [
@@ -96,6 +128,83 @@ const EmployeePage = () => {
         : "Нет данных",
     },
   ];
+
+  const data: TableData[] =
+    visitsInfo?.results.map((visit, index) => {
+      return {
+        id: index + 1,
+        visit: visit.id.toString(),
+        visitTime: visit.date || "",
+        client:
+          `${visit.client.first_name} ${visit.client.last_name}` ||
+          "Нет данных",
+        clientNote: visit.notes || "",
+        services: visit.appointment_services.map((service) => {
+          return {
+            icon: Adjust,
+            name: service.service_name,
+            employee: visit.employee_name || "Нет данных",
+            employeeRole: visit.employee_role,
+            amount: Number(visit.service_amount) || 0,
+            discount: visit.discount_custom || 0,
+            total: Number(service.price) || 0,
+            employeeId: visit.employee_id,
+            clientId: visit.client.id,
+          };
+        }),
+        grandTotal: visit.total_price,
+        grandTotalCash: visit.total_cash,
+        grandTotalCard: visit.total_card,
+      };
+    }) || [];
+
+  console.log(salaryInfo?.results);
+  const salaryData: SalaryData[] = !salaryInfo
+    ? []
+    : salaryInfo?.results.map((salary, index) => {
+        return {
+          number: index + 1,
+          salaryItem: salary.description,
+          type: salary.type,
+          revenue: {
+            mainText: salary.revenue,
+            subText: "по чеку",
+          },
+          materials: salary.material_cost,
+          salary: salary.salary_change,
+          salaryFormula: salary.salary_formula,
+          accrued: {
+            mainText: salary.date,
+            subText: "Автоматически",
+          },
+          link: `/visits/${salary.appointment}`,
+          linkText: salary.appointment_name,
+          employee: salary.client_name || "Не указан",
+          deleteLink: "https://example.com/delete1",
+        };
+      });
+
+  const getWorkingTime = () => {
+    const today = new Date();
+    const start_date = userInfoData?.start_date;
+
+    if (start_date) {
+      const startDate = new Date(start_date);
+      const diff = today.getTime() - startDate.getTime();
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      return days;
+    }
+  };
+
+  const getServiceAmount = () => {
+    let amount = 0;
+    data.forEach((visit) => {
+      visit.services.forEach((service) => {
+        amount += service.amount;
+      });
+    });
+    return amount;
+  };
 
   const renderContentHeader = () => {
     switch (currentTab) {
@@ -129,7 +238,7 @@ const EmployeePage = () => {
                 icon={<CalendarMonthOutlined />}
                 iconColor="var(--secondary-main)"
                 textTitle="Является сотрудником"
-                valueText="8 месяцев 3 дня"
+                valueText={getWorkingTime() + " дней"}
               />
             </div>
             <RevenueChart />
@@ -144,7 +253,7 @@ const EmployeePage = () => {
                 icon={<ContentCut />}
                 iconColor="var(--success-main)"
                 textTitle="Услуг оказано"
-                valueText={"241"}
+                valueText={getServiceAmount()}
               />
               <CounterCard
                 backgroundColor={"rgba(33, 150, 243, 0.3)"}
@@ -152,9 +261,7 @@ const EmployeePage = () => {
                 iconColor="var(--primary-main)"
                 textTitle="Посещения"
                 valueText={
-                  counterCardData?.services_count
-                    ? counterCardData?.services_count.toString()
-                    : "0"
+                  data.map((visit) => visit.id).length.toString() || "0"
                 }
               />
 
@@ -163,7 +270,9 @@ const EmployeePage = () => {
                 icon={<CalendarMonthOutlined />}
                 iconColor="var(--secondary-main)"
                 textTitle="Последнее посещение"
-                valueText="09.03.2023"
+                valueText={
+                  data.length > 0 ? data[0].visitTime : "Посещений не найдено"
+                }
               />
             </div>
             <RevenueChart />
@@ -287,7 +396,7 @@ const EmployeePage = () => {
             xs={9}
             md={10.5}
           >
-            <EmployeeVisitsTable data={data} />
+            {visitsInfo && <EmployeeVisitsTable data={data} />}
           </Grid>
         );
       case 2:
@@ -301,6 +410,7 @@ const EmployeePage = () => {
             xs={9}
             md={10.5}
           >
+            {/* salary table is here */}
             <SalaryTable data={salaryData} />
           </Grid>
         );
@@ -317,7 +427,7 @@ const EmployeePage = () => {
             <div>
               <BreadcrumbsCustom />
               <h1 className={classes["main__header__upper__title"]}>
-                Yesset Yedres
+                {userInfoData?.first_name} {userInfoData?.last_name}
               </h1>
             </div>
             <ResponsiveTabs

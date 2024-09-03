@@ -4,7 +4,7 @@ import classes from "./styles.module.scss";
 import { employeeTabsData } from "@/pages/employees/employee-card/data";
 import FinesHeader from "./_components/finesHeader/finesHeader";
 import SalaryTable from "./_components/bonusesTable/tableBonuses";
-import {salaryData} from "./_components/bonusesTable/data";
+import { salaryData } from "./_components/bonusesTable/data";
 
 const EmployeeFines = () => {
   return (
@@ -24,7 +24,7 @@ const EmployeeFines = () => {
         xs={9}
         md={10.5}
       >
-        <SalaryTable data={salaryData}/>
+        <SalaryTable data={salaryData} />
       </Grid>
     </div>
   );

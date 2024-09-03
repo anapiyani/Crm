@@ -15,7 +15,7 @@ import {
 import { Clear } from "@mui/icons-material";
 import { styled } from "@mui/material/styles";
 
-interface SalaryData {
+export interface SalaryData {
   number: number;
   salaryItem: string;
   type: string;

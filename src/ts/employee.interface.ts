@@ -183,3 +183,26 @@ export interface ISubscriptionSales {
   constant_percentage: string;
   id?: number;
 }
+
+export interface ISalaryWalletResponse {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: ISalaryWallet[];
+}
+
+export interface ISalaryWallet {
+  id: number;
+  wallet: number;
+  description: string;
+  type: string;
+  revenue: string;
+  material_cost: string;
+  salary_change: string;
+  salary_formula: string;
+  date: string;
+  service: number;
+  appointment: number;
+  client_name: string;
+  appointment_name: string;
+}

@@ -8,9 +8,9 @@ export interface IVisitsInfo {
   certificate: boolean;
   date_from: string;
   date_to: string;
-  employee_id: number[];
+  employee_ids: number[] | string | undefined;
   id: number | string | undefined;
-  service_id: number[];
+  service_id: number[] | string | undefined;
   ascending_order: boolean;
   sort_by_date: boolean;
   status: string;
