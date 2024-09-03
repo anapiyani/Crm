@@ -16,7 +16,7 @@ import {
 } from "@mui/icons-material";
 import { Box, Button } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
-import RevenueChart from "./employee-card/components/chart";
+import RevenueChart from "./components/chart";
 import { employeeTabsData } from "@/pages/employees/employee-card/data";
 import TableHorizontal from "@/components/tables/table-horizontal/horizontal-info-card";
 import TableVertical from "@/components/tables/tableVertical/vertical-info-card";
@@ -26,11 +26,10 @@ import {
 } from "@/service/employee/employee.service";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
-import { data } from "./employee-visits/data";
-import EmployeeVisitsTable from "./employee-visits/visits-table/employee-visits-table";
-import { salaryData } from "./employee-salaryAndFines/_components/bonusesTable/data";
-import SalaryTable from "./employee-salaryAndFines/_components/bonusesTable/tableBonuses";
-import { current } from "@reduxjs/toolkit";
+import { data } from "../employee-visits/data";
+import EmployeeVisitsTable from "../employee-visits/visits-table/employee-visits-table";
+import { salaryData } from "../employee-salaryAndFines/_components/bonusesTable/data";
+import SalaryTable from "../employee-salaryAndFines/_components/bonusesTable/tableBonuses";
 
 const EmployeePage = () => {
   const [currentTab, setCurrentTab] = useState<number>(0);
@@ -39,7 +38,6 @@ const EmployeePage = () => {
   };
 
   const params = useParams<{ id: string }>();
-  // THIS IS FOR USER DATA
   const {
     data: counterCardData,
     isLoading: counterCardLoading,
@@ -310,8 +308,6 @@ const EmployeePage = () => {
         return <div></div>;
     }
   };
-
-  
 
   return (
     <div className={classes["main"]}>

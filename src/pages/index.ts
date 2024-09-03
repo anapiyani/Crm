@@ -3,7 +3,6 @@ import LoginPage from "./login/login.page";
 import CashDesk from "./cash-desk/cash-desk/cash-desk.page";
 
 //Customers
-import EmployeeCard from "./employees/employee-card/employee-card.page";
 import EmployeeAdd from "./employees/add/customer-add.page";
 import EmployeeSearch from "./employees/search/customer-search.page";
 import EmployeeVisits from "./employees/employee-visits/employee-visits.page";
@@ -25,16 +24,15 @@ import EmployeeCabinet from "./employees/cabinet/employee-cabinet";
 import IndirectCostsPage from "./cash-desk/indirect-costs/indirect-costs.page";
 import SalaryPage from "./employees/salary/salary.page";
 import EmployeeFines from "./employees/employee-salaryAndFines/employeeSalaryAndFines";
-import EmployeePage from "./employees/employee.page";
 import StoragePage from "./storage/storate.page";
 import AnalyticsPage from "./analytics/analytics";
 import Report from "./reports/report.page";
+import EmployeePage from "./employees/employee-card/employee.page";
 
 export {
   Home,
   LoginPage,
   CashDesk,
-  EmployeeCard,
   EmployeeAdd,
   EmployeeSearch,
   Unauthorized,

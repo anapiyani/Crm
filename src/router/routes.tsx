@@ -4,7 +4,6 @@ import {
   EmployeeSearch,
   Home,
   CashDesk,
-  EmployeeCard,
   Clients,
   ClientCard,
   SearchVisits,
@@ -92,7 +91,7 @@ export const ROUTES: IRoute[] = [
   {
     name: "Employee card",
     path: "employees/:id",
-    component: <EmployeeCard />,
+    component: <EmployeePage />,
   },
   {
     name: "Department",
@@ -149,12 +148,6 @@ export const ROUTES: IRoute[] = [
     path: "/employees/bonuses-fines",
     component: <EmployeeFines />,
   },
-  {
-    name: "Employee",
-    path: "/employees/main",
-    component: <EmployeePage />,
-  },
-
   {
     name: "Analytics",
     path: "/analytics",
