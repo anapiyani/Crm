@@ -378,7 +378,6 @@ const EmployeePage = () => {
           </Grid>
         );
       }
-
       default:
         return <div></div>;
     }
