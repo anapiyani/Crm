@@ -1,6 +1,13 @@
+// .yearly {
+//   display: grid;
+//   grid-template-columns: repeat(4, 1fr);
+//   grid-gap: 16px;
+//   padding: 10px;
+//   width: 100%;
+// }
 .yearly {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-gap: 16px;
-  padding: 10px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 }
