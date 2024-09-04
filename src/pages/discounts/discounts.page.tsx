@@ -96,6 +96,7 @@ const DiscountPage = () => {
   ) => {
     setPage(value);
   };
+
   const { register, handleSubmit, reset, control, setValue } =
     useForm<IDiscountsInfo>();
 
@@ -180,7 +181,7 @@ const DiscountPage = () => {
                           label: "Большая скидка",
                         },
                       ];
-
+             
                       const selectedOption = field.value
                         ? options.find((option) => option.value === field.value)
                         : null;
@@ -292,6 +293,8 @@ const DiscountPage = () => {
                   />
                 </div>
               </div>
+
+             
 
               <div className={classes.category__search}>
                 <p className={classes.heading}>Поиск</p>
