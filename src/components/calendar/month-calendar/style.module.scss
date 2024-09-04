@@ -1,65 +1,97 @@
 .calendar {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    max-width: 500px;
-    margin: 0 auto;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding-bottom: 1rem;
 }
 
 .header {
-    display: flex;
-    justify-content: space-between;
-    padding: 20px 20px;
-    color: #000000;
-    font-family: "Roboto", sans-serif;
-    text-transform: capitalize;
-    font-size: 1.6rem;
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 20px;
+  color: #000000;
+  font-family: "Roboto", sans-serif;
+  text-transform: capitalize;
+  font-size: 1.6rem;
 }
 
 .weekdays {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    padding: 5px 0;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  padding: 5px 0;
 }
 
 .weekdays div {
-    text-align: center;
-    padding: 5px 0;
-    font-weight: 400;
-    color: #00000099;
-    font-family: "Roboto", sans-serif;
-    font-size: 1.6rem;
+  text-align: center;
+  padding: 5px 0;
+  font-weight: 400;
+  color: #00000099;
+  font-family: "Roboto", sans-serif;
+  font-size: 1.6rem;
 }
 
 .days {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 5px;
-    padding-left: 10px;
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+  padding-left: 10px;
 }
 
 .day {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    margin: 5px;
-    font-size: 14px;
-    color: #666;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin: 5px;
+  font-size: 14px;
+  color: #666;
 }
 
 .day.notCurrent {
-    opacity: 0.4;
+  opacity: 0.4;
 }
 
 .day.selected {
-    border: 2px solid blue;
+  background-color: rgba(165, 214, 167, 1);
+  color: var(--text-primary);
+  font-weight: 500;
+  font-size: 1.5rem;
+}
+.holiday {
+  background-color: rgba(248, 187, 208, 1);
+  color: var(--text-primary);
+  font-size: 1.5rem;
+}
+
+.sickLeave {
+  background-color: rgba(255, 171, 145, 1);
+  color: var(--text-primary);
+  font-size: 1.5rem;
+}
+
+.timeOff {
+  background-color: rgba(224, 224, 224, 1);
+  color: var(--text-primary);
+  font-size: 1.5rem;
+}
+
+.training {
+  background-color: rgba(255, 236, 179, 1);
+  color: var(--text-primary);
+  font-size: 1.5rem;
+}
+
+.vacation {
+  background-color: rgba(199, 223, 247, 1);
+  color: var(--text-primary);
+  font-size: 1.5rem;
 }
 
 .day.today {
-    background-color: #e0f7fa;
+  border: 1px solid var(--primary-500);
 }
