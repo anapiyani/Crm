@@ -13,6 +13,7 @@ const YearlyCalendar: React.FC = () => {
           month={index}
           year={year}
           selectedDates={["31.08.2024", "05.09.2024"]}
+          holidays={["01.01.2024", "06.01.2024", "24.02.2024"]}
         />
       ))}
     </div>

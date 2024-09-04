@@ -6,18 +6,33 @@ interface Day {
   isCurrentMonth: boolean;
   isToday: boolean;
   isSelected: boolean;
+  isHoliday: boolean;
+  isSickLeave: boolean;
+  isTimeOff: boolean;
+  isTraining: boolean;
+  isVacation: boolean;
 }
 
 interface MonthProps {
   month: number;
   year: number;
-  selectedDates?: string[]; // Array of selected dates as strings
+  selectedDates?: string[];
+  holidays?: string[];
+  sickLeaves?: string[];
+  timeOffs?: string[];
+  trainings?: string[];
+  vacations?: string[];
 }
 
 const MonthlyCalendar: React.FC<MonthProps> = ({
   month,
   year,
   selectedDates,
+  holidays,
+  sickLeaves,
+  timeOffs,
+  trainings,
+  vacations,
 }) => {
   const today = new Date();
   const currentMonth = new Date(year, month);
@@ -30,6 +45,22 @@ const MonthlyCalendar: React.FC<MonthProps> = ({
     return (new Date(date.getFullYear(), date.getMonth(), 1).getDay() + 6) % 7;
   };
 
+  const parseDates = (dates?: string[]): Date[] => {
+    return (
+      dates?.map((date) => {
+        const [day, month, year] = date.split(".");
+        return new Date(`${year}-${month}-${day}`);
+      }) || []
+    );
+  };
+
+  const formattedSelectedDates = parseDates(selectedDates);
+  const formattedHolidays = parseDates(holidays);
+  const formattedSickLeaves = parseDates(sickLeaves);
+  const formattedTimeOffs = parseDates(timeOffs);
+  const formattedTrainings = parseDates(trainings);
+  const formattedVacations = parseDates(vacations);
+
   const generateDays = (): Day[] => {
     const days: Day[] = [];
     const totalDays = daysInMonth(currentMonth);
@@ -37,11 +68,6 @@ const MonthlyCalendar: React.FC<MonthProps> = ({
 
     const prevMonth = new Date(year, month - 1);
     const daysInPrevMonth = daysInMonth(prevMonth);
-
-    const formattedSelectedDates = selectedDates?.map((date) => {
-      const [day, month, year] = date.split(".");
-      return new Date(`${year}-${month}-${day}`);
-    });
 
     for (let i = 1; i <= firstDay; i++) {
       days.push({
@@ -53,23 +79,47 @@ const MonthlyCalendar: React.FC<MonthProps> = ({
         isCurrentMonth: false,
         isToday: false,
         isSelected: false,
+        isHoliday: false,
+        isSickLeave: false,
+        isTimeOff: false,
+        isTraining: false,
+        isVacation: false,
       });
     }
 
     for (let i = 1; i <= totalDays; i++) {
       const currentDate = new Date(year, month, i);
-      const isSelected = formattedSelectedDates?.some(
+
+      const isSelected = formattedSelectedDates.some(
         (selectedDate) =>
-          selectedDate.getDate() === currentDate.getDate() &&
-          selectedDate.getMonth() === currentDate.getMonth() &&
-          selectedDate.getFullYear() === currentDate.getFullYear(),
+          selectedDate.toDateString() === currentDate.toDateString(),
+      );
+      const isHoliday = formattedHolidays.some(
+        (holiday) => holiday.toDateString() === currentDate.toDateString(),
+      );
+      const isSickLeave = formattedSickLeaves.some(
+        (sickLeave) => sickLeave.toDateString() === currentDate.toDateString(),
+      );
+      const isTimeOff = formattedTimeOffs.some(
+        (timeOff) => timeOff.toDateString() === currentDate.toDateString(),
+      );
+      const isTraining = formattedTrainings.some(
+        (training) => training.toDateString() === currentDate.toDateString(),
+      );
+      const isVacation = formattedVacations.some(
+        (vacation) => vacation.toDateString() === currentDate.toDateString(),
       );
 
       days.push({
         date: currentDate,
         isCurrentMonth: true,
         isToday: today.toDateString() === currentDate.toDateString(),
-        isSelected: isSelected || false,
+        isSelected,
+        isHoliday,
+        isSickLeave,
+        isTimeOff,
+        isTraining,
+        isVacation,
       });
     }
 
@@ -81,6 +131,11 @@ const MonthlyCalendar: React.FC<MonthProps> = ({
         isCurrentMonth: false,
         isToday: false,
         isSelected: false,
+        isHoliday: false,
+        isSickLeave: false,
+        isTimeOff: false,
+        isTraining: false,
+        isVacation: false,
       });
     }
 
@@ -110,7 +165,11 @@ const MonthlyCalendar: React.FC<MonthProps> = ({
               !day.isCurrentMonth ? styles.notCurrent : ""
             } ${day.isToday ? styles.today : ""} ${
               day.isSelected ? styles.selected : ""
-            }`}
+            } ${day.isHoliday ? styles.holiday : ""} ${
+              day.isSickLeave ? styles.sickLeave : ""
+            } ${day.isTimeOff ? styles.timeOff : ""} ${
+              day.isTraining ? styles.training : ""
+            } ${day.isVacation ? styles.vacation : ""}`}
           >
             {day.date.getDate()}
           </div>

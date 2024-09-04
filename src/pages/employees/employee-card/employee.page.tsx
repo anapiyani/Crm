@@ -341,6 +341,43 @@ const EmployeePage = () => {
             </div>
           </Grid>
         );
+      case 4: {
+        return (
+          <Grid container xl={12} sx={{ gap: "0.8rem" }}>
+            <div className={classes["main__header__upper__row__cards"]}>
+              <CounterCard
+                backgroundColor={"rgba(76, 175, 80, 0.3)"}
+                icon={<ContentCut />}
+                iconColor="var(--success-main)"
+                textTitle="Выручка за все время"
+                valueText={
+                  counterCardData?.revenue ? counterCardData.revenue : "0"
+                }
+              />
+              <CounterCard
+                backgroundColor={"rgba(33, 150, 243, 0.3)"}
+                icon={<ExitToApp />}
+                iconColor="var(--primary-main)"
+                textTitle="Обслуженные посещения"
+                valueText={
+                  counterCardData?.services_count
+                    ? counterCardData?.services_count.toString()
+                    : "0"
+                }
+              />
+
+              <CounterCard
+                backgroundColor={"rgba(156,39,176, 0.3)"}
+                icon={<CalendarMonthOutlined />}
+                iconColor="var(--secondary-main)"
+                textTitle="Является сотрудником"
+                valueText={getWorkingTime() + " дней"}
+              />
+            </div>
+            <RevenueChart />
+          </Grid>
+        );
+      }
       default:
         return <div></div>;
     }
@@ -439,7 +476,67 @@ const EmployeePage = () => {
             xs={9}
             md={10.5}
           >
-            calendar
+            <div className={classes.calendar_header}>
+              <h1>Сегодня - 2 марта</h1>
+              <div className={classes.calendar_header__descr}>
+                <div className={classes.calendar_header__descr__item}>
+                  <div
+                    style={{ border: "2px solid rgba(11, 107, 203, 1)" }}
+                    className={classes.calendar_header__descr__item__box}
+                  ></div>
+                  <p>Сегодня</p>
+                </div>
+                <div className={classes.calendar_header__descr__item}>
+                  <div
+                    style={{ backgroundColor: "rgba(165, 214, 167, 1)" }}
+                    className={classes.calendar_header__descr__item__box}
+                  ></div>
+                  <p>Рабочие дни</p>
+                </div>
+                <div className={classes.calendar_header__descr__item}>
+                  <div
+                    style={{ backgroundColor: "rgba(248, 187, 208, 1)" }}
+                    className={classes.calendar_header__descr__item__box}
+                  ></div>
+                  <p>Праздники</p>
+                </div>
+                <div className={classes.calendar_header__descr__item}>
+                  <div
+                    style={{ backgroundColor: "rgba(255, 171, 145, 1)" }}
+                    className={classes.calendar_header__descr__item__box}
+                  ></div>
+                  <p>Больничный</p>
+                </div>
+                <div className={classes.calendar_header__descr__item}>
+                  <div
+                    style={{ backgroundColor: "rgba(224, 224, 224, 1)" }}
+                    className={classes.calendar_header__descr__item__box}
+                  ></div>
+                  <p>Отгул</p>
+                </div>
+                <div className={classes.calendar_header__descr__item}>
+                  <div
+                    style={{ backgroundColor: "rgba(255, 236, 179, 1)" }}
+                    className={classes.calendar_header__descr__item__box}
+                  ></div>
+                  <p>Обучение</p>
+                </div>
+                <div className={classes.calendar_header__descr__item}>
+                  <div
+                    style={{ backgroundColor: "rgba(199, 223, 247, 1)" }}
+                    className={classes.calendar_header__descr__item__box}
+                  ></div>
+                  <p>Отпуск</p>
+                </div>
+                <Button
+                  className={classes.calendar_header__descr__btn}
+                  variant="contained"
+                  startIcon={<Edit />}
+                >
+                  Редактировать график работы
+                </Button>
+              </div>
+            </div>
             <YearlyCalendar />
           </Grid>
         );

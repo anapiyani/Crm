@@ -75,12 +75,41 @@
 }
 
 .day.selected {
-  background-color: #a5d6a7;
+  background-color: rgba(165, 214, 167, 1);
   color: var(--text-primary);
   font-weight: 500;
   font-size: 1.5rem;
 }
+.holiday {
+  background-color: rgba(248, 187, 208, 1);
+  color: var(--text-primary);
+  font-size: 1.5rem;
+}
+
+.sickLeave {
+  background-color: rgba(255, 171, 145, 1);
+  color: var(--text-primary);
+  font-size: 1.5rem;
+}
+
+.timeOff {
+  background-color: rgba(224, 224, 224, 1);
+  color: var(--text-primary);
+  font-size: 1.5rem;
+}
+
+.training {
+  background-color: rgba(255, 236, 179, 1);
+  color: var(--text-primary);
+  font-size: 1.5rem;
+}
+
+.vacation {
+  background-color: rgba(199, 223, 247, 1);
+  color: var(--text-primary);
+  font-size: 1.5rem;
+}
 
 .day.today {
-  background-color: #e0f7fa;
+  border: 1px solid var(--primary-500);
 }
