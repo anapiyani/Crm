@@ -65,3 +65,17 @@ export interface IResponseScheduleDataCounts {
   results: IResponseScheduleData[];
   count: number;
 }
+
+export interface IYearlySchedule {
+  date: string;
+  day_status: {
+    id: number;
+    status:
+      | "working_day"
+      | "holiday"
+      | "sick_leave"
+      | "time_off"
+      | "learning"
+      | "vacation";
+  };
+}

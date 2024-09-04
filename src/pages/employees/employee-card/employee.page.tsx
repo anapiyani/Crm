@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import classes from "./styles.module.scss";
 import CounterCard from "@/components/counter-card/counter-card";
 import BreadcrumbsCustom from "@/components/navigation/breadcrumbs/breadcrumbs";
@@ -35,12 +35,19 @@ import SalaryTable, {
 import { searchVisits } from "@/service/activity/activity.service";
 import { TableData } from "../employee-visits/data";
 import YearlyCalendar from "@/components/calendar/yearly-calendar/yearly-calendar";
+import { getEmployeeScheduleYearly } from "@/service/schedule/schedule.service";
 
 const EmployeePage = () => {
   const [currentTab, setCurrentTab] = useState<number>(0);
   const handleTabChange = (tabIndex: number) => {
     setCurrentTab(tabIndex);
   };
+  const [workingDays, setWorkingDays] = useState<string[]>([]);
+  const [holidays, setHolidays] = useState<string[]>([]);
+  const [sickLeaves, setSickLeaves] = useState<string[]>([]);
+  const [timeOffs, setTimeOffs] = useState<string[]>([]);
+  const [trainings, setTrainings] = useState<string[]>([]);
+  const [vacations, setVacations] = useState<string[]>([]);
 
   const params = useParams<{ id: string }>();
 
@@ -159,7 +166,6 @@ const EmployeePage = () => {
       };
     }) || [];
 
-  console.log(salaryInfo?.results);
   const salaryData: SalaryData[] = !salaryInfo
     ? []
     : salaryInfo?.results.map((salary, index) => {
@@ -206,6 +212,54 @@ const EmployeePage = () => {
     });
     return amount;
   };
+
+  const { data: scheduleData, isLoading: scheduleLoading } = useQuery({
+    queryKey: ["scheduleData"],
+    queryFn: () => getEmployeeScheduleYearly(Number(params.id)),
+  });
+
+  useEffect(() => {
+    if (scheduleData) {
+      const workingDaysArray: string[] = [];
+      const holidaysArray: string[] = [];
+      const sickLeavesArray: string[] = [];
+      const timeOffsArray: string[] = [];
+      const trainingsArray: string[] = [];
+      const vacationsArray: string[] = [];
+
+      scheduleData?.forEach((date) => {
+        switch (date.day_status.status) {
+          case "working_day":
+            workingDaysArray.push(date.date);
+            break;
+          case "holiday":
+            holidaysArray.push(date.date);
+            break;
+          case "sick_leave":
+            sickLeavesArray.push(date.date);
+            break;
+          case "time_off":
+            timeOffsArray.push(date.date);
+            break;
+          case "learning":
+            trainingsArray.push(date.date);
+            break;
+          case "vacation":
+            vacationsArray.push(date.date);
+            break;
+          default:
+            break;
+        }
+      });
+
+      setWorkingDays(workingDaysArray);
+      setHolidays(holidaysArray);
+      setSickLeaves(sickLeavesArray);
+      setTimeOffs(timeOffsArray);
+      setTrainings(trainingsArray);
+      setVacations(vacationsArray);
+    }
+  }, [scheduleData]);
 
   const renderContentHeader = () => {
     switch (currentTab) {
@@ -533,12 +587,22 @@ const EmployeePage = () => {
                   className={classes.calendar_header__descr__btn}
                   variant="contained"
                   startIcon={<Edit />}
+                  sx={{
+                    marginLeft: "5rem",
+                  }}
                 >
                   Редактировать график работы
                 </Button>
               </div>
             </div>
-            <YearlyCalendar />
+            <YearlyCalendar
+              working_day={workingDays}
+              holidays={holidays}
+              sickLeaves={sickLeaves}
+              timeOffs={timeOffs}
+              trainings={trainings}
+              vacations={vacations}
+            />
           </Grid>
         );
 

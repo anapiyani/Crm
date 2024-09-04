@@ -2,7 +2,21 @@ import React from "react";
 import Calendar from "../month-calendar/calendar";
 import styles from "./styles.module.scss";
 
-const YearlyCalendar: React.FC = () => {
+const YearlyCalendar = ({
+  working_day,
+  holidays,
+  sickLeaves,
+  timeOffs,
+  trainings,
+  vacations,
+}: {
+  working_day?: string[];
+  holidays?: string[];
+  sickLeaves?: string[];
+  timeOffs?: string[];
+  trainings?: string[];
+  vacations?: string[];
+}) => {
   const year = new Date().getFullYear();
 
   return (
@@ -12,8 +26,8 @@ const YearlyCalendar: React.FC = () => {
           key={index}
           month={index}
           year={year}
-          selectedDates={["31.08.2024", "05.09.2024"]}
-          holidays={["01.01.2024", "06.01.2024", "24.02.2024"]}
+          selectedDates={working_day}
+          holidays={holidays}
         />
       ))}
     </div>

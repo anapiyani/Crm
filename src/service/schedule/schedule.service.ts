@@ -4,6 +4,7 @@ import {
   IResponseScheduleData,
   IResponseScheduleDataCounts,
   ISchedule,
+  IYearlySchedule,
 } from "@/ts/schedule.interface";
 import { IResponseData } from "@/ts/types";
 
@@ -106,4 +107,12 @@ export const getEmployeeScheduleEachDay = (
   id: number,
 ): Promise<IResponseScheduleDataCounts> => {
   return api.get(`/schedule/schedules/employee/${id}/`).then((res) => res.data);
+};
+
+export const getEmployeeScheduleYearly = (
+  id: number,
+): Promise<IYearlySchedule[]> => {
+  return api
+    .get(`/schedule/schedules/employee/dates_with_status/?employee_id=${id}`)
+    .then((res) => res.data);
 };
