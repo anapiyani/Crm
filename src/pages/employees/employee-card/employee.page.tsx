@@ -354,6 +354,7 @@ const EmployeePage = () => {
                   counterCardData?.revenue ? counterCardData.revenue : "0"
                 }
               />
+
               <CounterCard
                 backgroundColor={"rgba(33, 150, 243, 0.3)"}
                 icon={<ExitToApp />}
