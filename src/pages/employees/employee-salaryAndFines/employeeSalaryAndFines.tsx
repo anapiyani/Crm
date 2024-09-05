@@ -24,7 +24,10 @@ const EmployeeFines = () => {
         xs={9}
         md={10.5}
       >
-        <SalaryTable data={salaryData} />
+        <SalaryTable
+          onDeleteWalletHostry={(id: number) => console.log(id)}
+          data={salaryData}
+        />
       </Grid>
     </div>
   );
