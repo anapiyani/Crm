@@ -4,6 +4,7 @@ import {
   addEmployee,
   addTemplate,
   deleteTemplate,
+  deleteWalletHistory,
   editTemplatePut,
   IAddEmployeeInterface,
 } from "./employee.service";
@@ -70,6 +71,22 @@ export const useDeleteTemplate = () => {
     onError: (error) => {
       const errorMessage =
         error.message || "Произошла ошибка при удалении шаблона.";
+      toast.error(errorMessage);
+    },
+  });
+};
+
+export const useDeleteWallethistory = () => {
+  const queryClient = useQueryClient();
+  return useMutation<void, Error, number>({
+    mutationFn: deleteWalletHistory,
+    onSuccess: () => {
+      toast.success("История успешно удалена!.");
+      queryClient.invalidateQueries({ queryKey: ["salaryData"] });
+    },
+    onError: (error) => {
+      const errorMessage =
+        error.message || "Произошла ошибка при удалении истории.";
       toast.error(errorMessage);
     },
   });
