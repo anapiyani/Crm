@@ -37,6 +37,8 @@ import { TableData } from "../employee-visits/data";
 import YearlyCalendar from "@/components/calendar/yearly-calendar/yearly-calendar";
 import { getEmployeeScheduleYearly } from "@/service/schedule/schedule.service";
 import { useDeleteWallethistory } from "@/service/employee/employee.hook";
+import NiceModal from "@ebay/nice-modal-react";
+import stepFormModal from "@/modals/step-form/step-form.modal";
 
 const EmployeePage = () => {
   const [currentTab, setCurrentTab] = useState<number>(0);
@@ -225,6 +227,10 @@ const EmployeePage = () => {
     mutationDeleteWalletHistory.mutate(id);
   };
 
+  const openSalaryTemplateModal = () => {
+    NiceModal.show(stepFormModal);
+  };
+
   useEffect(() => {
     if (scheduleData) {
       const workingDaysArray: string[] = [];
@@ -355,6 +361,7 @@ const EmployeePage = () => {
                   textTransform: "none",
                 }}
                 startIcon={<Edit />}
+                onClick={openSalaryTemplateModal}
               >
                 Настроить зарплату
               </Button>
