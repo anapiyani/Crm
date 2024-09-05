@@ -1,0 +1,57 @@
+.main__discounts {
+  padding: 0.8rem;
+  background: #fff;
+  border: 0.1rem solid #cdd7e1;
+  height: fit-content;
+  border-radius: 16px;
+}
+
+.main__discounts__header {
+  /* Adjust header styling */
+}
+
+.main__discounts__lower {
+  /* Adjust table container styling */
+}
+
+.main__discounts__lower__container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+  width: 100%;
+}
+
+.main__discounts__lower__container__row {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 1rem;
+  justify-content: space-around;
+}
+
+.name_link {
+  color: #1e88e5;
+  text-decoration: none;
+}
+
+.action_text {
+  margin-left: 0.5rem;
+  font-size: 1.4rem;
+}
+
+.discount_percentage {
+  font-size: 1.4rem;
+  color: #1976d2;
+}
+
+.tableSettings {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.main__discounts__lower__container__label,
+.tableSettings {
+  font-size: 1.6rem;
+}
