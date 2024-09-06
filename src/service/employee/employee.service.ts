@@ -71,7 +71,7 @@ export const editTemplatePut = ({
   form: ITemplate;
   id: number;
 }): Promise<ITemplate> => {
-  return api.put(`/templates/${id}/`, form).then((res) => res.data);
+  return api.patch(`/templates/${id}/`, form).then((res) => res.data);
 };
 
 export const deleteTemplate = (id: number): Promise<void> => {
