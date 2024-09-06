@@ -14,11 +14,11 @@ export const employeeTabsData = [
     icon: AccountBalanceWalletOutlined,
     label: "Зарплата, штрафы, премии, авансы",
   },
-  {
-    to: "/employees/reviews",
-    icon: WarningAmberOutlined,
-    label: "Отзывы / жалобы",
-  },
+  // {
+  //   to: "/employees/reviews",
+  //   icon: WarningAmberOutlined,
+  //   label: "Отзывы / жалобы",
+  // },
   {
     to: "/employees/work-schedule",
     icon: CalendarMonthOutlined,

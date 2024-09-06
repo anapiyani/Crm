@@ -25,6 +25,7 @@ import {
   StoragePage,
   AnalyticsPage,
   Report,
+  DiscountPage,
 } from "@/pages";
 
 // import { Role } from "@/ts/types";
@@ -157,5 +158,10 @@ export const ROUTES: IRoute[] = [
     name: "Report",
     path: "/analytics/reports",
     component: <Report />,
+  },
+  {
+    name: "Discounts",
+    path: "/discounts",
+    component: <DiscountPage />,
   },
 ];

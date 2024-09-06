@@ -1,11 +1,12 @@
 .calendar {
-  display: flex;
-  flex-direction: column;
-  width: 23%;
-  max-width: 400px;
-  margin: 0 auto;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  padding-bottom: 1rem;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding-bottom: 1rem;
+    background-color: #fff;
 }
 
 .header {
@@ -53,20 +54,21 @@
 }
 
 .days {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  padding-left: 10px;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
 }
 
 .day {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 30px;
-  border-radius: 100%;
-  margin: 5px;
-  font-size: 14px;
-  color: #666;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    margin: 5px;
+    font-size: 14px;
+    color: #666;
 }
 
 .day.notCurrent {
