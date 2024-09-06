@@ -68,6 +68,7 @@ const StepForm: React.FC<IStepFormProps> = ({
           toEdit.services_with_different_percentage || [],
         item_sales: toEdit.item_sales || {},
         isEdit: toEdit.id ? true : false,
+        employee: toEdit.employee || undefined,
       };
       reset(defaultValues);
     }
@@ -139,6 +140,7 @@ const StepForm: React.FC<IStepFormProps> = ({
         templateNameAndIds={templateNameAndIds}
         control={control}
         choosenTemplate={choosenTemplate}
+        onSaveName={handleSubmit(onSubmit)}
       />
     ),
     1: <FixedPart control={control} />,

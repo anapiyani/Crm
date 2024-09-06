@@ -3,6 +3,7 @@ import toast from "react-hot-toast";
 import {
   addEmployee,
   addTemplate,
+  assignTemplate,
   deleteTemplate,
   deleteWalletHistory,
   editTemplatePut,
@@ -87,6 +88,22 @@ export const useDeleteWallethistory = () => {
     onError: (error) => {
       const errorMessage =
         error.message || "Произошла ошибка при удалении истории.";
+      toast.error(errorMessage);
+    },
+  });
+};
+
+export const useAssignTemplate = () => {
+  const queryClient = useQueryClient();
+  return useMutation<void, Error, { user_id: number; template_id: number }>({
+    mutationFn: assignTemplate,
+    onSuccess: () => {
+      toast.success("Шаблон успешно назначен!.");
+      queryClient.invalidateQueries({ queryKey: ["employeeTemplate"] });
+    },
+    onError: (error) => {
+      const errorMessage =
+        error.message || "Произошла ошибка при назначении шаблона.";
       toast.error(errorMessage);
     },
   });
