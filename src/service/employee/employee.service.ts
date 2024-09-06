@@ -90,3 +90,7 @@ export const getWalletHistory = (
     .get(`/salary-wallet-history/?page=${page}&user_id=${id}`)
     .then((res) => res.data);
 };
+
+export const deleteWalletHistory = (id: number): Promise<void> => {
+  return api.delete(`/salary-wallet-history/${id}/`).then((res) => res.data);
+};

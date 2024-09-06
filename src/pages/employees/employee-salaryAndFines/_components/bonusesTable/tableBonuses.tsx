@@ -33,11 +33,12 @@ export interface SalaryData {
   link: string;
   linkText: string;
   employee: string;
-  deleteLink: string;
+  id: number;
 }
 
 interface SalaryTableProps {
   data: SalaryData[];
+  onDeleteWalletHostry: (id: number) => void;
 }
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -73,7 +74,10 @@ const tableHeaders = [
   { id: "link", label: "Связь" },
 ];
 
-const SalaryTable: React.FC<SalaryTableProps> = ({ data }) => {
+const SalaryTable: React.FC<SalaryTableProps> = ({
+  data,
+  onDeleteWalletHostry,
+}) => {
   return (
     <Paper
       sx={{
@@ -136,10 +140,14 @@ const SalaryTable: React.FC<SalaryTableProps> = ({ data }) => {
                   >
                     {row.employee}
                   </Link>
-                  <IconButton color="error" href={row.deleteLink}>
+                  <IconButton color="error">
                     <Clear sx={{ fontSize: "1.4rem" }} />
                   </IconButton>
-                  <Link href={row.deleteLink} color="error" sx={{ ml: 0.5 }}>
+                  <Link
+                    onClick={() => onDeleteWalletHostry(row.id)}
+                    color="error"
+                    sx={{ ml: 0.5, cursor: "pointer" }}
+                  >
                     Удалить
                   </Link>
                 </StyledTableCell>

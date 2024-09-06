@@ -36,6 +36,9 @@ import { searchVisits } from "@/service/activity/activity.service";
 import { TableData } from "../employee-visits/data";
 import YearlyCalendar from "@/components/calendar/yearly-calendar/yearly-calendar";
 import { getEmployeeScheduleYearly } from "@/service/schedule/schedule.service";
+import { useDeleteWallethistory } from "@/service/employee/employee.hook";
+import NiceModal from "@ebay/nice-modal-react";
+import stepFormModal from "@/modals/step-form/step-form.modal";
 
 const EmployeePage = () => {
   const [currentTab, setCurrentTab] = useState<number>(0);
@@ -48,6 +51,8 @@ const EmployeePage = () => {
   const [timeOffs, setTimeOffs] = useState<string[]>([]);
   const [trainings, setTrainings] = useState<string[]>([]);
   const [vacations, setVacations] = useState<string[]>([]);
+
+  const mutationDeleteWalletHistory = useDeleteWallethistory();
 
   const params = useParams<{ id: string }>();
 
@@ -187,7 +192,7 @@ const EmployeePage = () => {
           link: `/visits/${salary.appointment}`,
           linkText: salary.appointment_name,
           employee: salary.client_name || "Не указан",
-          deleteLink: "https://example.com/delete1",
+          id: salary.id,
         };
       });
 
@@ -217,6 +222,14 @@ const EmployeePage = () => {
     queryKey: ["scheduleData"],
     queryFn: () => getEmployeeScheduleYearly(Number(params.id)),
   });
+
+  const deleteWalletHistory = (id: number) => {
+    mutationDeleteWalletHistory.mutate(id);
+  };
+
+  const openSalaryTemplateModal = () => {
+    NiceModal.show(stepFormModal);
+  };
 
   useEffect(() => {
     if (scheduleData) {
@@ -326,7 +339,9 @@ const EmployeePage = () => {
                 iconColor="var(--secondary-main)"
                 textTitle="Последнее посещение"
                 valueText={
-                  data.length > 0 ? data[0].visitTime : "Посещений не найдено"
+                  data.length > 0
+                    ? data[data.length - 1].visitTime
+                    : "Посещений не найдено"
                 }
               />
             </div>
@@ -346,6 +361,7 @@ const EmployeePage = () => {
                   textTransform: "none",
                 }}
                 startIcon={<Edit />}
+                onClick={openSalaryTemplateModal}
               >
                 Настроить зарплату
               </Button>
@@ -503,7 +519,10 @@ const EmployeePage = () => {
             xs={9}
             md={10.5}
           >
-            <SalaryTable data={salaryData} />
+            <SalaryTable
+              onDeleteWalletHostry={deleteWalletHistory}
+              data={salaryData}
+            />
           </Grid>
         );
       case 3:

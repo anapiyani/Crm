@@ -23,20 +23,22 @@ import AttractingCliens from "../attracting-clients/attracting-clients.component
 import CustomerDevelopment from "../customer-development/customer-development.component";
 import classes from "./styles.module.scss";
 
-// const steps = [
-//   "Имя шаблона",
-//   "Фикс. часть",
-//   "Плавающая часть",
-//   "Продажа товаров",
-//   "Привлечение клиентов",
-//   "Развитие клиентов",
-// ];
-
 interface IStepFormProps {
   toEdit?: Partial<ITemplate>;
+  isInfoPage?: boolean;
+  onHideModal?: () => void;
+  templateList?: ITemplate[];
+  templateNameAndIds?: { name: string; id: number | undefined }[];
+  choosenTemplate?: (value: string) => void;
 }
 
-const StepForm: React.FC<IStepFormProps> = ({ toEdit }) => {
+const StepForm: React.FC<IStepFormProps> = ({
+  toEdit,
+  isInfoPage,
+  onHideModal,
+  templateNameAndIds,
+  choosenTemplate,
+}) => {
   const managmentSteps = 3;
   const editMutation = useEditTemplate();
   const addMutation = useAddTemplate();
@@ -123,8 +125,22 @@ const StepForm: React.FC<IStepFormProps> = ({ toEdit }) => {
     reset();
   };
 
+  const handleCloseModal = () => {
+    if (isInfoPage && onHideModal) {
+      onHideModal();
+    }
+    reset();
+  };
+
   const componentMapping: Record<number, JSX.Element> = {
-    0: <TemplateName control={control} />,
+    0: (
+      <TemplateName
+        isEmployeeEdit={isInfoPage}
+        templateNameAndIds={templateNameAndIds}
+        control={control}
+        choosenTemplate={choosenTemplate}
+      />
+    ),
     1: <FixedPart control={control} />,
     2: (
       <FloatingPart
@@ -181,9 +197,11 @@ const StepForm: React.FC<IStepFormProps> = ({ toEdit }) => {
           }}
         >
           {toEdit?.template_type !== "management"
-            ? steps.map((label) => (
+            ? steps.map((label, index) => (
                 <Step key={label}>
-                  <StepLabel>{label}</StepLabel>
+                  <StepLabel onClick={() => setActiveStep(index)}>
+                    {label}
+                  </StepLabel>
                 </Step>
               ))
             : steps.slice(0, managmentSteps).map((label) => (
@@ -197,17 +215,23 @@ const StepForm: React.FC<IStepFormProps> = ({ toEdit }) => {
             <div className={classes.child}>{displayStep()}</div>
           </Typography>
           <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
-            {activeStep === 0 ? (
+            {isInfoPage ? (
+              <Button
+                variant="outlined"
+                color="error"
+                onClick={handleCloseModal}
+                startIcon={<Close />}
+                sx={{ ...buttonStyles, textTransform: "capitalize", mr: 1 }}
+              >
+                Закрыть
+              </Button>
+            ) : activeStep === 0 ? (
               <Button
                 variant="outlined"
                 color="error"
                 onClick={handleDelete}
-                sx={{ mr: 1 }}
                 startIcon={<Delete />}
-                style={{
-                  ...buttonStyles,
-                  textTransform: "capitalize",
-                }}
+                sx={{ ...buttonStyles, textTransform: "capitalize", mr: 1 }}
               >
                 Удалить
               </Button>
@@ -217,11 +241,7 @@ const StepForm: React.FC<IStepFormProps> = ({ toEdit }) => {
                 color="error"
                 onClick={handleStop}
                 startIcon={<Close />}
-                style={{
-                  ...buttonStyles,
-                  textTransform: "capitalize",
-                }}
-                sx={{ mr: 1 }}
+                sx={{ ...buttonStyles, textTransform: "capitalize", mr: 1 }}
               >
                 Отмена
               </Button>
