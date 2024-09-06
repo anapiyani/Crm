@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import HeaderTemplate from "../MultiStepHeader/MultiStepHeader.component";
 import StepInput from "../step-input/step-input.component";
 import classes from "./styles.module.scss";
@@ -12,6 +12,7 @@ interface TemplateNameProps {
   isEmployeeEdit?: boolean;
   templateNameAndIds?: { name: string; id: number | undefined }[];
   choosenTemplate?: (value: string) => void;
+  onSaveName?: () => void;
 }
 
 const TemplateName: React.FC<TemplateNameProps> = ({
@@ -19,7 +20,9 @@ const TemplateName: React.FC<TemplateNameProps> = ({
   isEmployeeEdit,
   templateNameAndIds,
   choosenTemplate,
+  onSaveName,
 }) => {
+  const [templateId, setTemplateId] = useState<string | undefined>();
   const mappedOptionNameAndId = () => {
     return templateNameAndIds?.map((template) => {
       return {
@@ -40,11 +43,10 @@ const TemplateName: React.FC<TemplateNameProps> = ({
             isAutoComplete={true}
             dataValue={""}
             options={mappedOptionNameAndId()}
-            onChange={(value) =>
-              choosenTemplate && choosenTemplate(value.value)
-            }
+            onChange={(value) => setTemplateId(value ? value.value : undefined)}
             afterChild={
               <Button
+                onClick={() => choosenTemplate && choosenTemplate(templateId!)}
                 sx={{
                   fontSize: "1.1rem",
                   padding: "1rem 1.5rem",
@@ -58,24 +60,32 @@ const TemplateName: React.FC<TemplateNameProps> = ({
             }
           />
           <HeaderTemplate children={"Сохранить текущие настройки"} />
-          <StepInput
-            labelName={"Название шаблона"}
-            placeholder={"Дайте имя новому шаблону"}
-            dataValue={""}
-            onChange={(e) => console.log(e.target.value)}
-            afterChild={
-              <Button
-                sx={{
-                  fontSize: "1.1rem",
-                  padding: "1rem 1.5rem",
-                  width: "150px",
-                }}
-                variant="outlined"
-              >
-                <Save sx={{ marginRight: "0.5rem" }} />
-                Сохранить
-              </Button>
-            }
+
+          <Controller
+            name="name"
+            control={control}
+            render={({ field }) => (
+              <StepInput
+                labelName={"Название шаблона"}
+                placeholder={"Дайте имя новому шаблону"}
+                onChange={(e) => field.onChange(e)}
+                dataValue={field.value || ""}
+                afterChild={
+                  <Button
+                    sx={{
+                      fontSize: "1.1rem",
+                      padding: "1rem 1.5rem",
+                      width: "150px",
+                    }}
+                    onClick={onSaveName}
+                    variant="outlined"
+                  >
+                    <Save sx={{ marginRight: "0.5rem" }} />
+                    Сохранить
+                  </Button>
+                }
+              />
+            )}
           />
         </div>
       ) : (

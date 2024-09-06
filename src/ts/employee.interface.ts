@@ -92,6 +92,7 @@ export interface ITemplate {
   item_sales: IItemSales;
   id?: number;
   isEdit?: boolean;
+  employee?: number | undefined;
 }
 
 export interface IItemSales {

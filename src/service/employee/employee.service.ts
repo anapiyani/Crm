@@ -94,3 +94,14 @@ export const getWalletHistory = (
 export const deleteWalletHistory = (id: number): Promise<void> => {
   return api.delete(`/salary-wallet-history/${id}/`).then((res) => res.data);
 };
+
+export const assignTemplate = (form: {
+  user_id: number;
+  template_id: number;
+}) => {
+  return api.post("/assign-template/", form).then((res) => res.data);
+};
+
+export const getEmployeeTemplate = (id: string): Promise<ITemplate> => {
+  return api.get(`/templates/employee/${id}/`).then((res) => res.data);
+};

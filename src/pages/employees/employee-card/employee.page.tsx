@@ -23,6 +23,8 @@ import TableHorizontal from "@/components/tables/table-horizontal/horizontal-inf
 import TableVertical from "@/components/tables/tableVertical/vertical-info-card";
 import {
   cardInfoEmplpyee,
+  getEmployeeTemplate,
+  getTemplateList,
   getWalletHistory,
   mainInfoEmployee,
 } from "@/service/employee/employee.service";
@@ -64,6 +66,11 @@ const EmployeePage = () => {
   const { data: userInfoData, isLoading: userInfoLoading } = useQuery({
     queryKey: ["mainInfoEmployee", params.id],
     queryFn: () => mainInfoEmployee(Number(params.id)),
+  });
+
+  const { data: employeeTemplate, isLoading: templateLoading } = useQuery({
+    queryKey: ["employeeTemplate"],
+    queryFn: () => getEmployeeTemplate(params.id!),
   });
 
   const { data: visitsInfo, isPending: visitsPending } = useQuery({
@@ -228,7 +235,10 @@ const EmployeePage = () => {
   };
 
   const openSalaryTemplateModal = () => {
-    NiceModal.show(stepFormModal);
+    NiceModal.show(stepFormModal, {
+      user_id: params.id,
+      employeeTemplate: employeeTemplate,
+    });
   };
 
   useEffect(() => {
@@ -373,7 +383,11 @@ const EmployeePage = () => {
                 iconColor="#607D8B"
                 textTitle="Фикс. часть"
                 valueText="За смену"
-                textTitleFocus="0 ₸"
+                textTitleFocus={
+                  employeeTemplate?.fixed_part.fixed_amount
+                    ? employeeTemplate?.fixed_part.fixed_amount + " ₸"
+                    : "0 ₸"
+                }
               />
               <CounterCard
                 backgroundColor="rgba(33, 150, 243, 0.3)"
@@ -381,7 +395,11 @@ const EmployeePage = () => {
                 iconColor="var(--primary-main)"
                 textTitle="Плав. часть"
                 valueText="От выручки"
-                textTitleFocus="0%"
+                textTitleFocus={
+                  employeeTemplate?.floating_part.employee_percentage
+                    ? employeeTemplate?.floating_part.employee_percentage + " %"
+                    : "0 %"
+                }
               />
 
               <CounterCard
@@ -390,7 +408,7 @@ const EmployeePage = () => {
                 iconColor="var(--success-main)"
                 textTitle="Прод. товаров"
                 valueText="От продаж"
-                textTitleFocus="0%"
+                textTitleFocus={"0 %"}
               />
               <CounterCard
                 backgroundColor="rgba(33, 150, 243, 0.3)"
@@ -398,7 +416,13 @@ const EmployeePage = () => {
                 iconColor="var(--primary-main)"
                 textTitle="Привл. клиентов"
                 valueText="За клиента"
-                textTitleFocus="0 ₸"
+                textTitleFocus={
+                  employeeTemplate?.client_attraction?.value_client_of_master !=
+                  null
+                    ? employeeTemplate.client_attraction
+                        .value_client_of_master + " ₸"
+                    : "0 ₸"
+                }
               />
               <CounterCard
                 backgroundColor="rgba(156, 39, 176, 0.3)"
@@ -406,7 +430,11 @@ const EmployeePage = () => {
                 iconColor="var(--secondary-main)"
                 textTitle="Развитие клиентов"
                 valueText="От продаж"
-                textTitleFocus="0 ₸"
+                textTitleFocus={
+                  employeeTemplate?.client_development?.value != null
+                    ? employeeTemplate.client_development.value + " ₸"
+                    : "0 ₸"
+                }
               />
             </div>
           </Grid>
