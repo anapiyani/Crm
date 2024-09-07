@@ -1,0 +1,258 @@
+.break-modal {
+  &__time {
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    gap: 3rem;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+}
+
+.create-appointment {
+  &__params-text {
+    font-size: 1.6rem;
+    font-weight: 400;
+    line-height: 2.4rem;
+    color: var(--brand-500);
+  }
+
+  &__params {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    align-items: center;
+
+    &--icon {
+      display: flex;
+      flex-direction: row;
+      gap: 0.5rem;
+      align-items: center;
+    }
+  }
+
+  &__calendar {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    align-items: center;
+    margin-top: 1rem;
+  }
+
+  &__services {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+
+    &--select {
+      margin-top: 1rem;
+      display: flex;
+      flex-direction: row;
+      gap: 1rem;
+    }
+
+    &--table {
+      margin-top: 1rem;
+      table {
+        border-collapse: collapse;
+
+        th {
+          background-color: var(--neutral-050);
+          padding: 1rem;
+          font-size: 1.4rem;
+          font-weight: 600;
+          &:not(:first-child) {
+            text-align: center;
+          }
+        }
+        tr td {
+          font-size: 1.4rem;
+        }
+        tr td:first-child {
+          min-width: 20rem;
+          text-align: left;
+        }
+
+        tr:nth-child(even) {
+          background-color: var(--neutral-050);
+        }
+      }
+    }
+  }
+
+  &__buttons {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 4rem;
+
+    &--right {
+      gap: 0.5rem;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      margin-left: 0.5rem;
+    }
+  }
+}
+
+.choose-service-modal {
+  min-width: 80rem;
+  z-index: 99999;
+  &__accordions {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
+
+.tabs-modal {
+  width: fit-content;
+}
+
+.delete-modal {
+  font-size: 1.6rem;
+  font-weight: 400;
+  line-height: 2.4rem;
+}
+
+.u-p-0 {
+  padding: 2rem 0;
+}
+.u-w-full {
+  width: 100%;
+}
+
+.u-full-zero {
+  padding: 0;
+}
+
+.u-mt-1 {
+  margin-top: 1rem;
+}
+
+.u-mt-2 {
+  margin-top: 2rem;
+}
+
+.u-font-size-16 {
+  font-size: 1.6rem;
+}
+
+.event-details {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+
+  &__right {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  &__modal {
+    min-width: 100rem;
+    width: 150rem;
+  }
+
+  &__header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    &--text {
+      font-size: 1.6rem;
+      color: var(--text-primary);
+      font-weight: 400;
+    }
+
+    &--buttons {
+      display: flex;
+      flex-direction: row;
+      gap: 1rem;
+    }
+  }
+}
+
+.add-employees-schedule {
+  &--header {
+    font-size: 1.6rem;
+    font-weight: 400;
+    line-height: 2.4rem;
+    color: var(--brand-500);
+  }
+  &__container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    &--data {
+      display: flex;
+      flex-direction: row;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    &--time {
+      display: flex;
+      flex-direction: row;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    &--label {
+      font-size: 1.6rem;
+      line-height: 2.4rem;
+      min-width: 12rem;
+    }
+  }
+}
+
+.export-appointments {
+  &--header {
+    font-size: 1.6rem;
+    font-weight: 400;
+    line-height: 2.4rem;
+    color: var(--brand-500);
+  }
+  &__container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 2rem;
+
+    &__item {
+      display: flex;
+      flex-direction: row;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    &--label {
+      font-size: 1.6rem;
+      line-height: 2.4rem;
+      min-width: 10rem;
+    }
+  }
+}
+
+.checkbox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.info_text {
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--text-secondary);
+  max-width: 30rem;
+  margin-top: 0.5rem;
+}
+
+.transfer {
+  margin-top: 1rem;
+}

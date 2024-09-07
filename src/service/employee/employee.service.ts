@@ -97,7 +97,7 @@ export const deleteWalletHistory = (id: number): Promise<void> => {
 
 export const assignTemplate = (form: {
   user_id: number;
-  template_id: number;
+  template_id: number | null;
 }) => {
   return api.post("/assign-template/", form).then((res) => res.data);
 };

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Backdrop, Button, Divider } from "@mui/material";
 import { Clear, Done } from "@mui/icons-material";
 import classes from "./styles.module.scss";
@@ -31,6 +31,10 @@ const ModalWindow: React.FC<ModalWindowProps> = ({
   afterClose,
   isFront = false,
 }) => {
+  useEffect(() => {
+    document.body.style.overflow = open ? "hidden" : "auto";
+  }, [open]);
+
   return (
     <Backdrop
       sx={{

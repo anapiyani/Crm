@@ -3,7 +3,7 @@ import ModalWindow from "@/components/modal-window/modal-window";
 import NiceModal, { useModal } from "@ebay/nice-modal-react";
 import classes from "./styles.module.scss";
 import { Autocomplete, Button, Divider, TextField } from "@mui/material";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { getOperations } from "@/service/kassa/kassa.service";
 import { IKassaOperations, IWithdrawal } from "@/ts/kassa.interface";
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -14,8 +14,8 @@ import toast from "react-hot-toast";
 const WithdrawModal: React.FC = () => {
   const { register, handleSubmit, reset } = useForm<IWithdrawal>();
   const { data: operationsData } = useQuery({
-    queryKey: ["kassaService"],
-    queryFn: () => getOperations(),
+    queryKey: ["kassaServiceWithdraw"],
+    queryFn: () => getOperations("Withdraw", true),
   });
 
   const mutation = useWithdrawl();
