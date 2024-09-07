@@ -9,6 +9,10 @@ import RoleEmployeeCheckbox from "@/components/role-employee-checkbox/role-emplo
 import { getEmployeeScheduleEachDay } from "@/service/schedule/schedule.service";
 import { useQueries } from "@tanstack/react-query";
 import { IResponseScheduleData } from "@/ts/schedule.interface";
+import AddPeriod from "@/modals/schedule/add-period.modal";
+import NiceModal from "@ebay/nice-modal-react";
+import interactionPlugin from "@fullcalendar/interaction";
+import DaySettingsModal from "@/modals/schedule/day-settings.modal";
 
 const WorkSchedule = () => {
   const [selectedEmployeeIds, setSelectedEmployeeIds] = useState<
@@ -31,6 +35,18 @@ const WorkSchedule = () => {
       .filter((query) => query.isSuccess)
       .map((query) => query.data.results as IResponseScheduleData[]);
   }, [employeeQueries]);
+
+  const handleOpenAddPeriod = () => {
+    NiceModal.show(AddPeriod);
+  };
+
+  const scheduleDayClick = (date: any) => {
+    NiceModal.show(DaySettingsModal);
+  };
+
+  const eventClick = (event: any) => {
+    console.log("event click", event);
+  };
 
   const renderEventContent = (eventInfo: any) => {
     return (
@@ -90,7 +106,7 @@ const WorkSchedule = () => {
               className={classes["schedule__content__calendar__header__top"]}
             >
               <h2>Календарь</h2>
-              <Button>
+              <Button onClick={handleOpenAddPeriod}>
                 <AddIcon /> Добавить период
               </Button>
             </div>
@@ -98,7 +114,7 @@ const WorkSchedule = () => {
           </div>
           <div className={classes["schedule__content__calendar__dates"]}>
             <FullCalendar
-              plugins={[dayGridPlugin]}
+              plugins={[dayGridPlugin, interactionPlugin]}
               initialView="dayGridMonth"
               locale="ru"
               events={eventData}
@@ -110,6 +126,9 @@ const WorkSchedule = () => {
                 omitZeroMinute: false,
                 meridiem: "narrow",
               }}
+              selectable={true}
+              select={scheduleDayClick}
+              eventClick={(event) => eventClick(event)}
             />
           </div>
         </div>

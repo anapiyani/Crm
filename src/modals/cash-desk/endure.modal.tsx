@@ -14,8 +14,8 @@ import toast from "react-hot-toast";
 const EndureModal: React.FC = () => {
   const { register, handleSubmit, reset } = useForm<IWithdrawal>();
   const { data: operationsData } = useQuery({
-    queryKey: ["kassaService"],
-    queryFn: () => getOperations(true),
+    queryKey: ["kassaServiceEndure"],
+    queryFn: () => getOperations("Deposit", true),
   });
 
   const mutation = useDepositKassa();

@@ -52,6 +52,7 @@ const StepFormModal = ({
           template_id: template.id,
         };
         assignTemplate.mutate(formData);
+        modal.hide();
       }
     });
   };

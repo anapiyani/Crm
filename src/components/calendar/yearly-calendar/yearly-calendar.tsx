@@ -28,6 +28,10 @@ const YearlyCalendar = ({
           year={year}
           selectedDates={working_day}
           holidays={holidays}
+          sickLeaves={sickLeaves}
+          timeOffs={timeOffs}
+          trainings={trainings}
+          vacations={vacations}
         />
       ))}
     </div>

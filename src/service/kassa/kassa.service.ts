@@ -16,10 +16,11 @@ import { IResponseData } from "@/ts/types";
 import api from "../api";
 
 export const getOperations = (
+  q?: string,
   kassa_transaction?: boolean,
 ): Promise<IKassaOperations[]> => {
   const url = kassa_transaction
-    ? "/operations/?kassa_transaction=true"
+    ? "/operations/?kassa_transaction=true&q=" + q
     : "/operations/";
   return api.get(url).then((res) => res.data);
 };

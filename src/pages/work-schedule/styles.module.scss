@@ -108,6 +108,10 @@
     border: none;
   }
 
+  .fc-daygrid-day {
+    cursor: pointer;
+  }
+
   .fc .fc-event-main {
     color: var(--text-primary);
     font-size: 1.4rem;

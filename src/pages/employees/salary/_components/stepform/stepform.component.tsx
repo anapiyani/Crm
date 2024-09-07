@@ -16,6 +16,7 @@ import SellingGoods from "../selling-goods/selling-goods.component";
 import { ITemplate } from "@/ts/employee.interface";
 import {
   useAddTemplate,
+  useAssignTemplate,
   useDeleteTemplate,
   useEditTemplate,
 } from "@/service/employee/employee.hook";
@@ -54,6 +55,7 @@ const StepForm: React.FC<IStepFormProps> = ({
   ]);
   const { register, handleSubmit, reset, control, setValue, getValues } =
     useForm<ITemplate>();
+  const assignTemplate = useAssignTemplate();
 
   useEffect(() => {
     if (toEdit) {
@@ -94,7 +96,13 @@ const StepForm: React.FC<IStepFormProps> = ({
   }, [toEdit]);
 
   const onSubmit: SubmitHandler<ITemplate> = (data) => {
-    console.log(data);
+    if (data.employee) {
+      assignTemplate.mutate({
+        template_id: null,
+        user_id: data.employee,
+      });
+    }
+
     if (data.isEdit) {
       editMutation.mutate({ form: data, id: toEdit!.id! });
     } else {

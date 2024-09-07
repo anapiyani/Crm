@@ -95,15 +95,18 @@ export const useDeleteWallethistory = () => {
 
 export const useAssignTemplate = () => {
   const queryClient = useQueryClient();
-  return useMutation<void, Error, { user_id: number; template_id: number }>({
+  return useMutation<
+    void,
+    Error,
+    { user_id: number; template_id: number | null }
+  >({
     mutationFn: assignTemplate,
     onSuccess: () => {
       toast.success("Шаблон успешно назначен!.");
       queryClient.invalidateQueries({ queryKey: ["employeeTemplate"] });
     },
     onError: (error) => {
-      const errorMessage =
-        error.message || "Произошла ошибка при назначении шаблона.";
+      const errorMessage = error.name || "Шаблон для сотрудника уже назначен.";
       toast.error(errorMessage);
     },
   });

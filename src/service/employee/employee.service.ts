@@ -71,7 +71,7 @@ export const editTemplatePut = ({
   form: ITemplate;
   id: number;
 }): Promise<ITemplate> => {
-  return api.put(`/templates/${id}/`, form).then((res) => res.data);
+  return api.patch(`/templates/${id}/`, form).then((res) => res.data);
 };
 
 export const deleteTemplate = (id: number): Promise<void> => {
@@ -97,7 +97,7 @@ export const deleteWalletHistory = (id: number): Promise<void> => {
 
 export const assignTemplate = (form: {
   user_id: number;
-  template_id: number;
+  template_id: number | null;
 }) => {
   return api.post("/assign-template/", form).then((res) => res.data);
 };
