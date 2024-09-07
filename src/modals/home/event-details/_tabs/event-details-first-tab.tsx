@@ -27,6 +27,8 @@ import {
 } from "@/service/services/services.service";
 import { Add } from "@mui/icons-material";
 import classNames from "classnames";
+import { set } from "react-hook-form";
+import { co } from "node_modules/@fullcalendar/core/internal-common";
 
 interface IEventDetailsFirstTabProps {
   data?: ISingleAppointmentReturn;
@@ -54,6 +56,14 @@ const EventDetailsFirstTab: React.FC<IEventDetailsFirstTabProps> = ({
   const [selectedParameter, setSelectedParameter] = useState<IOption | null>(
     null
   );
+  const [parametersData, setParametersData] = useState<
+    {
+      id: number;
+      name: string;
+      price: number;
+      type: string;
+    }[]
+  >([]);
 
   const { data: servicesDataByEmployee } = useQuery({
     queryKey: ["servicesData", data?.employee_id],
@@ -63,13 +73,13 @@ const EventDetailsFirstTab: React.FC<IEventDetailsFirstTabProps> = ({
     refetchOnWindowFocus: false,
   });
 
-  const { data: parametersData } = useQuery({
-    queryKey: ["parametersData", selectedService?.value],
-    queryFn: () => getServiceParametersById(selectedService?.value as number),
-    enabled: selectedService !== null && selectedService?.value !== 0,
-    staleTime: Infinity,
-    refetchOnWindowFocus: false,
-  });
+  // const { data: parametersData } = useQuery({
+  //   queryKey: ["parametersData", selectedService?.value],
+  //   queryFn: () => getServiceParametersById(selectedService?.value as number),
+  //   enabled: selectedService !== null && selectedService?.value !== 0,
+  //   staleTime: Infinity,
+  //   refetchOnWindowFocus: false,
+  // });
 
   useEffect(() => {
     if (data && data.appointment_services) {
@@ -106,8 +116,9 @@ const EventDetailsFirstTab: React.FC<IEventDetailsFirstTabProps> = ({
   const handleAddService = () => {
     if (selectedService && selectedParameter) {
       const service = servicesDataByEmployee?.find(
-        (service) => service.parameter.id === selectedService.value
+        (service) => service.id === selectedService.value
       );
+      console.log(service);
       if (service) {
         setServicesData([
           ...servicesData,
@@ -115,8 +126,15 @@ const EventDetailsFirstTab: React.FC<IEventDetailsFirstTabProps> = ({
             id: Date.now(),
             service: selectedService.label,
             service_id: selectedService.value,
-            price: service.price,
-            unitPrice: Number(service.price),
+            price:
+              service.parameters
+                .find((param) => param.id === selectedParameter.value)
+                ?.price.toString() || "0",
+            unitPrice: Number(
+              service.parameters.find(
+                (param) => param.id === selectedParameter.value
+              )?.price
+            ),
             quantity: 1,
             parameter: selectedParameter.label,
             parameter_id: selectedParameter.value,
@@ -215,12 +233,25 @@ const EventDetailsFirstTab: React.FC<IEventDetailsFirstTabProps> = ({
               selectValue={"label"}
               size="small"
               value={selectedService}
-              onChange={(value) => setSelectedService(value)}
+              onChange={(value) => {
+                console.log(value);
+                setSelectedService(value);
+                console.log(
+                  servicesDataByEmployee?.find(
+                    (service) => service.id === value?.value
+                  )?.parameters
+                );
+                setParametersData(
+                  servicesDataByEmployee?.find(
+                    (service) => service.id === value?.value
+                  )?.parameters || []
+                );
+              }}
               options={
                 servicesDataByEmployee
                   ? servicesDataByEmployee.map((service) => ({
                       label: service.service,
-                      value: service.parameter.id,
+                      value: service.service_id,
                     }))
                   : []
               }
