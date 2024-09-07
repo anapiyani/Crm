@@ -5,6 +5,7 @@ import {
   IResponseScheduleData,
   IResponseScheduleDataCounts,
   ISchedule,
+  IScheduleEmployeeChange,
   IYearlySchedule,
 } from "@/ts/schedule.interface";
 import { IResponseData } from "@/ts/types";
@@ -121,5 +122,15 @@ export const getEmployeeScheduleYearly = (
 export const longBreak = (formData: ILongBreaks): Promise<any> => {
   return api
     .post(`/schedule/schedules/long-break/`, formData)
+    .then((res) => res.data);
+};
+
+export const scheduleEmployeeChange = (
+  formData: IScheduleEmployeeChange,
+): Promise<any> => {
+  return api
+    .put(
+      `/schedule/schedules/change/?date=${formData.date}&employee_id=${formData.employeeId}&end_time=${formData.end_time}&start_time=${formData.start_time}`,
+    )
     .then((res) => res.data);
 };

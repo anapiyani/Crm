@@ -87,3 +87,10 @@ export interface IYearlySchedule {
       | "vacation";
   };
 }
+
+export interface IScheduleEmployeeChange {
+  date: string;
+  employeeId: number;
+  end_time: string;
+  start_time: string;
+}

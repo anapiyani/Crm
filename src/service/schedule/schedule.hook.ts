@@ -5,6 +5,7 @@ import {
   addTimeOffToScheduleByDate,
   deleteBreakFromSchedule,
   longBreak,
+  scheduleEmployeeChange,
   updateEmployeePosition,
 } from "./schedule.service";
 import { IBreaks, ILongBreaks } from "@/ts/schedule.interface";
@@ -100,6 +101,20 @@ export const useLongBreak = () => {
     },
     onError: () => {
       toast.error("Ошибка при добавлении длинного перерыва");
+    },
+  });
+};
+
+export const useChangeSchedule = () => {
+  const QueryClient = useQueryClient();
+  return useMutation({
+    mutationFn: scheduleEmployeeChange,
+    onSuccess: () => {
+      QueryClient.invalidateQueries({ queryKey: ["scheduleEmployee"] });
+      toast.success("Изменения сохранены");
+    },
+    onError: () => {
+      toast.error("Ошибка при сохранении изменений");
     },
   });
 };

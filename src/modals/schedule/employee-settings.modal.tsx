@@ -9,8 +9,9 @@ import { useQuery } from "@tanstack/react-query";
 import { getHierarchyEmployeesByDepartment } from "@/service/hierarchy/hierarchy.service";
 import { processEmployeeOptions } from "@/utils/process-employees-departments";
 import toast from "react-hot-toast";
-import classNames from "classnames";
 import dayjs from "dayjs";
+import { useChangeSchedule } from "@/service/schedule/schedule.hook";
+import { IScheduleEmployeeChange } from "@/ts/schedule.interface";
 
 const EmployeSettings = ({
   user_id,
@@ -21,10 +22,18 @@ const EmployeSettings = ({
   date: string;
   endDate: string;
 }) => {
+  const mutation = useChangeSchedule();
   const modal = useModal();
   const [selectedEmployee, setSelectedEmployee] = useState<
     number | null | undefined
   >(null);
+  const [choosenDate, setChoosenDate] = useState<string>(date);
+  const [startHour, setStartHour] = useState<string>(
+    dayjs(date).format("HH:mm"),
+  );
+  const [endHour, setEndHour] = useState<string>(
+    dayjs(endDate).format("HH:mm"),
+  );
 
   const useEmployees = () => {
     return useQuery({
@@ -55,10 +64,6 @@ const EmployeSettings = ({
     }
   }, [user_id, employeeOptions]);
 
-  const handleSubmit = () => {
-    console.log("submit");
-  };
-
   const handleStartDate = () => {
     return dayjs(date).format("YYYY-MM-DD");
   };
@@ -70,6 +75,22 @@ const EmployeSettings = ({
   const handleEndHour = () => {
     return dayjs(endDate).isValid() ? dayjs(endDate).format("HH:mm") : "00:00";
   };
+
+  const handleSubmit = () => {
+    const form: IScheduleEmployeeChange = {
+      employeeId: selectedEmployee!,
+      date: dayjs(choosenDate).format("YYYY-MM-DD"),
+      start_time: startHour,
+      end_time: endHour,
+    };
+    mutation.mutate(form);
+  };
+
+  useEffect(() => {
+    if (mutation.isSuccess) {
+      modal.hide();
+    }
+  });
 
   return (
     <ModalWindow
@@ -148,24 +169,10 @@ const EmployeSettings = ({
             <p className={classes["add-employees-schedule__container--label"]}>
               Дата
             </p>
-            <div>
-              <CustomDatePicker defaultValue={handleStartDate()} />
-            </div>
-            <p
-              className={classNames(
-                classes["add-employees-schedule__container--label"],
-                classes.timetext,
-              )}
-            >
-              Фактическое время работы
-            </p>
-            <div style={{ width: "12rem" }}>
-              <CustomTimePicker
-                value="14:00"
-                size="small"
-                onChange={(value) => console.log(value)}
-              />
-            </div>
+            <CustomDatePicker
+              onChange={(value) => setChoosenDate(value.target.value)}
+              defaultValue={handleStartDate()}
+            />
           </div>
           <div
             className={classes["add-employees-schedule__container--data"]}
@@ -221,14 +228,14 @@ const EmployeSettings = ({
               <CustomTimePicker
                 size="small"
                 value={handleStartHour()}
-                onChange={(value) => console.log(value)}
+                onChange={(e) => setStartHour(e)}
               />{" "}
             </div>
             <div style={{ width: "12rem" }}>
               <CustomTimePicker
                 size="small"
                 value={handleEndHour()}
-                onChange={(value) => console.log(value)}
+                onChange={(e) => setEndHour(e)}
               />
             </div>
           </div>
