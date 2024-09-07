@@ -21,7 +21,7 @@ export const useAddBreakToSchedule = () => {
     },
     onError: (error) => {
       const errorMessage =
-        "Произошла ошибка при добавлении перерыва." || error.message;
+        error.message || "Произошла ошибка при добавлении перерыва.";
       toast.error(errorMessage);
     },
   });
@@ -38,7 +38,7 @@ export const useDeleteBreakFromSchedule = () => {
     },
     onError: (error) => {
       const errorMessage =
-        "Произошла ошибка при удалении перерыва." || error.message;
+        error.message || "Произошла ошибка при удалении перерыва.";
       toast.error(errorMessage);
     },
   });
