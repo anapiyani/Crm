@@ -15,9 +15,11 @@ import dayjs from "dayjs";
 const EmployeSettings = ({
   user_id,
   date,
+  endDate,
 }: {
   user_id: string;
   date: string;
+  endDate: string;
 }) => {
   const modal = useModal();
   const [selectedEmployee, setSelectedEmployee] = useState<
@@ -55,6 +57,18 @@ const EmployeSettings = ({
 
   const handleSubmit = () => {
     console.log("submit");
+  };
+
+  const handleStartDate = () => {
+    return dayjs(date).format("YYYY-MM-DD");
+  };
+
+  const handleStartHour = () => {
+    return dayjs(date).isValid() ? dayjs(date).format("HH:mm") : "00:00";
+  };
+
+  const handleEndHour = () => {
+    return dayjs(endDate).isValid() ? dayjs(endDate).format("HH:mm") : "00:00";
   };
 
   return (
@@ -135,9 +149,7 @@ const EmployeSettings = ({
               Дата
             </p>
             <div>
-              <CustomDatePicker
-                defaultValue={dayjs(date).format("YYYY-MM-DD")}
-              />
+              <CustomDatePicker defaultValue={handleStartDate()} />
             </div>
             <p
               className={classNames(
@@ -208,12 +220,14 @@ const EmployeSettings = ({
             <div style={{ width: "12rem" }}>
               <CustomTimePicker
                 size="small"
+                value={handleStartHour()}
                 onChange={(value) => console.log(value)}
               />{" "}
             </div>
             <div style={{ width: "12rem" }}>
               <CustomTimePicker
                 size="small"
+                value={handleEndHour()}
                 onChange={(value) => console.log(value)}
               />
             </div>

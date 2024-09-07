@@ -49,6 +49,7 @@ const WorkSchedule = () => {
     NiceModal.show(EmployeSettingsModal, {
       user_id: event.event.extendedProps.user_id,
       date: event.event.start,
+      endDate: event.event.extendedProps.end_time,
     });
   };
 
@@ -83,6 +84,7 @@ const WorkSchedule = () => {
         start: employee.start_time,
         extendedProps: {
           user_id: employee.employee.id,
+          end_time: employee.end_time,
         },
       })),
     );
