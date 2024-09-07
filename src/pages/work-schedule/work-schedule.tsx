@@ -46,8 +46,10 @@ const WorkSchedule = () => {
   };
 
   const eventClick = (event: any) => {
-    console.log("event click", event.event.id);
-    NiceModal.show(EmployeSettingsModal);
+    NiceModal.show(EmployeSettingsModal, {
+      user_id: event.event.extendedProps.user_id,
+      date: event.event.start,
+    });
   };
 
   const renderEventContent = (eventInfo: any) => {
@@ -79,6 +81,9 @@ const WorkSchedule = () => {
             ?.color || generateColors(),
         textColor: "black",
         start: employee.start_time,
+        extendedProps: {
+          user_id: employee.employee.id,
+        },
       })),
     );
   }, [employeesData, selectedEmployeeIds]);
