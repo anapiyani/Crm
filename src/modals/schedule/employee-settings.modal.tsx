@@ -1,12 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import NiceModal, { useModal } from "@ebay/nice-modal-react";
 import ModalWindow from "@/components/modal-window/modal-window";
-import {
-  Autocomplete,
-  AutocompleteRenderInputParams,
-  Divider,
-  TextField,
-} from "@mui/material";
+import { Autocomplete, Divider, TextField } from "@mui/material";
 import CustomDatePicker from "@/components/date-picker/date-picker-custom";
 import CustomTimePicker from "@/components/time-picker/time-picker-custom";
 import classes from "./styles.module.scss";
@@ -15,11 +10,21 @@ import { getHierarchyEmployeesByDepartment } from "@/service/hierarchy/hierarchy
 import { processEmployeeOptions } from "@/utils/process-employees-departments";
 import toast from "react-hot-toast";
 import classNames from "classnames";
-import CustomAutoComplete from "@/components/autocomplete/custom-autocomplete.component";
+import dayjs from "dayjs";
 
-const EmployeSettings = () => {
+const EmployeSettings = ({
+  user_id,
+  date,
+  endDate,
+}: {
+  user_id: string;
+  date: string;
+  endDate: string;
+}) => {
   const modal = useModal();
-  const [selectedEmployee, setSelectedEmployee] = useState<number>();
+  const [selectedEmployee, setSelectedEmployee] = useState<
+    number | null | undefined
+  >(null);
 
   const useEmployees = () => {
     return useQuery({
@@ -39,16 +44,31 @@ const EmployeSettings = () => {
       : [];
   }, [employeeDepartmentHierarchyData]);
 
-  const resetStates = () => {
-    setSelectedEmployee(undefined);
-  };
-
-  // useEffect(() => {
-  // resetStates();
-  // }, [mutation.isSuccess, modal.visible]);
+  useEffect(() => {
+    if (user_id && employeeOptions.length > 0) {
+      const defaultEmployee = employeeOptions.find(
+        (option) => option.nodeId === parseInt(user_id),
+      );
+      if (defaultEmployee) {
+        setSelectedEmployee(defaultEmployee.nodeId);
+      }
+    }
+  }, [user_id, employeeOptions]);
 
   const handleSubmit = () => {
     console.log("submit");
+  };
+
+  const handleStartDate = () => {
+    return dayjs(date).format("YYYY-MM-DD");
+  };
+
+  const handleStartHour = () => {
+    return dayjs(date).isValid() ? dayjs(date).format("HH:mm") : "00:00";
+  };
+
+  const handleEndHour = () => {
+    return dayjs(endDate).isValid() ? dayjs(endDate).format("HH:mm") : "00:00";
   };
 
   return (
@@ -83,7 +103,7 @@ const EmployeSettings = () => {
                 ) || null
               }
               onChange={(event, value) => {
-                setSelectedEmployee(value?.nodeId);
+                setSelectedEmployee(value?.nodeId || null);
               }}
               renderOption={(props, option) => (
                 <li
@@ -129,7 +149,7 @@ const EmployeSettings = () => {
               Дата
             </p>
             <div>
-              <CustomDatePicker />
+              <CustomDatePicker defaultValue={handleStartDate()} />
             </div>
             <p
               className={classNames(
@@ -141,6 +161,7 @@ const EmployeSettings = () => {
             </p>
             <div style={{ width: "12rem" }}>
               <CustomTimePicker
+                value="14:00"
                 size="small"
                 onChange={(value) => console.log(value)}
               />
@@ -161,22 +182,18 @@ const EmployeSettings = () => {
               <Autocomplete
                 size="small"
                 fullWidth={true}
+                disabled
+                value={{
+                  value: "Только выбранная дата",
+                  label: "Только выбранная дата",
+                }}
                 isOptionEqualToValue={(option, value) =>
                   option.value === value.value
                 }
                 options={[
-                  { value: "Сотрудник заболел", label: "Сотрудник заболел" },
                   {
-                    value: "Сотрудник в отпуске",
-                    label: "Сотрудник в отпуске",
-                  },
-                  {
-                    value: "Сотрудник взял отгул",
-                    label: "Сотрудник взял отгул",
-                  },
-                  {
-                    value: "Сотрудник на обучении",
-                    label: "Сотрудник на обучении",
+                    value: "Только выбранная дата",
+                    label: "Только выбранная дата",
                   },
                 ]}
                 onChange={(event, value) => {
@@ -185,7 +202,7 @@ const EmployeSettings = () => {
                 renderInput={(params) => (
                   <div className={classes["main__lower__auto"]}>
                     <TextField
-                      placeholder="Выберите тип периода"
+                      placeholder="Только выбранная дата"
                       sx={{
                         height: "40px",
                         width: "200px",
@@ -203,12 +220,14 @@ const EmployeSettings = () => {
             <div style={{ width: "12rem" }}>
               <CustomTimePicker
                 size="small"
+                value={handleStartHour()}
                 onChange={(value) => console.log(value)}
               />{" "}
             </div>
             <div style={{ width: "12rem" }}>
               <CustomTimePicker
                 size="small"
+                value={handleEndHour()}
                 onChange={(value) => console.log(value)}
               />
             </div>
