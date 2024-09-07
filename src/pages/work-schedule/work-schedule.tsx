@@ -13,6 +13,7 @@ import AddPeriod from "@/modals/schedule/add-period.modal";
 import NiceModal from "@ebay/nice-modal-react";
 import interactionPlugin from "@fullcalendar/interaction";
 import DaySettingsModal from "@/modals/schedule/day-settings.modal";
+import EmployeSettingsModal from "@/modals/schedule/employee-settings.modal";
 
 const WorkSchedule = () => {
   const [selectedEmployeeIds, setSelectedEmployeeIds] = useState<
@@ -45,7 +46,8 @@ const WorkSchedule = () => {
   };
 
   const eventClick = (event: any) => {
-    console.log("event click", event);
+    console.log("event click", event.event.id);
+    NiceModal.show(EmployeSettingsModal);
   };
 
   const renderEventContent = (eventInfo: any) => {
