@@ -12,6 +12,8 @@ interface ChooseServiceModalProps {
     departmentName: string;
     childrenServices: IHierarchyFlattenService[];
   }[];
+  employeeId: number;
+  servicesData: any[];
 }
 
 const ChooseService: React.FC<ChooseServiceModalProps> = ({
@@ -21,21 +23,31 @@ const ChooseService: React.FC<ChooseServiceModalProps> = ({
   const modal = useModal();
   const [tempSelectedServices, setTempSelectedServices] = useState<any[]>([]);
 
-  const services = flattenData;
+  const handleServiceSelect = (
+    selectedService: any,
+    selectedParameter: any
+  ) => {
+    const serviceWithParameter = {
+      ...selectedService,
+      parameter: selectedParameter,
+    };
 
-  const handleServiceSelect = (selectedService: any) => {
     setTempSelectedServices((prevData) => {
       const existingService = prevData.find(
-        (item) => item.service_id === selectedService.service_id,
+        (item) => item.service_id === serviceWithParameter.service_id
       );
       if (existingService) {
         return prevData.map((item) =>
-          item.service_id === selectedService.service_id
-            ? { ...item, quantity: selectedService.quantity }
-            : item,
+          item.service_id === serviceWithParameter.service_id
+            ? {
+                ...item,
+                quantity: selectedService.quantity,
+                parameter: selectedParameter,
+              }
+            : item
         );
       } else {
-        return [...prevData, selectedService];
+        return [...prevData, serviceWithParameter];
       }
     });
   };
@@ -53,12 +65,14 @@ const ChooseService: React.FC<ChooseServiceModalProps> = ({
       isFront={true}
     >
       <div className={classes["choose-service-modal__accordions"]}>
-        {services.map((service, index) => (
+        {flattenData.map((service, index) => (
           <ServiceAccordion
             key={index}
             departmentName={service.departmentName}
             childrenServices={service.childrenServices}
-            onServiceSelect={handleServiceSelect}
+            onServiceSelect={(service, parameter) =>
+              handleServiceSelect(service, parameter)
+            }
           />
         ))}
       </div>

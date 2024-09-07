@@ -64,16 +64,28 @@ export interface IServiceCategory {
   services: IService[];
 }
 
+// export interface IUserService {
+//   id: number;
+//   service: string;
+//   role: number;
+//   parameter: {
+//     id: number;
+//     name: string;
+//   };
+//   price: string;
+//   type: string;
+// }
 export interface IUserService {
   id: number;
   service: string;
+  service_id: number;
   role: number;
-  parameter: {
+  parameters: {
     id: number;
     name: string;
-  };
-  price: string;
-  type: string;
+    price: number;
+    type: string;
+  }[];
 }
 
 export interface IEmployeeServiceHierarchy {
@@ -82,22 +94,31 @@ export interface IEmployeeServiceHierarchy {
   level: string;
   children: IEmployeeServiceHierarchy[];
   services: {
-    service_price_id: number;
-    service: number;
-    role: number;
-    parameter: number;
-    price: number;
-    type: string;
+    service_id: number;
+    min_price: number;
+    service: {
+      name: string;
+      role_id: number;
+      role_name: string;
+      price_details: {
+        parameter_id: number;
+        parameter_name: string;
+        service_price_id: number;
+        price: number;
+        type: string;
+      }[];
+    };
   }[];
 }
 
 export interface IHierarchyFlattenService {
   id: number;
-  service: number;
   service_id: number;
-  price: number;
   quantity: number;
-  parameter: string;
-  parameter_id: number;
   serviceName: string;
+  parameter: {
+    id: number;
+    name: string;
+    price: number;
+  }[];
 }

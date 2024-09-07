@@ -86,7 +86,7 @@ const WorkSchedule = () => {
           user_id: employee.employee.id,
           end_time: employee.end_time,
         },
-      })),
+      }))
     );
   }, [employeesData, selectedEmployeeIds]);
 
@@ -98,7 +98,7 @@ const WorkSchedule = () => {
   };
 
   const handleCheckEmployee = (
-    selectedEmployeeIds: { id: number; color?: string | undefined }[],
+    selectedEmployeeIds: { id: number; color?: string | undefined }[]
   ) => {
     setSelectedEmployeeIds(selectedEmployeeIds);
   };
@@ -130,11 +130,12 @@ const WorkSchedule = () => {
               eventColor="#3788d8"
               eventContent={renderEventContent}
               eventTimeFormat={{
-                hour: "numeric",
+                hour: "2-digit",
                 minute: "2-digit",
                 omitZeroMinute: false,
-                meridiem: "narrow",
+                meridiem: false,
               }}
+              timeZone="UTC +6"
               selectable={true}
               select={scheduleDayClick}
               eventClick={(event) => eventClick(event)}

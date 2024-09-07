@@ -1,6 +1,6 @@
 import { IEmployeeAddForm } from "@/ts/types";
 import api from "../api";
-import { IDepartments } from "@/ts/departments.interface";
+import { IDepartment } from "@/ts/types";
 import {
   ICardInfoEmployee,
   IEmployeesData,
@@ -24,17 +24,17 @@ export interface IAddEmployeeInterface {
 }
 
 export const addEmployee = (
-  form: IEmployeeAddForm,
+  form: IEmployeeAddForm
 ): Promise<IAddEmployeeInterface> => {
   return api.post("/users/register-employee/", form).then((res) => res.data);
 };
 
-export const searchDepartment = (): Promise<IDepartments> => {
+export const searchDepartment = (): Promise<IDepartment> => {
   return api.get("/hierarchy/hierarchy-departments/").then((res) => res.data);
 };
 
 export const searchEmployee = (
-  formData?: Partial<ISearchFormData>,
+  formData?: Partial<ISearchFormData>
 ): Promise<void | IEmployeesData> => {
   const params = new URLSearchParams();
   Object.entries(formData!).forEach(([key, value]) => {
@@ -47,7 +47,7 @@ export const searchEmployee = (
 };
 
 export const cardInfoEmplpyee = (
-  user_id: number,
+  user_id: number
 ): Promise<ICardInfoEmployee> => {
   return api.get(`/information-card/${user_id}/`).then((res) => res.data);
 };
@@ -84,7 +84,7 @@ export const addTemplate = (form: ITemplate): Promise<ITemplate> => {
 
 export const getWalletHistory = (
   id: string,
-  page: number,
+  page: number
 ): Promise<ISalaryWalletResponse> => {
   return api
     .get(`/salary-wallet-history/?page=${page}&user_id=${id}`)
