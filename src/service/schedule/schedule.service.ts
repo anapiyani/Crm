@@ -1,6 +1,7 @@
 import api from "../api";
 import {
   IBreaks,
+  ILongBreaks,
   IResponseScheduleData,
   IResponseScheduleDataCounts,
   ISchedule,
@@ -114,5 +115,11 @@ export const getEmployeeScheduleYearly = (
 ): Promise<IYearlySchedule[]> => {
   return api
     .get(`/schedule/schedules/employee/dates_with_status/?employee_id=${id}`)
+    .then((res) => res.data);
+};
+
+export const longBreak = (formData: ILongBreaks): Promise<any> => {
+  return api
+    .post(`/schedule/schedules/long-break/`, formData)
     .then((res) => res.data);
 };

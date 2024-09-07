@@ -19,6 +19,14 @@ export interface IBreaks {
   date: string;
 }
 
+export interface ILongBreaks {
+  employee_id: number;
+  date_from: string;
+  date_to: string;
+  day_status_id: number;
+  replacement_employee_id?: number;
+}
+
 export interface IAppointment {
   id: number;
   client: number;

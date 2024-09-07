@@ -22,7 +22,7 @@ const WorkSchedule = () => {
   const employeeQueries = useQueries({
     queries: selectedEmployeeIds.map((user) => {
       return {
-        queryKey: ["user", user.id],
+        queryKey: ["scheduleEmployee", user.id],
         queryFn: () => getEmployeeScheduleEachDay(user.id),
         enabled: selectedEmployeeIds.length > 0,
         staleTime: 1000 * 60 * 5,

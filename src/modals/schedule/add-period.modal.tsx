@@ -10,12 +10,15 @@ import { getHierarchyEmployeesByDepartment } from "@/service/hierarchy/hierarchy
 import { processEmployeeOptions } from "@/utils/process-employees-departments";
 import toast from "react-hot-toast";
 import classNames from "classnames";
+import { ILongBreaks } from "@/ts/schedule.interface";
+import { useLongBreak } from "@/service/schedule/schedule.hook";
 
 const AddPeriodModal = () => {
+  const mutation = useLongBreak();
   const modal = useModal();
   const [startDate, setStartDate] = useState<string>("");
   const [endDate, setEndDate] = useState<string>("");
-  const [periodType, setPeriodType] = useState<string>("");
+  const [periodType, setPeriodType] = useState<number | null>();
   const [selectedEmployee, setSelectedEmployee] = useState<number>();
   const [isTransfer, setIsTransfer] = useState<boolean>(false);
   const [selectedTransferEmployee, setSelectedTransferEmployee] = useState<
@@ -44,12 +47,12 @@ const AddPeriodModal = () => {
     setSelectedEmployee(undefined);
     setStartDate("");
     setEndDate("");
-    setPeriodType("");
+    setPeriodType(null);
   };
 
-  // useEffect(() => {
-  // resetStates();
-  // }, [mutation.isSuccess, modal.visible]);
+  useEffect(() => {
+    resetStates();
+  }, [mutation.isSuccess, modal.visible]);
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value, checked } = event.target;
@@ -59,24 +62,21 @@ const AddPeriodModal = () => {
   };
 
   const handleSubmit = () => {
-    // it shows a modal window with the title "Настройки смены" and the following fields:
-    // selected Employee: selectedEmployee
-    // start date: startDate
-    // end date: endDate
-    // period type: periodType
-    // transfer: isTransfer
-    // selected transfer employee: selectedTransferEmployee
-    // if all fields are filled, it calls createPeriod.mutate()
-    // if not, it shows a toast with the text "Заполните все поля"
-    // after that, it resets all states
-    const formData = {
-      employeeId: selectedEmployee,
-      startDate,
-      endDate,
-      periodType,
-      ...(isTransfer && { transferEmployeeId: selectedTransferEmployee }),
-    };
-    console.log(formData);
+    if (!selectedEmployee || !startDate || !endDate || !periodType) {
+      toast.error("Заполните все поля");
+      return;
+    } else {
+      const formData: ILongBreaks = {
+        employee_id: selectedEmployee,
+        date_from: startDate,
+        date_to: endDate,
+        day_status_id: periodType,
+        ...(isTransfer && {
+          replacement_employee_id: selectedTransferEmployee,
+        }),
+      };
+      mutation.mutate(formData);
+    }
   };
 
   return (
@@ -175,17 +175,17 @@ const AddPeriodModal = () => {
                 option.value === value.value
               }
               options={[
-                { value: "Сотрудник заболел", label: "Сотрудник заболел" },
+                { value: 3, label: "Сотрудник заболел" },
                 {
-                  value: "Сотрудник в отпуске",
+                  value: 2,
                   label: "Сотрудник в отпуске",
                 },
                 {
-                  value: "Сотрудник взял отгул",
+                  value: 4,
                   label: "Сотрудник взял отгул",
                 },
                 {
-                  value: "Сотрудник на обучении",
+                  value: 5,
                   label: "Сотрудник на обучении",
                 },
               ]}

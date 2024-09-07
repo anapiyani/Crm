@@ -110,6 +110,27 @@ const StepForm: React.FC<IStepFormProps> = ({
     }
   };
 
+  const onSubmitForUser = (data: ITemplate) => {
+    if (data.employee) {
+      assignTemplate.mutate({
+        template_id: null,
+        user_id: data.employee,
+      });
+    }
+
+    if (data.isEdit) {
+      addMutation.mutate({
+        ...data,
+        employee: data.employee,
+      });
+    } else {
+      addMutation.mutate({
+        ...data,
+        employee: data.employee,
+      });
+    }
+  };
+
   const handleNext = () => {
     if (activeStep === steps.length - 1) {
       return;
@@ -148,7 +169,7 @@ const StepForm: React.FC<IStepFormProps> = ({
         templateNameAndIds={templateNameAndIds}
         control={control}
         choosenTemplate={choosenTemplate}
-        onSaveName={handleSubmit(onSubmit)}
+        onSaveName={() => onSubmitForUser(getValues())}
       />
     ),
     1: <FixedPart control={control} />,

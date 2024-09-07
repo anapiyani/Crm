@@ -4,9 +4,10 @@ import {
   addEmployeeToSchedule,
   addTimeOffToScheduleByDate,
   deleteBreakFromSchedule,
+  longBreak,
   updateEmployeePosition,
 } from "./schedule.service";
-import { IBreaks } from "@/ts/schedule.interface";
+import { IBreaks, ILongBreaks } from "@/ts/schedule.interface";
 import toast from "react-hot-toast";
 
 export const useAddBreakToSchedule = () => {
@@ -20,7 +21,7 @@ export const useAddBreakToSchedule = () => {
     },
     onError: (error) => {
       const errorMessage =
-        "Произошла ошибка при добавлении перерыва." || error.message;
+        error.message || "Произошла ошибка при добавлении перерыва.";
       toast.error(errorMessage);
     },
   });
@@ -37,7 +38,7 @@ export const useDeleteBreakFromSchedule = () => {
     },
     onError: (error) => {
       const errorMessage =
-        "Произошла ошибка при удалении перерыва." || error.message;
+        error.message || "Произошла ошибка при удалении перерыва.";
       toast.error(errorMessage);
     },
   });
@@ -85,6 +86,20 @@ export const useReorderEmployee = () => {
     },
     onError: (error) => {
       toast.error(error.message || "Ошибка при перемещении сотрудника");
+    },
+  });
+};
+
+export const useLongBreak = () => {
+  const queryClient = useQueryClient();
+  return useMutation<ILongBreaks, Error, any>({
+    mutationFn: longBreak,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["scheduleEmployee"] });
+      toast.success("Длинный перерыв успешно добавлен");
+    },
+    onError: () => {
+      toast.error("Ошибка при добавлении длинного перерыва");
     },
   });
 };
