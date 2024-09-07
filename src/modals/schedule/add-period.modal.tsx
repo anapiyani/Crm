@@ -12,6 +12,7 @@ import toast from "react-hot-toast";
 import classNames from "classnames";
 import { ILongBreaks } from "@/ts/schedule.interface";
 import { useLongBreak } from "@/service/schedule/schedule.hook";
+import dayjs from "dayjs";
 
 const AddPeriodModal = () => {
   const mutation = useLongBreak();
@@ -68,8 +69,8 @@ const AddPeriodModal = () => {
     } else {
       const formData: ILongBreaks = {
         employee_id: selectedEmployee,
-        date_from: startDate,
-        date_to: endDate,
+        date_from: dayjs(startDate).format("DD-MM-YYYY"),
+        date_to: dayjs(endDate).format("DD-MM-YYYY"),
         day_status_id: periodType,
         ...(isTransfer && {
           replacement_employee_id: selectedTransferEmployee,
@@ -103,7 +104,7 @@ const AddPeriodModal = () => {
               fullWidth={true}
               value={
                 employeeOptions.find(
-                  (option) => option.nodeId === selectedEmployee,
+                  (option) => option.nodeId === selectedEmployee
                 ) || null
               }
               onChange={(event, value) => {
@@ -213,7 +214,7 @@ const AddPeriodModal = () => {
           <div
             className={classNames(
               classes["add-employees-schedule__container--data"],
-              classes.checkbox,
+              classes.checkbox
             )}
           >
             <input
@@ -229,7 +230,7 @@ const AddPeriodModal = () => {
             <div
               className={classNames(
                 classes["add-employees-schedule__container--data"],
-                classes.transfer,
+                classes.transfer
               )}
             >
               <p
@@ -247,7 +248,7 @@ const AddPeriodModal = () => {
                 fullWidth={true}
                 value={
                   employeeOptions.find(
-                    (option) => option.nodeId === selectedEmployee,
+                    (option) => option.nodeId === selectedEmployee
                   ) || null
                 }
                 onChange={(event, value) => {
