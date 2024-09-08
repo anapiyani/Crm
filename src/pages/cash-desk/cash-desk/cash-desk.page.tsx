@@ -7,6 +7,7 @@ import withdrawModal from "@/modals/cash-desk/withdraw.modal";
 import {
   getCashRegister,
   getOperations,
+  kassaNow,
   searchKassaData,
 } from "@/service/kassa/kassa.service";
 import {
@@ -21,6 +22,7 @@ import {
   HomeOutlined,
   ImportExport,
   LocalActivity,
+  LocalAtm,
   MenuBook,
   North,
   Payments,
@@ -57,6 +59,11 @@ const CashDesk = () => {
   const { data: operationsData } = useQuery({
     queryKey: ["kassaService"],
     queryFn: () => getOperations(),
+  });
+
+  const { data: nowInKassa } = useQuery({
+    queryKey: ["nowInKassa"],
+    queryFn: () => kassaNow(1),
   });
 
   const tabsData = [
@@ -268,6 +275,17 @@ const CashDesk = () => {
     }
   };
 
+  const todayAllMoney = () => {
+    if (nowInKassa) {
+      return (
+        Number(nowInKassa.card_money) +
+        Number(nowInKassa.cash_money) +
+        Number(nowInKassa.check_money) +
+        Number(nowInKassa.checking_account_money)
+      );
+    }
+  };
+
   const expenseAllMoney = () => {
     if (cashRegisterData) {
       return (
@@ -326,6 +344,41 @@ const CashDesk = () => {
                 Снять деньги
               </Button>
             </div>
+            <CashCard
+              header={
+                <>
+                  <LocalAtm
+                    style={{
+                      backgroundColor: "rgba(99, 107, 116, 1)",
+                      color: "white",
+                    }}
+                  />{" "}
+                  Сейчас в кассе
+                </>
+              }
+              content={[
+                {
+                  icon: <Public />,
+                  text: todayAllMoney()?.toString(),
+                },
+                {
+                  icon: <Payments />,
+                  text: nowInKassa?.cash_money,
+                },
+                {
+                  icon: <CreditCard />,
+                  text: nowInKassa?.card_money,
+                },
+                {
+                  icon: <LocalActivity />,
+                  text: nowInKassa?.check_money,
+                },
+                {
+                  icon: <MenuBook />,
+                  text: nowInKassa?.checking_account_money,
+                },
+              ]}
+            />
             <CashCard
               header={
                 <>

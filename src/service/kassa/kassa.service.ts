@@ -7,6 +7,7 @@ import {
   IIndirectSumarry,
   IKassaOperations,
   IPeriodCashRegister,
+  IResponseKassaNow,
   ISalaryPayment,
   ISearchKassa,
   IWithdrawal,
@@ -105,4 +106,8 @@ export const addCategoryIndirectCosts = (
 
 export const deleteCategoryIndirectCosts = (id: number): Promise<any> => {
   return api.delete(`/operations/${id}/`).then((res) => res.data);
+};
+
+export const kassaNow = (id: number): Promise<IResponseKassaNow> => {
+  return api.get(`/kassa/${id}/`).then((res) => res.data);
 };

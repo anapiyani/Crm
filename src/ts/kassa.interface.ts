@@ -145,3 +145,15 @@ export interface IIndirectCategory {
   expense: boolean;
   parent?: number;
 }
+
+export interface IResponseKassaNow {
+  card_money: string;
+  cash_money: string;
+  check_money: string;
+  checking_account_money: string;
+  date_created: string;
+  date_updated: string;
+  id: number;
+  name: string;
+  total_money: number;
+}
