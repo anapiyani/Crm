@@ -52,7 +52,7 @@ const AddCategoryModal: React.FC<AddCategoryModalProps> = ({ parentId }) => {
         }}
         value={categoryName}
         onChange={(e) => setCategoryName(e.target.value)}
-        placeholder="Введите называние категории"
+        placeholder="Введите название категории"
       />
     </ModalWindow>
   );

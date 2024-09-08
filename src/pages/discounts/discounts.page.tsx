@@ -29,6 +29,12 @@ import { Controller, useForm } from "react-hook-form";
 import DiscountsTable from "./_components/discountsTable/discounts-table";
 import DiscountsChart from "./_components/charts/chart1/chart-discounts";
 import DualYAxisChart from "./_components/charts/charts2/chart-doubleAxis";
+import NiceModal from "@ebay/nice-modal-react";
+import DiscountModal from "@/modals/discounts/discountProgram.modal";
+
+// Import the required localization components
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs"; // Or another adapter like AdapterDateFns, etc.
 
 interface IDiscountsInfo {
   nomination: string;
@@ -105,24 +111,18 @@ const DiscountPage = () => {
     setCurrentTab(tabIndex);
   };
   const params = useParams<{ id: string }>();
-  // THIS IS FOR USER DATA
-  const {
-    data: counterCardData,
-    isLoading: counterCardLoading,
-    isError: counterCardError,
-  } = useQuery({
-    queryKey: ["cardInfoEmplpyee", params.id],
-    queryFn: () => cardInfoEmplpyee(Number(params.id)),
-  });
 
-  const {
-    data: userInfoData,
-    isLoading: userInfoLoading,
-    isError: userInfoError,
-  } = useQuery({
-    queryKey: ["mainInfoEmployee", params.id],
-    queryFn: () => mainInfoEmployee(Number(params.id)),
-  });
+  // Handler to open and close the modal
+  const [isModalOpen, setModalOpen] = useState(false);
+
+  const handleOpenModal = () => {
+    setModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalOpen(false);
+  };
+
   const renderContentHeader = () => {
     switch (currentTab) {
       case 0:
@@ -181,7 +181,7 @@ const DiscountPage = () => {
                           label: "Большая скидка",
                         },
                       ];
-             
+
                       const selectedOption = field.value
                         ? options.find((option) => option.value === field.value)
                         : null;
@@ -294,8 +294,6 @@ const DiscountPage = () => {
                 </div>
               </div>
 
-             
-
               <div className={classes.category__search}>
                 <p className={classes.heading}>Поиск</p>
                 <div className={classes.category__search__buttons}>
@@ -360,12 +358,12 @@ const DiscountPage = () => {
             <DiscountsChart
               data={graphPercentageData}
               yAxisLabel="%"
-              yAxisTickFormatter={(value) => `${value}%`}
               colors={{
                 discounts: "#b71c1c",
                 visits: "#7e57c2",
                 activeDiscounts: "#2196f3",
               }}
+              yAxisTickFormatter={(value) => `${value}%`}
             />
           </Grid>
         );
@@ -437,6 +435,7 @@ const DiscountPage = () => {
                       padding: 0,
                       fontSize: "1.4rem",
                     }}
+                    onClick={handleOpenModal} // Change this line to use `handleOpenModal`
                   >
                     Добавить
                   </Button>
@@ -549,29 +548,34 @@ const DiscountPage = () => {
   };
 
   return (
-    <div className={classes["main"]}>
-      <div className={classes["main__header"]}>
-        <Box sx={{ ml: { xs: "2rem", xl: "7.6rem" } }}>
-          <div className={classes["main__header__upper"]}>
-            <div>
-              <BreadcrumbsCustom />
-              <h1 className={classes["main__header__upper__title"]}>
-                Yesset Yedres
-              </h1>
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <div className={classes["main"]}>
+        <div className={classes["main__header"]}>
+          <Box sx={{ ml: { xs: "2rem", xl: "7.6rem" } }}>
+            <div className={classes["main__header__upper"]}>
+              <div>
+                <BreadcrumbsCustom />
+                <h1 className={classes["main__header__upper__title"]}>
+                  Yesset Yedres
+                </h1>
+              </div>
+              <ResponsiveTabs
+                tabsData={discountsTabsData}
+                onTabChange={handleTabChange}
+                currentTab={currentTab}
+              />
+              <div className={classes["main__header__upper__row"]}>
+                {renderContentHeader()}
+              </div>
             </div>
-            <ResponsiveTabs
-              tabsData={discountsTabsData}
-              onTabChange={handleTabChange}
-              currentTab={currentTab}
-            />
-            <div className={classes["main__header__upper__row"]}>
-              {renderContentHeader()}
-            </div>
-          </div>
-        </Box>
+          </Box>
+        </div>
+        {renderContentMain()}
+
+        {/* Add the DiscountModal here */}
+        <DiscountModal open={isModalOpen} onClose={handleCloseModal} />
       </div>
-      {renderContentMain()}
-    </div>
+    </LocalizationProvider>
   );
 };
 

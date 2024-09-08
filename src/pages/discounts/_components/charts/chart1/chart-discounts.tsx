@@ -64,7 +64,7 @@ const DiscountsChart = ({
         flexWrap: "wrap",
       }}
     >
-      <ResponsiveContainer width={400} height={200}>
+      <ResponsiveContainer width={350} height={200}>
         <AreaChart
           data={data}
           margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
