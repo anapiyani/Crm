@@ -1,13 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Button, IconButton, Divider } from "@mui/material";
 import { Man3Outlined } from "@mui/icons-material";
 import classes from "./style.module.scss";
+import { IServiceCalculation } from "@/ts/service.interface";
 
 interface CalculationProps {
   material: string;
-  employeePercentage: string;
-  position: string;
-  employeeName: string;
+  data: IServiceCalculation[];
 }
 
 const buttonStyle = {
@@ -20,12 +19,10 @@ const buttonStyle = {
   fontWeight: 400,
 };
 
-const Calculation: React.FC<CalculationProps> = ({
-  material,
-  employeePercentage,
-  position,
-  employeeName,
-}) => {
+const Calculation: React.FC<CalculationProps> = ({ material, data }) => {
+  const [employeePercentage, setEmployeePercentage] = React.useState<number>(0);
+  const [position, setPosition] = React.useState<number>(0);
+
   return (
     <div className={classes.calculation}>
       <p className={classes.calculation__title}>Калькуляция</p>
@@ -48,42 +45,64 @@ const Calculation: React.FC<CalculationProps> = ({
           <p className={classes.calculation__content__item__label}>
             Процент сотрудника
           </p>
-          <Button
-            variant="contained"
-            sx={{
-              ...buttonStyle,
-            }}
-          >
-            {employeePercentage}
-          </Button>
+          {data.map((item, index) => (
+            <Button
+              onClick={() => {
+                setEmployeePercentage(index);
+              }}
+              variant="contained"
+              sx={{
+                ...buttonStyle,
+              }}
+            >
+              {item.employee_percentage}%
+            </Button>
+          ))}
         </div>
 
         <div className={classes.calculation__content__item}>
           <p className={classes.calculation__content__item__label}>Должность</p>
-          <Button
-            variant="contained"
-            sx={{
-              ...buttonStyle,
-            }}
-          >
-            {position}
-          </Button>
+
+          {data[employeePercentage].positions.map((item, index) => (
+            <Button
+              onClick={() => {
+                setPosition(index);
+              }}
+              variant="contained"
+              sx={{
+                ...buttonStyle,
+              }}
+            >
+              {item.name}
+            </Button>
+          ))}
         </div>
 
         <div className={classes.calculation__content__item}>
           <p className={classes.calculation__content__item__label}>
             Сотрудники
           </p>
-          <div className={classes.calculation__content__item__employee}>
-            <IconButton sx={{ padding: 0, marginRight: "0.8rem" }}>
-              <Man3Outlined
-                sx={{ fontSize: "2.4rem", color: "var(--primary-500)" }}
-              />
-            </IconButton>
-            <p className={classes.calculation__content__item__employee__name}>
-              {employeeName}
-            </p>
-          </div>
+          {data[employeePercentage].positions[position].employees.map(
+            (item, index) => (
+              <div
+                className={classes.calculation__content__item__employee}
+                onClick={() =>
+                  window.location.assign(`/employees/${item.user}`)
+                }
+              >
+                <IconButton sx={{ padding: 0, marginRight: "0.8rem" }}>
+                  <Man3Outlined
+                    sx={{ fontSize: "2.4rem", color: "var(--primary-500)" }}
+                  />
+                </IconButton>
+                <p
+                  className={classes.calculation__content__item__employee__name}
+                >
+                  {item.full_name}
+                </p>
+              </div>
+            )
+          )}
         </div>
       </div>
     </div>

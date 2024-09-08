@@ -1,5 +1,6 @@
 import {
   IService,
+  IServiceCalculation,
   IServiceParameters,
   IServicePrices,
   IUserService,
@@ -45,6 +46,14 @@ export const getServicePrices = (
 ): Promise<IServicePrices> => {
   return api
     .get(`/services/services-prices/${service_id}`)
+    .then((res) => res.data);
+};
+
+export const getCalculations = (
+  service_id: number
+): Promise<IServiceCalculation[]> => {
+  return api
+    .get(`/percentage-position-employee/${service_id}`)
     .then((res) => res.data);
 };
 

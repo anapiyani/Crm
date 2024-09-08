@@ -34,17 +34,29 @@ export interface IServicePrices {
   service: string;
   roles: {
     role: string;
-    parameters: string[];
+    parameters?: string[];
     prices: {
-      parameter: string;
+      parameter?: string;
       price: number;
       type: string;
     }[];
   }[];
 }
 
+export interface IServiceCalculation {
+  employee_percentage: number;
+  positions: {
+    name: string;
+    employees: {
+      full_name: string;
+      user: number;
+    }[];
+  }[];
+}
+
 export interface IServiceCostData {
   position: string;
+
   cost?: number;
   costFrom?: number;
   costTo?: number;

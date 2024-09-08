@@ -23,6 +23,7 @@ interface CostTableProps {
   unit: string;
   showIcons?: boolean;
   hierarchy?: boolean;
+  hasParameters?: boolean;
   tableHeaders?: { name: string; key?: string }[];
 }
 
@@ -32,6 +33,7 @@ const CostTable: React.FC<CostTableProps> = ({
   unit,
   showIcons = true,
   hierarchy = false,
+  hasParameters = false,
   tableHeaders = [{ name: "Должность" }, { name: "Стоимость" }],
 }) => {
   const [tableData, setTableData] = useState<IServiceCostData[]>(data);
@@ -58,6 +60,7 @@ const CostTable: React.FC<CostTableProps> = ({
       row.costFrom = calculateCostFrom(row);
       row.costTo = calculateCostTo(row);
     });
+    renderRows(data);
   }, [data]);
 
   const calculateCostFrom = (row: IServiceCostData) => {
@@ -68,6 +71,17 @@ const CostTable: React.FC<CostTableProps> = ({
     return Math.max(row.shortHair!, row.mediumHair!, row.longHair!, row.roots!);
   };
 
+  useEffect(() => {
+    setTableData(data);
+  }, [tableData]);
+
+  const renderHeader = () => {
+    return tableHeaders.map((header, index) => (
+      <TableCell align="left" sx={{ fontSize: "14px", fontWeight: 600 }}>
+        {header.name}
+      </TableCell>
+    ));
+  };
   const renderRows = (rowData: IServiceCostData[], level: number = 0) => {
     return rowData.map((row, index) => (
       <React.Fragment key={index}>
@@ -99,11 +113,14 @@ const CostTable: React.FC<CostTableProps> = ({
             <div className={classes.cellContainer}>
               <TextField
                 value={row.cost}
+                //only number input
+                type="number"
                 onChange={(e) =>
                   handleInputChange(index, "cost", Number(e.target.value))
                 }
+                defaultValue={row.cost ? row.cost : 0}
                 sx={{
-                  width: "80px",
+                  width: hasParameters ? "100%" : "100%",
                   marginRight: "1.6rem",
                 }}
                 InputProps={{
@@ -116,159 +133,187 @@ const CostTable: React.FC<CostTableProps> = ({
               <p className={classes.cellContainer__text}>{unit}</p>
             </div>
           </TableCell>
-          <TableCell
-            sx={{
-              height: "48px",
-              border: "0.1rem solid rgba(99,107,116, 0.3)",
-            }}
-          >
-            <div className={classes.cellContainer}>
-              <TextField
-                value={row.costFrom}
+          {hasParameters && (
+            <>
+              <TableCell
                 sx={{
-                  width: "80px",
-                  marginRight: "1.6rem",
+                  height: "48px",
+                  border: "0.1rem solid rgba(99,107,116, 0.3)",
                 }}
-                InputProps={{
-                  sx: {
-                    fontSize: "16px",
-                  },
-                  readOnly: true,
-                }}
-                size="small"
-              />
-              <p className={classes.cellContainer__text}>{unit}</p>
-            </div>
-          </TableCell>
-          <TableCell
-            sx={{
-              height: "48px",
-              border: "0.1rem solid rgba(99,107,116, 0.3)",
-            }}
-          >
-            <div className={classes.cellContainer}>
-              <TextField
-                value={row.costTo}
+              >
+                <div className={classes.cellContainer}>
+                  <TextField
+                    value={row.costFrom}
+                    type="number"
+                    sx={{
+                      width: "100%",
+                      marginRight: "1.6rem",
+                    }}
+                    defaultValue={row.costFrom ? row.costFrom : 0}
+                    InputProps={{
+                      sx: {
+                        fontSize: "16px",
+                      },
+                      readOnly: true,
+                    }}
+                    size="small"
+                  />
+                  <p className={classes.cellContainer__text}>{unit}</p>
+                </div>
+              </TableCell>
+              <TableCell
                 sx={{
-                  width: "80px",
-                  marginRight: "1.6rem",
+                  height: "48px",
+                  border: "0.1rem solid rgba(99,107,116, 0.3)",
                 }}
-                InputProps={{
-                  sx: {
-                    fontSize: "16px",
-                  },
-                  readOnly: true,
-                }}
-                size="small"
-              />
-              <p className={classes.cellContainer__text}>{unit}</p>
-            </div>
-          </TableCell>
-          <TableCell
-            sx={{
-              height: "48px",
-              border: "0.1rem solid rgba(99,107,116, 0.3)",
-            }}
-          >
-            <div className={classes.cellContainer}>
-              <TextField
-                value={row.shortHair}
-                onChange={(e) =>
-                  handleInputChange(index, "shortHair", Number(e.target.value))
-                }
+              >
+                <div className={classes.cellContainer}>
+                  <TextField
+                    value={row.costTo}
+                    type="number"
+                    sx={{
+                      width: "100%",
+                      marginRight: "1.6rem",
+                    }}
+                    InputProps={{
+                      sx: {
+                        fontSize: "16px",
+                      },
+                      readOnly: true,
+                    }}
+                    defaultValue={row.costTo ? row.costTo : 0}
+                    size="small"
+                  />
+                  <p className={classes.cellContainer__text}>{unit}</p>
+                </div>
+              </TableCell>
+              <TableCell
                 sx={{
-                  width: "80px",
-                  marginRight: "1.6rem",
+                  height: "48px",
+                  border: "0.1rem solid rgba(99,107,116, 0.3)",
                 }}
-                InputProps={{
-                  sx: {
-                    fontSize: "16px",
-                  },
-                }}
-                size="small"
-              />
-              <p className={classes.cellContainer__text}>{unit}</p>
-            </div>
-          </TableCell>
-          <TableCell
-            sx={{
-              height: "48px",
-              border: "0.1rem solid rgba(99,107,116, 0.3)",
-            }}
-          >
-            <div className={classes.cellContainer}>
-              <TextField
-                value={row.mediumHair}
-                onChange={(e) =>
-                  handleInputChange(index, "mediumHair", Number(e.target.value))
-                }
+              >
+                <div className={classes.cellContainer}>
+                  <TextField
+                    value={row.shortHair}
+                    type="number"
+                    onChange={(e) =>
+                      handleInputChange(
+                        index,
+                        "shortHair",
+                        Number(e.target.value)
+                      )
+                    }
+                    sx={{
+                      width: "100%",
+                      marginRight: "1.6rem",
+                    }}
+                    InputProps={{
+                      sx: {
+                        fontSize: "16px",
+                      },
+                    }}
+                    defaultValue={row.shortHair ? row.shortHair : 0}
+                    size="small"
+                  />
+                  <p className={classes.cellContainer__text}>{unit}</p>
+                </div>
+              </TableCell>
+              <TableCell
                 sx={{
-                  width: "80px",
-                  marginRight: "1.6rem",
+                  height: "48px",
+                  border: "0.1rem solid rgba(99,107,116, 0.3)",
                 }}
-                InputProps={{
-                  sx: {
-                    fontSize: "16px",
-                  },
-                }}
-                size="small"
-              />
-              <p className={classes.cellContainer__text}>{unit}</p>
-            </div>
-          </TableCell>
-          <TableCell
-            sx={{
-              height: "48px",
-              border: "0.1rem solid rgba(99,107,116, 0.3)",
-            }}
-          >
-            <div className={classes.cellContainer}>
-              <TextField
-                value={row.longHair}
-                onChange={(e) =>
-                  handleInputChange(index, "longHair", Number(e.target.value))
-                }
+              >
+                <div className={classes.cellContainer}>
+                  <TextField
+                    value={row.mediumHair}
+                    type="number"
+                    onChange={(e) =>
+                      handleInputChange(
+                        index,
+                        "mediumHair",
+                        Number(e.target.value)
+                      )
+                    }
+                    defaultValue={row.mediumHair ? row.mediumHair : 0}
+                    sx={{
+                      width: "100%",
+                      marginRight: "1.6rem",
+                    }}
+                    InputProps={{
+                      sx: {
+                        fontSize: "16px",
+                      },
+                    }}
+                    size="small"
+                  />
+                  <p className={classes.cellContainer__text}>{unit}</p>
+                </div>
+              </TableCell>
+              <TableCell
                 sx={{
-                  width: "80px",
-                  marginRight: "1.6rem",
+                  height: "48px",
+                  border: "0.1rem solid rgba(99,107,116, 0.3)",
                 }}
-                InputProps={{
-                  sx: {
-                    fontSize: "16px",
-                  },
-                }}
-                size="small"
-              />
-              <p className={classes.cellContainer__text}>{unit}</p>
-            </div>
-          </TableCell>
-          <TableCell
-            sx={{
-              height: "48px",
-              border: "0.1rem solid rgba(99,107,116, 0.3)",
-              borderRight: "none",
-            }}
-          >
-            <div className={classes.cellContainer}>
-              <TextField
-                value={row.roots}
-                onChange={(e) =>
-                  handleInputChange(index, "roots", Number(e.target.value))
-                }
+              >
+                <div className={classes.cellContainer}>
+                  <TextField
+                    value={row.longHair}
+                    type="number"
+                    defaultValue={row.longHair ? row.longHair : 0}
+                    onChange={(e) =>
+                      handleInputChange(
+                        index,
+                        "longHair",
+                        Number(e.target.value)
+                      )
+                    }
+                    sx={{
+                      width: "100%",
+                      marginRight: "1.6rem",
+                    }}
+                    InputProps={{
+                      sx: {
+                        fontSize: "16px",
+                      },
+                    }}
+                    size="small"
+                  />
+                  <p className={classes.cellContainer__text}>{unit}</p>
+                </div>
+              </TableCell>
+              <TableCell
                 sx={{
-                  width: "80px",
-                  marginRight: "1.6rem",
+                  height: "48px",
+                  border: "0.1rem solid rgba(99,107,116, 0.3)",
+                  borderRight: "none",
                 }}
-                InputProps={{
-                  sx: {
-                    fontSize: "16px",
-                  },
-                }}
-                size="small"
-              />
-              <p className={classes.cellContainer__text}>{unit}</p>
-            </div>
-          </TableCell>
+              >
+                <div className={classes.cellContainer}>
+                  <TextField
+                    value={row.roots}
+                    type="number"
+                    defaultValue={row.roots ? row.roots : 0}
+                    onChange={(e) =>
+                      handleInputChange(index, "roots", Number(e.target.value))
+                    }
+                    sx={{
+                      width: "100%",
+                      marginRight: "1.6rem",
+                    }}
+                    InputProps={{
+                      sx: {
+                        fontSize: "16px",
+                      },
+                    }}
+                    size="small"
+                  />
+                  <p className={classes.cellContainer__text}>{unit}</p>
+                </div>
+              </TableCell>
+            </>
+          )}
         </TableRow>
       </React.Fragment>
     ));
@@ -311,14 +356,7 @@ const CostTable: React.FC<CostTableProps> = ({
       <Table>
         <TableHead sx={{ borderBottom: "0.2rem solid var(--divider)" }}>
           <TableRow sx={{ background: "var(--neutral-050)" }}>
-            {tableHeaders.map((header, index) => (
-              <TableCell
-                align="left"
-                sx={{ fontSize: "14px", fontWeight: 600 }}
-              >
-                {header.name}
-              </TableCell>
-            ))}
+            {renderHeader()}
           </TableRow>
         </TableHead>
         <TableBody>{renderRows(tableData)}</TableBody>

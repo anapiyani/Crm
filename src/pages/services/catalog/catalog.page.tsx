@@ -5,20 +5,20 @@ import {
   getSearchResults,
 } from "@/service/hierarchy/hierarchy.service";
 import {
+  getCalculations,
   getServiceParent,
   getServicePrices,
 } from "@/service/services/services.service";
-import { IService, IServiceCostData } from "@/ts/service.interface";
+import {
+  IService,
+  IServiceCalculation,
+  IServiceCostData,
+} from "@/ts/service.interface";
 import {
   Autocomplete,
   Button,
   CircularProgress,
   Divider,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow,
   TextField,
 } from "@mui/material";
 import { DndProvider } from "react-dnd";
@@ -38,14 +38,9 @@ import {
   ISearchResult,
   IServiceParent,
 } from "@/ts/hierarchy.inteface";
-import dayjs from "dayjs";
+
 import CostTable from "./service/_components/table-price/table-price";
-import {
-  costData,
-  durationData,
-  materialData,
-} from "./service/_components/table-price/data";
-import MaterialTable from "./service/_components/table-materials/table-materials";
+
 import Calculation from "./service/_components/calculation/calculation";
 
 const ServiceCatalog = () => {
@@ -74,6 +69,22 @@ const ServiceCatalog = () => {
       cost: 0,
     },
   ]);
+  const [hasParameters, setHasParameters] = useState(false);
+
+  const [calculations, setCalculations] = useState<
+    IServiceCalculation[] | null
+  >(null);
+
+  useEffect(() => {
+    const fetchCalculations = async () => {
+      if (service) {
+        const result = await getCalculations(service.id);
+        setCalculations(result);
+      }
+    };
+
+    fetchCalculations();
+  }, [service]);
   const { data, isPending, isError } = useQuery({
     queryKey: ["hierarchyData"],
     queryFn: getHierarchy,
@@ -84,10 +95,21 @@ const ServiceCatalog = () => {
   const handleServiceSelect = (service: IService) => {
     setService(service);
     getServiceParent(service.id).then((data) => setServiceParents(data));
+    setIsLoading(true);
     getServicePrices(service.id).then((data) => {
       const prices: IServiceCostData[] = [];
       data.roles.map((role) => {
+        if (role.prices.length > 1) {
+          setHasParameters(true);
+        }
         if (role.prices.length === 1) {
+          setHasParameters(false);
+          console.log(role);
+          let oneRolePrice: IServiceCostData = {
+            position: role.role,
+            cost: role.prices[0].price,
+          };
+          prices.push(oneRolePrice);
           return {
             position: role.role,
             cost: role.prices[0].price,
@@ -116,12 +138,8 @@ const ServiceCatalog = () => {
         }
       });
       setCostData(prices);
-      console.log(prices);
-    });
-    setIsLoading(true);
-    setTimeout(() => {
       setIsLoading(false);
-    }, 10);
+    });
   };
 
   const handleSearch = () => {
@@ -149,6 +167,43 @@ const ServiceCatalog = () => {
   function handleAutocompleteChange(value: any, fieldName: string): void {
     setFormData((prev) => ({ ...prev, [fieldName]: value }));
   }
+
+  const renderTables = () => {
+    if (!service || !calculations) {
+      return null;
+    }
+
+    return (
+      <div>
+        <CostTable
+          title="Стоимость"
+          unit="₸"
+          data={costData}
+          hasParameters={hasParameters}
+          tableHeaders={
+            hasParameters
+              ? [
+                  { name: "Должность", key: "position" },
+                  { name: "Цена", key: "cost" },
+                  { name: "Стоимость от", key: "costFrom" },
+                  { name: "Стоимость до", key: "costTo" },
+                  { name: "Короткие от 10 см", key: "shortHair" },
+                  { name: "Средние 15-20 см", key: "mediumHair" },
+                  { name: "Длинные 30-40 см", key: "longHair" },
+                  { name: "Очень длинные от 50 см", key: "roots" },
+                ]
+              : [
+                  { name: "Должность", key: "position" },
+                  { name: "Цена", key: "cost" },
+                ]
+          }
+        />
+
+        {/* <MaterialTable title="Материалы" data={materialData} /> */}
+        <Calculation material="Материалы салона" data={calculations} />
+      </div>
+    );
+  };
 
   return (
     <div className={classes.catalog}>
@@ -451,7 +506,21 @@ const ServiceCatalog = () => {
                         key={parent.id}
                         className={classes.catalog__lower__info__row}
                       >
-                        <p>{parent.level}</p>
+                        <p>
+                          {parent.level === "department"
+                            ? "Отдел"
+                            : parent.level === "section"
+                            ? "Секция"
+                            : parent.level === "service_type"
+                            ? "Тип"
+                            : parent.level === "group"
+                            ? "Группа"
+                            : parent.level === "category"
+                            ? "Категория"
+                            : parent.level === "subcategory"
+                            ? "Подкатегория"
+                            : "Unknown"}
+                        </p>
                         <TextField
                           className={classes.catalog__lower__info__row__input}
                           disabled
@@ -499,21 +568,7 @@ const ServiceCatalog = () => {
               />
             </div>
             <div>
-              <CostTable
-                title="Стоимость"
-                unit="₸"
-                data={costData}
-                tableHeaders={[
-                  { name: "Должность", key: "position" },
-                  { name: "Цена", key: "cost" },
-                  { name: "Стоимость от", key: "costFrom" },
-                  { name: "Стоимость до", key: "costTo" },
-                  { name: "Короткие от 10 см", key: "shortHair" },
-                  { name: "Средние 15-20 см", key: "mediumHair" },
-                  { name: "Длинные 30-40 см", key: "longHair" },
-                  { name: "Очень длинные от 50 см", key: "roots" },
-                ]}
-              />
+              {renderTables()}
               {/* <CostTable
                 title="Продолжительность"
                 unit="мин"
@@ -521,13 +576,6 @@ const ServiceCatalog = () => {
                 data={durationData}
                 hierarchy
               /> */}
-              <MaterialTable title="Материалы" data={materialData} />
-              <Calculation
-                material="Материалы салона"
-                employeePercentage="50%"
-                position="Универсал"
-                employeeName="Имя Фамилия"
-              />
             </div>
           </div>
         )}
