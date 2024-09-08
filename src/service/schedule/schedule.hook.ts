@@ -96,7 +96,7 @@ export const useLongBreak = () => {
   return useMutation<ILongBreaks, Error, any>({
     mutationFn: longBreak,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["scheduleEmployee"] });
+      queryClient.invalidateQueries({ queryKey: ["scheduleEmployees"] });
       toast.success("Длинный перерыв успешно добавлен");
     },
     onError: () => {
@@ -110,7 +110,7 @@ export const useChangeSchedule = () => {
   return useMutation({
     mutationFn: scheduleEmployeeChange,
     onSuccess: () => {
-      QueryClient.invalidateQueries({ queryKey: ["scheduleEmployee"] });
+      QueryClient.invalidateQueries({ queryKey: ["scheduleEmployees"] });
       toast.success("Изменения сохранены");
     },
     onError: () => {

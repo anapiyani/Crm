@@ -107,8 +107,10 @@ export const updateEmployeePosition = (orderData: {
 
 export const getEmployeeScheduleEachDay = (
   id: number,
-): Promise<IResponseScheduleDataCounts> => {
-  return api.get(`/schedule/schedules/employee/${id}/`).then((res) => res.data);
+): Promise<IResponseScheduleData[]> => {
+  return api
+    .get(`/schedule/schedules/employee/${id}/?pagination_on=false`)
+    .then((res) => res.data);
 };
 
 export const getEmployeeScheduleYearly = (
