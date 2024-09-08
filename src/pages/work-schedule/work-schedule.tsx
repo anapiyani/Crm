@@ -14,6 +14,7 @@ import NiceModal from "@ebay/nice-modal-react";
 import interactionPlugin from "@fullcalendar/interaction";
 import DaySettingsModal from "@/modals/schedule/day-settings.modal";
 import EmployeSettingsModal from "@/modals/schedule/employee-settings.modal";
+import dayjs from "dayjs";
 
 const WorkSchedule = () => {
   const [selectedEmployeeIds, setSelectedEmployeeIds] = useState<
@@ -23,7 +24,7 @@ const WorkSchedule = () => {
   const employeeQueries = useQueries({
     queries: selectedEmployeeIds.map((user) => {
       return {
-        queryKey: ["scheduleEmployee", user.id],
+        queryKey: ["scheduleEmployees", user.id],
         queryFn: () => getEmployeeScheduleEachDay(user.id),
         enabled: selectedEmployeeIds.length > 0,
         staleTime: 1000 * 60 * 5,
@@ -34,7 +35,7 @@ const WorkSchedule = () => {
   const employeesData = useMemo(() => {
     return employeeQueries
       .filter((query) => query.isSuccess)
-      .map((query) => query.data.results as IResponseScheduleData[]);
+      .map((query) => query.data as IResponseScheduleData[]);
   }, [employeeQueries]);
 
   const handleOpenAddPeriod = () => {
@@ -42,7 +43,9 @@ const WorkSchedule = () => {
   };
 
   const scheduleDayClick = (date: any) => {
-    NiceModal.show(DaySettingsModal);
+    NiceModal.show(DaySettingsModal, {
+      TodayData: dayjs(date.start).format("DD-MM-YYYY"),
+    });
   };
 
   const eventClick = (event: any) => {
@@ -72,7 +75,7 @@ const WorkSchedule = () => {
     );
   };
 
-  const eventData = useMemo(() => {
+  const eventData = () => {
     return employeesData.flatMap((employeeArray) =>
       employeeArray.map((employee) => ({
         title: `${employee.employee.first_name} ${employee.employee.last_name}`,
@@ -86,9 +89,9 @@ const WorkSchedule = () => {
           user_id: employee.employee.id,
           end_time: employee.end_time,
         },
-      }))
+      })),
     );
-  }, [employeesData, selectedEmployeeIds]);
+  };
 
   const generateColors = () => {
     const r = Math.floor(Math.random() * 56) + 200;
@@ -98,7 +101,7 @@ const WorkSchedule = () => {
   };
 
   const handleCheckEmployee = (
-    selectedEmployeeIds: { id: number; color?: string | undefined }[]
+    selectedEmployeeIds: { id: number; color?: string | undefined }[],
   ) => {
     setSelectedEmployeeIds(selectedEmployeeIds);
   };
@@ -126,7 +129,7 @@ const WorkSchedule = () => {
               plugins={[dayGridPlugin, interactionPlugin]}
               initialView="dayGridMonth"
               locale="ru"
-              events={eventData}
+              events={eventData()}
               eventColor="#3788d8"
               eventContent={renderEventContent}
               eventTimeFormat={{

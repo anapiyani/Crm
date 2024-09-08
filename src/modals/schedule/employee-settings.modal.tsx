@@ -12,6 +12,8 @@ import toast from "react-hot-toast";
 import dayjs from "dayjs";
 import { useChangeSchedule } from "@/service/schedule/schedule.hook";
 import { IScheduleEmployeeChange } from "@/ts/schedule.interface";
+import utc from "dayjs/plugin/utc";
+import tz from "dayjs/plugin/timezone";
 
 const EmployeSettings = ({
   user_id,
@@ -19,20 +21,24 @@ const EmployeSettings = ({
   endDate,
 }: {
   user_id: string;
-  date: string;
+  date: `string`;
   endDate: string;
 }) => {
   const mutation = useChangeSchedule();
+  dayjs.extend(utc);
+  dayjs.extend(tz);
+  console.log(dayjs.tz.guess());
+
   const modal = useModal();
   const [selectedEmployee, setSelectedEmployee] = useState<
     number | null | undefined
   >(null);
   const [choosenDate, setChoosenDate] = useState<string>(date);
   const [startHour, setStartHour] = useState<string>(
-    dayjs(date).format("HH:mm"),
+    dayjs(date).tz("Africa/Ouagadougou").format("HH:mm"),
   );
   const [endHour, setEndHour] = useState<string>(
-    dayjs(endDate).format("HH:mm"),
+    dayjs(endDate).tz("Africa/Ouagadougou").format("HH:mm"),
   );
 
   const useEmployees = () => {
@@ -69,19 +75,23 @@ const EmployeSettings = ({
   };
 
   const handleStartHour = () => {
-    return dayjs(date).isValid() ? dayjs(date).format("HH:mm") : "00:00";
+    return dayjs(date).tz("Africa/Ouagadougou").format("HH:mm");
   };
 
   const handleEndHour = () => {
-    return dayjs(endDate).isValid() ? dayjs(endDate).format("HH:mm") : "00:00";
+    return dayjs(endDate).tz("Africa/Ouagadougou").format("HH:mm");
   };
+
+  console.log(handleStartHour());
 
   const handleSubmit = () => {
     const form: IScheduleEmployeeChange = {
-      employeeId: selectedEmployee!,
-      date: dayjs(choosenDate).format("YYYY-MM-DD"),
+      employee_id: selectedEmployee!,
+      new_date: dayjs(choosenDate).format("YYYY-MM-DD"),
       start_time: startHour,
       end_time: endHour,
+      current_date: dayjs(date).format("YYYY-MM-DD"),
+      date: dayjs(date).format("YYYY-MM-DD"),
     };
     mutation.mutate(form);
   };
@@ -94,7 +104,7 @@ const EmployeSettings = ({
 
   return (
     <ModalWindow
-      title={"Добавить период"}
+      title={"Настройки смены"}
       open={modal.visible}
       handleClose={() => modal.hide()}
       handleSave={handleSubmit}

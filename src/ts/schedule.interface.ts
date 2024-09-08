@@ -90,7 +90,23 @@ export interface IYearlySchedule {
 
 export interface IScheduleEmployeeChange {
   date: string;
-  employeeId: number;
+  employee_id: number;
   end_time: string;
   start_time: string;
+  current_date: string;
+  new_date: string;
+}
+
+export interface IFormDataEmployeeSettings {
+  employee_id: number;
+  days_of_week?: {
+    [key: string]: string[];
+  };
+  starting_date: string;
+  end_date?: string;
+  specific_date?: string;
+  pattern?: number[] | string | undefined;
+  period?: string;
+  start_time?: string;
+  end_time?: string;
 }

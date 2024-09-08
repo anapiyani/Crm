@@ -6,6 +6,7 @@ import {
   deleteBreakFromSchedule,
   longBreak,
   scheduleEmployeeChange,
+  scheduleEmployeeSettings,
   updateEmployeePosition,
 } from "./schedule.service";
 import { IBreaks, ILongBreaks } from "@/ts/schedule.interface";
@@ -96,7 +97,7 @@ export const useLongBreak = () => {
   return useMutation<ILongBreaks, Error, any>({
     mutationFn: longBreak,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["scheduleEmployee"] });
+      queryClient.invalidateQueries({ queryKey: ["scheduleEmployees"] });
       toast.success("Длинный перерыв успешно добавлен");
     },
     onError: () => {
@@ -110,7 +111,21 @@ export const useChangeSchedule = () => {
   return useMutation({
     mutationFn: scheduleEmployeeChange,
     onSuccess: () => {
-      QueryClient.invalidateQueries({ queryKey: ["scheduleEmployee"] });
+      QueryClient.invalidateQueries({ queryKey: ["scheduleEmployees"] });
+      toast.success("Изменения сохранены");
+    },
+    onError: () => {
+      toast.error("Ошибка при сохранении изменений");
+    },
+  });
+};
+
+export const useSettingsScheduleEmployee = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: scheduleEmployeeSettings,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["scheduleEmployees"] });
       toast.success("Изменения сохранены");
     },
     onError: () => {
