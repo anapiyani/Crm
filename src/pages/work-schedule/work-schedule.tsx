@@ -14,6 +14,7 @@ import NiceModal from "@ebay/nice-modal-react";
 import interactionPlugin from "@fullcalendar/interaction";
 import DaySettingsModal from "@/modals/schedule/day-settings.modal";
 import EmployeSettingsModal from "@/modals/schedule/employee-settings.modal";
+import dayjs from "dayjs";
 
 const WorkSchedule = () => {
   const [selectedEmployeeIds, setSelectedEmployeeIds] = useState<
@@ -42,7 +43,9 @@ const WorkSchedule = () => {
   };
 
   const scheduleDayClick = (date: any) => {
-    NiceModal.show(DaySettingsModal);
+    NiceModal.show(DaySettingsModal, {
+      TodayData: dayjs(date.start).format("DD-MM-YYYY"),
+    });
   };
 
   const eventClick = (event: any) => {

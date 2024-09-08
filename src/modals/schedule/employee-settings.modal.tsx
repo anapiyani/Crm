@@ -21,7 +21,7 @@ const EmployeSettings = ({
   endDate,
 }: {
   user_id: string;
-  date: string;
+  date: `string`;
   endDate: string;
 }) => {
   const mutation = useChangeSchedule();
@@ -86,10 +86,12 @@ const EmployeSettings = ({
 
   const handleSubmit = () => {
     const form: IScheduleEmployeeChange = {
-      employeeId: selectedEmployee!,
-      date: dayjs(choosenDate).format("DD-MM-YYYY"),
+      employee_id: selectedEmployee!,
+      new_date: dayjs(choosenDate).format("YYYY-MM-DD"),
       start_time: startHour,
       end_time: endHour,
+      current_date: dayjs(date).format("YYYY-MM-DD"),
+      date: dayjs(date).format("YYYY-MM-DD"),
     };
     mutation.mutate(form);
   };

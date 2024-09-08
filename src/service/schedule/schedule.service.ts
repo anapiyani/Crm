@@ -1,6 +1,7 @@
 import api from "../api";
 import {
   IBreaks,
+  IFormDataEmployeeSettings,
   ILongBreaks,
   IResponseScheduleData,
   IResponseScheduleDataCounts,
@@ -131,8 +132,16 @@ export const scheduleEmployeeChange = (
   formData: IScheduleEmployeeChange,
 ): Promise<any> => {
   return api
-    .put(
-      `/schedule/schedules/change/?date=${formData.date}&employee_id=${formData.employeeId}&end_time=${formData.end_time}&start_time=${formData.start_time}`,
+    .patch(
+      `/schedule/schedules/change/?current_date=${formData.current_date}&employee_id=${formData.employee_id}&end_time=${formData.end_time}&new_date=${formData.new_date}&start_time=${formData.start_time}`,
     )
+    .then((res) => res.data);
+};
+
+export const scheduleEmployeeSettings = (
+  formData: IFormDataEmployeeSettings,
+): Promise<any> => {
+  return api
+    .post(`/schedule/schedules/settings/`, formData)
     .then((res) => res.data);
 };

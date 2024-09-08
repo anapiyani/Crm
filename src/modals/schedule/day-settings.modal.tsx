@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import NiceModal, { useModal } from "@ebay/nice-modal-react";
 import ModalWindow from "@/components/modal-window/modal-window";
 import { Autocomplete, Divider, TextField } from "@mui/material";
@@ -11,6 +11,9 @@ import { processEmployeeOptions } from "@/utils/process-employees-departments";
 import classNames from "classnames";
 import { DateCalendar, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { IFormDataEmployeeSettings } from "@/ts/schedule.interface";
+import dayjs from "dayjs";
+import { useSettingsScheduleEmployee } from "@/service/schedule/schedule.hook";
 
 // Define the type for schedule options and weekdays
 interface ScheduleOption {
@@ -66,16 +69,23 @@ interface WeekDayTimes {
   };
 }
 
-// Helper function to capitalize the first letter of a string
 const capitalize = (word: string) =>
   word.charAt(0).toUpperCase() + word.slice(1);
 
-const DaySettings = () => {
+const DaySettings = ({ TodayData }: { TodayData: string }) => {
   const modal = useModal();
+  const mutation = useSettingsScheduleEmployee();
   const [selectedEmployee, setSelectedEmployee] = useState<number>();
+  const [startingDate, setStartingDate] = useState<string>(TodayData);
+  const [choosenOnCalendar, setChoosenOnCalendar] = useState<string>("");
+  const [selectedWeekPeriod, setSelectedWeekPeriod] = useState<
+    string | undefined
+  >("");
   const [selectedPattern, setSelectedPattern] = useState<ScheduleOption | null>(
     { label: "Только выбранная дата", pattern: "only_choosen_date" },
   );
+  const [startTime, setStartTime] = useState<string>("00:00");
+  const [endTime, setEndTime] = useState<string>("23:59");
 
   const [weekDayTimes, setWeekDayTimes] = useState<WeekDayTimes>({
     monday: { checked: false, startTime: null, endTime: null },
@@ -150,7 +160,6 @@ const DaySettings = () => {
     setSelectedEmployee(undefined);
   };
 
-  // This function will transform the `weekDayTimes` state into the desired format
   const formatWeekdayTimes = () => {
     const formattedTimes: { [key: string]: [string, string] } = {};
 
@@ -176,7 +185,41 @@ const DaySettings = () => {
       console.log("Saving pattern:", patternQuery.pattern);
       console.log("Formatted Weekday Times:", formattedTimes);
     }
+
+    const formData: IFormDataEmployeeSettings = {
+      employee_id: selectedEmployee || 0,
+      starting_date: dayjs(startingDate).format("YYYY-MM-DD"),
+    };
+
+    if (selectedPattern?.pattern === "only_choosen_date") {
+      formData.specific_date = startingDate;
+      formData.start_time = startTime;
+      formData.end_time = endTime;
+      selectedWeekPeriod && (formData.period = selectedWeekPeriod);
+    }
+
+    if (selectedPattern?.pattern === "choose_on_calendar") {
+      formData.specific_date = dayjs(choosenOnCalendar).format("YYYY-MM-DD");
+    }
+
+    if (selectedPattern?.pattern === "week_days") {
+      formData.days_of_week = formatWeekdayTimes();
+      selectedWeekPeriod && (formData.period = selectedWeekPeriod);
+    }
+
+    if (selectedPattern?.pattern === selectedPattern?.pattern) {
+      formData.pattern = selectedPattern!.pattern;
+      formData.start_time = startTime;
+      formData.end_time = endTime;
+      selectedWeekPeriod && (formData.period = selectedWeekPeriod);
+    }
+
+    mutation.mutate(formData);
   };
+
+  useEffect(() => {
+    mutation.isSuccess && modal.hide();
+  }, [mutation.isSuccess]);
 
   const handlePatternChange = (
     event: React.SyntheticEvent,
@@ -185,6 +228,10 @@ const DaySettings = () => {
     if (!value?.isParent) {
       setSelectedPattern(value);
     }
+  };
+
+  const handleStartDate = () => {
+    return dayjs(TodayData).format("YYYY-MM-DD");
   };
 
   const handleWeekdayChange = (
@@ -203,13 +250,15 @@ const DaySettings = () => {
 
   return (
     <ModalWindow
-      title={"Добавить период"}
+      title={"Настройки смены"}
       open={modal.visible}
       handleClose={() => modal.hide()}
       handleSave={handleSubmit}
       afterClose={modal.remove}
     >
-      <div className={classes["add-employees-schedule"]}>
+      <div
+        className={classNames(classes["add-employees-schedule"], classes.day)}
+      >
         <div className={classes["add-employees-schedule__container"]}>
           <h1 className={classes["add-employees-schedule--header"]}>
             Основные параметры
@@ -279,7 +328,10 @@ const DaySettings = () => {
               Дата
             </p>
             <div>
-              <CustomDatePicker />
+              <CustomDatePicker
+                onChange={(e) => setStartingDate(e.target.value)}
+                defaultValue={handleStartDate()}
+              />
             </div>
           </div>
           <div
@@ -340,13 +392,13 @@ const DaySettings = () => {
                 <div style={{ width: "12rem" }}>
                   <CustomTimePicker
                     size="small"
-                    onChange={(value) => console.log("Start time:", value)}
+                    onChange={(value) => setStartTime(value)}
                   />
                 </div>
                 <div style={{ width: "12rem" }}>
                   <CustomTimePicker
                     size="small"
-                    onChange={(value) => console.log("End time:", value)}
+                    onChange={(value) => setEndTime(value)}
                   />
                 </div>
               </div>
@@ -355,7 +407,7 @@ const DaySettings = () => {
           {selectedPattern?.pattern === "choose_on_calendar" && (
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DateCalendar
-                onChange={(e) => console.log(e.$d)}
+                onChange={(e) => setChoosenOnCalendar(e.$d)}
                 sx={{
                   marginTop: "1rem",
                   button: {
@@ -482,7 +534,7 @@ const DaySettings = () => {
                     { value: "half year", label: "Полгода" },
                   ]}
                   onChange={(event, value) => {
-                    console.log(value);
+                    setSelectedWeekPeriod(value?.value);
                   }}
                   renderInput={(params) => (
                     <div className={classes["main__lower__auto"]}>
@@ -505,6 +557,52 @@ const DaySettings = () => {
             </div>
           )}
         </div>
+        {(selectedPattern?.pattern === "only_choosen_date" ||
+          selectedPattern?.pattern === "every_day" ||
+          Array.isArray(selectedPattern?.pattern)) && (
+          <div
+            style={{ marginTop: "2rem" }}
+            className={classes["add-employees-schedule__container--data"]}
+          >
+            <p className={classes["add-employees-schedule__container--label"]}>
+              Период
+            </p>
+            <Autocomplete
+              size="small"
+              fullWidth={true}
+              isOptionEqualToValue={(option, value) =>
+                option.value === value.value
+              }
+              options={[
+                { value: "week", label: "Неделя" },
+                { value: "2 weeks", label: "2 Недели" },
+                { value: "month", label: "Месяц" },
+                { value: "2 months", label: "2 Месяца" },
+                { value: "3 months", label: "3 Месяца" },
+                { value: "half year", label: "Полгода" },
+              ]}
+              onChange={(event, value) => {
+                setSelectedWeekPeriod(value?.value);
+              }}
+              renderInput={(params) => (
+                <div className={classes["main__lower__auto"]}>
+                  <TextField
+                    placeholder="Выберите тип периода"
+                    sx={{
+                      height: "40px",
+
+                      "& .MuiInputBase-input": {
+                        fontSize: "1.6rem",
+                      },
+                    }}
+                    {...params}
+                    className={"main__lower__auto__input"}
+                  />
+                </div>
+              )}
+            />
+          </div>
+        )}
       </div>
     </ModalWindow>
   );
