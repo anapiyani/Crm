@@ -6,31 +6,80 @@ import Grid from "@mui/material/Unstable_Grid2";
 import classes from "./styles.module.scss";
 import InfoHeader from "@/components/navigation/header/info-header";
 import {
-  mainTableData,
   additionalInfoTableData,
   discountsTableData,
   financeTableData,
   contactsTableData,
   commentsTableData,
-  clientNameData,
-  clientTabsData,
   sampleVisits,
 } from "./data";
+import { useParams } from "react-router-dom";
+import { HomeOutlined } from "@mui/icons-material";
+import {
+  cardInfoEmplpyee,
+  mainInfoEmployee,
+} from "@/service/employee/employee.service";
+import { useQuery } from "@tanstack/react-query";
+import { ICardInfoEmployee } from "@/ts/employee.interface";
 
 const ClientCard = () => {
+  const params = useParams<{ id: string }>();
   const [page, setPage] = useState(1);
   const pageCount = 10;
 
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
-    value: number
+    value: number,
   ) => {
     setPage(value);
   };
 
+  const { data: userInfoData, isLoading: userInfoLoading } = useQuery({
+    queryKey: ["mainInfoEmployee", params.id],
+    queryFn: () => mainInfoEmployee(Number(params.id)),
+  });
+
+  const { data: counterCardData, isLoading: counterCardLoading } = useQuery({
+    queryKey: ["cardInfoEmplpyee", params.id],
+    queryFn: () => cardInfoEmplpyee(Number(params.id)),
+  });
+
+  const clientTabsData = [
+    { to: "/clients", icon: HomeOutlined, label: "Обзор" },
+  ];
+
+  const clientNameData = {
+    name:
+      "Карта клиента - " +
+      userInfoData?.first_name +
+      " " +
+      userInfoData?.last_name,
+  };
+
+  const mainTableData = [
+    { property: "Автосегмент", value: "Не указано" },
+    { property: "ID клиента", value: userInfoData?.user_id },
+    { property: "Категория", value: userInfoData?.category || "Без категории" },
+    { property: "Фамилия", value: userInfoData?.last_name || "Не указано" },
+    { property: "Имя", value: userInfoData?.first_name || "Не указано" },
+    {
+      property: "Моб. телефон",
+      value: userInfoData?.phone_number || "Не указано",
+    },
+    { property: "Рассылка SMS", value: "Запрет на рассылку" },
+    { property: "Черный список", value: "Нет" },
+    { property: "Онлайн запись", value: "Да" },
+    { property: "Явка", value: "100% (0 из 48 не пришёл)" },
+    { property: "Явка", value: "" },
+  ];
+
   return (
     <div className={classes["main"]}>
-      <InfoHeader tabsData={clientTabsData} nameData={clientNameData} />
+      <InfoHeader
+        tabsData={clientTabsData}
+        nameData={clientNameData}
+        counterCardData={counterCardData}
+      />
       <Grid
         container
         sx={{

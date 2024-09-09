@@ -1,13 +1,5 @@
 import { HomeOutlined } from "@mui/icons-material";
 
-export const clientTabsData = [
-  { to: "/clients", icon: HomeOutlined, label: "Обзор" },
-];
-
-export const clientNameData = {
-  name: "Карта клиента - Марина Владимировна",
-};
-
 export const mainTableData = [
   { property: "Автосегмент", value: "Не указано" },
   { property: "ID клиента", value: 7 },

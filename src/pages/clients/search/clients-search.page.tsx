@@ -25,9 +25,8 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 
 const ClientSearch = () => {
-  const { register, handleSubmit, reset, setValue, watch } = useForm<
-    ISearchFormData
-  >();
+  const { register, handleSubmit, reset, setValue, watch } =
+    useForm<ISearchFormData>();
   const [searchParams, setSearchParams] = useState<ISearchFormData>({
     search: "",
     phone_number: "",
@@ -84,7 +83,7 @@ const ClientSearch = () => {
 
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
-    value: number
+    value: number,
   ) => {
     setPage(value);
     setSearchParams((prev) => ({
@@ -96,7 +95,7 @@ const ClientSearch = () => {
 
   const handlePageSizeChange = (
     event: React.ChangeEvent<{}>,
-    newSize: number
+    newSize: number,
   ) => {
     setPageSize(newSize);
     setSearchParams((prev) => ({
@@ -350,7 +349,10 @@ const ClientSearch = () => {
                   <TableRow key={index}>
                     <TableCell>{customer.user_id}</TableCell>
                     <TableCell>
-                      <Link className={classes.link} to="/">
+                      <Link
+                        className={classes.link}
+                        to={`/clients/${customer.user_id}`}
+                      >
                         {customer.last_name ? customer.last_name : "-"}{" "}
                         {customer.first_name ? customer.first_name : "-"}
                       </Link>
