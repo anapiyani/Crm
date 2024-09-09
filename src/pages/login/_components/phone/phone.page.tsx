@@ -23,7 +23,7 @@ const PhoneLogin = (props: TProps) => {
 
   const onSubmitPhone = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const phone = phoneNumber.replace(/[()\s-+]+/g, "");
+    const phone = phoneNumber.replace(/[()\s-]+/g, "");
     if (phoneNumber === "") {
       return;
     }
