@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { ArrowDropUp, ArrowDropDown, AccessTime } from "@mui/icons-material";
 import dayjs from "dayjs";
-
+import utc from "dayjs/plugin/utc";
 interface CustomTimePickerProps {
   value?: string;
   onChange: (value: string) => void;
@@ -20,16 +20,18 @@ interface CustomTimePickerProps {
 }
 
 const CustomTimePicker: React.FC<CustomTimePickerProps> = ({
-  value = "08:00",
+  value = "09:00",
   onChange,
   size = "medium",
   withLabel = true,
 }) => {
+  dayjs.extend(utc);
+
   const [selectedHour, setSelectedHour] = useState<string>(
-    dayjs(value, "HH:mm").format("HH"),
+    dayjs(value, "HH:mm", true).format("hh"),
   );
   const [selectedMinute, setSelectedMinute] = useState<string>(
-    dayjs(value, "HH:mm").format("mm"),
+    dayjs(value, "HH:mm", true).format("mm"),
   );
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
