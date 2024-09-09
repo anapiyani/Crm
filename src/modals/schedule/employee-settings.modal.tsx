@@ -35,10 +35,10 @@ const EmployeSettings = ({
   >(null);
   const [choosenDate, setChoosenDate] = useState<string>(date);
   const [startHour, setStartHour] = useState<string>(
-    dayjs(date).tz("Africa/Ouagadougou").format("HH:mm"),
+    dayjs(date).tz("Africa/Ouagadougou").format("HH:mm")
   );
   const [endHour, setEndHour] = useState<string>(
-    dayjs(endDate).tz("Africa/Ouagadougou").format("HH:mm"),
+    dayjs(endDate).tz("Africa/Ouagadougou").format("HH:mm")
   );
 
   const useEmployees = () => {
@@ -62,7 +62,7 @@ const EmployeSettings = ({
   useEffect(() => {
     if (user_id && employeeOptions.length > 0) {
       const defaultEmployee = employeeOptions.find(
-        (option) => option.nodeId === parseInt(user_id),
+        (option) => option.nodeId === parseInt(user_id)
       );
       if (defaultEmployee) {
         setSelectedEmployee(defaultEmployee.nodeId);
@@ -75,10 +75,12 @@ const EmployeSettings = ({
   };
 
   const handleStartHour = () => {
+    console.log(dayjs(date).tz("Africa/Ouagadougou").format("HH:mm"));
     return dayjs(date).tz("Africa/Ouagadougou").format("HH:mm");
   };
 
   const handleEndHour = () => {
+    console.log(dayjs(date).tz("Africa/Ouagadougou").format("HH:mm"));
     return dayjs(endDate).tz("Africa/Ouagadougou").format("HH:mm");
   };
 
@@ -130,7 +132,7 @@ const EmployeSettings = ({
               fullWidth={true}
               value={
                 employeeOptions.find(
-                  (option) => option.nodeId === selectedEmployee,
+                  (option) => option.nodeId === selectedEmployee
                 ) || null
               }
               onChange={(event, value) => {

@@ -76,17 +76,6 @@ export interface IServiceCategory {
   services: IService[];
 }
 
-// export interface IUserService {
-//   id: number;
-//   service: string;
-//   role: number;
-//   parameter: {
-//     id: number;
-//     name: string;
-//   };
-//   price: string;
-//   type: string;
-// }
 export interface IUserService {
   id: number;
   service: string;
