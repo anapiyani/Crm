@@ -76,7 +76,7 @@ export const ROUTES: IRoute[] = [
   },
   {
     name: "Client card",
-    path: "/clients/client-card",
+    path: "/clients/:id",
     component: <ClientCard />,
   },
   {

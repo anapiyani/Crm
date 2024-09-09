@@ -12,7 +12,7 @@ type TProps = {
 };
 
 const PhoneLogin = (props: TProps) => {
-  const [phoneNumber, onPhoneChange] = useState<string>("+7");
+  const [phoneNumber, onPhoneChange] = useState<string>("7");
   const [openVerify, setOpenVerify] = useState<boolean>(false);
   const [otp, setOtp] = useState("");
   const { mutation } = usePhoneLoginMutation();
@@ -23,13 +23,15 @@ const PhoneLogin = (props: TProps) => {
 
   const onSubmitPhone = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const phone = phoneNumber.replace(/[()\s-]+/g, "");
+    const phone = phoneNumber.replace(/[()\s-+]+/g, "");
     if (phoneNumber === "") {
       return;
     }
     mutation.mutate({ phone });
     if (mutation.isSuccess) {
       setOpenVerify(true);
+    } else {
+      console.log(phone);
     }
   };
 

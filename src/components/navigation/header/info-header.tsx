@@ -23,6 +23,7 @@ interface InfoHeaderProps {
   nameData: NameData;
   counterCardData?: ICardInfoEmployee;
   startedWork?: string;
+  isCustomer?: boolean;
 }
 
 const InfoHeader: React.FC<InfoHeaderProps> = ({
@@ -30,6 +31,7 @@ const InfoHeader: React.FC<InfoHeaderProps> = ({
   nameData,
   counterCardData,
   startedWork,
+  isCustomer,
 }) => {
   return (
     <div className={classes["main__header"]}>
@@ -49,7 +51,7 @@ const InfoHeader: React.FC<InfoHeaderProps> = ({
                   backgroundColor="rgba(76, 175, 80, 0.3)"
                   icon={<HomeOutlined />}
                   iconColor="var(--success-main)"
-                  textTitle="Выручка за все время"
+                  textTitle={isCustomer ? "Выручка" : "Выручка за все время"}
                   valueText={
                     counterCardData?.revenue ? counterCardData.revenue : "0"
                   }
@@ -58,7 +60,7 @@ const InfoHeader: React.FC<InfoHeaderProps> = ({
                   backgroundColor="rgba(33, 150, 243, 0.3)"
                   icon={<HomeOutlined />}
                   iconColor="var(--primary-main)"
-                  textTitle="Обслуженные посещения"
+                  textTitle={isCustomer ? "Посещения" : "Обслуженные посещения"}
                   valueText={
                     counterCardData?.services_count
                       ? counterCardData?.services_count.toString()
@@ -70,7 +72,9 @@ const InfoHeader: React.FC<InfoHeaderProps> = ({
                   backgroundColor="rgba(156,39,176, 0.3)"
                   icon={<HomeOutlined />}
                   iconColor="var(--secondary-main)"
-                  textTitle="Является сотрудником"
+                  textTitle={
+                    isCustomer ? "Является клиентом" : "Является сотрудником"
+                  }
                   valueText={startedWork ? startedWork : "Дата не указана"}
                 />
               </div>
