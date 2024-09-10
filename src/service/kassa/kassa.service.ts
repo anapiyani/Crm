@@ -58,11 +58,17 @@ export const searchKassaData = (
   formData: ISearchKassa,
 ): Promise<IResponseData<KassaResponse[]>> => {
   const params = new URLSearchParams();
+
   Object.entries(formData).forEach(([key, value]) => {
     if (value) {
-      params.append(key, value.toString());
+      if (Array.isArray(value)) {
+        value.forEach((item) => params.append(key, item.toString()));
+      } else {
+        params.append(key, value.toString());
+      }
     }
   });
+
   const url = `/transactions/list/?${params.toString()}`;
   return api.get(url).then((res) => res.data);
 };
