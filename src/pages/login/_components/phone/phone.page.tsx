@@ -46,7 +46,7 @@ const PhoneLogin = (props: TProps) => {
 
   const onSubmitOtp = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const phone = phoneNumber.replace(/[()\s-]+/g, "");
+    const phone = phoneNumber.replace(/[()\s-+]+/g, "");
     verifyMutation.mutate({
       phone_number: phone,
       otp: otp,
