@@ -1,5 +1,8 @@
 import { useState } from "react";
-import { usePhoneLoginMutation } from "@/service/auth/auth.hook";
+import {
+  usePhoneLoginMutation,
+  useVerifyOtpMutation,
+} from "@/service/auth/auth.hook";
 import { MuiOtpInput } from "mui-one-time-password-input";
 import { Button, TextField, InputAdornment, Alert } from "@mui/material";
 import InputMask from "react-input-mask";
@@ -17,6 +20,7 @@ const PhoneLogin = (props: TProps) => {
   const [openVerify, setOpenVerify] = useState<boolean>(false);
   const [otp, setOtp] = useState("");
   const { mutation } = usePhoneLoginMutation();
+  const verifyMutation = useVerifyOtpMutation();
 
   const handleChange = (newValue: string) => {
     setOtp(newValue);
@@ -42,7 +46,11 @@ const PhoneLogin = (props: TProps) => {
 
   const onSubmitOtp = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(otp);
+    const phone = phoneNumber.replace(/[()\s-]+/g, "");
+    verifyMutation.mutate({
+      phone_number: phone,
+      otp: otp,
+    });
   };
 
   return (

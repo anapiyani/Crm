@@ -2,6 +2,7 @@ import BreadcrumbsCustom from "@/components/navigation/breadcrumbs/breadcrumbs";
 import {
   Button,
   Checkbox,
+  CircularProgress,
   Divider,
   FormControlLabel,
   FormGroup,
@@ -25,6 +26,7 @@ import { TableData } from "@/modals/home/event-details/data";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { IVisitsInfo, IVisitsResponse } from "@/ts/activity.interface";
 import { searchVisits } from "@/service/activity/activity.service";
+import toast from "react-hot-toast";
 
 interface ITreeItemProps {
   id: number;
@@ -326,6 +328,18 @@ const SearchVisits = () => {
     setCurrentPage(1);
     refetchVistsData();
   };
+
+  if (visitsPending && isLoadingServices) {
+    return (
+      <div className="loading">
+        <CircularProgress />
+      </div>
+    );
+  }
+
+  if (visitsError && errorServices) {
+    toast.error("Ошибка загрузки данных...");
+  }
 
   return (
     <div className={classes.visits}>
