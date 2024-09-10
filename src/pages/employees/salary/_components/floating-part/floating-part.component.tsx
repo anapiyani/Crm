@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useState } from "react";
 import HeaderTemplate from "../MultiStepHeader/MultiStepHeader.component";
 import StepInput from "../step-input/step-input.component";
 import classes from "./styles.module.scss";
-<<<<<<< Updated upstream
 import {
   Button,
   Autocomplete,
@@ -22,9 +21,6 @@ import {
   UseFormGetValues,
 } from "react-hook-form";
 import { IOptions, ITemplate } from "@/ts/employee.interface";
-=======
-import { Checkbox, Divider, FormControlLabel } from "@mui/material";
->>>>>>> Stashed changes
 
 interface DevServiceItem {
   id: string;
@@ -165,20 +161,14 @@ const FloatingPart: React.FC<FloatingPartProps> = ({
       id: newId,
       element: (
         <div>
-<<<<<<< Updated upstream
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <div style={{ display: "flex", flexDirection: "column" }}>
               {/* Fields inside the new service */}
-=======
-          <div style={{ display: "flex" }}>
-            <div style={{ display: "flex", flexDirection: "column" }}>
->>>>>>> Stashed changes
               <div
                 className={classes.services__employeePersentage__info}
                 style={{
                   display: "flex",
                   flexDirection: "column",
-<<<<<<< Updated upstream
                   width: "25rem",
                   marginBottom: "1rem",
                 }}
@@ -302,119 +292,6 @@ const FloatingPart: React.FC<FloatingPartProps> = ({
             >
               <Delete />
             </Button>
-=======
-                  width: "15rem",
-                  marginBottom: "1rem",
-                }}
-              >
-                <p style={{ fontSize: "1.6rem" }}>% сотрудника</p>
-                <div style={{ display: "flex", marginBottom: "1rem" }}>
-                  <input
-                    type="text"
-                    placeholder="0"
-                    style={{ width: "12rem", marginRight: "1rem" }}
-                    onChange={(e) => console.log(e.target.value)}
-                  />
-                  <p>руб.</p>
-                </div>
-                <select name="pets" id="pet-select">
-                  <option value="fixed_percent">Фикс. сумма</option>
-                  <option value="service_percent">% от чека</option>
-                  <option value="service_materials_no_discount_percent">
-                    % - МТ без скидк
-                  </option>
-                  <option value="service_materials_discount_percent">
-                    % - МТ со скид
-                  </option>
-                  <option value="service_minus_client_bonuses_materials_percent">
-                    % от (чека за услуги - бонусы клиента - материалы)
-                  </option>
-                </select>
-              </div>
-              <div
-                className={classes.services__employeePersentage__info}
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  width: "15rem",
-                  marginBottom: "1rem",
-                }}
-              >
-                <p style={{ fontSize: "1.3rem" }}>Свои клиенты / 1-й чек</p>
-                <select name="pets" id="pet-select">
-                  <option value="service_percent">По умолчанию</option>
-                  <option value="service_materials_no_discount_percent">
-                    Свои клиенты
-                  </option>
-                  <option value="service_materials_discount_percent">
-                    С первого чека
-                  </option>
-                </select>
-              </div>
-              <div
-                className={classes.services__employeePersentage__info}
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  width: "15rem",
-                  marginBottom: "1rem",
-                }}
-              >
-                <p style={{ fontSize: "1.3rem" }}>Прайс / чек</p>
-                <select name="pets" id="pet-select">
-                  <option value="service_percent">По умолчанию</option>
-                  <option value="service_materials_no_discount_percent">
-                    По чеку (после всех скидок)
-                  </option>
-                  <option value="service_materials_discount_percent">
-                    По прайсу (без учета скидок)
-                  </option>
-                </select>
-              </div>
-              <div
-                className={classes.services__employeePersentage__info}
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  width: "15rem",
-                  marginBottom: "1rem",
-                }}
-              >
-                <p style={{ fontSize: "1.3rem" }}>Материалы какие</p>
-                <select name="pets" id="pet-select">
-                  <option value="service_percent">По умолчанию</option>
-                  <option value="service_percent">
-                    Вычитать все материалы
-                  </option>
-                  <option value="service_materials_no_discount_percent">
-                    Вычитать только "не в чек"
-                  </option>
-                  <option value="service_materials_discount_percent">
-                    Вычитать только "в чек"
-                  </option>
-                </select>
-              </div>
-              <div
-                className={classes.services__employeePersentage__info}
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  width: "15rem",
-                  marginBottom: "1rem",
-                }}
-              >
-                <p style={{ fontSize: "1.3rem" }}>Материалы откуда</p>
-                <select name="pets" id="pet-select">
-                  <option value="service_percent">По умолчанию</option>
-                  <option value="service_percent">Вычитать из выручки</option>
-                  <option value="service_materials_no_discount_percent">
-                    Вычитается из доли мастера
-                  </option>
-                </select>
-              </div>
-            </div>
-            {/* hier scheße Button für löschen modal */}
->>>>>>> Stashed changes
           </div>
           <Divider />
         </div>
