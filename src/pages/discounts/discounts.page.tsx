@@ -13,7 +13,6 @@ import {
 } from "@mui/icons-material";
 import { Grid, Button, Box, Divider } from "@mui/material";
 import { useState } from "react";
-import RevenueChart from "../employees/employee-card/components/chart";
 import classes from "./styles.module.scss";
 import { useParams } from "react-router-dom";
 import {
@@ -32,9 +31,8 @@ import DualYAxisChart from "./_components/charts/charts2/chart-doubleAxis";
 import NiceModal from "@ebay/nice-modal-react";
 import DiscountModal from "@/modals/discounts/discountProgram.modal";
 
-// Import the required localization components
 import { LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs"; // Or another adapter like AdapterDateFns, etc.
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs"; 
 
 interface IDiscountsInfo {
   nomination: string;
@@ -122,6 +120,9 @@ const DiscountPage = () => {
   const handleCloseModal = () => {
     setModalOpen(false);
   };
+
+
+ 
 
   const renderContentHeader = () => {
     switch (currentTab) {
@@ -435,7 +436,7 @@ const DiscountPage = () => {
                       padding: 0,
                       fontSize: "1.4rem",
                     }}
-                    onClick={handleOpenModal} // Change this line to use `handleOpenModal`
+                    onClick={handleOpenModal} 
                   >
                     Добавить
                   </Button>

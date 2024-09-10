@@ -8,14 +8,6 @@ import Grid from "@mui/material/Unstable_Grid2";
 import { Button, CircularProgress, Divider } from "@mui/material";
 import TableVertical from "@/components/tables/tableVertical/vertical-info-card";
 import TableHorizontal from "@/components/tables/table-horizontal/horizontal-info-card";
-import {
-  mainTableData,
-  additionalInfoTableData,
-  discountsTableData,
-  financeTableData,
-  contactsTableData,
-  commentsTableData,
-} from "@/pages/clients/client-card/data";
 import ChangeHistoryTable from "@/components/tables/table-change-history/table-change-history";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -43,6 +35,8 @@ import {
 } from "@/service/appointments/appointments.hook";
 import EventDetailsThirdTab from "./_tabs/event-details-third-tab";
 import classNames from "classnames";
+import { mainInfoEmployee } from "@/service/employee/employee.service";
+import { getDeposit } from "@/service/client/client.service";
 
 interface IEventDetailsModalProps {
   appointmentId: number;
@@ -69,6 +63,22 @@ const EventDetails: React.FC<IEventDetailsModalProps> = ({ appointmentId }) => {
 
   const clientId = singleAppointmentData?.client?.id;
 
+  const { data: userInfoData, isLoading: userInfoLoading } = useQuery({
+    queryKey: ["mainInfoEmployee", clientId],
+    queryFn: () => (clientId ? mainInfoEmployee(Number(clientId)) : undefined),
+    enabled: !!clientId,
+    staleTime: Infinity,
+    refetchOnWindowFocus: false,
+  });
+
+  const { data: userDepositData, isLoading: userDepositLoading } = useQuery({
+    queryKey: ["userDepositData", clientId],
+    queryFn: () => (clientId ? getDeposit(Number(clientId)) : undefined),
+    enabled: !!clientId,
+    staleTime: Infinity,
+    refetchOnWindowFocus: false,
+  });
+
   const {
     data: customerAppointmentHistoryData,
     isPending: customerAppointmentPending,
@@ -82,41 +92,35 @@ const EventDetails: React.FC<IEventDetailsModalProps> = ({ appointmentId }) => {
     refetchOnWindowFocus: false,
   });
 
-  const {
-    data: customerAppointmentNoShowData,
-    refetch: noDataRefetch,
-  } = useQuery({
-    queryKey: ["customerAppointmentNoShowData", clientId],
-    queryFn: () =>
-      clientId ? getCustomerAppointmentNoShowById(clientId) : undefined,
-    enabled: !!clientId,
-    staleTime: Infinity,
-    refetchOnWindowFocus: false,
-  });
+  const { data: customerAppointmentNoShowData, refetch: noDataRefetch } =
+    useQuery({
+      queryKey: ["customerAppointmentNoShowData", clientId],
+      queryFn: () =>
+        clientId ? getCustomerAppointmentNoShowById(clientId) : undefined,
+      enabled: !!clientId,
+      staleTime: Infinity,
+      refetchOnWindowFocus: false,
+    });
 
-  const {
-    data: customerAppointmentPlanned,
-    refetch: plannedRefetch,
-  } = useQuery({
-    queryKey: ["customerAppointmentPlanned", clientId],
-    queryFn: () =>
-      clientId ? getCustomerAppointmentPlannedById(clientId) : undefined,
-    enabled: !!clientId,
-    staleTime: Infinity,
-    refetchOnWindowFocus: false,
-  });
+  const { data: customerAppointmentPlanned, refetch: plannedRefetch } =
+    useQuery({
+      queryKey: ["customerAppointmentPlanned", clientId],
+      queryFn: () =>
+        clientId ? getCustomerAppointmentPlannedById(clientId) : undefined,
+      enabled: !!clientId,
+      staleTime: Infinity,
+      refetchOnWindowFocus: false,
+    });
 
-  const {
-    data: customerDeletedAppointments,
-    refetch: deletedRefetch,
-  } = useQuery({
-    queryKey: ["customerDeletedAppointments", clientId],
-    queryFn: () =>
-      clientId ? getCustomerDeletedAppointments(clientId) : undefined,
-    enabled: !!clientId,
-    staleTime: Infinity,
-    refetchOnWindowFocus: false,
-  });
+  const { data: customerDeletedAppointments, refetch: deletedRefetch } =
+    useQuery({
+      queryKey: ["customerDeletedAppointments", clientId],
+      queryFn: () =>
+        clientId ? getCustomerDeletedAppointments(clientId) : undefined,
+      enabled: !!clientId,
+      staleTime: Infinity,
+      refetchOnWindowFocus: false,
+    });
 
   useEffect(() => {
     if (appointmentId) {
@@ -163,6 +167,120 @@ const EventDetails: React.FC<IEventDetailsModalProps> = ({ appointmentId }) => {
   ) => {
     setPage(value);
   };
+
+  const mainTableData = [
+    { property: "Автосегмент", value: "Не указано" },
+    { property: "ID клиента", value: userInfoData?.user_id },
+    {
+      property: "Категория",
+      value: userInfoData?.category ? userInfoData?.category : "Без категории",
+    },
+    { property: "Фамилия", value: userInfoData?.last_name },
+    { property: "Имя", value: userInfoData?.first_name },
+    // { property: "Отчество", value: userInfoData?.middle_name },
+    { property: "Моб. телефон", value: userInfoData?.phone_number },
+    {
+      property: "Рассылка SMS",
+      value: userInfoData?.sms_notification
+        ? "Запрет на рассылку"
+        : "Разрешено",
+    },
+    // { property: "Черный список", value: "Нет" },
+    // { property: "Онлайн запись", value: "Да" },
+    // { property: "Явка", value: "100% (0 из 48 не пришёл)" },
+    // { property: "Явка", value: "" },
+  ];
+
+  const additionalInfoTableData = [
+    {
+      property: "1-е посещение",
+      value: userInfoData?.first_visit
+        ? new Date(userInfoData.first_visit).toLocaleString("ru-RU", {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit",
+          })
+        : "Не указано",
+    },
+
+    {
+      property: "Род занятий",
+      value: userInfoData?.occupation ? userInfoData?.occupation : "Не указано",
+    },
+    { property: "Дата рождения", value: userInfoData?.date_of_birth },
+    // { property: "Возраст", value: "30 лет" },
+    {
+      property: "Пол",
+      value: userInfoData?.gender ? userInfoData?.gender : "Не указан",
+    },
+    { property: "Анкета", value: userInfoData?.description ? "Есть" : "Нет" },
+    // { property: "Договор подписан", value: "Нет" },
+    {
+      property: "Привлечение",
+      value: userInfoData?.invite_source
+        ? userInfoData?.invite_source
+        : "Не указано",
+    },
+    // { property: "Откуда узнали", value: "Не указано" },
+    { property: "Удобство расположения", value: "Не указано" },
+    {
+      property: "Город",
+      value: userInfoData?.city ? userInfoData?.city : "Не указано",
+    },
+    {
+      property: "Дата добавления",
+      value: userInfoData?.start_date
+        ? new Date(userInfoData.start_date).toLocaleString("ru-RU", {})
+        : "Не указано",
+    },
+    { property: "Добавил сотрудник", value: userInfoData?.employee },
+    // { property: "Объединение", value: "Есть" },
+    // { property: "Салон клиента", value: "" },
+  ];
+
+  const discountsTableData = [
+    {
+      property: "Тип скидки",
+      value: userInfoData?.personal_discount
+        ? userInfoData?.personal_discount
+        : "Отсутствует",
+    },
+    {
+      property: "Скидка",
+      value: userInfoData?.personal_discount
+        ? userInfoData?.personal_discount
+        : "Отсутствует",
+    },
+  ];
+
+  const financeTableData = [
+    {
+      property: "Депозит",
+      value: userDepositData?.balance ? userDepositData?.balance : "0",
+      link: "/clients/deposits/history",
+      linkLabel: "История",
+    },
+    // {
+    //   property: "Бонусы",
+    //   value: "0",
+    //   link: "/clients/bonuses/history",
+    //   linkLabel: "История",
+    // },
+    // {
+    //   property: "Деп. абонемент",
+    //   value: "0",
+    //   link: "/clients/membership",
+    //   linkLabel: "Подробности",
+    // },
+  ];
+
+  const contactsTableData = [
+    { type: "Моб. телефон", contact: userInfoData?.phone_number, primary: true },
+  ];
+
+  const commentsTableData = [{ contact: "Нет ни одного комментария" }];
 
   const renderContent = () => {
     switch (currentTab) {
