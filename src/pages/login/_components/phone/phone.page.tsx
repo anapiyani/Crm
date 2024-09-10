@@ -115,7 +115,7 @@ const PhoneLogin = (props: TProps) => {
               className={classes["phone__content__form__send"]}
             >
               <InputMask
-                mask="+7 (999) 999 9999"
+                mask="7 (999) 999 9999"
                 value={phoneNumber}
                 disabled={false}
                 maskChar=" "
