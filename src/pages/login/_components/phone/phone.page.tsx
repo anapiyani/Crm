@@ -6,6 +6,7 @@ import InputMask from "react-input-mask";
 import icon from "@/assets/icons/icon_wise.svg";
 import flagIcon from "@/assets/icons/Flags.svg";
 import classes from "./styles.module.scss";
+import toast from "react-hot-toast";
 
 type TProps = {
   loginWEmail: () => void;
@@ -30,8 +31,12 @@ const PhoneLogin = (props: TProps) => {
     mutation.mutate({ phone });
     if (mutation.isSuccess) {
       setOpenVerify(true);
+      toast.success("Сообщение отправлено");
     } else {
-      console.log(phone);
+      toast.error("Что-то пошло не так повторите еще раз...");
+    }
+    if (mutation.isPending) {
+      toast.loading("Отправка...");
     }
   };
 

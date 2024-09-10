@@ -6,7 +6,6 @@ import Grid from "@mui/material/Unstable_Grid2";
 import classes from "./styles.module.scss";
 import InfoHeader from "@/components/navigation/header/info-header";
 import {
-  additionalInfoTableData,
   discountsTableData,
   financeTableData,
   contactsTableData,
@@ -20,12 +19,14 @@ import {
   mainInfoEmployee,
 } from "@/service/employee/employee.service";
 import { useQuery } from "@tanstack/react-query";
-import { ICardInfoEmployee } from "@/ts/employee.interface";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
 
 const ClientCard = () => {
   const params = useParams<{ id: string }>();
   const [page, setPage] = useState(1);
   const pageCount = 10;
+  dayjs.extend(relativeTime);
 
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
@@ -66,11 +67,46 @@ const ClientCard = () => {
       property: "Моб. телефон",
       value: userInfoData?.phone_number || "Не указано",
     },
-    { property: "Рассылка SMS", value: "Запрет на рассылку" },
-    { property: "Черный список", value: "Нет" },
-    { property: "Онлайн запись", value: "Да" },
     { property: "Явка", value: "100% (0 из 48 не пришёл)" },
-    { property: "Явка", value: "" },
+    {
+      property: "Рассылка SMS",
+      value: userInfoData?.sms_notification ? "Да" : "Запрет на рассылку",
+    },
+  ];
+
+  const additionalInfoTableData = [
+    {
+      property: "1-е посещение",
+      value: dayjs(userInfoData?.first_visit).format("DD.MM.YYYY"),
+    },
+    {
+      property: "Род занятий",
+      value: userInfoData?.occupation || "Не указано",
+    },
+    {
+      property: "Дата рождения",
+      value: userInfoData?.date_of_birth || "Не указано",
+    },
+    {
+      property: "Возраст",
+      value: userInfoData?.date_of_birth
+        ? dayjs(userInfoData.date_of_birth).fromNow()
+        : "Не указано",
+    },
+    {
+      property: "Пол",
+      value: userInfoData?.gender === "female" ? "Жен." : "Муж.",
+    },
+    { property: "Анкета", value: "Есть" },
+    { property: "Договор подписан", value: "Нет" },
+    { property: "Привлечение", value: "Нет" },
+    { property: "Откуда узнали", value: "Не указано" },
+    { property: "Удобство расположения", value: "Не указано" },
+    { property: "Город", value: userInfoData?.city || "Не указано" },
+    { property: "Дата добавления", value: "08.05.2020, 15:30" },
+    { property: "Добавил сотрудник", value: "Наталья Ильченко" },
+    { property: "Объединение", value: "Есть" },
+    { property: "Салон клиента", value: "" },
   ];
 
   return (

@@ -61,7 +61,7 @@ const TableVertical: React.FC<TableVerticalProps> = ({
   showAddIcon = false, // Default is false, meaning no Add icon by default
 }) => {
   const [dropdownValue, setDropdownValue] = useState(
-    data[data.length - 1].value
+    data[data.length - 1].value,
   );
 
   const handleDropdownChange = (event: SelectChangeEvent<string | number>) => {
@@ -200,7 +200,7 @@ const TableVertical: React.FC<TableVerticalProps> = ({
                 sx={{
                   textAlign: "left",
                   fontWeight: ["Фамилия", "Имя", "Отчество"].includes(
-                    row.property!
+                    row.property!,
                   )
                     ? "bold"
                     : "normal",
