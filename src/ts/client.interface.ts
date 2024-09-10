@@ -63,3 +63,9 @@ export interface IEmployeeDepartment {
   department: string;
   employees: IEmployee[];
 }
+
+export interface IClientDeposit {
+  balance: number;
+  id: number;
+  date_updated: string;
+}

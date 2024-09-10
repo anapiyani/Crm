@@ -36,7 +36,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 type DataRow = {
   property?: string;
-  value?: string | number;
+  value?: string | number | boolean;
   link?: string;
   linkLabel?: string;
 };
@@ -48,7 +48,7 @@ interface TableVerticalProps {
   extraAction?: React.ReactNode;
   includeDropdown?: boolean;
   noIcon?: boolean;
-  showAddIcon?: boolean; // New prop for the Add icon
+  showAddIcon?: boolean;
 }
 
 const TableVertical: React.FC<TableVerticalProps> = ({
@@ -60,8 +60,8 @@ const TableVertical: React.FC<TableVerticalProps> = ({
   noIcon = false,
   showAddIcon = false, // Default is false, meaning no Add icon by default
 }) => {
-  const [dropdownValue, setDropdownValue] = useState(
-    data[data.length - 1].value,
+  const [dropdownValue, setDropdownValue] = useState<string | number>(
+    data[data.length - 1].value as string | number
   );
 
   const handleDropdownChange = (event: SelectChangeEvent<string | number>) => {

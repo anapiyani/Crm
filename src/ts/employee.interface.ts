@@ -52,7 +52,7 @@ export interface IUserDetails {
   description?: string | null;
   description_as_main_characteristic?: boolean;
   discount_card?: string | null;
-  employee?: string | null;
+  employee?: string ;
   first_visit?: string;
   invite_source?: string;
   occupation?: string;
