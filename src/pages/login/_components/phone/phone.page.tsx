@@ -36,8 +36,6 @@ const PhoneLogin = (props: TProps) => {
     mutation.mutate({ phone });
     if (mutation.isSuccess) {
       toast.success("Сообщение отправлено");
-    } else {
-      toast.error("Что-то пошло не так повторите еще раз...");
     }
     if (mutation.isPending) {
       toast.loading("Отправка...");
@@ -51,13 +49,15 @@ const PhoneLogin = (props: TProps) => {
       phone_number: phone,
       otp: otp,
     });
+
     if (verifyMutation.isSuccess) {
       toast.success("Успешно");
-    } else {
-      toast.error("Что-то пошло не так повторите еще раз...");
     }
     if (verifyMutation.isPending) {
-      toast.loading("Отправка...");
+      toast.loading("Проверка...");
+    }
+    if (verifyMutation.isError) {
+      toast.error("Неправильный код, попробуйте еще раз");
     }
   };
 
