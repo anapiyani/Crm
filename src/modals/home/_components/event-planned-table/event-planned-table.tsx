@@ -35,7 +35,7 @@ interface IEnhancedTableProps<T> {
 
 function getComparator<Key extends keyof any>(
   order: Order,
-  orderBy: Key
+  orderBy: Key,
 ): (a: any, b: any) => number {
   return order === "desc"
     ? (a, b) => descendingComparator(a, b, orderBy)
@@ -133,7 +133,7 @@ export default function EventPlannedTable<T extends ITableData>({
 
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
-    property: keyof T
+    property: keyof T,
   ) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -145,7 +145,7 @@ export default function EventPlannedTable<T extends ITableData>({
   };
 
   const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
@@ -158,13 +158,13 @@ export default function EventPlannedTable<T extends ITableData>({
     () =>
       stableSort(data, getComparator(order, orderBy)).slice(
         page * rowsPerPage,
-        page * rowsPerPage + rowsPerPage
+        page * rowsPerPage + rowsPerPage,
       ),
-    [order, orderBy, page, rowsPerPage, data]
+    [order, orderBy, page, rowsPerPage, data],
   );
 
   return (
-    <Box sx={{ width: "100%" }}>
+    <Box sx={{ width: "100%" }} className={classes.tableComponent}>
       <Paper sx={{ width: "100%", mb: 2 }}>
         <TableContainer>
           <Table

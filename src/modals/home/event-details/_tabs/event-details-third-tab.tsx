@@ -12,6 +12,7 @@ interface IEventDetailsThirdTabProps {
   plannedVisitsData: IAppointmentHistory[];
   noShowData: IAppointmentHistory[];
   deletedData: IAppointmentHistory[];
+  isClientCard?: boolean;
 }
 
 const plannedTableHeadCells = [
@@ -57,31 +58,32 @@ const EventDetailsThirdTab: React.FC<IEventDetailsThirdTabProps> = ({
   plannedVisitsData,
   noShowData,
   deletedData,
+  isClientCard,
 }) => {
   const [tabIndex, setTabIndex] = useState<number>(0);
 
   const transformedPlannedData = transformDataToTableFormat(
     plannedVisitsData,
-    plannedTableHeadCells
+    plannedTableHeadCells,
   );
   const transformedDeletedData = transformDataToTableFormat(
     deletedData,
-    deletedTableHeadCells
+    deletedTableHeadCells,
   );
   const transformedNoShowData = transformDataToTableFormat(
     noShowData,
-    noShowTableHeadCells
+    noShowTableHeadCells,
   );
 
   const tabsData = [
     {
       id: 0,
-      title: "Завершенные посещения",
+      title: "Завершенные посещения /",
       component: <EventHistoryTable data={finishedVisitsData} />,
     },
     {
       id: 1,
-      title: "Запланированные посещения",
+      title: "Запланированные посещения /",
       component: (
         <EventPlannedTable
           data={transformedPlannedData}
@@ -91,7 +93,7 @@ const EventDetailsThirdTab: React.FC<IEventDetailsThirdTabProps> = ({
     },
     {
       id: 2,
-      title: "Удаленные записи",
+      title: "Удаленные записи /",
       component: (
         <EventPlannedTable
           data={transformedDeletedData}
@@ -131,7 +133,7 @@ const EventDetailsThirdTab: React.FC<IEventDetailsThirdTabProps> = ({
           <p
             key={tab.id}
             style={{
-              fontSize: "1.6rem",
+              fontSize: isClientCard ? "2.4rem" : "1.6rem",
               color: tabIndex === tab.id ? "var(--brand-500)" : "#000000",
               letterSpacing: 0.15,
               cursor: "pointer",
@@ -144,6 +146,7 @@ const EventDetailsThirdTab: React.FC<IEventDetailsThirdTabProps> = ({
 
         <Divider />
       </div>
+      <Divider />
       {tabsData[tabIndex].component}
       <div style={{ display: "flex", flexDirection: "column" }}></div>
     </div>

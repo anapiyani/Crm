@@ -52,12 +52,31 @@ export interface IUserDetails {
   description?: string | null;
   description_as_main_characteristic?: boolean;
   discount_card?: string | null;
-  employee?: string ;
+  employee?: string | number;
+  anketa?: string | null | boolean;
+  dogovor_podpisan?: boolean;
+  privlechenie?: string | null | boolean;
+  otkuda_uznali?: string | null;
+  udobstvo_raspolozheniya?: string | null;
+  connection?: boolean | null;
+  total_appointments?: number;
+  unattended_appointments?: number;
+  attendance?: number | null;
   first_visit?: string;
   invite_source?: string;
   occupation?: string;
-  personal_discount?: string | null;
   sms_notification?: boolean;
+  personal_discount?: {
+    id: number;
+    type: {
+      id: number;
+      name: string;
+      description: string;
+    };
+    promotion_name: string;
+    valid_date: string;
+    size: string;
+  };
 }
 
 export interface IEmployeesData {

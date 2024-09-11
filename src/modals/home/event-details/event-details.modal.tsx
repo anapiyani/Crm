@@ -163,7 +163,7 @@ const EventDetails: React.FC<IEventDetailsModalProps> = ({ appointmentId }) => {
 
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
-    value: number
+    value: number,
   ) => {
     setPage(value);
   };
@@ -243,14 +243,14 @@ const EventDetails: React.FC<IEventDetailsModalProps> = ({ appointmentId }) => {
   const discountsTableData = [
     {
       property: "Тип скидки",
-      value: userInfoData?.personal_discount
-        ? userInfoData?.personal_discount
+      value: userInfoData?.personal_discount?.type.name
+        ? userInfoData?.personal_discount?.type.name
         : "Отсутствует",
     },
     {
       property: "Скидка",
-      value: userInfoData?.personal_discount
-        ? userInfoData?.personal_discount
+      value: userInfoData?.personal_discount?.promotion_name
+        ? userInfoData?.personal_discount.promotion_name
         : "Отсутствует",
     },
   ];
@@ -277,7 +277,11 @@ const EventDetails: React.FC<IEventDetailsModalProps> = ({ appointmentId }) => {
   ];
 
   const contactsTableData = [
-    { type: "Моб. телефон", contact: userInfoData?.phone_number, primary: true },
+    {
+      type: "Моб. телефон",
+      contact: userInfoData?.phone_number,
+      primary: true,
+    },
   ];
 
   const commentsTableData = [{ contact: "Нет ни одного комментария" }];
@@ -395,7 +399,7 @@ const EventDetails: React.FC<IEventDetailsModalProps> = ({ appointmentId }) => {
       handleClose={() => modal.hide()}
       className={classNames(
         classes["u-p-0"],
-        currentTab === 2 && classes["event-details__modal"]
+        currentTab === 2 && classes["event-details__modal"],
       )}
       withButtons={false}
       withoutTitle={true}

@@ -24,6 +24,7 @@ import {
 } from "@mui/icons-material";
 import {
   cardInfoEmplpyee,
+  getWalletHistory,
   mainInfoEmployee,
 } from "@/service/employee/employee.service";
 import { useQuery } from "@tanstack/react-query";
@@ -37,6 +38,14 @@ import { employeeTabsData } from "@/pages/employees/employee-card/data";
 import { Box, Divider } from "@mui/material";
 import CounterCard from "@/components/counter-card/counter-card";
 import RevenueChart from "@/pages/employees/employee-card/components/chart";
+import { getBalance } from "@/service/activity/activity.service";
+import EventDetailsThirdTab from "@/modals/home/event-details/_tabs/event-details-third-tab";
+import {
+  getCustomerAppointmentHistoryById,
+  getCustomerAppointmentNoShowById,
+  getCustomerAppointmentPlannedById,
+  getCustomerDeletedAppointments,
+} from "@/service/appointments/appointments.service";
 
 const ClientCard = () => {
   const [currentTab, setCurrentTab] = useState<number>(0);
@@ -66,18 +75,61 @@ const ClientCard = () => {
     queryFn: () => cardInfoEmplpyee(Number(params.id)),
   });
 
-  const clientTabsData = [
-    { to: "/clients", icon: HomeOutlined, label: "Обзор" },
-    { to: "/clients/:id/visits", icon: HomeOutlined, label: "Посещения" },
-  ];
+  const { data: financeData, isLoading: financeLoading } = useQuery({
+    queryKey: ["getWalletHistory", params.id],
+    queryFn: () => getBalance(params.id!),
+  });
 
-  const clientNameData = {
-    name:
-      "Карта клиента - " +
-      userInfoData?.first_name +
-      " " +
-      userInfoData?.last_name,
-  };
+  const {
+    data: customerAppointmentHistoryData,
+    isPending: customerAppointmentPending,
+    refetch: customerRefetch,
+  } = useQuery({
+    queryKey: ["customerAppointmentHistoryData", params.id],
+    queryFn: () =>
+      params.id
+        ? getCustomerAppointmentHistoryById(Number(params.id))
+        : undefined,
+    enabled: !!params.id,
+    staleTime: Infinity,
+    refetchOnWindowFocus: false,
+  });
+
+  const { data: customerAppointmentNoShowData, refetch: noDataRefetch } =
+    useQuery({
+      queryKey: ["customerAppointmentNoShowData", params.id],
+      queryFn: () =>
+        params.id
+          ? getCustomerAppointmentNoShowById(Number(params.id))
+          : undefined,
+      enabled: !!params.id,
+      staleTime: Infinity,
+      refetchOnWindowFocus: false,
+    });
+
+  const { data: customerAppointmentPlanned, refetch: plannedRefetch } =
+    useQuery({
+      queryKey: ["customerAppointmentPlanned", params.id],
+      queryFn: () =>
+        params.id
+          ? getCustomerAppointmentPlannedById(Number(params.id))
+          : undefined,
+      enabled: !!params.id,
+      staleTime: Infinity,
+      refetchOnWindowFocus: false,
+    });
+
+  const { data: customerDeletedAppointments, refetch: deletedRefetch } =
+    useQuery({
+      queryKey: ["customerDeletedAppointments", params.id],
+      queryFn: () =>
+        params.id
+          ? getCustomerDeletedAppointments(Number(params.id))
+          : undefined,
+      enabled: !!params.id,
+      staleTime: Infinity,
+      refetchOnWindowFocus: false,
+    });
 
   const mainTableData = [
     { property: "Автосегмент", value: "Не указано" },
@@ -89,7 +141,10 @@ const ClientCard = () => {
       property: "Моб. телефон",
       value: userInfoData?.phone_number || "Не указано",
     },
-    { property: "Явка", value: "100% (0 из 48 не пришёл)" },
+    {
+      property: "Явка",
+      value: `${userInfoData?.attendance}% (${userInfoData?.total_appointments} из ${userInfoData?.unattended_appointments} не пришёл)`,
+    },
     {
       property: "Рассылка SMS",
       value: userInfoData?.sms_notification ? "Да" : "Запрет на рассылку",
@@ -119,21 +174,63 @@ const ClientCard = () => {
       property: "Пол",
       value: userInfoData?.gender === "female" ? "Жен." : "Муж.",
     },
-    { property: "Анкета", value: "Есть" },
-    { property: "Договор подписан", value: "Нет" },
-    { property: "Привлечение", value: "Нет" },
-    { property: "Откуда узнали", value: "Не указано" },
-    { property: "Удобство расположения", value: "Не указано" },
+    { property: "Анкета", value: userInfoData?.anketa ? "Есть" : "Нет" },
+    {
+      property: "Договор подписан",
+      value: userInfoData?.dogovor_podpisan ? "Да" : "Нет",
+    },
+    {
+      property: "Привлечение",
+      value: userInfoData?.privlechenie || "Не указано",
+    },
+    {
+      property: "Откуда узнали",
+      value: userInfoData?.invite_source || "Не указано",
+    },
     { property: "Город", value: userInfoData?.city || "Не указано" },
-    { property: "Дата добавления", value: "08.05.2020, 15:30" },
+    {
+      property: "Дата добавления",
+      value: userInfoData?.start_date || "Не указано",
+    },
     { property: "Добавил сотрудник", value: "Наталья Ильченко" },
-    { property: "Объединение", value: "Есть" },
-    { property: "Салон клиента", value: "" },
+    { property: "Объединение", value: userInfoData?.connection ? "Да" : "Нет" },
+  ];
+
+  const financeTableData = [
+    {
+      property: "Депозит",
+      value: financeData?.balance + " ₸" || "0",
+      link: "/clients/deposits/history",
+      linkLabel: "История",
+    },
+  ];
+
+  const contactsTableData = [
+    {
+      type: "Моб. телефон",
+      contact: userInfoData?.phone_number || "Не указано",
+      primary: true,
+    },
+  ];
+
+  const discountsTableData = [
+    {
+      property: "Тип скидки",
+      value: userInfoData?.personal_discount?.type.name
+        ? userInfoData?.personal_discount?.type.name
+        : "Отсутствует",
+    },
+    {
+      property: "Скидка",
+      value: userInfoData?.personal_discount?.promotion_name
+        ? userInfoData?.personal_discount.promotion_name
+        : "Отсутствует",
+    },
   ];
 
   const getWorkingTime = () => {
     const today = new Date();
-    const start_date = userInfoData?.start_date;
+    const start_date = userInfoData?.first_visit;
 
     if (start_date) {
       const startDate = new Date(start_date);
@@ -141,6 +238,16 @@ const ClientCard = () => {
       const days = Math.floor(diff / (1000 * 60 * 60 * 24));
       return days;
     }
+  };
+
+  const lastAppointmentData = () => {
+    return (
+      dayjs(
+        customerAppointmentHistoryData?.[
+          customerAppointmentHistoryData.length - 1
+        ]?.date,
+      ).format("DD.MM.YYYY") || "Не указано"
+    );
   };
 
   const renderContentHeader = () => {
@@ -207,7 +314,7 @@ const ClientCard = () => {
                 icon={<CalendarMonthOutlined />}
                 iconColor="var(--secondary-main)"
                 textTitle="Дата последнего посещения"
-                valueText={getWorkingTime() + " дней"}
+                valueText={lastAppointmentData()?.toString() || "0"}
               />
             </div>
             <RevenueChart />
@@ -301,14 +408,13 @@ const ClientCard = () => {
             md={10.5}
           >
             <div style={{ width: "100%" }}>
-              <div style={{ padding: "1.6rem 0rem" }}>
-                <p style={{ fontSize: "2.4rem", marginBottom: "1rem" }}>
-                  Завершенные посещения / запланированные посещения / удалённые
-                  записи / клиент не пришел
-                </p>
-                <Divider />
-              </div>
-              <ClientVisitsTable />
+              <EventDetailsThirdTab
+                finishedVisitsData={customerAppointmentHistoryData || []}
+                plannedVisitsData={customerAppointmentPlanned || []}
+                noShowData={customerAppointmentNoShowData || []}
+                deletedData={customerDeletedAppointments || []}
+                isClientCard={true}
+              />
             </div>
           </Grid>
         );
