@@ -25,8 +25,8 @@ const EmployeeCabinet = () => {
       room.services.map((serviceId) => ({
         id: serviceId,
         type: "service",
-        isChecked: 2,
-      })),
+        isChecked: 1,
+      }))
     );
   };
 
@@ -37,7 +37,7 @@ const EmployeeCabinet = () => {
   const handleServiceChange = (
     id: number,
     isChecked: number,
-    type: "service" | "category",
+    type: "service" | "category"
   ) => {
     setSelectedItems((prev) => {
       if (isChecked === 1) {
@@ -116,7 +116,7 @@ const EmployeeCabinet = () => {
               startIcon={<SaveOutlined />}
               onClick={() =>
                 handleSave(
-                  roomData?.find((room) => room.id === selectedRoom) as IRoom,
+                  roomData?.find((room) => room.id === selectedRoom) as IRoom
                 )
               }
             >
