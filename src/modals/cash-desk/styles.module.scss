@@ -56,9 +56,17 @@
 .u-w-full {
   width: 100%;
 }
+.u-w-ratio {
+  width: 100%;
+  justify-content: space-between;
+  label {
+    width: 40%;
+  }
+}
 
 .modalContent {
   padding: 0;
+  width: 70rem;
   &__content {
     display: flex;
     flex-direction: column;
@@ -73,7 +81,6 @@
         font-weight: 400;
         color: var(--text-primary);
         margin: 0;
-        width: 33%;
         a {
           font-size: 1.6rem;
           font-weight: 400;
@@ -81,6 +88,7 @@
           text-decoration: none;
         }
       }
+
       span {
         font-size: 1.6rem;
       }
