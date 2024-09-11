@@ -787,18 +787,7 @@ const CashDesk = () => {
                           {result.overall_change_in_cash_register.card} ₸
                           <CreditCard />
                         </p>
-                      ) : (
-                        <p
-                          style={{
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "0.5rem",
-                          }}
-                        >
-                          0 ₸
-                          <CreditCard />
-                        </p>
-                      )}
+                      ) : null}
                       {result.overall_change_in_cash_register?.cash !==
                         "0.00" && (
                         <p
