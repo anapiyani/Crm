@@ -567,16 +567,7 @@ const ServiceCatalog = () => {
                 }
               />
             </div>
-            <div>
-              {renderTables()}
-              {/* <CostTable
-                title="Продолжительность"
-                unit="мин"
-                showIcons={false}
-                data={durationData}
-                hierarchy
-              /> */}
-            </div>
+            <div>{renderTables()}</div>
           </div>
         )}
       </div>

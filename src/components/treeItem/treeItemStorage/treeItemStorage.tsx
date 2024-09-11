@@ -4,7 +4,14 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import LanOutlinedIcon from "@mui/icons-material/LanOutlined";
 import FolderIcon from "@mui/icons-material/Folder";
 import ContentCutIcon from "@mui/icons-material/ContentCut";
-import { Add, ContentPaste, Delete, Edit, Man } from "@mui/icons-material";
+import {
+  Add,
+  ContentPaste,
+  Delete,
+  Edit,
+  Man,
+  Science,
+} from "@mui/icons-material";
 import { useDrop, useDrag } from "react-dnd";
 import {
   Divider,
@@ -64,7 +71,7 @@ const MaterialItem: React.FC<IMaterialProps> = ({
       }}
       onClick={() => onSelect(material)}
     >
-      <ContentCutIcon style={{ color: "#388E3C", fontSize: "24px" }} />{" "}
+      <Science style={{ color: "#388E3C", fontSize: "24px" }} />{" "}
       <p style={{ fontWeight: isHighlighted ? "bold" : "normal" }}>
         {material.name}
       </p>
@@ -95,7 +102,7 @@ const levelsIcon: Record<string, JSX.Element> = {
       style={{ color: "#1E88E5", fontSize: "24px", marginRight: "1.6rem" }}
     />
   ),
-  service_type: (
+  brand: (
     <FolderIcon
       style={{ color: "#1565C0", fontSize: "24px", marginRight: "1.6rem" }}
     />
@@ -306,7 +313,7 @@ const TreeViewStorage: React.FC<TreeViewProps> = ({
     setIsDropping(true);
     const typeItem = [
       "section",
-      "service_type",
+      "brand",
       "group",
       "category",
       "subcategory",
@@ -381,7 +388,7 @@ const TreeViewStorage: React.FC<TreeViewProps> = ({
             <MenuItem
               disabled={[
                 "section",
-                "service_type",
+                "brand",
                 "group",
                 "category",
                 "subcategory",
@@ -396,7 +403,7 @@ const TreeViewStorage: React.FC<TreeViewProps> = ({
             </MenuItem>
             <MenuItem
               disabled={[
-                "service_type",
+                "brand",
                 "group",
                 "category",
                 "subcategory",
@@ -406,7 +413,7 @@ const TreeViewStorage: React.FC<TreeViewProps> = ({
             >
               <ListItemIcon>{levelsIcon["service_type"]}</ListItemIcon>
               <ListItemText primaryTypographyProps={{ fontSize: "1.6rem" }}>
-                Тип
+                Марка
               </ListItemText>
             </MenuItem>
             <MenuItem

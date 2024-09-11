@@ -1,10 +1,11 @@
 .main {
   padding: 3rem 7rem;
+  width: 100%;
   &__content {
     display: flex;
     &__cabinets {
       padding: 3rem 0;
-      width: 60rem;
+      width: 50%;
       margin-right: 5rem;
       &:last-child {
         margin-right: 0;

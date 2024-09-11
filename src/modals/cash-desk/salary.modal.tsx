@@ -24,6 +24,7 @@ import classes from "./styles.module.scss";
 
 const SalaryModal: React.FC = () => {
   const mutation = useSalary();
+  const [salaryType, setSalaryType] = useState<"advance" | "salary">("salary");
   const { data: employeeData } = useQuery({
     queryKey: ["employeeData"],
     queryFn: () => searchEmployee({ role: "employee" }),
@@ -33,13 +34,14 @@ const SalaryModal: React.FC = () => {
     value: number;
   } | null>(null);
   const [employeeInfo, setEmployeeInfo] = useState<IEmployeeWalletInfo>();
-  const { register, handleSubmit, reset, control, watch } =
-    useForm<ISalaryPayment>();
+  const { register, handleSubmit, reset, control, watch } = useForm<
+    ISalaryPayment
+  >();
 
   const type = watch("type");
 
   const onSubmit: SubmitHandler<ISalaryPayment> = async (
-    data: ISalaryPayment,
+    data: ISalaryPayment
   ) => {
     await mutation.mutate(data);
     reset();
@@ -55,7 +57,7 @@ const SalaryModal: React.FC = () => {
     if (selectedEmployee) {
       const fetchEmployeeInfo = async () => {
         const resultEmployee = await getEmployeeSalaryWallet(
-          selectedEmployee.value,
+          selectedEmployee.value
         );
         setEmployeeInfo(resultEmployee);
       };
@@ -92,7 +94,7 @@ const SalaryModal: React.FC = () => {
               control={control}
               render={({ field }) => (
                 <CustomAutoComplete
-                  className={classes["u-w-full"]}
+                  className={classes["u-w-ratio"]}
                   {...field}
                   selectValue="label"
                   placeholder="Имя Фамилия, Администратор"
@@ -105,23 +107,49 @@ const SalaryModal: React.FC = () => {
                   }}
                   value={
                     employeeOptions?.find(
-                      (option) => option.value === field.value,
+                      (option) => option.value === field.value
                     ) || null
                   }
                 />
               )}
             />
           </div>
-          <div className={classes.modalContent__content__item}>
-            <p style={{ marginRight: "3rem" }}>Дата последней выплаты</p>
+          <div
+            className={classes.modalContent__content__item}
+            style={{
+              display: "flex",
+
+              alignItems: "center",
+            }}
+          >
+            <p
+              style={{
+                marginRight: "1rem",
+                width: "33.33333% !important",
+
+                textWrap: "wrap",
+                maxLines: "2",
+              }}
+            >
+              Дата последней выплаты
+            </p>
             <p style={{ color: "#636B74" }}>
               {employeeInfo?.last_payment_date
                 ? employeeInfo.last_payment_date
                 : "Отсуствует"}
             </p>
           </div>
-          <div className={classes.modalContent__content__item}>
-            <p style={{ marginRight: "3rem" }}>Детали, штрафы, премии</p>
+          <div
+            className={classes.modalContent__content__item}
+            style={{
+              display: "flex",
+
+              alignItems: "center",
+            }}
+          >
+            <p style={{ width: "33.33333% !important", marginRight: "1.5rem" }}>
+              Детали, штрафы, премии
+            </p>
             <p>
               <Link to="/">Посмотреть</Link>
             </p>
@@ -129,52 +157,83 @@ const SalaryModal: React.FC = () => {
         </div>
         <Divider />
         <div className={classes.modalContent__content}>
-          <div className={classes.modalContent__content__item}>
-            <p className={classes.nametext}>Тип выплаты</p>
-            <Controller
-              name="type"
-              control={control}
-              render={({ field }) => (
-                <FormControl component="fieldset">
-                  <RadioGroup
-                    {...field}
-                    aria-labelledby="demo-radio-buttons-group-label"
-                    name="type"
-                    row
-                    value={field.value}
-                    onChange={(e) => field.onChange(e.target.value)}
-                  >
-                    <FormControlLabel
-                      value="salary"
-                      control={<Radio size="medium" />}
-                      label="Зарплата."
-                    />
-                    <FormControlLabel
-                      value="advance"
-                      control={<Radio />}
-                      label="Аванс."
-                    />
-                  </RadioGroup>
-                </FormControl>
-              )}
-            />
+          <div
+            className={classes.modalContent__content__item}
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <p
+              className={classes.nametext}
+              style={{
+                width: "33.33333% !important",
+              }}
+            >
+              Тип выплаты
+            </p>
+            <div
+              style={{
+                width: "70%",
+              }}
+            >
+              <Controller
+                name="type"
+                control={control}
+                render={({ field }) => (
+                  <FormControl component="fieldset">
+                    <RadioGroup
+                      {...field}
+                      aria-labelledby="demo-radio-buttons-group-label"
+                      name="type"
+                      row
+                      value={field.value}
+                      onChange={(e) => {
+                        setSalaryType(e.target.value as "advance" | "salary");
+                        field.onChange(e.target.value);
+                      }}
+                    >
+                      <FormControlLabel
+                        value="salary"
+                        control={<Radio size="medium" />}
+                        label="Зарплата."
+                      />
+                      <FormControlLabel
+                        value="advance"
+                        control={<Radio />}
+                        label="Аванс."
+                      />
+                    </RadioGroup>
+                  </FormControl>
+                )}
+              />
+            </div>
           </div>
-          <div className={classes.modalContent__content__item}>
+          <div
+            className={classes.modalContent__content__item}
+            style={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
             {type === "advance" ? (
               <div
                 style={{
                   display: "flex",
                   justifyContent: "space-between",
                   alignItems: "center",
+                  width: "100%",
                 }}
               >
-                <p style={{ marginRight: "20px" }}>Нужно выплатить</p>
+                <p style={{ width: "33.333333%" }}>Нужно выплатить</p>
                 <TextField
                   label="Сумма аванса"
                   placeholder="Сумма"
                   size="small"
                   sx={{
-                    width: "290px",
+                    width: "79.5%",
                     fontSize: "1.4rem",
                     "& .MuiFormLabel-root": {
                       fontSize: "1.4rem",
@@ -193,7 +252,7 @@ const SalaryModal: React.FC = () => {
                 control={control}
                 render={({ field }) => (
                   <CustomAutoComplete
-                    className={classes["u-w-full"]}
+                    className={classes["u-w-ratio"]}
                     {...field}
                     selectValue="label"
                     placeholder="Все начисления"
@@ -225,7 +284,7 @@ const SalaryModal: React.FC = () => {
               control={control}
               render={({ field }) => (
                 <CustomAutoComplete
-                  className={classes["u-w-full"]}
+                  className={classes["u-w-ratio"]}
                   {...field}
                   selectValue="label"
                   placeholder="Наличными"
@@ -243,38 +302,50 @@ const SalaryModal: React.FC = () => {
               )}
             />
           </div>
-          <div className={classes.modalContent__content__item}>
-            <p style={{ marginRight: "2rem" }}>Дата выплаты</p>
-            <div style={{ display: "flex" }}>
-              <Controller
-                name="date_from"
-                control={control}
-                render={({ field }) => <CustomDatePicker {...field} />}
-              />
-              <p
-                style={{
-                  width: "20px",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                -
+          {salaryType === "salary" && (
+            <div
+              className={classes.modalContent__content__item}
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <p style={{ marginRight: "2rem", width: "33.33333%" }}>
+                Дата выплаты
               </p>
-              <Controller
-                name="date_to"
-                control={control}
-                render={({ field }) => <CustomDatePicker {...field} />}
-              />
+              <div style={{ display: "flex", width: "88%" }}>
+                <Controller
+                  name="date_from"
+                  control={control}
+                  render={({ field }) => <CustomDatePicker {...field} />}
+                />
+                <p
+                  style={{
+                    width: "20px",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  -
+                </p>
+                <Controller
+                  name="date_to"
+                  control={control}
+                  render={({ field }) => <CustomDatePicker {...field} />}
+                />
+              </div>
             </div>
-          </div>
+          )}
+
           <div className={classes.modalContent__content__item}>
             <Controller
               name="customer"
               control={control}
               render={({ field }) => (
                 <CustomAutoComplete
-                  className={classes["u-w-full"]}
+                  className={classes["u-w-ratio"]}
                   {...field}
                   selectValue="label"
                   placeholder="Юридическое лицо"
@@ -287,7 +358,7 @@ const SalaryModal: React.FC = () => {
                   }}
                   value={
                     employeeOptions?.find(
-                      (option) => option.value === field.value,
+                      (option) => option.value === field.value
                     ) || null
                   }
                 />

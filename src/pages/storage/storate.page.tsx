@@ -54,6 +54,24 @@ import TableStock from "./_components/table-stock/tableStock.tsx";
 const StoragePage: React.FC = () => {
   const [material, setMaterial] = useState<IMaterial | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [overviewData, setOverviewData] = useState([
+    { property: "Артикул", value: material?.vendor_code || "Не указано" },
+    { property: "Штрих-код", value: material?.vendor_code || "Не указано" },
+    {
+      property: "Наименование",
+      value: material?.name || "Не указано",
+    },
+    {
+      property: "Альт. название",
+      value: "Не указано",
+    },
+    {
+      property: "Описание",
+      value: material?.description || "Не указано",
+      link: "#",
+      linkLabel: "+ Добавить поставщика",
+    },
+  ]);
   const { data, isPending, isError } = useQuery({
     queryKey: ["storageHierarchyData"],
     queryFn: () => getHierarchyStorage(),
@@ -62,6 +80,7 @@ const StoragePage: React.FC = () => {
   });
   const handialMaterialSelect = (material: IMaterial) => {
     setMaterial(material);
+    console.log(material);
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
@@ -88,8 +107,8 @@ const StoragePage: React.FC = () => {
     { IconComponent: LanOutlined, color: "#0B6BCB", label: "Отдел" },
     { IconComponent: Science, color: "#388E3C", label: "Материал" },
     { IconComponent: Folder, color: "#1E88E5", label: "Категория" },
-    { IconComponent: Folder, color: "#1565C0", label: "Группа" },
-    { IconComponent: Folder, color: "#7B1FA2", label: "Марка" },
+    { IconComponent: Folder, color: "#7B1FA2", label: "Группа" },
+    { IconComponent: Folder, color: "#1565C0", label: "Марка" },
     { IconComponent: Folder, color: "#EF6C00", label: "Линия" },
     { IconComponent: Folder, color: "#FBC02D", label: "Подлиния" },
   ];
@@ -761,7 +780,7 @@ const StoragePage: React.FC = () => {
         </div>
         {renderUpperContentMain()}
       </div>
-      {renderLowerContent()}
+      {material && !isLoading && renderLowerContent()}
     </div>
   );
 };
