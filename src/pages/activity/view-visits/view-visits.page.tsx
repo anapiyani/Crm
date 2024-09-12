@@ -103,6 +103,22 @@ const ViewVisits = () => {
     });
   };
 
+  const getTotalOfServices = () => {
+    let total = 0;
+    visitInfo?.appointment_services.forEach((service) => {
+      total += service.total_summ;
+    });
+    return total;
+  };
+
+  const getMaterialPrucahsesTotal = () => {
+    let total = 0;
+    visitInfo?.material_purchases.forEach((purchase) => {
+      total += Number(purchase.price);
+    });
+    return total;
+  };
+
   return (
     <div className={classes.view}>
       <div className={classes.view__header}>
@@ -324,7 +340,8 @@ const ViewVisits = () => {
               >
                 <div>
                   <p style={{ fontSize: "1.6rem" }}>
-                    Итого по отделу: <strong>2 200 ₸</strong>.
+                    Итого по отделу:{" "}
+                    <strong>{getMaterialPrucahsesTotal()} ₸</strong>.
                   </p>
                 </div>
               </div>
@@ -409,7 +426,7 @@ const ViewVisits = () => {
               >
                 <div>
                   <p style={{ fontSize: "1.6rem" }}>
-                    Итого по отделу: <strong>4950</strong>.
+                    Итого по отделу: <strong>{getTotalOfServices()} ₸</strong>.
                   </p>
                 </div>
               </div>

@@ -84,23 +84,28 @@ export interface KassaResponse {
 }
 
 export interface IEmployeeWalletInfo {
-  amount_paid: string;
-  amount_to_pay: string;
-  employee: number;
   id: number;
+  employee: number;
+  amount_to_pay: string;
+  amount_paid: string;
+  last_payment_date: string;
   last_payment_amount: string;
-  last_payment_date: string | null;
+  fixed_part_amount: string;
+  floating_part_amount: string;
+  client_development_amount: string;
 }
 
 export interface ISalaryPayment {
+  salary: string;
+  type: string;
+  salary_entry: string;
+  employee: number;
+  customer: number;
+  withdrawal_method: string | undefined;
   date_from: string;
   date_to: string;
-  employee: number;
-  salary: string;
-  salary_entry?: string;
-  type: string;
-  withdrawal_method: string;
-  customer: number;
+  payment: { money_type: string; amount: string }[];
+  nuzhno_vyplatit: string;
 }
 
 export interface IIndirectCosts {
