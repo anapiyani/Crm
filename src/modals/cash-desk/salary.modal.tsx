@@ -34,19 +34,13 @@ const SalaryModal: React.FC = () => {
     value: number;
   } | null>(null);
   const [employeeInfo, setEmployeeInfo] = useState<IEmployeeWalletInfo>();
-  const { register, handleSubmit, reset, control, watch } = useForm<
-    ISalaryPayment
-  >();
+  const { register, handleSubmit, reset, control, watch, setValue, getValues } =
+    useForm<ISalaryPayment>();
+  const [payment, setPayment] = useState<
+    { money_type: string; amount: string }[]
+  >([]);
 
   const type = watch("type");
-
-  const onSubmit: SubmitHandler<ISalaryPayment> = async (
-    data: ISalaryPayment
-  ) => {
-    await mutation.mutate(data);
-    reset();
-    handleCloseModal();
-  };
 
   const employeeOptions = employeeData?.results.map((item) => ({
     label: item.first_name + " " + item.last_name,
@@ -57,7 +51,7 @@ const SalaryModal: React.FC = () => {
     if (selectedEmployee) {
       const fetchEmployeeInfo = async () => {
         const resultEmployee = await getEmployeeSalaryWallet(
-          selectedEmployee.value
+          selectedEmployee.value,
         );
         setEmployeeInfo(resultEmployee);
       };
@@ -74,9 +68,58 @@ const SalaryModal: React.FC = () => {
     { label: "Оплата по карте", value: "card" },
     { label: "Оплата чеками", value: "check" },
     { label: "С расчетного счета", value: "salary_advance" },
+    { label: "Смешанная оплата", value: "mixed" },
   ];
 
   const modal = useModal();
+
+  useEffect(() => {
+    if (getValues("nuzhno_vyplatit") === "1") {
+      employeeInfo?.amount_to_pay &&
+        setValue("salary", employeeInfo.fixed_part_amount);
+    } else if (getValues("nuzhno_vyplatit") === "2") {
+      employeeInfo?.amount_to_pay &&
+        setValue("salary", employeeInfo.floating_part_amount);
+    } else if (getValues("nuzhno_vyplatit") === "3") {
+      employeeInfo?.amount_to_pay &&
+        setValue("salary", employeeInfo.client_development_amount);
+    } else if (getValues("nuzhno_vyplatit") === "0") {
+      employeeInfo?.amount_to_pay &&
+        setValue("salary", employeeInfo.amount_to_pay);
+    }
+  }, [employeeInfo, getValues("nuzhno_vyplatit")]);
+
+  const onSubmit: SubmitHandler<ISalaryPayment> = async (
+    data: ISalaryPayment,
+  ) => {
+    const updatedData = { ...data, payment };
+    if (updatedData.withdrawal_method === "mixed") {
+      delete updatedData.withdrawal_method;
+    }
+    mutation.mutate(updatedData);
+    reset();
+    setPayment([]);
+    handleCloseModal();
+  };
+
+  const handlePaymentChange = (moneyType: string, amount: string) => {
+    setPayment((prevPayments) => {
+      const existingPayment = prevPayments.find(
+        (payment) => payment.money_type === moneyType,
+      );
+      if (existingPayment) {
+        return prevPayments.map((payment) =>
+          payment.money_type === moneyType ? { ...payment, amount } : payment,
+        );
+      } else {
+        return [...prevPayments, { money_type: moneyType, amount }];
+      }
+    });
+  };
+
+  const withdrawalMethod = watch("withdrawal_method");
+  const nuzhno_vyplatit = watch("nuzhno_vyplatit");
+
   return (
     <ModalWindow
       title={"Выплата зарплаты сотруднику"}
@@ -107,7 +150,7 @@ const SalaryModal: React.FC = () => {
                   }}
                   value={
                     employeeOptions?.find(
-                      (option) => option.value === field.value
+                      (option) => option.value === field.value,
                     ) || null
                   }
                 />
@@ -247,35 +290,50 @@ const SalaryModal: React.FC = () => {
                 />
               </div>
             ) : (
-              <Controller
-                name="salary"
-                control={control}
-                render={({ field }) => (
-                  <CustomAutoComplete
-                    className={classes["u-w-ratio"]}
-                    {...field}
-                    selectValue="label"
-                    placeholder="Все начисления"
-                    size="small"
-                    label="Нужно выплатить"
-                    options={[
-                      { label: "Option 1", value: "1" },
-                      { label: "Option 2", value: "2" },
-                      { label: "Option 3", value: "3" },
-                    ]}
-                    onChange={(value) => {
-                      field.onChange(value?.value);
-                    }}
-                    value={
-                      [
-                        { label: "Option 1", value: "1" },
-                        { label: "Option 2", value: "2" },
-                        { label: "Option 3", value: "3" },
-                      ].find((option) => option.value === field.value) || null
-                    }
-                  />
-                )}
-              />
+              <div className={classes.modalContent__content__item}>
+                <Controller
+                  name="nuzhno_vyplatit"
+                  control={control}
+                  render={({ field }) => (
+                    <CustomAutoComplete
+                      className={classes["u-w-ratio"]}
+                      {...field}
+                      selectValue="label"
+                      placeholder="Все начисления"
+                      size="small"
+                      label="Нужно выплатить"
+                      options={[
+                        { label: "Все начисления", value: "0" },
+                        { label: "Фикс. часть", value: "1" },
+                        { label: "Плав. часть", value: "2" },
+                        { label: "Развитие кл.", value: "3" },
+                      ]}
+                      onChange={(value) => {
+                        field.onChange(value?.value);
+                      }}
+                      value={
+                        [
+                          { label: "Все начисления", value: "0" },
+                          { label: "Фикс. часть", value: "1" },
+                          { label: "Плав. часть", value: "2" },
+                          { label: "Развитие кл.", value: "3" },
+                        ].find((option) => option.value === field.value) || null
+                      }
+                    />
+                  )}
+                />
+                <p style={{ marginLeft: "20px" }}>
+                  {nuzhno_vyplatit === "0"
+                    ? employeeInfo?.amount_to_pay
+                    : nuzhno_vyplatit === "1"
+                      ? employeeInfo?.fixed_part_amount
+                      : nuzhno_vyplatit === "2"
+                        ? employeeInfo?.floating_part_amount
+                        : nuzhno_vyplatit === "3"
+                          ? employeeInfo?.client_development_amount
+                          : ""}
+                </p>
+              </div>
             )}
           </div>
           <div className={classes.modalContent__content__item}>
@@ -302,6 +360,96 @@ const SalaryModal: React.FC = () => {
               )}
             />
           </div>
+          {withdrawalMethod === "mixed" && (
+            <div
+              className={classes.modalContent__content__item}
+              style={{ display: "flex", flexDirection: "column" }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  width: "100%",
+                  marginBottom: "1rem",
+                }}
+              >
+                <p style={{ width: "33.333333%" }}>Наличными</p>
+                <TextField
+                  label="Сумма"
+                  placeholder="Сумма"
+                  size="small"
+                  sx={{
+                    width: "79.5%",
+                    fontSize: "1.4rem",
+                    "& .MuiFormLabel-root": {
+                      fontSize: "1.4rem",
+                    },
+                    "& .MuiOutlinedInput-root": {
+                      fontSize: "1.4rem",
+                    },
+                  }}
+                  fullWidth
+                  onChange={(e) => handlePaymentChange("cash", e.target.value)}
+                />
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  width: "100%",
+                  marginBottom: "1rem",
+                }}
+              >
+                <p style={{ width: "33.333333%" }}>По карте</p>
+                <TextField
+                  label="Сумма"
+                  placeholder="Сумма"
+                  size="small"
+                  sx={{
+                    width: "79.5%",
+                    fontSize: "1.4rem",
+                    "& .MuiFormLabel-root": {
+                      fontSize: "1.4rem",
+                    },
+                    "& .MuiOutlinedInput-root": {
+                      fontSize: "1.4rem",
+                    },
+                  }}
+                  fullWidth
+                  onChange={(e) => handlePaymentChange("card", e.target.value)}
+                />
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  width: "100%",
+                }}
+              >
+                <p style={{ width: "33.333333%" }}>Чеками</p>
+                <TextField
+                  label="Сумма"
+                  placeholder="Сумма"
+                  size="small"
+                  sx={{
+                    width: "79.5%",
+                    fontSize: "1.4rem",
+                    "& .MuiFormLabel-root": {
+                      fontSize: "1.4rem",
+                    },
+                    "& .MuiOutlinedInput-root": {
+                      fontSize: "1.4rem",
+                    },
+                  }}
+                  fullWidth
+                  onChange={(e) => handlePaymentChange("check", e.target.value)}
+                />
+              </div>
+            </div>
+          )}
           {salaryType === "salary" && (
             <div
               className={classes.modalContent__content__item}
@@ -358,7 +506,7 @@ const SalaryModal: React.FC = () => {
                   }}
                   value={
                     employeeOptions?.find(
-                      (option) => option.value === field.value
+                      (option) => option.value === field.value,
                     ) || null
                   }
                 />
