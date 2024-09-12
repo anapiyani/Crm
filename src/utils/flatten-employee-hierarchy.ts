@@ -37,16 +37,6 @@ export const flattenEmployeeHierarchy = (
             serviceName: service.service.name,
             parameter: parameters,
           });
-          // departmentServices.push({
-          //   id: service.service_price_id,
-          //   service: service.service,
-          //   service_id: service.service,
-          //   price: service.price,
-          //   quantity: 1,
-          //   parameter: service.parameter.toString(),
-          //   parameter_id: service.parameter,
-          //   serviceName: node.name,
-          // });
         });
       }
 
