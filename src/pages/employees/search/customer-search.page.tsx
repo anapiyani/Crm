@@ -65,7 +65,7 @@ const EmployeeSearch = () => {
     date_of_birth_to: "",
   });
   const [selectedRoles, setSelectedRoles] = useState(
-    formData.roleEmployee.split(", ").filter(Boolean)
+    formData.roleEmployee.split(", ").filter(Boolean),
   );
   const [pageSize, setPageSize] = useState<IOption>({ label: "10", value: 10 });
   const [page, setPage] = useState(1);
@@ -91,7 +91,7 @@ const EmployeeSearch = () => {
 
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
-    value: number
+    value: number,
   ) => {
     handleFormDataChange("page", value);
   };
@@ -132,7 +132,7 @@ const EmployeeSearch = () => {
   const handleRangeChange = (
     fieldPrefix: string,
     value: string,
-    boundary: "From" | "To"
+    boundary: "From" | "To",
   ) => {
     setFormData((prev) => ({
       ...prev,
@@ -190,6 +190,17 @@ const EmployeeSearch = () => {
   useEffect(() => {
     refetchEmployeeData();
   }, [formData.page_size, formData.page]);
+
+  const getUserAge = (dateOfBirth: string) => {
+    const today = new Date();
+    const birthDate = new Date(dateOfBirth);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    return age;
+  };
 
   return (
     <div className={classes["main"]}>
@@ -286,7 +297,7 @@ const EmployeeSearch = () => {
                     handleRangeChange(
                       "date_of_birth_from",
                       e.target.value,
-                      "From"
+                      "From",
                     )
                   }
                   onChangeTo={(e) =>
@@ -385,13 +396,13 @@ const EmployeeSearch = () => {
                           onInputChange={(isChecked) =>
                             handleCheckboxChange(
                               position.name,
-                              isChecked ? true : false
+                              isChecked ? true : false,
                             )
                           }
                         />
                       ))}
                     </TriStateCheckbox>
-                  ) : null
+                  ) : null,
                 )}
               </div>
             }
@@ -514,7 +525,7 @@ const EmployeeSearch = () => {
                       <TableCell>
                         {row.phone_number} <br /> {row.email}
                       </TableCell>
-                      <TableCell>-</TableCell>
+                      <TableCell>{getUserAge(row.date_of_birth)}</TableCell>
                       <TableCell>{row.date_of_birth}</TableCell>
                       <TableCell>{row.role}</TableCell>
                       <TableCell>

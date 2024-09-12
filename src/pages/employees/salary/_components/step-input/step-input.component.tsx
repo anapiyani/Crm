@@ -71,7 +71,8 @@ const StepInput: React.FC<StepInputProps> = ({
   };
 
   const handleMinusClick = () => {
-    const newValue = (Number(inputValue) || 0) - 1;
+    const currentValue = Number(inputValue) || 0;
+    const newValue = currentValue > 0 ? currentValue - 1 : 0;
     setInputValue(newValue.toString());
     onChange(newValue);
   };

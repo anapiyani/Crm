@@ -107,6 +107,17 @@ const ClientSearch = () => {
     refetchCustomerData();
   };
 
+  const getUserAge = (dateOfBirth: string) => {
+    const today = new Date();
+    const birthDate = new Date(dateOfBirth);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const m = today.getMonth() - birthDate.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+    return age;
+  };
+
   return (
     <div className={classes["main"]}>
       <div className={classes["main__wrapper"]}>
@@ -366,7 +377,7 @@ const ClientSearch = () => {
                     <TableCell>
                       {customer.category ? customer.category : "-"}
                     </TableCell>
-                    <TableCell>-</TableCell>
+                    <TableCell>{getUserAge(customer.date_of_birth)}</TableCell>
                     <TableCell>
                       {customer.date_of_birth ? customer.date_of_birth : "-"}
                     </TableCell>
