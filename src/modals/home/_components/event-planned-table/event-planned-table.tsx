@@ -121,7 +121,7 @@ export default function EventPlannedTable<T extends ITableData>({
     event: React.ChangeEvent<unknown>,
     newPage: number
   ) => {
-    setPage(newPage - 1); // Pagination is 1-based, but we need 0-based for our logic
+    setPage(newPage - 1);
   };
 
   const emptyRows =
@@ -136,7 +136,6 @@ export default function EventPlannedTable<T extends ITableData>({
     [order, orderBy, page, rowsPerPage, data]
   );
 
-  // Reset the page when the data array changes
   useEffect(() => {
     setPage(0);
   }, [data]);

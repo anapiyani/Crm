@@ -21,6 +21,18 @@ interface IOption {
   value: number;
 }
 
+const headerCells = [
+  { label: "№", numeric: true },
+  { label: "Посещение", numeric: false },
+  { label: "Отдел", numeric: false },
+  { label: "Услуга", numeric: false },
+  { label: "Сотрудник", numeric: false },
+  { label: "Сумма", numeric: true },
+  { label: "Скидка", numeric: true },
+  { label: "Итого", numeric: true },
+  { label: "Всего", numeric: true },
+];
+
 const EventHistoryTable: React.FC<IEventHistoryTableProps> = ({ data }) => {
   const [pageSize, setPageSize] = useState<IOption>({ label: "10", value: 10 });
   const pageSizeOptions: IOption[] = [
@@ -29,32 +41,35 @@ const EventHistoryTable: React.FC<IEventHistoryTableProps> = ({ data }) => {
     { label: "50", value: 50 },
     { label: "100", value: 100 },
   ];
-  const [page, setPage] = useState(0); // This is 0-indexed
+  const [page, setPage] = useState(0);
 
-  // Calculate total pages based on the data length and page size
   const totalPages = Math.ceil(data.length / pageSize.value);
 
-  // Reset the page when the data changes
   useEffect(() => {
     setPage(0);
   }, [data]);
 
-  // Handle page size change
-  const handlePageSizeChange = (event: React.ChangeEvent<{ value: unknown }>) => {
+  const handlePageSizeChange = (
+    event: React.ChangeEvent<{ value: unknown }>
+  ) => {
     const selectedOption = pageSizeOptions.find(
       (option) => option.value === Number(event.target.value)
     ) || { label: "10", value: 10 };
     setPageSize(selectedOption);
-    setPage(0); // Reset to the first page when the page size changes
+    setPage(0);
   };
 
-  // Handle page change
-  const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
-    setPage(value - 1); // Pagination component uses 1-based indexing, but we need 0-based
+  const handlePageChange = (
+    event: React.ChangeEvent<unknown>,
+    value: number
+  ) => {
+    setPage(value - 1);
   };
 
-  // Calculate the current data to display
-  const currentData = data.slice(page * pageSize.value, (page + 1) * pageSize.value);
+  const currentData = data.slice(
+    page * pageSize.value,
+    (page + 1) * pageSize.value
+  );
 
   return (
     <div className={classes["event-history-table"]}>
@@ -71,15 +86,9 @@ const EventHistoryTable: React.FC<IEventHistoryTableProps> = ({ data }) => {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>№</TableCell>
-                <TableCell>Посещение</TableCell>
-                <TableCell>Отдел</TableCell>
-                <TableCell>Услуга</TableCell>
-                <TableCell>Сотрудник</TableCell>
-                <TableCell>Сумма</TableCell>
-                <TableCell>Скидка</TableCell>
-                <TableCell>Итого</TableCell>
-                <TableCell>Всего</TableCell>
+                {headerCells.map((headCell) => (
+                  <TableCell key={headCell.label}>{headCell.label}</TableCell>
+                ))}
               </TableRow>
             </TableHead>
             <TableBody>
@@ -180,7 +189,8 @@ const EventHistoryTable: React.FC<IEventHistoryTableProps> = ({ data }) => {
         <div className={classes["lower"]}>
           <div className={classes["lower__row"]}>
             <p className={classes["lower__label"]}>
-              Показано {Math.min(pageSize.value, data.length)} из {data.length} записей
+              Показано {Math.min(pageSize.value, data.length)} из {data.length}{" "}
+              записей
             </p>
             <div>
               <div className={classes["tableSettings"]}>
@@ -202,7 +212,7 @@ const EventHistoryTable: React.FC<IEventHistoryTableProps> = ({ data }) => {
             </div>
             <Pagination
               count={totalPages}
-              page={page + 1} // Pagination component is 1-based, so add 1
+              page={page + 1}
               variant="outlined"
               shape="rounded"
               boundaryCount={1}
