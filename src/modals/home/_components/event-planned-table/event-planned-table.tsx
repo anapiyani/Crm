@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import {
   Box,
   Table,
@@ -6,11 +6,10 @@ import {
   TableCell,
   TableContainer,
   TableHead,
-  TablePagination,
   TableRow,
-  TableSortLabel,
   Paper,
-  Typography,
+  Pagination,
+  TableSortLabel,
 } from "@mui/material";
 import { visuallyHidden } from "@mui/utils";
 import classes from "./styles.module.scss";
@@ -35,7 +34,7 @@ interface IEnhancedTableProps<T> {
 
 function getComparator<Key extends keyof any>(
   order: Order,
-  orderBy: Key,
+  orderBy: Key
 ): (a: any, b: any) => number {
   return order === "desc"
     ? (a, b) => descendingComparator(a, b, orderBy)
@@ -76,49 +75,9 @@ function stableSort<T>(array: T[], comparator: (a: T, b: T) => number): T[] {
   return stabilizedThis.map((el) => el[0]);
 }
 
-function EnhancedTableHead<T>({
-  order,
-  orderBy,
-  onRequestSort,
-  headCells,
-}: {
-  order: Order;
-  orderBy: string;
-  onRequestSort: (event: React.MouseEvent<unknown>, property: keyof T) => void;
-  headCells: IHeadCell<T>[];
-}) {
-  const createSortHandler =
-    (property: keyof T) => (event: React.MouseEvent<unknown>) => {
-      onRequestSort(event, property);
-    };
-
-  return (
-    <TableHead>
-      <TableRow>
-        {headCells.map((headCell) => (
-          <TableCell
-            key={headCell.id as string}
-            align={headCell.numeric ? "right" : "left"}
-            sortDirection={orderBy === headCell.id ? order : false}
-            sx={{ fontSize: "1.4rem", textAlign: "center" }}
-          >
-            <TableSortLabel
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : "asc"}
-              onClick={createSortHandler(headCell.id)}
-            >
-              {headCell.label}
-              {orderBy === headCell.id ? (
-                <Box component="span" sx={visuallyHidden}>
-                  {order === "desc" ? "sorted descending" : "sorted ascending"}
-                </Box>
-              ) : null}
-            </TableSortLabel>
-          </TableCell>
-        ))}
-      </TableRow>
-    </TableHead>
-  );
+interface IOption {
+  label: string;
+  value: number;
 }
 
 export default function EventPlannedTable<T extends ITableData>({
@@ -126,74 +85,129 @@ export default function EventPlannedTable<T extends ITableData>({
   headCells,
   title,
 }: IEnhancedTableProps<T>) {
-  const [order, setOrder] = React.useState<Order>("asc");
-  const [orderBy, setOrderBy] = React.useState<keyof T>(headCells[0].id);
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [order, setOrder] = useState<Order>("asc");
+  const [orderBy, setOrderBy] = useState<keyof T>(headCells[0].id);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
-    property: keyof T,
+    property: keyof T
   ) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
   };
 
-  const handleChangePage = (event: unknown, newPage: number) => {
-    setPage(newPage);
+  const [pageSize, setPageSize] = useState<IOption>({ label: "10", value: 10 });
+  const pageSizeOptions: IOption[] = [
+    { label: "10", value: 10 },
+    { label: "20", value: 20 },
+    { label: "50", value: 50 },
+    { label: "100", value: 100 },
+  ];
+
+  const handlePageSizeChange = (
+    event: React.ChangeEvent<{ value: unknown }>
+  ) => {
+    const selectedOption = pageSizeOptions.find(
+      (option) => option.value === Number(event.target.value)
+    ) || { label: "10", value: 10 };
+    setRowsPerPage(selectedOption.value);
+    setPage(0); // Reset page when page size changes
   };
 
-  const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement>,
+  const handlePageChange = (
+    event: React.ChangeEvent<unknown>,
+    newPage: number
   ) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
-    setPage(0);
+    setPage(newPage - 1);
   };
 
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - data.length) : 0;
 
-  const visibleRows = React.useMemo(
+  const visibleRows = useMemo(
     () =>
       stableSort(data, getComparator(order, orderBy)).slice(
         page * rowsPerPage,
-        page * rowsPerPage + rowsPerPage,
+        page * rowsPerPage + rowsPerPage
       ),
-    [order, orderBy, page, rowsPerPage, data],
+    [order, orderBy, page, rowsPerPage, data]
   );
 
+  useEffect(() => {
+    setPage(0);
+  }, [data]);
+
   return (
-    <Box sx={{ width: "100%" }} className={classes.tableComponent}>
-      <Paper sx={{ width: "100%", mb: 2 }}>
-        <TableContainer>
-          <Table
-            sx={{ minWidth: 750 }}
-            aria-labelledby="tableTitle"
-            size="medium"
-          >
-            <EnhancedTableHead
-              order={order}
-              orderBy={orderBy as string}
-              onRequestSort={handleRequestSort}
-              headCells={headCells}
-            />
-            <TableBody>
-              {visibleRows.map((row, index) => (
-                <TableRow hover tabIndex={-1} key={index}>
-                  {headCells.map((cell) => (
-                    <TableCell
-                      key={cell.id as string}
-                      align={cell.numeric ? "right" : "left"}
-                      sx={{ fontSize: "1.4rem", textAlign: "center" }}
+    <div className={classes["event-history-table"]}>
+      <div style={{ padding: "0.8rem" }}>
+        <TableContainer
+          component={Paper}
+          sx={{
+            borderTopLeftRadius: "8px",
+            borderTopRightRadius: "8px",
+            border: "0.1rem solid var(--neutral-300)",
+            boxShadow: "none",
+          }}
+        >
+          <Table>
+            <TableHead>
+              <TableRow>
+                {headCells.map((headCell) => (
+                  <TableCell
+                    key={headCell.id as string}
+                    align={"left"}
+                    sx={{ fontSize: "1.4rem", textAlign: "center" }}
+                    sortDirection={orderBy === headCell.id ? order : false}
+                  >
+                    <TableSortLabel
+                      active={orderBy === headCell.id}
+                      direction={orderBy === headCell.id ? order : "asc"}
+                      onClick={(event) => handleRequestSort(event, headCell.id)}
                     >
-                      {cell.id === "id"
-                        ? `Запись №${row[cell.id]}`
-                        : row[cell.id]}
-                    </TableCell>
-                  ))}
+                      {headCell.label}
+                      {orderBy === headCell.id ? (
+                        <Box component="span" sx={visuallyHidden}>
+                          {order === "desc"
+                            ? "sorted descending"
+                            : "sorted ascending"}
+                        </Box>
+                      ) : null}
+                    </TableSortLabel>
+                  </TableCell>
+                ))}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {visibleRows.length > 0 ? (
+                visibleRows.map((row, index) => (
+                  <TableRow key={index}>
+                    {headCells.map((cell) => (
+                      <TableCell
+                        key={cell.id as string}
+                        align={cell.numeric ? "right" : "left"}
+                        sx={{
+                          padding: "0.5rem 1rem",
+                          fontSize: "1.4rem",
+                          textAlign: "center",
+                        }}
+                      >
+                        {cell.id === "id"
+                          ? `Запись №${row[cell.id]}`
+                          : row[cell.id]}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={headCells.length}>
+                    Ничего не найдено
+                  </TableCell>
                 </TableRow>
-              ))}
+              )}
               {emptyRows > 0 && (
                 <TableRow style={{ height: 53 * emptyRows }}>
                   <TableCell colSpan={headCells.length} />
@@ -202,39 +216,44 @@ export default function EventPlannedTable<T extends ITableData>({
             </TableBody>
           </Table>
         </TableContainer>
-        {data.length !== 0 && (
-          <TablePagination
-            rowsPerPageOptions={[10, 20, 50]}
-            component="div"
-            count={data.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-            sx={{
-              fontSize: "1.4rem",
-              "& .MuiToolbar-root": {
-                fontSize: "1.4rem",
-              },
-              "& .MuiTablePagination-displayedRows": {
-                fontSize: "1.4rem",
-              },
-              "& .MuiTablePagination-selectLabel": {
-                fontSize: "1.4rem",
-              },
-            }}
-          />
-        )}
-        {data.length === 0 && (
-          <Typography
-            variant="h6"
-            align="center"
-            sx={{ padding: "16px", fontSize: "1.6rem", fontWeight: 400 }}
-          >
-            Ничего не найдено
-          </Typography>
-        )}
-      </Paper>
-    </Box>
+      </div>
+
+      {data.length > 0 && (
+        <div className={classes["lower"]}>
+          <div className={classes["lower__row"]}>
+            <p className={classes["lower__label"]}>
+              Показано {Math.min(rowsPerPage, data.length)} из {data.length}{" "}
+              записей
+            </p>
+            <div>
+              <div className={classes["tableSettings"]}>
+                Показывать{" "}
+                <select
+                  name="pageSize"
+                  id="pageSize"
+                  onChange={handlePageSizeChange}
+                >
+                  {pageSizeOptions.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>{" "}
+                записей
+              </div>
+            </div>
+            <Pagination
+              count={Math.ceil(data.length / rowsPerPage)}
+              page={page + 1}
+              variant="outlined"
+              shape="rounded"
+              boundaryCount={1}
+              color="primary"
+              onChange={handlePageChange}
+            />
+          </div>
+        </div>
+      )}
+    </div>
   );
 }

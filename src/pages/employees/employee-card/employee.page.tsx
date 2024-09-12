@@ -553,20 +553,6 @@ const EmployeePage = () => {
             />
           </Grid>
         );
-      // case 3:
-      //   return (
-      //     <Grid
-      //       container
-      //       sx={{
-      //         mb: "5rem",
-      //         ml: { xs: "2rem", xl: "7.6rem" },
-      //       }}
-      //       xs={9}
-      //       md={10.5}
-      //     >
-      //       <h1>Reports n shit</h1>
-      //     </Grid>
-      //   );
       case 3:
         return (
           <Grid

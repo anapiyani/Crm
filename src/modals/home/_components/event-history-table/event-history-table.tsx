@@ -1,5 +1,4 @@
-import React, { useState } from "react";
-import classes from "./styles.module.scss";
+import React, { useState, useEffect } from "react";
 import {
   Pagination,
   Paper,
@@ -11,6 +10,7 @@ import {
   TableRow,
 } from "@mui/material";
 import { IAppointmentHistory } from "@/ts/appointments.interface";
+import classes from "./styles.module.scss";
 
 interface IEventHistoryTableProps {
   data: IAppointmentHistory[];
@@ -21,6 +21,18 @@ interface IOption {
   value: number;
 }
 
+const headerCells = [
+  { label: "№", numeric: true },
+  { label: "Посещение", numeric: false },
+  { label: "Отдел", numeric: false },
+  { label: "Услуга", numeric: false },
+  { label: "Сотрудник", numeric: false },
+  { label: "Сумма", numeric: true },
+  { label: "Скидка", numeric: true },
+  { label: "Итого", numeric: true },
+  { label: "Всего", numeric: true },
+];
+
 const EventHistoryTable: React.FC<IEventHistoryTableProps> = ({ data }) => {
   const [pageSize, setPageSize] = useState<IOption>({ label: "10", value: 10 });
   const pageSizeOptions: IOption[] = [
@@ -29,6 +41,13 @@ const EventHistoryTable: React.FC<IEventHistoryTableProps> = ({ data }) => {
     { label: "50", value: 50 },
     { label: "100", value: 100 },
   ];
+  const [page, setPage] = useState(0);
+
+  const totalPages = Math.ceil(data.length / pageSize.value);
+
+  useEffect(() => {
+    setPage(0);
+  }, [data]);
 
   const handlePageSizeChange = (
     event: React.ChangeEvent<{ value: unknown }>
@@ -37,44 +56,51 @@ const EventHistoryTable: React.FC<IEventHistoryTableProps> = ({ data }) => {
       (option) => option.value === Number(event.target.value)
     ) || { label: "10", value: 10 };
     setPageSize(selectedOption);
+    setPage(0);
   };
+
+  const handlePageChange = (
+    event: React.ChangeEvent<unknown>,
+    value: number
+  ) => {
+    setPage(value - 1);
+  };
+
+  const currentData = data.slice(
+    page * pageSize.value,
+    (page + 1) * pageSize.value
+  );
 
   return (
     <div className={classes["event-history-table"]}>
-      <TableContainer
-        component={Paper}
-        sx={{
-          borderTopLeftRadius: "8px",
-          borderTopRightRadius: "8px",
-          border: "0.1rem solid var(--neutral-300)",
-          padding: "0.8rem",
-        }}
-      >
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>№</TableCell>
-              <TableCell>Посещение</TableCell>
-              <TableCell>Отдел</TableCell>
-              <TableCell>Услуга</TableCell>
-              <TableCell>Сотрудник</TableCell>
-              <TableCell>Сумма</TableCell>
-              <TableCell>Скидка</TableCell>
-              <TableCell>Итого</TableCell>
-              <TableCell>Всего</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {data.length > 0 ? (
-              <>
-                {data.map((appointment, index) => (
+      <div style={{ padding: "0.8rem" }}>
+        <TableContainer
+          component={Paper}
+          sx={{
+            borderTopLeftRadius: "8px",
+            borderTopRightRadius: "8px",
+            border: "0.1rem solid var(--neutral-300)",
+            boxShadow: "none",
+          }}
+        >
+          <Table>
+            <TableHead>
+              <TableRow>
+                {headerCells.map((headCell) => (
+                  <TableCell key={headCell.label}>{headCell.label}</TableCell>
+                ))}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {currentData.length > 0 ? (
+                currentData.map((appointment, index) => (
                   <TableRow key={appointment.id}>
                     <TableCell
                       sx={{
                         padding: "0.5rem 1rem",
                       }}
                     >
-                      {index + 1}
+                      {page * pageSize.value + index + 1}
                     </TableCell>
                     <TableCell>
                       <div className={classes["content-wrapper"]}>
@@ -149,21 +175,22 @@ const EventHistoryTable: React.FC<IEventHistoryTableProps> = ({ data }) => {
                       </div>
                     </TableCell>
                   </TableRow>
-                ))}
-              </>
-            ) : (
-              <TableRow>
-                <TableCell colSpan={9}>Ничего не найдено</TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </TableContainer>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell colSpan={9}>Ничего не найдено</TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </div>
       {data.length > 0 && (
         <div className={classes["lower"]}>
           <div className={classes["lower__row"]}>
             <p className={classes["lower__label"]}>
-              Показано 10 из 145 записей
+              Показано {Math.min(pageSize.value, data.length)} из {data.length}{" "}
+              записей
             </p>
             <div>
               <div className={classes["tableSettings"]}>
@@ -172,6 +199,7 @@ const EventHistoryTable: React.FC<IEventHistoryTableProps> = ({ data }) => {
                   name="pageSize"
                   id="pageSize"
                   onChange={handlePageSizeChange}
+                  value={pageSize.value}
                 >
                   {pageSizeOptions.map((option) => (
                     <option key={option.value} value={option.value}>
@@ -183,13 +211,13 @@ const EventHistoryTable: React.FC<IEventHistoryTableProps> = ({ data }) => {
               </div>
             </div>
             <Pagination
-              // count={Math.ceil(searchResult?.count / pageSize.value)}
-              // page={page}
+              count={totalPages}
+              page={page + 1}
               variant="outlined"
               shape="rounded"
               boundaryCount={1}
               color="primary"
-              // onChange={handlePageChange}
+              onChange={handlePageChange}
             />
           </div>
         </div>

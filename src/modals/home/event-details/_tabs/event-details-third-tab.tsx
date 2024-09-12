@@ -21,7 +21,7 @@ const plannedTableHeadCells = [
   { id: "date", numeric: false, label: "Дата" },
   { id: "time", numeric: false, label: "Время" },
   { id: "status", numeric: false, label: "Статус" },
-  { id: "employee", numeric: false, label: "Соотрудник" },
+  { id: "employee", numeric: false, label: "Сотрудник" },
   { id: "service", numeric: false, label: "Услуги" },
   { id: "price", numeric: true, label: "Сумма" },
   { id: "admin", numeric: false, label: "Записал" },
