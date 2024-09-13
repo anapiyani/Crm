@@ -16,8 +16,14 @@ export interface IAppointmentService {
   service: number;
   price?: string;
   quantity: number;
-  materials: IMaterial[];
+  materials?: IMaterial[];
   parameter_id: number;
+}
+
+export interface IAppointmentServiceToAdd {
+  service: number;
+  quantity: number;
+  parameter: number;
 }
 
 export interface IAppointmentCreateForm {
@@ -166,4 +172,8 @@ export interface IDeletedAppointment {
   date: string;
   start_time: string;
   end_time: string;
+}
+
+export interface IServicesAdd {
+  appointment_services: IAppointmentServiceToAdd[];
 }
