@@ -35,10 +35,14 @@ import { useCancelPayment } from "@/service/activity/activity.hook";
 import addServiceModal from "@/modals/activity/add-service.modal";
 import { flattenEmployeeHierarchy } from "@/utils/flatten-employee-hierarchy";
 import { getHierarchyByEmployeeId } from "@/service/hierarchy/hierarchy.service";
+import { useAddServiceForAppointment } from "@/service/appointments/appointments.hook";
+import { IServicesAdd } from "@/ts/appointments.interface";
 
 const ViewVisits = () => {
   const params = useParams<{ id: string }>();
   const cancelMutation = useCancelPayment();
+  // mutation for adding service to appointment
+  const addServiceMutation = useAddServiceForAppointment();
 
   const {
     data: visitInfo,
@@ -81,7 +85,15 @@ const ViewVisits = () => {
   };
 
   const handleSaveSelectedServices = (services: IServicesChoose[]) => {
-    console.log(services);
+    // Adding services to new object that gets the service data, but here service data is wrong (quantity and parameter) so u've to fix it @zhango
+    const servicesForm: IServicesAdd = {
+      appointment_services: services.map((service) => ({
+        service: service.id,
+        quantity: service.quantity,
+        parameter: service.parameter_id,
+      })),
+    };
+    addServiceMutation.mutate({ id: params.id!, services: servicesForm });
   };
 
   const onAddServiceHandler = () => {

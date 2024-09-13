@@ -3,6 +3,7 @@ import {
   IAppointmentReturn,
 } from "@/ts/appointments.interface";
 import {
+  addServiceForAppointment,
   createAppointments,
   temporaryDeleteAppointment,
   updateAppointmentStatus,
@@ -57,6 +58,23 @@ export const useUpdateAppointmentStatus = () => {
     onError: (error) => {
       const errorMessage =
         error.message || "Произошла ошибка при обновлении статуса записи.";
+      toast.error(errorMessage);
+    },
+  });
+};
+
+// mutation for adding service to appointment
+export const useAddServiceForAppointment = () => {
+  const QueryClient = useQueryClient();
+  return useMutation({
+    mutationFn: addServiceForAppointment,
+    onSuccess: () => {
+      toast.success("Услуга успешно добавлена!");
+      QueryClient.invalidateQueries({ queryKey: ["visitInfo"] });
+    },
+    onError: (error) => {
+      const errorMessage =
+        error.message || "Произошла ошибка при добавлении услуги.";
       toast.error(errorMessage);
     },
   });
