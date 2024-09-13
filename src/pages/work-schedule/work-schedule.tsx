@@ -66,6 +66,8 @@ const WorkSchedule = () => {
           overflow: "hidden",
           textAlign: "center",
           width: "100%",
+          height: "100%",
+          textWrap: "wrap",
         }}
       >
         <p className={classes.eventText}>

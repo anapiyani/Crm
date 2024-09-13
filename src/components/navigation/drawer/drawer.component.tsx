@@ -120,8 +120,8 @@ const ResponsiveDrawer = (props: IProps) => {
       children: [
         { text: "Найти", link: "/clients" },
         { text: "Добавить", link: "/clients/add" },
-        { text: "Настройки", link: "/clients/settings" },
-        { text: "Лист ожидания", link: "/clients/waiting-list" },
+        // { text: "Настройки", link: "/clients/settings" },
+        // { text: "Лист ожидания", link: "/clients/waiting-list" },
       ],
     },
     {

@@ -436,120 +436,127 @@ const IndirectCostsPage: FC = () => {
             {indirectCostsData &&
               indirectCostsData.map((item, index) => {
                 const tableKey = `table${index + 1}`;
-                return (
-                  <div
-                    className={classes.main__content__result__wrap}
-                    key={index}
-                  >
+
+                if (item.total_expenses !== "0.00") {
+                  return (
                     <div
-                      onClick={() => toggleTable(tableKey)}
-                      className={classes.main__content__result__wrap__header}
+                      className={classes.main__content__result__wrap}
+                      key={index}
                     >
-                      <h1>{item.main_operation_name}</h1>
                       <div
-                        style={{
-                          display: "flex",
-                          flexDirection: "row",
-                          alignItems: "center",
-                        }}
+                        onClick={() => toggleTable(tableKey)}
+                        className={classes.main__content__result__wrap__header}
                       >
-                        <h1>-{item.total_expenses} ₸</h1>
-                        <span style={{ paddingTop: "8px" }}>
-                          {openTables[tableKey] ? (
-                            <ExpandLess style={{ fontSize: "24px" }} />
-                          ) : (
-                            <ExpandMore style={{ fontSize: "24px" }} />
-                          )}
-                        </span>
-                        {edit && (
-                          <Button
-                            sx={{ minWidth: "4rem" }}
-                            className={classes.editBtns}
-                            onClick={() =>
-                              handleAddOperation(item.main_operation_id)
-                            }
-                          >
-                            <Add
-                              sx={{
-                                fontSize: "1.6rem",
-                              }}
-                            />
-                          </Button>
-                        )}
-                        {edit && (
-                          <Button
-                            onClick={() =>
-                              handleDeleteCategory(item.main_operation_id)
-                            }
-                            sx={{ minWidth: "4rem" }}
-                            color="error"
-                          >
-                            <DeleteOutline sx={{ fontSize: "1.6rem" }} />
-                          </Button>
-                        )}
-                      </div>
-                    </div>
-                    {openTables[tableKey] && item.details && (
-                      <Table className={classes.table}>
-                        <TableHead>
-                          <TableRow>
-                            <TableCell>Название категории</TableCell>
-                            <TableCell>Дата</TableCell>
-                            <TableCell>Тип операции</TableCell>
-                            <TableCell>Сумма</TableCell>
-                            {edit && <TableCell>Действия</TableCell>}
-                          </TableRow>
-                        </TableHead>
-                        <TableBody>
-                          {item.details.map((itemDetail, detailIndex) =>
-                            itemDetail.operations &&
-                            itemDetail.operations.length > 0 ? (
-                              itemDetail.operations.map(
-                                (operation, opIndex) => (
-                                  <TableRow key={`${detailIndex}-${opIndex}`}>
-                                    <TableCell>{itemDetail.name}</TableCell>
-                                    <TableCell>
-                                      {dayjs(operation.date).format(
-                                        "DD.MM.YYYY",
-                                      )}
-                                    </TableCell>
-                                    <TableCell>
-                                      {operation.money_type}
-                                    </TableCell>
-                                    <TableCell>
-                                      {operation.total_amount_change}
-                                    </TableCell>
-                                    {edit && (
-                                      <TableCell className={classes.editTable}>
-                                        <Button>
-                                          <DeleteOutline />
-                                        </Button>
-                                      </TableCell>
-                                    )}
-                                  </TableRow>
-                                ),
-                              )
+                        <h1>{item.main_operation_name}</h1>
+                        <div
+                          style={{
+                            display: "flex",
+                            flexDirection: "row",
+                            alignItems: "center",
+                          }}
+                        >
+                          <h1>-{item.total_expenses} ₸</h1>
+                          <span style={{ paddingTop: "8px" }}>
+                            {openTables[tableKey] ? (
+                              <ExpandLess style={{ fontSize: "24px" }} />
                             ) : (
-                              <TableRow key={detailIndex}>
-                                <TableCell>{itemDetail.name}</TableCell>
-                                <TableCell>Нет данных</TableCell>
-                                <TableCell>Нет данных</TableCell>
-                                <TableCell>Нет данных</TableCell>
-                                {edit && (
-                                  <TableCell className={classes.editTable}>
-                                    <Button>
-                                      <DeleteOutline />
-                                    </Button>
-                                  </TableCell>
-                                )}
-                              </TableRow>
-                            ),
+                              <ExpandMore style={{ fontSize: "24px" }} />
+                            )}
+                          </span>
+                          {edit && (
+                            <Button
+                              sx={{ minWidth: "4rem" }}
+                              className={classes.editBtns}
+                              onClick={() =>
+                                handleAddOperation(item.main_operation_id)
+                              }
+                            >
+                              <Add
+                                sx={{
+                                  fontSize: "1.6rem",
+                                }}
+                              />
+                            </Button>
                           )}
-                        </TableBody>
-                      </Table>
-                    )}
-                  </div>
-                );
+                          {edit && (
+                            <Button
+                              onClick={() =>
+                                handleDeleteCategory(item.main_operation_id)
+                              }
+                              sx={{ minWidth: "4rem" }}
+                              color="error"
+                            >
+                              <DeleteOutline sx={{ fontSize: "1.6rem" }} />
+                            </Button>
+                          )}
+                        </div>
+                      </div>
+                      {openTables[tableKey] && item.details && (
+                        <Table className={classes.table}>
+                          <TableHead>
+                            <TableRow>
+                              <TableCell>Название категории</TableCell>
+                              <TableCell>Дата</TableCell>
+                              <TableCell>Тип операции</TableCell>
+                              <TableCell>Сумма</TableCell>
+                              {edit && <TableCell>Действия</TableCell>}
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {item.details.map((itemDetail, detailIndex) =>
+                              itemDetail.operations &&
+                              itemDetail.operations.length > 0 ? (
+                                itemDetail.operations.map(
+                                  (operation, opIndex) => (
+                                    <TableRow key={`${detailIndex}-${opIndex}`}>
+                                      <TableCell>{itemDetail.name}</TableCell>
+                                      <TableCell>
+                                        {dayjs(operation.date).format(
+                                          "DD.MM.YYYY",
+                                        )}
+                                      </TableCell>
+                                      <TableCell>
+                                        {operation.money_type}
+                                      </TableCell>
+                                      <TableCell>
+                                        {operation.total_amount_change}
+                                      </TableCell>
+                                      {edit && (
+                                        <TableCell
+                                          className={classes.editTable}
+                                        >
+                                          <Button>
+                                            <DeleteOutline />
+                                          </Button>
+                                        </TableCell>
+                                      )}
+                                    </TableRow>
+                                  ),
+                                )
+                              ) : (
+                                <TableRow key={detailIndex}>
+                                  <TableCell>{itemDetail.name}</TableCell>
+                                  <TableCell>Нет данных</TableCell>
+                                  <TableCell>Нет данных</TableCell>
+                                  <TableCell>Нет данных</TableCell>
+                                  {edit && (
+                                    <TableCell className={classes.editTable}>
+                                      <Button>
+                                        <DeleteOutline />
+                                      </Button>
+                                    </TableCell>
+                                  )}
+                                </TableRow>
+                              ),
+                            )}
+                          </TableBody>
+                        </Table>
+                      )}
+                    </div>
+                  );
+                } else {
+                  return null;
+                }
               })}
           </div>
         </div>
