@@ -169,7 +169,11 @@ export interface IClientBalance {
 export interface IServicesChoose {
   id: number;
   name: string;
-  parameter: string;
+  parameter: {
+    id: number;
+    name: string;
+    price: number;
+  };
   parameter_id: number;
   price: number;
   quantity: number;
