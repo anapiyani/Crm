@@ -85,7 +85,7 @@ const ViewVisits = () => {
   };
 
   const handleSaveSelectedServices = (services: IServicesChoose[]) => {
-    // Adding services to new object that gets the service data, but here service data is wrong (quantity and parameter) so u've to fix it @zhango
+    // Adding services to new object that gets the service data, but here service data is wrong (quantity and parameters) so u've to fix it @zhango
     const servicesForm: IServicesAdd = {
       appointment_services: services.map((service) => ({
         service: service.id,

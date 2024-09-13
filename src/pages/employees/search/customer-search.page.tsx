@@ -242,7 +242,6 @@ const EmployeeSearch = () => {
                   label="Телефон"
                   name="phoneNumber"
                   placeholder="Введите номер"
-                  value={formData.phone_number}
                   onChange={(event) =>
                     setFormData((prev) => ({
                       ...prev,
