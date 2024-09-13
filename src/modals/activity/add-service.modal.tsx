@@ -21,19 +21,44 @@ const addServices = ({ onSave, flattenData }: IAddServicesProps) => {
 
   const services = flattenData;
 
-  const handleServiceSelect = (selectedService: any) => {
+  const handleServiceSelect = (
+    selectedService: any,
+    selectedParameter: any,
+    quantity: { [key: string]: number }
+  ) => {
+    const serviceWithParameter = {
+      ...selectedService,
+      parameter: selectedParameter,
+      quantity: quantity[selectedService.service_id],
+    };
+
     setTempSelectedServices((prevData) => {
       const existingService = prevData.find(
-        (item) => item.service_id === selectedService.service_id,
+        (item) => item.service_id === serviceWithParameter.service_id
       );
       if (existingService) {
+        console.log(
+          prevData.map((item) =>
+            item.service_id === serviceWithParameter.service_id
+              ? {
+                  ...item,
+                  quantity: quantity[serviceWithParameter.service_id],
+                  parameter: selectedParameter,
+                }
+              : item
+          )
+        );
         return prevData.map((item) =>
-          item.service_id === selectedService.service_id
-            ? { ...item, quantity: selectedService.quantity }
-            : item,
+          item.service_id === serviceWithParameter.service_id
+            ? {
+                ...item,
+                quantity: quantity[serviceWithParameter.service_id],
+                parameter: selectedParameter,
+              }
+            : item
         );
       } else {
-        return [...prevData, selectedService];
+        return [...prevData, serviceWithParameter];
       }
     });
   };
@@ -56,7 +81,9 @@ const addServices = ({ onSave, flattenData }: IAddServicesProps) => {
             key={index}
             departmentName={service.departmentName}
             childrenServices={service.childrenServices}
-            onServiceSelect={handleServiceSelect}
+            onServiceSelect={(service, parameter, quantity) =>
+              handleServiceSelect(service, parameter, quantity)
+            }
           />
         ))}
       </div>

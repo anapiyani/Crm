@@ -23,7 +23,8 @@ interface ServiceAccordionProps {
   childrenServices: ChildService[];
   onServiceSelect: (
     selectedService: ChildService,
-    selectedParameter: any
+    selectedParameter: any,
+    quantity: { [key: string]: number }
   ) => void;
 }
 
@@ -56,11 +57,15 @@ const ServiceAccordion: React.FC<ServiceAccordionProps> = ({
   );
 
   const handleQuantityChange = (service: ChildService, amount: number) => {
+    console.log(service, amount);
     setQuantities((prevQuantities) => {
+      console.log(prevQuantities);
+      console.log(prevQuantities[service.service_id]);
       const newQuantity = Math.max(
         prevQuantities[service.service_id] + amount,
         1
       );
+
       return { ...prevQuantities, [service.service_id]: newQuantity };
     });
 
@@ -68,7 +73,7 @@ const ServiceAccordion: React.FC<ServiceAccordionProps> = ({
     const selectedParam = service.parameter.find(
       (param) => param.id === selectedParamId
     );
-    onServiceSelect(service, selectedParam);
+    onServiceSelect(service, selectedParam, quantities);
   };
 
   const handleItemClick = (service: ChildService) => {
@@ -87,9 +92,9 @@ const ServiceAccordion: React.FC<ServiceAccordionProps> = ({
             ...prevSelectedParameter,
             [service.service_id]: firstParameter.id,
           }));
-          onServiceSelect(service, firstParameter);
+          onServiceSelect(service, firstParameter, quantities);
         } else {
-          onServiceSelect(service, null);
+          onServiceSelect(service, null, quantities);
         }
       }
 
@@ -116,7 +121,7 @@ const ServiceAccordion: React.FC<ServiceAccordionProps> = ({
     );
 
     if (selectedParam) {
-      onServiceSelect(service, selectedParam);
+      onServiceSelect(service, selectedParam, quantities);
     }
   };
 
