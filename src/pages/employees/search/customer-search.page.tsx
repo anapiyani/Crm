@@ -32,6 +32,8 @@ import { IDepartmentData } from "@/ts/departments.interface";
 import { ISearchFormData } from "@/ts/employee.interface";
 import TextsmsOutlinedIcon from "@mui/icons-material/TextsmsOutlined";
 import { Link } from "react-router-dom";
+import dayjs from "dayjs";
+import CustomDatePicker from "@/components/date-picker/date-picker-custom";
 
 interface IOption {
   label: string;
@@ -118,6 +120,7 @@ const EmployeeSearch = () => {
   });
 
   const handleSubmit = () => {
+    console.log(formData);
     searchEmployee(formData);
     refetchEmployeeData();
   };
@@ -129,16 +132,23 @@ const EmployeeSearch = () => {
     }));
   };
 
-  const handleRangeChange = (
-    fieldPrefix: string,
-    value: string,
-    boundary: "From" | "To",
-  ) => {
-    setFormData((prev) => ({
-      ...prev,
-      [`${fieldPrefix}${boundary}`]: value,
-    }));
-  };
+  // const handleRangeChange = (
+  //   fieldPrefix: string,
+  //   value: string,
+  //   boundary:
+  //     | "age_from"
+  //     | "age_to"
+  //     | "works_from"
+  //     | "works_to"
+  //     | "date_of_birth_from"
+  //     | "date_of_birth_to",
+  // ) => {
+  //   console.log(fieldPrefix, value, boundary);
+  //   setFormData((prev) => ({
+  //     ...prev,
+  //     [`${fieldPrefix}${boundary}`]: value,
+  //   }));
+  // };
 
   const handleCheckboxChange = (role: string, isChecked: boolean) => {
     setSelectedRoles((prev) => {
@@ -280,30 +290,72 @@ const EmployeeSearch = () => {
                   type="double"
                   doubleDivier="-"
                   onChangeFrom={(e) =>
-                    handleRangeChange("works_from", e.target.value, "From")
+                    setFormData((prev) => ({
+                      ...prev,
+                      [`works_from`]: e.target.value,
+                    }))
                   }
                   onChangeTo={(e) =>
-                    handleRangeChange("works_to", e.target.value, "To")
+                    setFormData((prev) => ({
+                      ...prev,
+                      [`works_to`]: e.target.value,
+                    }))
                   }
                 />
 
-                <VerticalTextField
+                {/* <VerticalTextField
                   label="Дата рождения"
                   placeholder="С"
                   placeholderOptional="По"
                   type="double"
                   doubleDivier="-"
                   onChangeFrom={(e) =>
-                    handleRangeChange(
-                      "date_of_birth_from",
-                      e.target.value,
-                      "From",
-                    )
+                    setFormData((prev) => ({
+                      ...prev,
+                      [`date_of_birth_from`]: e.target.value,
+                    }))
                   }
                   onChangeTo={(e) =>
-                    handleRangeChange("date_of_birth_to", e.target.value, "To")
+                    setFormData((prev) => ({
+                      ...prev,
+                      [`date_of_birth_to`]: e.target.value,
+                    }))
                   }
-                />
+                /> */}
+
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "end",
+                    gap: "10px",
+                  }}
+                >
+                  <p style={{ fontSize: "1.6rem" }}>Дата рождения</p>
+                  <CustomDatePicker
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        [`date_of_birth_from`]: dayjs(e.target.value).format(
+                          "DD.MM.YYYY",
+                        ),
+                      }))
+                    }
+                    style={{ width: "190px" }}
+                  />
+                  <p>-</p>
+                  <CustomDatePicker
+                    onChange={(e) => {
+                      setFormData((prev) => ({
+                        ...prev,
+                        [`date_of_birth_to`]: dayjs(e.target.value).format(
+                          "DD.MM.YYYY",
+                        ),
+                      }));
+                    }}
+                    style={{ width: "190px" }}
+                  />
+                </div>
 
                 <VerticalTextField
                   label="Возраст"
@@ -312,10 +364,16 @@ const EmployeeSearch = () => {
                   type="double"
                   doubleDivier="-"
                   onChangeFrom={(e) =>
-                    handleRangeChange("age", e.target.value, "From")
+                    setFormData((prev) => ({
+                      ...prev,
+                      [`age_from`]: e.target.value,
+                    }))
                   }
                   onChangeTo={(e) =>
-                    handleRangeChange("age", e.target.value, "To")
+                    setFormData((prev) => ({
+                      ...prev,
+                      [`age_to`]: e.target.value,
+                    }))
                   }
                 />
                 <div className={classes["main__upper__checkboxes"]}>
@@ -526,7 +584,9 @@ const EmployeeSearch = () => {
                         {row.phone_number} <br /> {row.email}
                       </TableCell>
                       <TableCell>{getUserAge(row.date_of_birth)}</TableCell>
-                      <TableCell>{row.date_of_birth}</TableCell>
+                      <TableCell>
+                        {dayjs(row.date_of_birth).format("DD.MM.YYYY")}
+                      </TableCell>
                       <TableCell>{row.role}</TableCell>
                       <TableCell>
                         <Button>
