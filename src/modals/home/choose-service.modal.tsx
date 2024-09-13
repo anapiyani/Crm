@@ -25,11 +25,13 @@ const ChooseService: React.FC<ChooseServiceModalProps> = ({
 
   const handleServiceSelect = (
     selectedService: any,
-    selectedParameter: any
+    selectedParameter: any,
+    quantity: { [key: string]: number }
   ) => {
     const serviceWithParameter = {
       ...selectedService,
       parameter: selectedParameter,
+      quantity: quantity[selectedService.service_id],
     };
 
     setTempSelectedServices((prevData) => {
@@ -41,7 +43,7 @@ const ChooseService: React.FC<ChooseServiceModalProps> = ({
           item.service_id === serviceWithParameter.service_id
             ? {
                 ...item,
-                quantity: selectedService.quantity,
+                quantity: quantity[serviceWithParameter.service_id],
                 parameter: selectedParameter,
               }
             : item
@@ -70,8 +72,8 @@ const ChooseService: React.FC<ChooseServiceModalProps> = ({
             key={index}
             departmentName={service.departmentName}
             childrenServices={service.childrenServices}
-            onServiceSelect={(service, parameter) =>
-              handleServiceSelect(service, parameter)
+            onServiceSelect={(service, parameter, quantity) =>
+              handleServiceSelect(service, parameter, quantity)
             }
           />
         ))}
