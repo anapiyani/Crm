@@ -623,6 +623,9 @@ const EmployeePage = () => {
                   sx={{
                     marginLeft: "5rem",
                   }}
+                  onClick={() =>
+                    (window.location.href = `/employees/work-schedule/${params.id}`)
+                  }
                 >
                   Редактировать график работы
                 </Button>
