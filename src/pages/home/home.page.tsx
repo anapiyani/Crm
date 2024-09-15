@@ -350,6 +350,10 @@ const Home: React.FC = () => {
     }
   };
 
+  const handleDropElement = () => {
+    console.log("handleDropElement");
+  };
+
   const handleMenuItemClick = (
     modal: any,
     setAnchorEl: React.Dispatch<React.SetStateAction<HTMLElement | null>>
