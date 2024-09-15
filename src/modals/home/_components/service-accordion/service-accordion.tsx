@@ -57,18 +57,14 @@ const ServiceAccordion: React.FC<ServiceAccordionProps> = ({
   );
 
   const handleQuantityChange = (service: ChildService, amount: number) => {
-    console.log(service, amount);
     setQuantities((prevQuantities) => {
-      console.log(prevQuantities);
-      console.log(prevQuantities[service.service_id]);
       const newQuantity = Math.max(
         prevQuantities[service.service_id] + amount,
         1
       );
-
+      prevQuantities[service.service_id] = newQuantity;
       return { ...prevQuantities, [service.service_id]: newQuantity };
     });
-
     const selectedParamId = selectedParameter[service.service_id];
     const selectedParam = service.parameter.find(
       (param) => param.id === selectedParamId

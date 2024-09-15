@@ -189,6 +189,7 @@ const CreateAppointment: React.FC<ICreateAppointmentModalProps> = ({
       parameter_id: service.parameter_id,
     }));
 
+    console.log(services);
     const dates = appointmentDates.map((date) =>
       date.date.format("YYYY-MM-DD")
     );
@@ -229,7 +230,11 @@ const CreateAppointment: React.FC<ICreateAppointmentModalProps> = ({
             price: service.parameters
               .find((param) => param.id === selectedParameters.value)
               ?.price.toString(),
-            unitPrice: Number(service.parameters[0].price),
+            unitPrice: Number(
+              service.parameters
+                .find((param) => param.id === selectedParameters.value)
+                ?.price.toString()
+            ),
             parameter: selectedParameters.label,
             parameter_id: selectedParameters.value,
           },

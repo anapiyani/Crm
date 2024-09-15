@@ -67,9 +67,8 @@ const ChooseService: React.FC<ChooseServiceModalProps> = ({
       handleSave={() => {
         onSave(tempSelectedServices);
         setTempSelectedServices([]);
-        modal.hide().then(() => {
-          modal.remove();
-        });
+        modal.hide();
+        modal.remove();
       }}
       handleClose={() => {
         modal.hide();

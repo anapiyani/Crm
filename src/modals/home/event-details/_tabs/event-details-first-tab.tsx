@@ -83,6 +83,8 @@ const EventDetailsFirstTab: React.FC<IEventDetailsFirstTabProps> = ({
 
   useEffect(() => {
     if (data && data.appointment_services) {
+      console.log(data.appointment_services);
+
       setServicesData(
         data.appointment_services.map((service) => ({
           id: service.id,
