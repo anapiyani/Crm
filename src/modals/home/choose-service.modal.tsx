@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import NiceModal, { useModal } from "@ebay/nice-modal-react";
 import ModalWindow from "@/components/modal-window/modal-window";
 import classes from "./styles.module.scss";
@@ -22,6 +22,12 @@ const ChooseService: React.FC<ChooseServiceModalProps> = ({
 }) => {
   const modal = useModal();
   const [tempSelectedServices, setTempSelectedServices] = useState<any[]>([]);
+
+  useEffect(() => {
+    if (modal.visible) {
+      setTempSelectedServices([]);
+    }
+  }, [modal.visible]);
 
   const handleServiceSelect = (
     selectedService: any,
@@ -60,9 +66,14 @@ const ChooseService: React.FC<ChooseServiceModalProps> = ({
       open={modal.visible}
       handleSave={() => {
         onSave(tempSelectedServices);
+        setTempSelectedServices([]);
         modal.hide();
+        modal.remove();
       }}
-      handleClose={() => modal.hide()}
+      handleClose={() => {
+        modal.hide();
+        modal.remove();
+      }}
       className={classNames(classes["u-p-0"], classes["choose-service-modal"])}
       isFront={true}
     >

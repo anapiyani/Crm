@@ -229,7 +229,11 @@ const CreateAppointment: React.FC<ICreateAppointmentModalProps> = ({
             price: service.parameters
               .find((param) => param.id === selectedParameters.value)
               ?.price.toString(),
-            unitPrice: Number(service.parameters[0].price),
+            unitPrice: Number(
+              service.parameters
+                .find((param) => param.id === selectedParameters.value)
+                ?.price.toString()
+            ),
             parameter: selectedParameters.label,
             parameter_id: selectedParameters.value,
           },
@@ -283,7 +287,6 @@ const CreateAppointment: React.FC<ICreateAppointmentModalProps> = ({
       service_id: number;
     }[]
   ) => {
-    console.log("asdasd", selectedServices);
     setServiceTableData((prevData) => {
       const newData = [...(prevData || [])];
       selectedServices.forEach((selectedService) => {
@@ -488,8 +491,6 @@ const CreateAppointment: React.FC<ICreateAppointmentModalProps> = ({
                     flattenData: flattenEmployeeHierarchy(
                       employeeHierarchyData || []
                     ),
-                  }).then((data) => {
-                    console.log("sdasdasd", data);
                   });
                 }}
               >

@@ -26,6 +26,7 @@ import {
 } from "@/service/hierarchy/hierarchy.service";
 import { useQuery } from "@tanstack/react-query";
 import { proccessRoleOptions } from "@/utils/process-role-options";
+import { set } from "react-hook-form";
 
 const EmployeeAdd = () => {
   const [dateOfBirth, setDateOfBirth] = useState<Date | null>(null);
@@ -109,25 +110,30 @@ const EmployeeAdd = () => {
         phone_number_whatsapp: removeMask(form.user.phone_number_whatsapp),
       },
     };
-    mutation.mutate(formToSend);
-    setForm({
-      user: {
-        email: "",
-        first_name: "",
-        last_name: "",
-        gender: "",
-        date_of_birth: "",
-        phone_number: "",
-        phone_number_whatsapp: "",
+    mutation.mutate(formToSend, {
+      onSuccess: (data) => {
+        setForm({
+          user: {
+            email: "",
+            first_name: "",
+            last_name: "",
+            gender: "",
+            date_of_birth: "",
+            phone_number: "",
+            phone_number_whatsapp: "",
+          },
+          position: 0,
+          start_date: new Date().toISOString().split("T")[0],
+          city: "",
+          city_index: "",
+          street: "",
+          house: "",
+          apartment: "",
+          comment: "",
+        });
+
+        window.location.assign(`/employees/${data.user.id}`);
       },
-      position: 0,
-      start_date: new Date().toISOString().split("T")[0],
-      city: "",
-      city_index: "",
-      street: "",
-      house: "",
-      apartment: "",
-      comment: "",
     });
   };
 

@@ -11,19 +11,19 @@ import {
 import { IServicesChoose } from "@/ts/activity.interface";
 
 export const createAppointments = (
-  data: IAppointmentCreateForm,
+  data: IAppointmentCreateForm
 ): Promise<IAppointmentReturn> => {
   return api.post("/appointments/appointments/", data).then((res) => res.data);
 };
 
 export const getAppointmentById = (
-  id: number,
+  id: number
 ): Promise<ISingleAppointmentReturn> => {
   return api.get(`/appointments/appointments/${id}/`).then((res) => res.data);
 };
 
 export const getCustomerAppointmentHistoryById = (
-  customer_id: number,
+  customer_id: number
 ): Promise<IAppointmentHistory[]> => {
   return api
     .get(`/appointments/appointments/history/${customer_id}/`)
@@ -33,7 +33,7 @@ export const getCustomerAppointmentHistoryById = (
 };
 
 export const getCustomerAppointmentNoShowById = (
-  customer_id: number,
+  customer_id: number
 ): Promise<IAppointmentHistory[]> => {
   return api
     .get(`/appointments/appointments/no-show/${customer_id}/`)
@@ -41,7 +41,7 @@ export const getCustomerAppointmentNoShowById = (
 };
 
 export const getCustomerAppointmentPlannedById = (
-  customer_id: number,
+  customer_id: number
 ): Promise<IAppointmentHistory[]> => {
   return api
     .get(`/appointments/appointments/planned/${customer_id}/`)
@@ -49,13 +49,17 @@ export const getCustomerAppointmentPlannedById = (
 };
 
 export const temporaryDeleteAppointment = (id: number) => {
+  const requestBody = {
+    reason_deleted: "Причина удаления",
+    is_deleted: true,
+  };
   return api
-    .put(`/appointments/appointments_change/${id}/`)
+    .put(`/appointments/appointments_change/${id}/`, requestBody)
     .then((res) => res.data);
 };
 
 export const getCustomerDeletedAppointments = (
-  customer_id: number,
+  customer_id: number
 ): Promise<IAppointmentHistory[]> => {
   return api
     .get(`/appointments/appointments/is-deleted/${customer_id}/`)
@@ -77,7 +81,7 @@ export const updateAppointmentStatus = ({
 };
 
 export const getAllDeletedAppointments = (
-  page?: number,
+  page?: number
 ): Promise<IDeletedAppointment[]> => {
   const params = new URLSearchParams();
   if (page) {

@@ -118,7 +118,7 @@ const EventDetailsFirstTab: React.FC<IEventDetailsFirstTabProps> = ({
       const service = servicesDataByEmployee?.find(
         (service) => service.id === selectedService.value
       );
-      console.log(service);
+
       if (service) {
         setServicesData([
           ...servicesData,
@@ -234,13 +234,8 @@ const EventDetailsFirstTab: React.FC<IEventDetailsFirstTabProps> = ({
               size="small"
               value={selectedService}
               onChange={(value) => {
-                console.log(value);
                 setSelectedService(value);
-                console.log(
-                  servicesDataByEmployee?.find(
-                    (service) => service.id === value?.value
-                  )?.parameters
-                );
+
                 setParametersData(
                   servicesDataByEmployee?.find(
                     (service) => service.id === value?.value
