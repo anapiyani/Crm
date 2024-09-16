@@ -386,7 +386,7 @@ const Home: React.FC = () => {
     NiceModal.show(modal);
     setAnchorEl(null);
   };
-  
+
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <div className={classes["home"]}>
@@ -715,40 +715,50 @@ const Home: React.FC = () => {
                     <Divider />
                     <div className={classes["prediction__date-picker"]}>
                       <div
-                        style={{
-                          width: "11rem",
-                        }}
+                        className={classes["prediction__date-picker__dates"]}
                       >
-                        <CustomDatePicker 
-                          value={fromDate || ""}
-                          onChange={handleFromDateChange}
-                        />
-                      </div>
-                      <span
-                        className={classes["prediction__date-picker--dash"]}
-                      >
-                        -
-                      </span>
-                      <div
-                        style={{
-                          width: "11rem",
-                        }}
-                      >
-                        <CustomDatePicker 
-                          value={toDate || ""}
-                          onChange={handleToDateChange}
-                          min={fromDate || ""}
-                        />
+                        <div
+                          style={{
+                            width: "100%",
+                          }}
+                        >
+                          <CustomDatePicker
+                            value={fromDate || ""}
+                            onChange={handleFromDateChange}
+                          />
+                        </div>
+                        <span
+                          className={classes["prediction__date-picker--dash"]}
+                        >
+                          -
+                        </span>
+                        <div
+                          style={{
+                            width: "100%",
+                          }}
+                        >
+                          <CustomDatePicker
+                            value={toDate || ""}
+                            onChange={handleToDateChange}
+                            min={fromDate || ""}
+                          />
+                        </div>
                       </div>
                       <Button
                         variant="contained"
                         sx={{
                           height: "4rem",
-                          borderRadius: "8px",
+                          borderRadius: "4px",
                         }}
+                        startIcon={<Cached />}
                       >
-                        <Cached />
+                        Расчитать
                       </Button>
+                    </div>
+                    <Divider />
+                    <div className={classes["prediction__result"]}>
+                      <span>Прогноз выручки</span>
+                      <span>0 руб.</span>
                     </div>
                   </div>
 

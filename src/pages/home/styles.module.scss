@@ -275,15 +275,33 @@
 }
 
 .prediction {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
   margin-top: 3rem;
 
   &__date-picker {
     margin-top: 1rem;
     display: flex;
-    flex-direction: row;
-    gap: 0.7rem;
+    flex-direction: column;
     align-items: center;
-
+    gap: 0.5rem;
+    Button {
+      width: 100%;
+      box-shadow: none;
+      height: 3rem;
+      &:hover {
+        background-color: var(--primary-700);
+        box-shadow: none;
+      }
+    }
+    &__dates {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      gap: 0.7rem;
+      align-items: center;
+    }
     &--dash {
       width: 5px;
       font-size: 1.6rem;

@@ -40,7 +40,7 @@ const ChatModal = () => {
     const loadingIndex = newMessages.length;
     const loadingMessages: Message[] = [
       ...newMessages,
-      { sender: "bot", text: "Бот печатает..." },
+      { sender: "bot", text: "Ассистент печатает..." },
     ];
     setMessages(loadingMessages);
     setLoadingMessageId(loadingIndex);
@@ -94,7 +94,7 @@ const ChatModal = () => {
       <div className={classes.modal} onClick={(e) => e.stopPropagation()}>
         <div className={classes.modal__window}>
           <div className={classes.modal__window__header}>
-            <h2 className={classes.modal__window__title}>Чат с ботом</h2>
+            <h2 className={classes.modal__window__title}>Чат с ассистентом</h2>
           </div>
           <Divider />
           <div className={classes.modal__window__content}>
