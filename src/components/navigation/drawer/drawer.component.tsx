@@ -61,11 +61,12 @@ const ResponsiveDrawer = (props: IProps) => {
   const location = useLocation();
   const [open, setOpen] = useState<string | null>(null);
   const [selectedParentIndex, setSelectedParentIndex] = useState<string | null>(
-    null,
+    null
   );
   const [selectedChildIndex, setSelectedChildIndex] = useState<string | null>(
-    null,
+    null
   );
+  const [isChatOpen, setIsChatOpen] = useState<boolean>(false);
 
   useEffect(() => {
     const path = location.pathname;
@@ -211,7 +212,7 @@ const ResponsiveDrawer = (props: IProps) => {
 
   const renderListItems = (
     items: Item[],
-    parentIndex: number | null = null,
+    parentIndex: number | null = null
   ) => {
     return items.map((item, index) => {
       const uniqueIndex =
@@ -374,7 +375,13 @@ const ResponsiveDrawer = (props: IProps) => {
         </StyledDrawerPaper>
         <div
           onClick={() => {
-            NiceModal.show(chatModal);
+            if (isChatOpen) {
+              NiceModal.hide(chatModal);
+              setIsChatOpen(false);
+            } else {
+              NiceModal.show(chatModal);
+              setIsChatOpen(true);
+            }
           }}
           className={classes["assistant"]}
         >

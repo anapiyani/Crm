@@ -63,9 +63,9 @@ const AnalyticsPage = () => {
           title={"Посещения"}
           children={
             <div className={classes["main__content__grid"]}>
-              <img src={images[6]} />
-              <img src={images[7]} />
-              <img src={images[5]} />
+              <img src={images[6]} onClick={() => openImageViewer(6)} />
+              <img src={images[7]} onClick={() => openImageViewer(7)} />
+              <img src={images[5]} onClick={() => openImageViewer(5)} />
             </div>
           }
         />

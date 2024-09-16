@@ -1,7 +1,7 @@
 .chat {
   display: flex;
   flex-direction: column;
-  height: 50rem;
+  height: 100%;
   width: 50rem;
   &__content {
     height: 90%;
@@ -10,13 +10,14 @@
     flex-direction: column;
     overflow-y: auto;
     overflow-x: hidden;
+    scrollbar-width: none;
     &::-webkit-scrollbar {
       width: 0.5rem;
     }
     &::-webkit-scrollbar-thumb {
       background-color: transparent;
-      border-radius: 1rem;
     }
+
     &::-webkit-scrollbar-track {
       background: transparent;
     }
@@ -29,6 +30,47 @@
     button {
       height: 4rem;
       box-shadow: none;
+    }
+  }
+}
+
+@keyframes slideInFromLeft {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.modal {
+  overflow: hidden;
+  position: fixed;
+  bottom: 5rem;
+  left: 5rem;
+  height: 90%;
+  border-radius: 8px;
+  background-color: white;
+  z-index: 999;
+  color: var(--text-primary);
+  animation: slideInFromLeft 0.5s ease;
+  &__window {
+    padding: 2rem;
+    height: 100%;
+    &__content {
+      display: flex;
+      flex-direction: column;
+
+      padding: 1rem;
+      height: 95%;
+    }
+    &__header {
+      height: 4rem;
+    }
+    &__title {
+      font-size: 1.6rem;
+      color: var(--text-primary);
+      font-weight: 400;
     }
   }
 }
