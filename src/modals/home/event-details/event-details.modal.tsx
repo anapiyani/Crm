@@ -551,7 +551,13 @@ const EventDetails: React.FC<IEventDetailsModalProps> = ({ appointmentId }) => {
               sx={{
                 fontSize: "1.4rem",
               }}
-              onClick={() => TemporaryDeleteAppointment.mutate(appointmentId)}
+              onClick={() =>
+                TemporaryDeleteAppointment.mutate({
+                  id: appointmentId,
+                  is_deleted: true,
+                  reason_deleted: null,
+                })
+              }
             >
               Удалить
             </Button>

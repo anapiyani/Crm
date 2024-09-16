@@ -63,7 +63,6 @@ export const useUpdateAppointmentStatus = () => {
   });
 };
 
-// mutation for adding service to appointment
 export const useAddServiceForAppointment = () => {
   const QueryClient = useQueryClient();
   return useMutation({
