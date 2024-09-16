@@ -1,4 +1,11 @@
-import { HomeOutlined } from "@mui/icons-material";
+import {
+  ChatOutlined,
+  CreditCardOutlined,
+  HomeOutlined,
+  LocalActivityOutlined,
+  PaymentsOutlined,
+  ExitToAppOutlined,
+} from "@mui/icons-material";
 
 export const mainTableData = [
   { property: "Автосегмент", value: "Не указано" },
@@ -81,3 +88,80 @@ export const sampleVisits = [
     link: "Посмотреть",
   },
 ];
+
+export const clientsTabsData = [
+  { to: "/clients/:id", icon: HomeOutlined, label: "Обзор" },
+  { to: "/clients/visits", icon: ExitToAppOutlined, label: "Посещения" },
+  {
+    to: "/clients/finance",
+    icon: PaymentsOutlined,
+    label: "Финансы",
+  },
+  {
+    to: "/clients/discounts",
+    icon: CreditCardOutlined,
+    label: "Скидки",
+  },
+  {
+    to: "/clients/membership",
+    icon: LocalActivityOutlined,
+    label: "Абонементы / Сертификаты",
+  },
+  {
+    to: "/clients/comments",
+    icon: ChatOutlined,
+    label: "Комментарии",
+  },
+];
+
+export const financeChartLabels = ["Июнь", "Июль", "Август", "Сентябрь"];
+
+export const financeChartData = [
+  {
+    label: "Текущий депозит",
+    data: [20, 40, 50, 60],
+    borderColor: "#2196F3",
+    backgroundColor: "rgba(33, 150, 243, 0.1)",
+    yAxisID: "y2",
+    fill: true,
+  },
+  {
+    label: "Сумма чека",
+    data: [15, 30, 45, 55],
+    borderColor: "#F44336",
+    backgroundColor: "rgba(244, 67, 54, 0.1)",
+    yAxisID: "y1",
+    fill: true,
+  },
+];
+
+export const financeChartLegendLabels = [
+  { label: "Текущий депозит", color: "#2196F3" },
+  { label: "Сумма чека", color: "#F44336" },
+];
+
+export const revenueChartLabels = ["", "Июнь", "Июль", "Август", "Сентябрь"];
+
+export const revenueChartData = [
+    {
+      label: "Выручка",
+      data: [7, 13, 30, 52, 73],
+      borderColor: "#4CAF50",
+      backgroundColor: "rgba(76, 175, 80, 0.1)",
+      yAxisID: "y1",
+      fill: true,
+    },
+    {
+      label: "Клиенты",
+      data: [7, 15, 38, 50, 60],
+      borderColor: "#2196F3",
+      backgroundColor: "rgba(33, 150, 243, 0.1)",
+      yAxisID: "y2",
+      fill: "-1",
+    },
+  ];
+
+  export const revenueChartLegendLabels = [
+    { label: "Выручка", color: "#4CAF50" },
+    { label: "Клиенты", color: "#2196F3" },
+  ];
