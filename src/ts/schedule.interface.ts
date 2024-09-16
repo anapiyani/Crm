@@ -29,7 +29,13 @@ export interface ILongBreaks {
 
 export interface IAppointment {
   id: number;
-  client: number;
+  client: {
+    id: number;
+    first_name: string;
+    last_name: string;
+    email: string;
+    phone_number: string;
+  };
   employee: number;
   status: string;
   date: string;

@@ -78,7 +78,7 @@ const CashDesk = () => {
   const { register, handleSubmit, reset, getValues } = useForm<ISearchKassa>();
   const [money_type, setMoney_type] = useState<string[]>([]);
   const [selectedOperationId, setSelectedOperationId] = useState<string | null>(
-    null,
+    null
   );
   const queryClient = useQueryClient();
 
@@ -118,7 +118,7 @@ const CashDesk = () => {
   });
 
   const onSearchSubmit: SubmitHandler<ISearchKassa> = async (
-    data: ISearchKassa,
+    data: ISearchKassa
   ) => {
     const formData = {
       ...data,
@@ -136,7 +136,7 @@ const CashDesk = () => {
         formData.page_size,
         formData.page,
       ],
-      formData,
+      formData
     );
     refetchSearchResult();
   };
@@ -166,13 +166,13 @@ const CashDesk = () => {
   };
 
   const processOperationsData = (
-    operations: IKassaOperations[],
+    operations: IKassaOperations[]
   ): { label: string; value: string; isParent: boolean }[] => {
     const result: { label: string; value: string; isParent: boolean }[] = [];
 
     const traverse = (
       nodes: IKassaOperations[],
-      parent: IKassaOperations | null,
+      parent: IKassaOperations | null
     ) => {
       nodes.forEach((node) => {
         if (node.children && node.children.length > 0) {
@@ -199,7 +199,7 @@ const CashDesk = () => {
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value, checked } = event.target;
     setMoney_type((prev) =>
-      checked ? [...prev, value] : prev.filter((type) => type !== value),
+      checked ? [...prev, value] : prev.filter((type) => type !== value)
     );
   };
   const options = operationsData ? processOperationsData(operationsData) : [];
@@ -229,16 +229,16 @@ const CashDesk = () => {
 
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
-    value: number,
+    value: number
   ) => {
     setPage(value);
   };
 
   const handlePageSizeChange = (
-    event: React.ChangeEvent<{ value: unknown }>,
+    event: React.ChangeEvent<{ value: unknown }>
   ) => {
     const selectedOption = pageSizeOptions.find(
-      (option) => option.value === Number(event.target.value),
+      (option) => option.value === Number(event.target.value)
     ) || { label: "10", value: 10 };
     setPageSize(selectedOption);
   };
@@ -490,10 +490,10 @@ const CashDesk = () => {
                 <p style={{ marginRight: "1rem", marginLeft: "1rem" }}>-</p>
                 <CustomDatePicker
                   value={toDate}
+                  min={fromDate}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                     setToDate(e.target.value)
                   }
-                  min={fromDate}
                 />
               </div>
               <Button onClick={onRefetchCashRegister} variant="contained">
@@ -787,7 +787,10 @@ const CashDesk = () => {
                             gap: "0.5rem",
                           }}
                         >
-                          {result.overall_change_in_cash_register.card ? result.overall_change_in_cash_register.card : null} ₸
+                          {result.overall_change_in_cash_register.card
+                            ? result.overall_change_in_cash_register.card
+                            : null}{" "}
+                          ₸
                           <CreditCard />
                         </p>
                       ) : null}

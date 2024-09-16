@@ -33,6 +33,8 @@ import interactionPlugin from "@fullcalendar/interaction";
 import scrollGridPlugin from "@fullcalendar/scrollgrid";
 import { DateSelectArg, DatesSetArg, EventClickArg } from "@fullcalendar/core";
 import dayjs, { Dayjs } from "dayjs";
+import timezone from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
 
 import BreadcrumbsCustom from "@/components/navigation/breadcrumbs/breadcrumbs";
 import CustomDatePicker from "@/components/date-picker/date-picker-custom";
@@ -144,6 +146,8 @@ const Home: React.FC = () => {
     });
   };
 
+  dayjs.extend(timezone);
+  dayjs.extend(utc);
   const handleOpenSchedule = (id: number) => {
     setSelectedEmployee(id);
   };
@@ -361,8 +365,18 @@ const Home: React.FC = () => {
     }
   };
 
-  const handleDropElement = () => {
-    console.log("handleDropElement");
+  const handleDropElement = (eventDragged: any) => {
+    console.log(dayjs.tz.guess());
+
+    console.log(eventDragged.el);
+    const start = dayjs(eventDragged.event._instance.range.start)
+      .tz("Atlantic/Reykjavik")
+      .format("HH:mm");
+    const end = dayjs(eventDragged.event._instance.range.end)
+      .tz("Atlantic/Reykjavik")
+      .format("HH:mm");
+    console.log("start", start);
+    console.log("end", end);
   };
 
   const handleMenuItemClick = (
@@ -404,6 +418,7 @@ const Home: React.FC = () => {
               eventAllow={(_, draggedEvent) =>
                 draggedEvent?.extendedProps.type !== "break"
               }
+              eventDragStop={(eventDragged) => handleDropElement(eventDragged)}
               customButtons={{
                 shiftReport: {
                   text: "Отчет смены",
