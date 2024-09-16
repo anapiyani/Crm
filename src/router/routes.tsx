@@ -90,6 +90,11 @@ export const ROUTES: IRoute[] = [
     component: <WorkSchedule />,
   },
   {
+    name: "Work schedule",
+    path: "/employees/work-schedule/:id",
+    component: <WorkSchedule />,
+  },
+  {
     name: "Employee card",
     path: "employees/:id",
     component: <EmployeePage />,

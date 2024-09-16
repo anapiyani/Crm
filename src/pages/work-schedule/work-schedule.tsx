@@ -15,11 +15,13 @@ import interactionPlugin from "@fullcalendar/interaction";
 import DaySettingsModal from "@/modals/schedule/day-settings.modal";
 import EmployeSettingsModal from "@/modals/schedule/employee-settings.modal";
 import dayjs from "dayjs";
+import { useParams } from "react-router-dom";
 
 const WorkSchedule = () => {
   const [selectedEmployeeIds, setSelectedEmployeeIds] = useState<
     { id: number; color?: string }[]
   >([]);
+  const { id } = useParams<{ id: string }>();
 
   const employeeQueries = useQueries({
     queries: selectedEmployeeIds.map((user) => {
@@ -33,9 +35,10 @@ const WorkSchedule = () => {
   });
 
   const employeesData = useMemo(() => {
-    return employeeQueries
+    const data = employeeQueries
       .filter((query) => query.isSuccess)
       .map((query) => query.data as IResponseScheduleData[]);
+    return data;
   }, [employeeQueries]);
 
   const handleOpenAddPeriod = () => {
@@ -78,7 +81,7 @@ const WorkSchedule = () => {
   };
 
   const eventData = () => {
-    return employeesData.flatMap((employeeArray) =>
+    const events = employeesData.flatMap((employeeArray) =>
       employeeArray.map((employee) => ({
         title: `${employee.employee.first_name} ${employee.employee.last_name}`,
         date: employee.date,
@@ -93,6 +96,7 @@ const WorkSchedule = () => {
         },
       })),
     );
+    return events;
   };
 
   const generateColors = () => {
@@ -165,6 +169,7 @@ const WorkSchedule = () => {
               <RoleEmployeeCheckbox
                 onEmployeeSelectionChange={handleCheckEmployee}
                 generateColors={generateColors}
+                id={id}
               />
             </div>
           </div>
