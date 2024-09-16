@@ -95,7 +95,7 @@ const WorkSchedule = () => {
           user_id: employee.employee.id,
           end_time: employee.end_time,
         },
-      })),
+      }))
     );
     return events;
   };
@@ -108,7 +108,7 @@ const WorkSchedule = () => {
   };
 
   const handleCheckEmployee = (
-    selectedEmployeeIds: { id: number; color?: string | undefined }[],
+    selectedEmployeeIds: { id: number; color?: string | undefined }[]
   ) => {
     setSelectedEmployeeIds(selectedEmployeeIds);
   };

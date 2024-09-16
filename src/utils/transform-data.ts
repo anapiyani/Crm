@@ -69,7 +69,7 @@ export const transformSchedulesToFullCalendar = (schedules: ISchedule[]) => {
     appointments.forEach((appointment) => {
       events.push({
         id: `${appointment.id}`,
-        title: `${schedule.employee.first_name} ${schedule.employee.last_name}`,
+        title: `${appointment.client.first_name} ${appointment.client.last_name}`,
         start: `${date}T${appointment.start_time}`,
         end: `${date}T${appointment.end_time}`,
         resourceId: resourceId,
@@ -141,7 +141,7 @@ export const transformMonthlySchedulesToFullCalendar = (
       schedule.appointments.forEach((appointment) => {
         events.push({
           id: `${appointment.id}`,
-          title: `${schedule.employee.first_name} ${schedule.employee.last_name}`,
+          title: `${appointment.client.first_name} ${appointment.client.last_name}`,
           start: `${formattedDate}T${appointment.start_time}`,
           end: `${formattedDate}T${appointment.end_time}`,
           resourceId: `${schedule.employee.id}-${formattedDate}`,

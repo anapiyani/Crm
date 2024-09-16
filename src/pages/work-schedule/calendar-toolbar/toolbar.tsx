@@ -10,7 +10,7 @@ interface CustomToolbarProps {
   date: Date;
   onNavigate: (
     action: "PREV" | "NEXT" | "TODAY" | "DATE",
-    newDate?: Date,
+    newDate?: Date
   ) => void;
 }
 
