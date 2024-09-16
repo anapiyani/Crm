@@ -58,6 +58,7 @@ export const temporaryDeleteAppointment = ({
   reason_deleted: null | string;
 }) => {
   const formData = new FormData();
+
   formData.append("is_deleted", String(is_deleted));
   formData.append("reason_deleted", reason_deleted || "");
 
