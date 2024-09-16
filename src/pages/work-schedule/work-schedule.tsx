@@ -28,6 +28,7 @@ const WorkSchedule = () => {
       return {
         queryKey: ["scheduleEmployees", user.id],
         queryFn: () => getEmployeeScheduleEachDay(user.id),
+        refetchOnMount: true,
         enabled: selectedEmployeeIds.length > 0,
         staleTime: 1000 * 60 * 5,
       };

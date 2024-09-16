@@ -18,8 +18,6 @@ const RoleEmployeeCheckbox: React.FC<RoleEmployeeCheckboxProps> = ({
   generateColors,
   id,
 }) => {
-  // if there is an id, then we are in the edit mode which means we have to check the employee that match the id
-
   const { data, isPending, error } = useQuery({
     queryKey: ["roleEmployeeCheckbox"],
     queryFn: getRoleEployeeByDepartment,
@@ -109,7 +107,7 @@ const RoleEmployeeCheckbox: React.FC<RoleEmployeeCheckboxProps> = ({
       const initialOpenState: Record<string, boolean> = {};
       data.forEach((department) => {
         initialState[department.department] = false;
-        initialOpenState[department.department] = false; // Initially all branches are open
+        initialOpenState[department.department] = false;
         department.roles.forEach((role) => {
           initialState[role.id.toString()] = false;
           initialOpenState[role.id.toString()] = true;
