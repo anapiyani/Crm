@@ -7,6 +7,11 @@ import ResponsiveTabs from "@/components/tabs/tabs.component";
 import RevenueChart from "@/pages/employees/employee-card/components/chart";
 import { HomeOutlined } from "@mui/icons-material";
 import { ICardInfoEmployee } from "@/ts/employee.interface";
+import {
+  revenueChartLabels,
+  revenueChartData,
+  revenueChartLegendLabels,
+} from "@/pages/clients/client-card/data";
 
 interface TabData {
   to: string;
@@ -78,7 +83,13 @@ const InfoHeader: React.FC<InfoHeaderProps> = ({
                   valueText={startedWork ? startedWork : "Дата не указана"}
                 />
               </div>
-              <RevenueChart />
+              <RevenueChart
+                labels={revenueChartLabels}
+                datasets={revenueChartData}
+                maxY1={75}
+                maxY2={60}
+                legendLabels={revenueChartLegendLabels}
+              />
             </Grid>
           </div>
         </div>

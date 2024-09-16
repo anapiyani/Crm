@@ -41,6 +41,11 @@ import { getEmployeeScheduleYearly } from "@/service/schedule/schedule.service";
 import { useDeleteWallethistory } from "@/service/employee/employee.hook";
 import NiceModal from "@ebay/nice-modal-react";
 import stepFormModal from "@/modals/step-form/step-form.modal";
+import {
+  revenueChartLabels,
+  revenueChartData,
+  revenueChartLegendLabels,
+} from "@/pages/clients/client-card/data";
 
 const EmployeePage = () => {
   const [currentTab, setCurrentTab] = useState<number>(0);
@@ -319,7 +324,13 @@ const EmployeePage = () => {
                 valueText={getWorkingTime() + " дней"}
               />
             </div>
-            <RevenueChart />
+            <RevenueChart
+              labels={revenueChartLabels}
+              datasets={revenueChartData}
+              maxY1={75}
+              maxY2={60}
+              legendLabels={revenueChartLegendLabels}
+            />
           </Grid>
         );
       case 1:
@@ -355,7 +366,13 @@ const EmployeePage = () => {
                 }
               />
             </div>
-            <RevenueChart />
+            <RevenueChart
+              labels={revenueChartLabels}
+              datasets={revenueChartData}
+              maxY1={75}
+              maxY2={60}
+              legendLabels={revenueChartLegendLabels}
+            />
           </Grid>
         );
       case 2:
@@ -473,7 +490,13 @@ const EmployeePage = () => {
                 valueText={getWorkingTime() + " дней"}
               />
             </div>
-            <RevenueChart />
+            <RevenueChart
+              labels={revenueChartLabels}
+              datasets={revenueChartData}
+              maxY1={75}
+              maxY2={60}
+              legendLabels={revenueChartLegendLabels}
+            />
           </Grid>
         );
       }
