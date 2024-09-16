@@ -483,15 +483,19 @@ const FloatingPart: React.FC<FloatingPartProps> = ({
                             label="Выберите период"
                             variant="outlined"
                             sx={{
-                              fontSize: "1.4rem",
-                              marginBottom: "1rem",
+                              fontSize: "3.0rem", // Increase font size here
+                              marginBottom: "1rem", // Maintain margin bottom
+                              marginTop: "1.0rem",  // Add margin to adjust vertical alignment
+                              "& .MuiInputBase-root": {
+                                padding: "0.75rem", // Adjust padding for better alignment
+                              },
                             }}
                           />
                         )}
                         sx={{
                           width: "20rem",
                           "& .MuiAutocomplete-inputRoot": {
-                            fontSize: "1rem",
+                            fontSize: "1.25rem",
                             padding: "0.5rem",
                             width: "20rem",
                           },

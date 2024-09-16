@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 import { useQuery } from "@tanstack/react-query";
 import { getExcelFile } from "@/service/reports/reports.service";
 import dayjs from "dayjs";
+import CustomDatePicker from "@/components/date-picker/date-picker-custom";
 
 const Report = () => {
   const [dateFirst, setDateFirst] = useState<string>("");
@@ -21,6 +22,8 @@ const Report = () => {
       }),
     enabled: !!dateFirst && !!dateSecond,
   });
+  const [fromDate, setFromDate] = useState<string>("");
+  const [toDate, setToDate] = useState<string>("");
 
   const getExcel = async () => {
     if (dateFirst && dateSecond) {
@@ -60,14 +63,32 @@ const Report = () => {
           позже, зайдя в карту клиента.
         </p>
         <div className={classes.report__upper__search}>
-          <VerticalTextField
+          {/* <VerticalTextField
             placeholder={"01.08.2024"}
             placeholderOptional={"01.08.2024"}
             doubleDivier="-"
             type="double-calendar"
             onChangeFrom={(e) => setDateFirst(e.target.value)}
             onChangeTo={(e) => setDateSecond(e.target.value)}
-          />
+          /> */}
+          <div>
+            <div style={{width:"78%",display:"flex", flexDirection:"row",alignItems:"center"}}>
+            <CustomDatePicker
+              value={fromDate}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setFromDate(e.target.value)
+              }
+            />
+            <p style={{ marginRight: "1rem", marginLeft: "1rem", fontSize:"1.6rem" }}>-</p>
+            <CustomDatePicker
+              value={toDate}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setToDate(e.target.value)
+              }
+              min={fromDate}
+            />
+            </div>
+          </div>
           <Button
             color="primary"
             sx={{
