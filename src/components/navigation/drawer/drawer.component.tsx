@@ -11,8 +11,8 @@ import {
   ListItemText,
   styled,
 } from "@mui/material";
+import AssistantIcon from "@mui/icons-material/Assistant";
 import { Fragment, ReactNode, useEffect, useState } from "react";
-
 import logo from "@/assets/icons/icon_wise_white.svg";
 import {
   AttachMoney,
@@ -35,6 +35,8 @@ import {
 } from "@mui/icons-material";
 import { NavLink, useLocation } from "react-router-dom";
 import classes from "./styles.module.scss";
+import NiceModal from "@ebay/nice-modal-react";
+import chatModal from "@/modals/chat/chat.modal";
 
 const drawerWidth = "25.6rem";
 
@@ -370,6 +372,14 @@ const ResponsiveDrawer = (props: IProps) => {
         >
           {drawer}
         </StyledDrawerPaper>
+        <div
+          onClick={() => {
+            NiceModal.show(chatModal);
+          }}
+          className={classes["assistant"]}
+        >
+          <AssistantIcon />
+        </div>
       </Box>
     </Box>
   );
