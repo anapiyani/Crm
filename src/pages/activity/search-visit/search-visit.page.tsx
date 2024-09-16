@@ -27,6 +27,7 @@ import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { IVisitsInfo, IVisitsResponse } from "@/ts/activity.interface";
 import { searchVisits } from "@/service/activity/activity.service";
 import toast from "react-hot-toast";
+import CustomDatePicker from "@/components/date-picker/date-picker-custom";
 
 interface ITreeItemProps {
   id: number;
@@ -246,6 +247,9 @@ const SearchVisits = () => {
     refetchOnWindowFocus: false,
   });
 
+  const [fromDate, setFromDate] = useState<string>("");
+  const [toDate, setToDate] = useState<string>("");
+
   const checkboxOptions = [
     {
       label: "Только неоплаченные",
@@ -417,7 +421,7 @@ const SearchVisits = () => {
                 }}
               />
 
-              <VerticalTextField
+              {/* <VerticalTextField MADE BY DIAS
                 name={"date"}
                 label={"Дата"}
                 placeholder="01.01.2021"
@@ -431,7 +435,29 @@ const SearchVisits = () => {
                 onChangeTo={(e) => {
                   setValue("date_to", e.target.value);
                 }}
-              />
+              /> */}
+
+              <div style={{ display: "flex", width: "100%" }} className={classes.visits__content__infos__form__date
+              }>
+                <label className={classes["date-picker-label"]}>Дата</label>
+                <div style={{width:"78%",display:"flex", flexDirection:"row",alignItems:"center"}}>
+                <CustomDatePicker
+                  value={fromDate}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setFromDate(e.target.value)
+                  }
+                />
+                <p style={{ marginRight: "1rem", marginLeft: "1rem", fontSize:"1.6rem" }}>-</p>
+                <CustomDatePicker
+                  value={toDate}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setToDate(e.target.value)
+                  }
+                  min={fromDate}
+                />
+                </div>
+                
+              </div>
 
               <VerticalTextField
                 label={"Номер"}

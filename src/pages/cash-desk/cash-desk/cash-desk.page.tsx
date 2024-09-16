@@ -482,15 +482,18 @@ const CashDesk = () => {
               <p>Будут показаны данные за выбранный период.</p>
               <div style={{ display: "flex", width: "90%" }}>
                 <CustomDatePicker
+                  value={fromDate}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                     setFromDate(e.target.value)
                   }
                 />
                 <p style={{ marginRight: "1rem", marginLeft: "1rem" }}>-</p>
                 <CustomDatePicker
+                  value={toDate}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                     setToDate(e.target.value)
                   }
+                  min={fromDate}
                 />
               </div>
               <Button onClick={onRefetchCashRegister} variant="contained">
@@ -784,7 +787,7 @@ const CashDesk = () => {
                             gap: "0.5rem",
                           }}
                         >
-                          {result.overall_change_in_cash_register.card} ₸
+                          {result.overall_change_in_cash_register.card ? result.overall_change_in_cash_register.card : null} ₸
                           <CreditCard />
                         </p>
                       ) : null}
@@ -798,7 +801,7 @@ const CashDesk = () => {
                           }}
                         >
                           {result.overall_change_in_cash_register.cash} ₸{" "}
-                          <Public />
+                          <Payments />
                         </p>
                       )}
                       {result.overall_change_in_cash_register?.check !==

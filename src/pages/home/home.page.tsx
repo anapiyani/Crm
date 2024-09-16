@@ -112,6 +112,17 @@ const Home: React.FC = () => {
     "daily"
   );
 
+  const [fromDate, setFromDate] = useState<string | null>(null);
+  const [toDate, setToDate] = useState<string | null>(null);
+
+  const handleFromDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFromDate(e.target.value);
+  };
+
+  const handleToDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setToDate(e.target.value);
+  };
+
   const {
     data: schedulesData,
     isPending: scheduesDataPending,
@@ -361,6 +372,7 @@ const Home: React.FC = () => {
     NiceModal.show(modal);
     setAnchorEl(null);
   };
+  
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <div className={classes["home"]}>
@@ -692,10 +704,9 @@ const Home: React.FC = () => {
                           width: "11rem",
                         }}
                       >
-                        <CustomDatePicker
-                          style={{
-                            fontSize: "1rem",
-                          }}
+                        <CustomDatePicker 
+                          value={fromDate || ""}
+                          onChange={handleFromDateChange}
                         />
                       </div>
                       <span
@@ -708,10 +719,10 @@ const Home: React.FC = () => {
                           width: "11rem",
                         }}
                       >
-                        <CustomDatePicker
-                          style={{
-                            fontSize: "1rem",
-                          }}
+                        <CustomDatePicker 
+                          value={toDate || ""}
+                          onChange={handleToDateChange}
+                          min={fromDate || ""}
                         />
                       </div>
                       <Button
