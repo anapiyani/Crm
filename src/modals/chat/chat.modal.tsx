@@ -2,7 +2,13 @@ import ModalWindow from "@/components/modal-window/modal-window";
 import NiceModal, { useModal } from "@ebay/nice-modal-react";
 import classes from "./style.module.scss";
 import CustomTextField from "@/components/textField/textField.component";
-import { Button, CircularProgress } from "@mui/material"; // Added CircularProgress for loading spinner
+import {
+  Backdrop,
+  Button,
+  CircularProgress,
+  Divider,
+  modalClasses,
+} from "@mui/material"; // Added CircularProgress for loading spinner
 import { Send } from "@mui/icons-material";
 import { useState, FormEvent, useRef, useEffect } from "react";
 import { useTextToBot } from "@/service/bot/bot.hook";
@@ -75,48 +81,64 @@ const ChatModal = () => {
   }, [messages]);
 
   return (
-    <ModalWindow
-      title={"Чат"}
+    <Backdrop
+      sx={{
+        color: "#fff",
+        zIndex: (theme) => theme.zIndex.drawer + 1,
+      }}
       open={modal.visible}
-      handleClose={() => modal.hide()}
-      withButtons={false}
+      onClick={() => {
+        modal.hide();
+      }}
     >
-      <div className={classes.chat}>
-        <div className={classes.chat__content}>
-          {messages.map((message, index) => (
-            <div
-              key={index}
-              ref={messagesEndRef}
-              className={message.sender === "bot" ? classes.bot : classes.user}
-            >
-              {message.text}
+      <div className={classes.modal} onClick={(e) => e.stopPropagation()}>
+        <div className={classes.modal__window}>
+          <div className={classes.modal__window__header}>
+            <h2 className={classes.modal__window__title}>Чат с ботом</h2>
+          </div>
+          <Divider />
+          <div className={classes.modal__window__content}>
+            <div className={classes.chat}>
+              <div className={classes.chat__content}>
+                {messages.map((message, index) => (
+                  <div
+                    key={index}
+                    ref={messagesEndRef}
+                    className={
+                      message.sender === "bot" ? classes.bot : classes.user
+                    }
+                  >
+                    {message.text}
+                  </div>
+                ))}
+              </div>
+              <form className={classes.chat__form} onSubmit={handleSendMessage}>
+                <CustomTextField
+                  placeholder="Сообщение..."
+                  label={""}
+                  size="small"
+                  value={userMessage}
+                  onChange={(e) => setUserMessage(e.target.value)}
+                  disabled={loadingMessageId !== null}
+                  autoComplete="off"
+                />
+                <Button
+                  variant="contained"
+                  type="submit"
+                  disabled={loadingMessageId !== null}
+                >
+                  {loadingMessageId !== null ? (
+                    <CircularProgress size={20} />
+                  ) : (
+                    <Send />
+                  )}
+                </Button>
+              </form>
             </div>
-          ))}
+          </div>
         </div>
-        <form className={classes.chat__form} onSubmit={handleSendMessage}>
-          <CustomTextField
-            placeholder="Сообщение..."
-            label={""}
-            size="small"
-            value={userMessage}
-            onChange={(e) => setUserMessage(e.target.value)}
-            disabled={loadingMessageId !== null}
-            autoComplete="off"
-          />
-          <Button
-            variant="contained"
-            type="submit"
-            disabled={loadingMessageId !== null}
-          >
-            {loadingMessageId !== null ? (
-              <CircularProgress size={20} />
-            ) : (
-              <Send />
-            )}
-          </Button>
-        </form>
       </div>
-    </ModalWindow>
+    </Backdrop>
   );
 };
 
