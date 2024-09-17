@@ -114,7 +114,7 @@ export default function EventPlannedTable<T extends ITableData>({
       (option) => option.value === Number(event.target.value)
     ) || { label: "10", value: 10 };
     setRowsPerPage(selectedOption.value);
-    setPage(0); // Reset page when page size changes
+    setPage(0);
   };
 
   const handlePageChange = (
@@ -142,7 +142,9 @@ export default function EventPlannedTable<T extends ITableData>({
 
   return (
     <div className={classes["event-history-table"]}>
-      <div style={{ padding: "0.8rem" }}>
+      <div
+        style={{ padding: "0.8rem", background: "#fff", borderRadius: "8px" }}
+      >
         <TableContainer
           component={Paper}
           sx={{

@@ -191,3 +191,38 @@ export const discountChartLegendLabels = [
 ];
 
 export const discountChartLabels = ["", "Июнь", "Июль", "Август", "Сентябрь"];
+
+export const membershipChartLabels = ["Июнь", "Июль", "Август", "Сентябрь"];
+
+export const membershipChartData = [
+  {
+    label: "Сертификаты",
+    data: [10, 20, 40, 60],
+    borderColor: "#3F8CFF",
+    backgroundColor: "rgba(63, 140, 255, 0.2)",
+    yAxisID: "y1",
+    fill: true,
+  },
+  {
+    label: "Абонементы",
+    data: [5, 15, 30, 55],
+    borderColor: "#4CAF50",
+    backgroundColor: "rgba(76, 175, 80, 0.2)",
+    yAxisID: "y1",
+    fill: true,
+  },
+  {
+    label: "Активные сертификаты",
+    data: [15, 25, 35, 60],
+    borderColor: "#9C27B0",
+    backgroundColor: "rgba(156, 39, 176, 0.2)",
+    yAxisID: "y2",
+    fill: true,
+  },
+];
+
+export const membershipChartLegendLabels = [
+  { label: "Сертификаты", color: "#3F8CFF" },
+  { label: "Абонементы", color: "#4CAF50" },
+  { label: "Активные сертификаты", color: "#9C27B0" },
+];

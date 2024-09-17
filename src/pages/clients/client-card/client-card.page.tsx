@@ -17,11 +17,15 @@ import {
   Add,
   CachedOutlined,
   CalendarMonthOutlined,
+  CardGiftcardOutlined,
   ContentCut,
   CreditScoreOutlined,
   ExitToApp,
   HomeOutlined,
+  LocalActivity,
+  LocalActivityOutlined,
   PaymentsOutlined,
+  PlayCircleFilledOutlined,
   ReceiptLongOutlined,
   StarBorderOutlined,
 } from "@mui/icons-material";
@@ -59,10 +63,15 @@ import {
   discountChartData,
   discountChartLabels,
   discountChartLegendLabels,
+  membershipChartData,
+  membershipChartLabels,
+  membershipChartLegendLabels,
 } from "./data";
 import EventPlannedTable from "@/modals/home/_components/event-planned-table/event-planned-table";
 import DepositModal from "@/modals/clients/deposit.modal";
 import PersonalDiscount from "./components/personal-discount/personalDiscountCard";
+import { r } from "node_modules/@fullcalendar/resource/internal-common";
+import MembershipTable from "./components/membership-table/membershipTable";
 
 const ClientCard = () => {
   const [open, setOpen] = useState(false);
@@ -501,6 +510,41 @@ const ClientCard = () => {
             />
           </Grid>
         );
+      case 4:
+        return (
+          <Grid container xl={12} sx={{ gap: "0.8rem" }}>
+            <div className={classes["main__header__upper__row__cards"]}>
+              <CounterCard
+                backgroundColor={"#2196F34D"}
+                iconColor="#2196F3"
+                icon={<CardGiftcardOutlined />}
+                textTitle="Сертификаты"
+                valueText={"0 шт."}
+              />
+              <CounterCard
+                backgroundColor={"#2E7D324D"}
+                icon={<LocalActivityOutlined />}
+                iconColor="#2E7D32"
+                textTitle="Абонементы"
+                valueText={"0 шт."}
+              />
+              <CounterCard
+                backgroundColor={"#9C27B04D"}
+                iconColor="#9C27B0"
+                icon={<PlayCircleFilledOutlined />}
+                textTitle="Активные сертификаты"
+                valueText={"0 шт."}
+              />
+            </div>
+            <RevenueChart
+              labels={membershipChartLabels}
+              datasets={membershipChartData}
+              maxY1={75}
+              maxY2={60}
+              legendLabels={membershipChartLegendLabels}
+            />
+          </Grid>
+        );
       default:
         return <div></div>;
     }
@@ -710,7 +754,7 @@ const ClientCard = () => {
               visits={5}
               totalAmount="50 000 тенге"
               savedAmount="5 000 тенге"
-              issueDate="4 июн 2020" 
+              issueDate="4 июн 2020"
               percent={10}
             />
             <PersonalDiscount
@@ -718,9 +762,85 @@ const ClientCard = () => {
               visits={5}
               totalAmount="50 000 тенге"
               savedAmount="5 000 тенге"
-              issueDate="4 июн 2020" 
+              issueDate="4 июн 2020"
               percent={10}
             />
+          </Grid>
+        );
+      case 4:
+        return (
+          <Grid
+            container
+            sx={{
+              mb: "5rem",
+              ml: { xs: "2rem", xl: "7.6rem" },
+            }}
+            xs={9}
+            md={10.5}
+          >
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                width: "100%",
+              }}
+            >
+              <div className={classes.membership}>
+                <div className={classes.membership__section}>
+                  <p className={classes.membership__section__title}>
+                    Купленные подарочные сертификаты
+                  </p>
+                  <Divider />
+                </div>
+                <MembershipTable />
+              </div>
+
+              <div className={classes.membership}>
+                <div className={classes.membership__section}>
+                  <p className={classes.membership__section__title}>
+                    Использованные подарочные сертификаты
+                  </p>
+                  <Divider />
+                </div>
+                <p className={classes.membership__noTableText}>
+                  Нет активированных сертификатов
+                </p>
+              </div>
+
+              <div className={classes.membership}>
+                <div className={classes.membership__section}>
+                  <p className={classes.membership__section__title}>
+                    Абонементы
+                  </p>
+                  <Divider />
+                </div>
+                <p className={classes.membership__noTableText}>
+                  Нет активированных абонементов
+                </p>
+              </div>
+              <div className={classes.membership}>
+                <div className={classes.membership__section}>
+                  <p className={classes.membership__section__title}>
+                    Депозитные абонементы
+                  </p>
+                  <Divider />
+                </div>
+                <p className={classes.membership__noTableText}>
+                  Нет активированных абонементов
+                </p>
+              </div>
+              <div className={classes.membership}>
+                <div className={classes.membership__section}>
+                  <p className={classes.membership__section__title}>
+                    Составные абонементы
+                  </p>
+                  <Divider />
+                </div>
+                <p className={classes.membership__noTableText}>
+                  Нет активированных абонементов
+                </p>
+              </div>
+            </div>
           </Grid>
         );
       default:

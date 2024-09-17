@@ -13,7 +13,7 @@ import {
   TableRowProps,
 } from "@mui/material";
 import { TableData } from "../data";
-import { CreditScore, CardGiftcard, Rowing } from "@mui/icons-material";
+import { CreditScore, CardGiftcard } from "@mui/icons-material";
 
 interface StyledTableRowProps extends TableRowProps {
   isParentRow?: boolean;

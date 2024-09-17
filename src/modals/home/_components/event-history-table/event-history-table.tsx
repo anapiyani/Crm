@@ -142,7 +142,7 @@ const EventHistoryTable: React.FC<IEventHistoryTableProps> = ({ data }) => {
 
   return (
     <div className={classes["event-history-table"]}>
-      <div style={{ padding: "0.8rem" }}>
+      <div style={{ padding: "0.8rem", background:"#fff", borderRadius:"8px" }}>
         <TableContainer
           component={Paper}
           sx={{

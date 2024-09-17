@@ -34,9 +34,7 @@ const RevenueChart: React.FC<CustomChartProps> = ({
   legendLabels,
   showThousandSuffix = true,
 }) => {
-  const [showData, setShowData] = useState(
-    legendLabels.map(() => true)
-  );
+  const [showData, setShowData] = useState(legendLabels.map(() => true));
 
   const data = {
     labels,
@@ -57,9 +55,7 @@ const RevenueChart: React.FC<CustomChartProps> = ({
         ticks: {
           stepSize: maxY1 / 3,
           callback: function (tickValue: number | string) {
-            return showThousandSuffix
-              ? `${tickValue} тыс.`
-              : `${tickValue}`;
+            return showThousandSuffix ? `${tickValue} тыс.` : `${tickValue}`;
           },
         },
       },
