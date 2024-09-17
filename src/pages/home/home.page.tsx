@@ -755,11 +755,6 @@ const Home: React.FC = () => {
                         Расчитать
                       </Button>
                     </div>
-                    <Divider />
-                    <div className={classes["prediction__result"]}>
-                      <span>Прогноз выручки</span>
-                      <span>0 руб.</span>
-                    </div>
                   </div>
 
                   <div className={classes["client"]}>
