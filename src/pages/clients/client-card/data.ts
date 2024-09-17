@@ -143,25 +143,51 @@ export const financeChartLegendLabels = [
 export const revenueChartLabels = ["", "Июнь", "Июль", "Август", "Сентябрь"];
 
 export const revenueChartData = [
-    {
-      label: "Выручка",
-      data: [7, 13, 30, 52, 73],
-      borderColor: "#4CAF50",
-      backgroundColor: "rgba(76, 175, 80, 0.1)",
-      yAxisID: "y1",
-      fill: true,
-    },
-    {
-      label: "Клиенты",
-      data: [7, 15, 38, 50, 60],
-      borderColor: "#2196F3",
-      backgroundColor: "rgba(33, 150, 243, 0.1)",
-      yAxisID: "y2",
-      fill: "-1",
-    },
-  ];
+  {
+    label: "Выручка",
+    data: [7, 13, 30, 52, 73],
+    borderColor: "#4CAF50",
+    backgroundColor: "rgba(76, 175, 80, 0.1)",
+    yAxisID: "y1",
+    fill: true,
+  },
+  {
+    label: "Клиенты",
+    data: [7, 15, 38, 50, 60],
+    borderColor: "#2196F3",
+    backgroundColor: "rgba(33, 150, 243, 0.1)",
+    yAxisID: "y2",
+    fill: "-1",
+  },
+];
 
-  export const revenueChartLegendLabels = [
-    { label: "Выручка", color: "#4CAF50" },
-    { label: "Клиенты", color: "#2196F3" },
-  ];
+export const revenueChartLegendLabels = [
+  { label: "Выручка", color: "#4CAF50" },
+  { label: "Клиенты", color: "#2196F3" },
+];
+
+export const discountChartData = [
+  {
+    label: "Количество скидок",
+    data: [1, 2, 5, 8, 15],
+    borderColor: "rgba(244, 67, 54, 1)",
+    backgroundColor: "rgba(244, 67, 54, 0.2)",
+    yAxisID: "y1",
+    fill: true,
+  },
+  {
+    label: "Процент скидок",
+    data: [0.5, 1.5, 4, 5.5, 6],
+    borderColor: "rgba(33, 150, 243, 1)",
+    backgroundColor: "rgba(33, 150, 243, 0.2)",
+    yAxisID: "y2",
+    fill: "-1",
+  },
+];
+
+export const discountChartLegendLabels = [
+  { label: "Количество скидок", color: "#C41C1C" },
+  { label: "Процент скидок", color: "#2196F3" },
+];
+
+export const discountChartLabels = ["", "Июнь", "Июль", "Август", "Сентябрь"];

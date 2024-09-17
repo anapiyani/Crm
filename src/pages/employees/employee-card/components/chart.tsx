@@ -23,6 +23,7 @@ interface CustomChartProps {
   maxY1: number;
   maxY2: number;
   legendLabels: { label: string; color: string }[];
+  showThousandSuffix?: boolean;
 }
 
 const RevenueChart: React.FC<CustomChartProps> = ({
@@ -31,9 +32,10 @@ const RevenueChart: React.FC<CustomChartProps> = ({
   maxY1,
   maxY2,
   legendLabels,
+  showThousandSuffix = true,
 }) => {
   const [showData, setShowData] = useState(
-    legendLabels.map(() => true) // initial state to show all data
+    legendLabels.map(() => true)
   );
 
   const data = {
@@ -55,7 +57,9 @@ const RevenueChart: React.FC<CustomChartProps> = ({
         ticks: {
           stepSize: maxY1 / 3,
           callback: function (tickValue: number | string) {
-            return `${tickValue} тыс.`;
+            return showThousandSuffix
+              ? `${tickValue} тыс.`
+              : `${tickValue}`;
           },
         },
       },
@@ -120,7 +124,7 @@ const RevenueChart: React.FC<CustomChartProps> = ({
                   "& .MuiSwitch-switchBase.Mui-checked": {
                     color: legend.color,
                     "&:hover": {
-                      backgroundColor: `${legend.color}1A`, // Use rgba equivalent
+                      backgroundColor: `${legend.color}1A`,
                     },
                   },
                   "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": {

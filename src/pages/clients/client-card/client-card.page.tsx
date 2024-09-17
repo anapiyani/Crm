@@ -23,6 +23,7 @@ import {
   HomeOutlined,
   PaymentsOutlined,
   ReceiptLongOutlined,
+  StarBorderOutlined,
 } from "@mui/icons-material";
 import {
   cardInfoEmplpyee,
@@ -55,9 +56,13 @@ import {
   revenueChartData,
   revenueChartLabels,
   revenueChartLegendLabels,
+  discountChartData,
+  discountChartLabels,
+  discountChartLegendLabels,
 } from "./data";
 import EventPlannedTable from "@/modals/home/_components/event-planned-table/event-planned-table";
 import DepositModal from "@/modals/clients/deposit.modal";
+import PersonalDiscount from "./components/personal-discount/personalDiscountCard";
 
 const ClientCard = () => {
   const [open, setOpen] = useState(false);
@@ -459,6 +464,43 @@ const ClientCard = () => {
             />
           </Grid>
         );
+      case 3:
+        return (
+          <Grid container xl={12} sx={{ gap: "0.8rem" }}>
+            <div className={classes["main__header__upper__row__cards"]}>
+              <CounterCard
+                backgroundColor={"#2E7D324D"}
+                icon={<Add />}
+                iconColor="#2E7D32"
+                textTitle="Выдать скидку или карту"
+                valueText={""}
+              />
+              <CounterCard
+                backgroundColor={"#F7C5C5"}
+                icon={<StarBorderOutlined />}
+                iconColor="#C41C1C"
+                textTitle="Количество скидок"
+                valueText={"4 шт."}
+              />
+
+              <CounterCard
+                backgroundColor={"#2196F34D"}
+                icon={<PaymentsOutlined />}
+                iconColor="#2196F3"
+                textTitle="Текущая скидка"
+                valueText={"10%"}
+              />
+            </div>
+            <RevenueChart
+              labels={discountChartLabels}
+              datasets={discountChartData}
+              maxY1={15}
+              maxY2={6}
+              legendLabels={discountChartLegendLabels}
+              showThousandSuffix={false}
+            />
+          </Grid>
+        );
       default:
         return <div></div>;
     }
@@ -638,7 +680,11 @@ const ClientCard = () => {
                       </Button>
                     </div>
                   </div>
-                  <DepositModal open={open} onClose={handleClose} isUpdate={isUpdate} />
+                  <DepositModal
+                    open={open}
+                    onClose={handleClose}
+                    isUpdate={isUpdate}
+                  />
                   <Divider />
                 </div>
 
@@ -648,6 +694,33 @@ const ClientCard = () => {
                 />
               </div>
             </div>
+          </Grid>
+        );
+      case 3:
+        return (
+          <Grid
+            container
+            sx={{ mb: "5rem", ml: { xs: "2rem", xl: "7.6rem" } }}
+            xs={9}
+            md={10.5}
+            gap={3}
+          >
+            <PersonalDiscount
+              status="Активна"
+              visits={5}
+              totalAmount="50 000 тенге"
+              savedAmount="5 000 тенге"
+              issueDate="4 июн 2020" 
+              percent={10}
+            />
+            <PersonalDiscount
+              status="Неактивна"
+              visits={5}
+              totalAmount="50 000 тенге"
+              savedAmount="5 000 тенге"
+              issueDate="4 июн 2020" 
+              percent={10}
+            />
           </Grid>
         );
       default:
