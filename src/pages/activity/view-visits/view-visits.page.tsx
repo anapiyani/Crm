@@ -41,7 +41,6 @@ import { IServicesAdd } from "@/ts/appointments.interface";
 const ViewVisits = () => {
   const params = useParams<{ id: string }>();
   const cancelMutation = useCancelPayment();
-  // mutation for adding service to appointment
   const addServiceMutation = useAddServiceForAppointment();
 
   const {
