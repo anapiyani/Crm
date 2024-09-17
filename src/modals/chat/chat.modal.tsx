@@ -2,13 +2,7 @@ import ModalWindow from "@/components/modal-window/modal-window";
 import NiceModal, { useModal } from "@ebay/nice-modal-react";
 import classes from "./style.module.scss";
 import CustomTextField from "@/components/textField/textField.component";
-import {
-  Backdrop,
-  Button,
-  CircularProgress,
-  Divider,
-  modalClasses,
-} from "@mui/material"; // Added CircularProgress for loading spinner
+import { Backdrop, Button, CircularProgress, Divider } from "@mui/material";
 import { Send } from "@mui/icons-material";
 import { useState, FormEvent, useRef, useEffect } from "react";
 import { useTextToBot } from "@/service/bot/bot.hook";
