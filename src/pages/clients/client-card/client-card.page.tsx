@@ -79,6 +79,7 @@ import PersonalDiscount from "./components/personal-discount/personalDiscountCar
 import { r } from "node_modules/@fullcalendar/resource/internal-common";
 import MembershipTable from "./components/membership-table/membershipTable";
 import { searchKassaData } from "@/service/kassa/kassa.service";
+import { getDepositHistory } from "@/service/client/client.service";
 
 interface IOption {
   label: string;
@@ -141,6 +142,59 @@ const ClientCard = () => {
   ) => {
     setPage(value);
   };
+
+  const [pageSizeDeposit, setPageSizeDeposit] = useState<IOption>({
+    label: "10",
+    value: 10,
+  });
+  const [pageDeposit, setPageDeposit] = useState(1);
+  const pageDepositCount = 10;
+
+  const pageSizeOptionsDeposit: IOption[] = [
+    { label: "10", value: 10 },
+    { label: "20", value: 20 },
+    { label: "50", value: 50 },
+    { label: "100", value: 100 },
+  ];
+
+  const handlePageDepositSizeChange = (
+    event: React.ChangeEvent<{ value: unknown }>,
+  ) => {
+    const selectedOption = pageSizeOptionsDeposit.find(
+      (option) => option.value === Number(event.target.value),
+    ) || { label: "10", value: 10 };
+    setPageSizeDeposit(selectedOption);
+  };
+
+  const handlePageDepositChange = (
+    event: React.ChangeEvent<unknown>,
+    value: number,
+  ) => {
+    setPageDeposit(value);
+  };
+
+  // const financeTableBodyData = [
+  //   {
+  //     number: 1,
+  //     deposit: "25 000 тенге",
+  //     sumChange: "25 000 тенге",
+  //     operation: "Пополнить депозит",
+  //     date: "4 июн 2020, 16:41",
+  //     employee: "Имя Фамилия, Врач-массажист",
+  //     relation: "Счет, Салон",
+  //     comment: "Комментарий",
+  //   },
+  //   {
+  //     number: 2,
+  //     deposit: "25 000 тенге",
+  //     sumChange: "25 000 тенге",
+  //     operation: "Пополнить депозит",
+  //     date: "4 июн 2020, 16:41",
+  //     employee: "Имя Фамилия, Врач-массажист",
+  //     relation: "Счет, Салон",
+  //     comment: "Комментарий",
+  //   },
+  // ];
 
   const { data: userInfoData, isLoading: userInfoLoading } = useQuery({
     queryKey: ["mainInfoEmployee", params.id],
@@ -221,6 +275,24 @@ const ClientCard = () => {
           customer: Number(params.id),
           page: pageTransaction,
           page_size: pageSizeTransaction.value,
+        }),
+    });
+
+  const { data: clientDepositHistory, isLoading: clientDepositHistoryLoading } =
+    useQuery({
+      queryKey: [
+        "getDepositHistory",
+        {
+          user_id: Number(params.id),
+          page: pageDeposit,
+          page_size: pageSizeDeposit,
+        },
+      ],
+      queryFn: () =>
+        getDepositHistory({
+          user_id: Number(params.id),
+          page: pageDeposit,
+          page_size: pageDepositCount,
         }),
     });
 
@@ -321,40 +393,6 @@ const ClientCard = () => {
     },
   ];
 
-  const moneyMovementTableHeadCells = [
-    { id: "operation" as const, numeric: false, label: "Операция" },
-    { id: "sum" as const, numeric: true, label: "Сумма" },
-    { id: "paid" as const, numeric: true, label: "Оплачено" },
-    { id: "deposit" as const, numeric: true, label: "На депозите" },
-    { id: "date" as const, numeric: false, label: "Дата" },
-    { id: "employee" as const, numeric: false, label: "Сотрудник" },
-    { id: "relation" as const, numeric: false, label: "Связь" },
-    { id: "comment" as const, numeric: false, label: "Комментарий" },
-  ];
-
-  const moneyMovementTableBodyData = [
-    {
-      operation: "Пополнить депозит",
-      sum: "25 000 тенге",
-      paid: "25 000 тенге",
-      deposit: "25 000 тенге",
-      date: "4 июн 2020, 16:41",
-      employee: "Имя Фамилия",
-      relation: "Посещение №21746, Салон",
-      comment: "Комментарий",
-    },
-    {
-      operation: "Пополнить депозит",
-      sum: "25 000 тенге",
-      paid: "25 000 тенге",
-      deposit: "25 000 тенге",
-      date: "4 июн 2020, 16:41",
-      employee: "Имя Фамилия",
-      relation: "Посещение №21746, Салон",
-      comment: "Комментарий",
-    },
-  ];
-
   const financeTableHeadCells = [
     { id: "number" as const, numeric: true, label: "№" },
     { id: "deposit" as const, numeric: true, label: "На депозите" },
@@ -364,29 +402,6 @@ const ClientCard = () => {
     { id: "employee" as const, numeric: false, label: "Сотрудник" },
     { id: "relation" as const, numeric: false, label: "Связь" },
     { id: "comment" as const, numeric: false, label: "Комментарий" },
-  ];
-
-  const financeTableBodyData = [
-    {
-      number: 1,
-      deposit: "25 000 тенге",
-      sumChange: "25 000 тенге",
-      operation: "Пополнить депозит",
-      date: "4 июн 2020, 16:41",
-      employee: "Имя Фамилия, Врач-массажист",
-      relation: "Счет, Салон",
-      comment: "Комментарий",
-    },
-    {
-      number: 2,
-      deposit: "25 000 тенге",
-      sumChange: "25 000 тенге",
-      operation: "Пополнить депозит",
-      date: "4 июн 2020, 16:41",
-      employee: "Имя Фамилия, Врач-массажист",
-      relation: "Счет, Салон",
-      comment: "Комментарий",
-    },
   ];
 
   const getWorkingTime = () => {
@@ -965,11 +980,112 @@ const ClientCard = () => {
                       />
                       <Divider />
                     </div>
-
-                    <EventPlannedTable
-                      data={financeTableBodyData}
-                      headCells={financeTableHeadCells}
-                    />
+                    {clientDepositHistory && (
+                      <div className={classes["transactions_table"]}>
+                        <Table className={classes.table}>
+                          <TableHead>
+                            <TableRow>
+                              <TableCell>№</TableCell>
+                              <TableCell>На депозите</TableCell>
+                              <TableCell>Сумма изменения</TableCell>
+                              <TableCell>Операция</TableCell>
+                              <TableCell>Дата</TableCell>
+                              <TableCell>Сотрудник</TableCell>
+                              <TableCell>Связь</TableCell>
+                              <TableCell>Комментарий</TableCell>
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            {clientDepositHistory?.results.map(
+                              (result, index) => (
+                                <TableRow key={result.id}>
+                                  <TableCell>{index + 1}</TableCell>
+                                  <TableCell>
+                                    <p>
+                                      {result.on_deposit} <br />{" "}
+                                    </p>
+                                  </TableCell>
+                                  <TableCell>
+                                    <p>{result.change_amount} ₸</p>
+                                  </TableCell>
+                                  <TableCell>
+                                    <p>{result.operation}</p>
+                                  </TableCell>
+                                  <TableCell>
+                                    {dayjs(result.date_created).format(
+                                      "DD.MM.YYYY",
+                                    )}
+                                  </TableCell>
+                                  <TableCell>
+                                    <Link
+                                      className={classes.name_link}
+                                      to={`employee/${result.employee}`}
+                                    >
+                                      {result.employee_full_name} <br />
+                                    </Link>
+                                    {result.employee_role}
+                                  </TableCell>
+                                  <TableCell>
+                                    <p>-</p>
+                                  </TableCell>
+                                  <TableCell>{result.comment}</TableCell>
+                                </TableRow>
+                              ),
+                            )}
+                          </TableBody>
+                        </Table>
+                        <div
+                          className={classes["transactions_table__container"]}
+                        >
+                          <div
+                            className={
+                              classes["transactions_table__container__row"]
+                            }
+                          >
+                            <p
+                              className={
+                                classes["transactions_table__container__label"]
+                              }
+                            >
+                              Показано {clientDepositHistory?.results.length} из{" "}
+                              {clientDepositHistory?.count} записей
+                            </p>
+                            <div>
+                              <div className={classes["tableSettings"]}>
+                                Показывать
+                                <select
+                                  name="pageSize"
+                                  onChange={handlePageDepositSizeChange}
+                                  id="pageSize"
+                                >
+                                  {pageSizeOptionsDeposit.map((option) => (
+                                    <option
+                                      key={option.value}
+                                      value={option.value}
+                                    >
+                                      {option.label}
+                                    </option>
+                                  ))}
+                                </select>
+                                записей
+                              </div>
+                            </div>
+                            <Pagination
+                              count={Math.ceil(
+                                clientDepositHistory?.count /
+                                  pageSizeDeposit.value,
+                              )}
+                              page={pageDeposit}
+                              variant="outlined"
+                              shape="rounded"
+                              boundaryCount={1}
+                              color="primary"
+                              onChange={handlePageDepositChange}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
