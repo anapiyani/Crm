@@ -15,12 +15,19 @@ import {
 import { useParams } from "react-router-dom";
 import {
   Add,
+  CachedOutlined,
   CalendarMonthOutlined,
+  CardGiftcardOutlined,
   ContentCut,
   CreditScoreOutlined,
   ExitToApp,
   HomeOutlined,
+  LocalActivity,
+  LocalActivityOutlined,
   PaymentsOutlined,
+  PlayCircleFilledOutlined,
+  ReceiptLongOutlined,
+  StarBorderOutlined,
 } from "@mui/icons-material";
 import {
   cardInfoEmplpyee,
@@ -34,8 +41,8 @@ import ClientVisitsTable from "./components/visit-table-tab/visitTable";
 import { render } from "@fullcalendar/core/preact.js";
 import BreadcrumbsCustom from "@/components/navigation/breadcrumbs/breadcrumbs";
 import ResponsiveTabs from "@/components/tabs/tabs.component";
-import { employeeTabsData } from "@/pages/employees/employee-card/data";
-import { Box, Divider } from "@mui/material";
+import { clientsTabsData } from "./data";
+import { Box, Button, Divider } from "@mui/material";
 import CounterCard from "@/components/counter-card/counter-card";
 import RevenueChart from "@/pages/employees/employee-card/components/chart";
 import { getBalance } from "@/service/activity/activity.service";
@@ -46,8 +53,38 @@ import {
   getCustomerAppointmentPlannedById,
   getCustomerDeletedAppointments,
 } from "@/service/appointments/appointments.service";
+import {
+  financeChartData,
+  financeChartLabels,
+  financeChartLegendLabels,
+  revenueChartData,
+  revenueChartLabels,
+  revenueChartLegendLabels,
+  discountChartData,
+  discountChartLabels,
+  discountChartLegendLabels,
+  membershipChartData,
+  membershipChartLabels,
+  membershipChartLegendLabels,
+} from "./data";
+import EventPlannedTable from "@/modals/home/_components/event-planned-table/event-planned-table";
+import DepositModal from "@/modals/clients/deposit.modal";
+import PersonalDiscount from "./components/personal-discount/personalDiscountCard";
+import { r } from "node_modules/@fullcalendar/resource/internal-common";
+import MembershipTable from "./components/membership-table/membershipTable";
 
 const ClientCard = () => {
+  const [open, setOpen] = useState(false);
+  const [isUpdate, setIsUpdate] = useState(false);
+
+  const handleOpen = (update: boolean) => {
+    setIsUpdate(update);
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
   const [currentTab, setCurrentTab] = useState<number>(0);
   const handleTabChange = (tabIndex: number) => {
     setCurrentTab(tabIndex);
@@ -60,7 +97,7 @@ const ClientCard = () => {
 
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
-    value: number,
+    value: number
   ) => {
     setPage(value);
   };
@@ -228,6 +265,74 @@ const ClientCard = () => {
     },
   ];
 
+  const moneyMovementTableHeadCells = [
+    { id: "operation" as const, numeric: false, label: "Операция" },
+    { id: "sum" as const, numeric: true, label: "Сумма" },
+    { id: "paid" as const, numeric: true, label: "Оплачено" },
+    { id: "deposit" as const, numeric: true, label: "На депозите" },
+    { id: "date" as const, numeric: false, label: "Дата" },
+    { id: "employee" as const, numeric: false, label: "Сотрудник" },
+    { id: "relation" as const, numeric: false, label: "Связь" },
+    { id: "comment" as const, numeric: false, label: "Комментарий" },
+  ];
+
+  const moneyMovementTableBodyData = [
+    {
+      operation: "Пополнить депозит",
+      sum: "25 000 тенге",
+      paid: "25 000 тенге",
+      deposit: "25 000 тенге",
+      date: "4 июн 2020, 16:41",
+      employee: "Имя Фамилия",
+      relation: "Посещение №21746, Салон",
+      comment: "Комментарий",
+    },
+    {
+      operation: "Пополнить депозит",
+      sum: "25 000 тенге",
+      paid: "25 000 тенге",
+      deposit: "25 000 тенге",
+      date: "4 июн 2020, 16:41",
+      employee: "Имя Фамилия",
+      relation: "Посещение №21746, Салон",
+      comment: "Комментарий",
+    },
+  ];
+
+  const financeTableHeadCells = [
+    { id: "number" as const, numeric: true, label: "№" },
+    { id: "deposit" as const, numeric: true, label: "На депозите" },
+    { id: "sumChange" as const, numeric: true, label: "Сумма изменения" },
+    { id: "operation" as const, numeric: false, label: "Операция" },
+    { id: "date" as const, numeric: false, label: "Дата" },
+    { id: "employee" as const, numeric: false, label: "Сотрудник" },
+    { id: "relation" as const, numeric: false, label: "Связь" },
+    { id: "comment" as const, numeric: false, label: "Комментарий" },
+  ];
+
+  const financeTableBodyData = [
+    {
+      number: 1,
+      deposit: "25 000 тенге",
+      sumChange: "25 000 тенге",
+      operation: "Пополнить депозит",
+      date: "4 июн 2020, 16:41",
+      employee: "Имя Фамилия, Врач-массажист",
+      relation: "Счет, Салон",
+      comment: "Комментарий",
+    },
+    {
+      number: 2,
+      deposit: "25 000 тенге",
+      sumChange: "25 000 тенге",
+      operation: "Пополнить депозит",
+      date: "4 июн 2020, 16:41",
+      employee: "Имя Фамилия, Врач-массажист",
+      relation: "Счет, Салон",
+      comment: "Комментарий",
+    },
+  ];
+
   const getWorkingTime = () => {
     const today = new Date();
     const start_date = userInfoData?.first_visit;
@@ -245,7 +350,7 @@ const ClientCard = () => {
       dayjs(
         customerAppointmentHistoryData?.[
           customerAppointmentHistoryData.length - 1
-        ]?.date,
+        ]?.date
       ).format("DD.MM.YYYY") || "Не указано"
     );
   };
@@ -283,7 +388,13 @@ const ClientCard = () => {
                 valueText={getWorkingTime() + " дней"}
               />
             </div>
-            <RevenueChart />
+            <RevenueChart
+              labels={revenueChartLabels}
+              datasets={revenueChartData}
+              maxY1={75}
+              maxY2={60}
+              legendLabels={revenueChartLegendLabels}
+            />
           </Grid>
         );
       case 1:
@@ -317,11 +428,123 @@ const ClientCard = () => {
                 valueText={lastAppointmentData()?.toString() || "0"}
               />
             </div>
-            <RevenueChart />
+            <RevenueChart
+              labels={revenueChartLabels}
+              datasets={revenueChartData}
+              maxY1={75}
+              maxY2={60}
+              legendLabels={revenueChartLegendLabels}
+            />
           </Grid>
         );
       case 2:
-        return <div></div>;
+        return (
+          <Grid container xl={12} sx={{ gap: "0.8rem" }}>
+            <div className={classes["main__header__upper__row__cards"]}>
+              <CounterCard
+                backgroundColor={"#C7DFF7"}
+                icon={<PaymentsOutlined />}
+                iconColor="#0B6BCB"
+                textTitle="Текущий депозит"
+                valueText={"0 тенге"}
+              />
+              <CounterCard
+                backgroundColor={"#FFCCBC"}
+                icon={<ReceiptLongOutlined />}
+                iconColor="#FF5722"
+                textTitle="Сумма последнего чека"
+                valueText={"1000 тенге"}
+              />
+
+              <CounterCard
+                backgroundColor={"rgba(156,39,176, 0.3)"}
+                icon={<CalendarMonthOutlined />}
+                iconColor="var(--secondary-main)"
+                textTitle="Дата последней операции"
+                valueText={lastAppointmentData()?.toString() || "0"}
+              />
+            </div>
+            <RevenueChart
+              labels={financeChartLabels}
+              datasets={financeChartData}
+              maxY1={75}
+              maxY2={60}
+              legendLabels={financeChartLegendLabels}
+            />
+          </Grid>
+        );
+      case 3:
+        return (
+          <Grid container xl={12} sx={{ gap: "0.8rem" }}>
+            <div className={classes["main__header__upper__row__cards"]}>
+              <CounterCard
+                backgroundColor={"#2E7D324D"}
+                icon={<Add />}
+                iconColor="#2E7D32"
+                textTitle="Выдать скидку или карту"
+                valueText={""}
+              />
+              <CounterCard
+                backgroundColor={"#F7C5C5"}
+                icon={<StarBorderOutlined />}
+                iconColor="#C41C1C"
+                textTitle="Количество скидок"
+                valueText={"4 шт."}
+              />
+
+              <CounterCard
+                backgroundColor={"#2196F34D"}
+                icon={<PaymentsOutlined />}
+                iconColor="#2196F3"
+                textTitle="Текущая скидка"
+                valueText={"10%"}
+              />
+            </div>
+            <RevenueChart
+              labels={discountChartLabels}
+              datasets={discountChartData}
+              maxY1={15}
+              maxY2={6}
+              legendLabels={discountChartLegendLabels}
+              showThousandSuffix={false}
+            />
+          </Grid>
+        );
+      case 4:
+        return (
+          <Grid container xl={12} sx={{ gap: "0.8rem" }}>
+            <div className={classes["main__header__upper__row__cards"]}>
+              <CounterCard
+                backgroundColor={"#2196F34D"}
+                iconColor="#2196F3"
+                icon={<CardGiftcardOutlined />}
+                textTitle="Сертификаты"
+                valueText={"0 шт."}
+              />
+              <CounterCard
+                backgroundColor={"#2E7D324D"}
+                icon={<LocalActivityOutlined />}
+                iconColor="#2E7D32"
+                textTitle="Абонементы"
+                valueText={"0 шт."}
+              />
+              <CounterCard
+                backgroundColor={"#9C27B04D"}
+                iconColor="#9C27B0"
+                icon={<PlayCircleFilledOutlined />}
+                textTitle="Активные сертификаты"
+                valueText={"0 шт."}
+              />
+            </div>
+            <RevenueChart
+              labels={membershipChartLabels}
+              datasets={membershipChartData}
+              maxY1={75}
+              maxY2={60}
+              legendLabels={membershipChartLegendLabels}
+            />
+          </Grid>
+        );
       default:
         return <div></div>;
     }
@@ -418,6 +641,208 @@ const ClientCard = () => {
             </div>
           </Grid>
         );
+      case 2:
+        return (
+          <Grid
+            container
+            sx={{
+              mb: "5rem",
+              ml: { xs: "2rem", xl: "7.6rem" },
+            }}
+            xs={9}
+            md={10.5}
+          >
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "24px",
+                width: "100%",
+              }}
+            >
+              <div>
+                <div style={{ padding: "1.6rem 0rem" }}>
+                  <p style={{ fontSize: "2.4rem", marginBottom: "1rem" }}>
+                    Движение денежных средств
+                  </p>
+                  <Divider />
+                </div>
+
+                <EventPlannedTable
+                  data={moneyMovementTableBodyData}
+                  headCells={moneyMovementTableHeadCells}
+                />
+              </div>
+              <div>
+                <div style={{ padding: "1.6rem 0rem" }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      marginBottom: "1rem",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
+                    <p style={{ fontSize: "2.4rem" }}>Депозит</p>
+
+                    <div
+                      style={{
+                        display: "flex",
+                        gap: "2rem",
+                        alignItems: "center",
+                      }}
+                    >
+                      <Button
+                        variant="text"
+                        color="primary"
+                        startIcon={<Add />}
+                        className="add-button"
+                        sx={{
+                          textTransform: "none",
+                          padding: 0,
+                          fontSize: "1.4rem",
+                          fontWeight: 600,
+                        }}
+                        onClick={() => handleOpen(false)}
+                      >
+                        Пополнить депозит
+                      </Button>
+                      <Button
+                        variant="text"
+                        color="primary"
+                        startIcon={<CachedOutlined />}
+                        className="add-button"
+                        sx={{
+                          textTransform: "none",
+                          padding: 0,
+                          fontSize: "1.4rem",
+                          fontWeight: 600,
+                        }}
+                        onClick={() => handleOpen(true)}
+                      >
+                        Обновить депозит
+                      </Button>
+                    </div>
+                  </div>
+                  <DepositModal
+                    open={open}
+                    onClose={handleClose}
+                    isUpdate={isUpdate}
+                  />
+                  <Divider />
+                </div>
+
+                <EventPlannedTable
+                  data={financeTableBodyData}
+                  headCells={financeTableHeadCells}
+                />
+              </div>
+            </div>
+          </Grid>
+        );
+      case 3:
+        return (
+          <Grid
+            container
+            sx={{ mb: "5rem", ml: { xs: "2rem", xl: "7.6rem" } }}
+            xs={9}
+            md={10.5}
+            gap={3}
+          >
+            <PersonalDiscount
+              status="Активна"
+              visits={5}
+              totalAmount="50 000 тенге"
+              savedAmount="5 000 тенге"
+              issueDate="4 июн 2020"
+              percent={10}
+            />
+            <PersonalDiscount
+              status="Неактивна"
+              visits={5}
+              totalAmount="50 000 тенге"
+              savedAmount="5 000 тенге"
+              issueDate="4 июн 2020"
+              percent={10}
+            />
+          </Grid>
+        );
+      case 4:
+        return (
+          <Grid
+            container
+            sx={{
+              mb: "5rem",
+              ml: { xs: "2rem", xl: "7.6rem" },
+            }}
+            xs={9}
+            md={10.5}
+          >
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                width: "100%",
+              }}
+            >
+              <div className={classes.membership}>
+                <div className={classes.membership__section}>
+                  <p className={classes.membership__section__title}>
+                    Купленные подарочные сертификаты
+                  </p>
+                  <Divider />
+                </div>
+                <MembershipTable />
+              </div>
+
+              <div className={classes.membership}>
+                <div className={classes.membership__section}>
+                  <p className={classes.membership__section__title}>
+                    Использованные подарочные сертификаты
+                  </p>
+                  <Divider />
+                </div>
+                <p className={classes.membership__noTableText}>
+                  Нет активированных сертификатов
+                </p>
+              </div>
+
+              <div className={classes.membership}>
+                <div className={classes.membership__section}>
+                  <p className={classes.membership__section__title}>
+                    Абонементы
+                  </p>
+                  <Divider />
+                </div>
+                <p className={classes.membership__noTableText}>
+                  Нет активированных абонементов
+                </p>
+              </div>
+              <div className={classes.membership}>
+                <div className={classes.membership__section}>
+                  <p className={classes.membership__section__title}>
+                    Депозитные абонементы
+                  </p>
+                  <Divider />
+                </div>
+                <p className={classes.membership__noTableText}>
+                  Нет активированных абонементов
+                </p>
+              </div>
+              <div className={classes.membership}>
+                <div className={classes.membership__section}>
+                  <p className={classes.membership__section__title}>
+                    Составные абонементы
+                  </p>
+                  <Divider />
+                </div>
+                <p className={classes.membership__noTableText}>
+                  Нет активированных абонементов
+                </p>
+              </div>
+            </div>
+          </Grid>
+        );
       default:
         return <div></div>;
     }
@@ -441,7 +866,7 @@ const ClientCard = () => {
               </h1>
             </div>
             <ResponsiveTabs
-              tabsData={employeeTabsData}
+              tabsData={clientsTabsData}
               onTabChange={handleTabChange}
               currentTab={currentTab}
             />
