@@ -173,29 +173,6 @@ const ClientCard = () => {
     setPageDeposit(value);
   };
 
-  // const financeTableBodyData = [
-  //   {
-  //     number: 1,
-  //     deposit: "25 000 тенге",
-  //     sumChange: "25 000 тенге",
-  //     operation: "Пополнить депозит",
-  //     date: "4 июн 2020, 16:41",
-  //     employee: "Имя Фамилия, Врач-массажист",
-  //     relation: "Счет, Салон",
-  //     comment: "Комментарий",
-  //   },
-  //   {
-  //     number: 2,
-  //     deposit: "25 000 тенге",
-  //     sumChange: "25 000 тенге",
-  //     operation: "Пополнить депозит",
-  //     date: "4 июн 2020, 16:41",
-  //     employee: "Имя Фамилия, Врач-массажист",
-  //     relation: "Счет, Салон",
-  //     comment: "Комментарий",
-  //   },
-  // ];
-
   const { data: userInfoData, isLoading: userInfoLoading } = useQuery({
     queryKey: ["mainInfoEmployee", params.id],
     queryFn: () => mainInfoEmployee(Number(params.id)),
