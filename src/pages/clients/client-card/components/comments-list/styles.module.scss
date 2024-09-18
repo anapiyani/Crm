@@ -1,0 +1,93 @@
+.commentList {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.selectAll {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 0rem;
+  font-size: 1.4rem;
+
+  .deleteAll {
+    color: red;
+    cursor: pointer;
+    padding: 0.4rem 1.6rem;
+  }
+
+  .checkbox {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    .selectAllText {
+      font-size: 1.6rem;
+      color: var(--primary);
+    }
+  }
+}
+
+.commentItemWrapper {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+}
+
+
+.commentItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  border: 1px solid var(--neutral-300);
+  border-radius: 8px;
+  padding: 1.6rem;
+  background-color: white;
+  width: 100%;
+
+  .commentHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    .userInfo {
+      display: flex;
+      align-items: center;
+      font-size: 1.4rem;
+      gap: 0.8rem;
+      .avatar {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+      }
+
+      .userName {
+        font-size: 1.6rem;
+        color: var(--brand-500);
+      }
+
+      .date {
+        font-size: 1.2rem;
+        color: var(--neutral-500);
+      }
+    }
+
+    .actions {
+      display: flex;
+      gap: 0.5rem;
+
+      .iconButton {
+        color: var(--primary-500);
+        svg {
+          font-size: 2.4rem;
+        }
+      }
+    }
+  }
+
+  .commentText {
+    font-size: 1.4rem;
+    color: var(--neutral-700);
+  }
+}

@@ -78,6 +78,7 @@ import DepositModal from "@/modals/clients/deposit.modal";
 import PersonalDiscount from "./components/personal-discount/personalDiscountCard";
 import { r } from "node_modules/@fullcalendar/resource/internal-common";
 import MembershipTable from "./components/membership-table/membershipTable";
+import CommentList from "./components/comments-list/commentsList";
 import { searchKassaData } from "@/service/kassa/kassa.service";
 import { getDepositHistory } from "@/service/client/client.service";
 
@@ -597,6 +598,7 @@ const ClientCard = () => {
             />
           </Grid>
         );
+
       default:
         return <div></div>;
     }
@@ -1168,6 +1170,70 @@ const ClientCard = () => {
                 <p className={classes.membership__noTableText}>
                   Нет активированных абонементов
                 </p>
+              </div>
+            </div>
+          </Grid>
+        );
+      case 5:
+        return (
+          <Grid
+            container
+            sx={{
+              mb: "5rem",
+              ml: { xs: "2rem", xl: "7.6rem" },
+            }}
+            xs={9}
+            md={10.5}
+          >
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "24px",
+                width: "75%",
+              }}
+            >
+              <div style={{ padding: "1.6rem 0rem" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    marginBottom: "1rem",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <p style={{ fontSize: "2.4rem" }}>Комментарии</p>
+
+                  <div
+                    style={{
+                      display: "flex",
+                      gap: "2rem",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Button
+                      variant="text"
+                      startIcon={
+                        <Add sx={{ width: "2.4rem", height: "2.4rem" }} />
+                      }
+                      className="add-button"
+                      sx={{
+                        textTransform: "none",
+                        padding: "0.4rem 1.6rem",
+                        fontSize: "1.4rem",
+                        fontWeight: 400,
+                        color: "#0B6BCB",
+                        gap:"0.4rem"
+                      }}
+                    >
+                      Добавить
+                    </Button>
+                  </div>
+                </div>
+                <Divider />
+              </div>
+              <div>
+                <CommentList />
               </div>
             </div>
           </Grid>
