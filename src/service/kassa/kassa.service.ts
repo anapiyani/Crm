@@ -55,7 +55,7 @@ export const kassaDeposit = (formData: IWithdrawal): Promise<IWithdrawal> => {
 };
 
 export const searchKassaData = (
-  formData: ISearchKassa,
+  formData: ISearchKassa | { customer: number },
 ): Promise<IResponseData<KassaResponse[]>> => {
   const params = new URLSearchParams();
 

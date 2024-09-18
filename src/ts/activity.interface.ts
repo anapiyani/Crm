@@ -164,6 +164,8 @@ export interface IClientBalance {
   balance: string;
   user: number;
   date_updated: string;
+  last_check_price: string;
+  last_operation_date: string;
 }
 
 export interface IServicesChoose {

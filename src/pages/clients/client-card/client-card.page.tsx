@@ -4,26 +4,22 @@ import TableHorizontal from "@/components/tables/table-horizontal/horizontal-inf
 import VisitHistory from "./components/visit-history-table";
 import Grid from "@mui/material/Unstable_Grid2";
 import classes from "./styles.module.scss";
-import InfoHeader from "@/components/navigation/header/info-header";
-import {
-  discountsTableData,
-  financeTableData,
-  contactsTableData,
-  commentsTableData,
-  sampleVisits,
-} from "./data";
-import { useParams } from "react-router-dom";
+import { commentsTableData, sampleVisits } from "./data";
+import { Link, useParams } from "react-router-dom";
 import {
   Add,
   CachedOutlined,
   CalendarMonthOutlined,
   CardGiftcardOutlined,
   ContentCut,
+  CreditCard,
   CreditScoreOutlined,
   ExitToApp,
   HomeOutlined,
   LocalActivity,
   LocalActivityOutlined,
+  MenuBook,
+  Payments,
   PaymentsOutlined,
   PlayCircleFilledOutlined,
   ReceiptLongOutlined,
@@ -42,7 +38,17 @@ import { render } from "@fullcalendar/core/preact.js";
 import BreadcrumbsCustom from "@/components/navigation/breadcrumbs/breadcrumbs";
 import ResponsiveTabs from "@/components/tabs/tabs.component";
 import { clientsTabsData } from "./data";
-import { Box, Button, Divider } from "@mui/material";
+import {
+  Box,
+  Button,
+  Divider,
+  Pagination,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+} from "@mui/material";
 import CounterCard from "@/components/counter-card/counter-card";
 import RevenueChart from "@/pages/employees/employee-card/components/chart";
 import { getBalance } from "@/service/activity/activity.service";
@@ -72,10 +78,44 @@ import DepositModal from "@/modals/clients/deposit.modal";
 import PersonalDiscount from "./components/personal-discount/personalDiscountCard";
 import { r } from "node_modules/@fullcalendar/resource/internal-common";
 import MembershipTable from "./components/membership-table/membershipTable";
+import { searchKassaData } from "@/service/kassa/kassa.service";
+
+interface IOption {
+  label: string;
+  value: number;
+}
 
 const ClientCard = () => {
   const [open, setOpen] = useState(false);
   const [isUpdate, setIsUpdate] = useState(false);
+  const [pageSizeTransaction, setPageSizeTransaction] = useState<IOption>({
+    label: "10",
+    value: 10,
+  });
+  const [pageTransaction, setPageTransaction] = useState(1);
+
+  const pageSizeOptionsTransaction: IOption[] = [
+    { label: "10", value: 10 },
+    { label: "20", value: 20 },
+    { label: "50", value: 50 },
+    { label: "100", value: 100 },
+  ];
+
+  const handlePageTransactionSizeChange = (
+    event: React.ChangeEvent<{ value: unknown }>,
+  ) => {
+    const selectedOption = pageSizeOptionsTransaction.find(
+      (option) => option.value === Number(event.target.value),
+    ) || { label: "10", value: 10 };
+    setPageSizeTransaction(selectedOption);
+  };
+
+  const handlePageTransactionChange = (
+    event: React.ChangeEvent<unknown>,
+    value: number,
+  ) => {
+    setPageTransaction(value);
+  };
 
   const handleOpen = (update: boolean) => {
     setIsUpdate(update);
@@ -97,7 +137,7 @@ const ClientCard = () => {
 
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
-    value: number
+    value: number,
   ) => {
     setPage(value);
   };
@@ -166,6 +206,22 @@ const ClientCard = () => {
       enabled: !!params.id,
       staleTime: Infinity,
       refetchOnWindowFocus: false,
+    });
+
+  const { data: clientTransactions, isLoading: clientTransactionsLoading } =
+    useQuery({
+      queryKey: [
+        "clientTransactions",
+        params.id,
+        pageSizeTransaction.value,
+        pageTransaction,
+      ],
+      queryFn: () =>
+        searchKassaData({
+          customer: Number(params.id),
+          page: pageTransaction,
+          page_size: pageSizeTransaction.value,
+        }),
     });
 
   const mainTableData = [
@@ -350,7 +406,7 @@ const ClientCard = () => {
       dayjs(
         customerAppointmentHistoryData?.[
           customerAppointmentHistoryData.length - 1
-        ]?.date
+        ]?.date,
       ).format("DD.MM.YYYY") || "Не указано"
     );
   };
@@ -446,14 +502,14 @@ const ClientCard = () => {
                 icon={<PaymentsOutlined />}
                 iconColor="#0B6BCB"
                 textTitle="Текущий депозит"
-                valueText={"0 тенге"}
+                valueText={financeData?.balance + " тенге" || "0"}
               />
               <CounterCard
                 backgroundColor={"#FFCCBC"}
                 icon={<ReceiptLongOutlined />}
                 iconColor="#FF5722"
                 textTitle="Сумма последнего чека"
-                valueText={"1000 тенге"}
+                valueText={financeData?.last_check_price + " тенге" || "0"}
               />
 
               <CounterCard
@@ -461,7 +517,11 @@ const ClientCard = () => {
                 icon={<CalendarMonthOutlined />}
                 iconColor="var(--secondary-main)"
                 textTitle="Дата последней операции"
-                valueText={lastAppointmentData()?.toString() || "0"}
+                valueText={
+                  dayjs(financeData?.last_operation_date).format(
+                    "DD.MM.YYYY",
+                  ) || "0"
+                }
               />
             </div>
             <RevenueChart
@@ -642,103 +702,279 @@ const ClientCard = () => {
           </Grid>
         );
       case 2:
+        // deposit main
         return (
-          <Grid
-            container
-            sx={{
-              mb: "5rem",
-              ml: { xs: "2rem", xl: "7.6rem" },
-            }}
-            xs={9}
-            md={10.5}
-          >
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "24px",
-                width: "100%",
+          clientTransactions && (
+            <Grid
+              container
+              sx={{
+                mb: "5rem",
+                ml: { xs: "2rem", xl: "7.6rem" },
               }}
+              xs={9}
+              md={10.5}
             >
-              <div>
-                <div style={{ padding: "1.6rem 0rem" }}>
-                  <p style={{ fontSize: "2.4rem", marginBottom: "1rem" }}>
-                    Движение денежных средств
-                  </p>
-                  <Divider />
-                </div>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "24px",
+                  width: "100%",
+                }}
+              >
+                <div>
+                  <div style={{ padding: "1.6rem 0rem" }}>
+                    <p style={{ fontSize: "2.4rem", marginBottom: "1rem" }}>
+                      Движение денежных средств
+                    </p>
+                    <Divider />
+                  </div>
 
-                <EventPlannedTable
-                  data={moneyMovementTableBodyData}
-                  headCells={moneyMovementTableHeadCells}
-                />
-              </div>
-              <div>
-                <div style={{ padding: "1.6rem 0rem" }}>
-                  <div
-                    style={{
-                      display: "flex",
-                      marginBottom: "1rem",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                    }}
-                  >
-                    <p style={{ fontSize: "2.4rem" }}>Депозит</p>
+                  <div className={classes["transactions_table"]}>
+                    <Table className={classes.table}>
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>№</TableCell>
+                          <TableCell>Операция</TableCell>
+                          <TableCell>Сумма</TableCell>
+                          <TableCell>Оплачено</TableCell>
+                          <TableCell>На депозите</TableCell>
+                          <TableCell>Дата</TableCell>
+                          <TableCell>Сотрудник</TableCell>
+                          <TableCell>Связь</TableCell>
+                          <TableCell>Комментарий</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {clientTransactions?.results.map((result, index) => (
+                          <TableRow key={result.id}>
+                            <TableCell>{index + 1}</TableCell>
+                            <TableCell>
+                              <p>
+                                {result.operation_name} <br />{" "}
+                                {dayjs(result.operation_date).format(
+                                  "DD.MM.YYYY",
+                                )}
+                              </p>
+                            </TableCell>
+                            <TableCell>
+                              <p
+                                className={
+                                  result.type === "income"
+                                    ? classes.income
+                                    : classes.expense
+                                }
+                              >
+                                {result.amount} ₸
+                              </p>
+                            </TableCell>
+                            <TableCell>
+                              {result.overall_change_in_cash_register?.card !==
+                                "0.00" || null ? (
+                                <p
+                                  style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: "0.5rem",
+                                  }}
+                                >
+                                  {result.overall_change_in_cash_register.card
+                                    ? result.overall_change_in_cash_register
+                                        .card
+                                    : null}{" "}
+                                  ₸
+                                  <CreditCard />
+                                </p>
+                              ) : null}
+                              {result.overall_change_in_cash_register?.cash !==
+                                "0.00" && (
+                                <p
+                                  style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: "0.5rem",
+                                  }}
+                                >
+                                  {result.overall_change_in_cash_register.cash}{" "}
+                                  ₸ <Payments />
+                                </p>
+                              )}
+                              {result.overall_change_in_cash_register?.check !==
+                                "0.00" && (
+                                <p
+                                  style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: "0.5rem",
+                                  }}
+                                >
+                                  {result.overall_change_in_cash_register.check}{" "}
+                                  ₸ <LocalActivity />
+                                </p>
+                              )}
+                              {result.overall_change_in_cash_register
+                                ?.checking_account !== "0.00" && (
+                                <p
+                                  style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: "0.5rem",
+                                  }}
+                                >
+                                  {
+                                    result.overall_change_in_cash_register
+                                      .checking_account
+                                  }
+                                  ₸ <MenuBook />
+                                </p>
+                              )}
+                            </TableCell>
+                            <TableCell>{result.deposit} </TableCell>
+                            <TableCell>
+                              {dayjs(result.operation_date).format(
+                                "DD.MM.YYYY",
+                              )}
+                            </TableCell>
+                            <TableCell>
+                              {result.employee ? (
+                                <Link
+                                  to={"/employees/" + result.employee}
+                                  className={classes.name_link}
+                                >
+                                  {result.employee_name}
+                                </Link>
+                              ) : (
+                                <p>Нет данных</p>
+                              )}
+                            </TableCell>
+                            <TableCell>
+                              <Link
+                                className={classes.name_link}
+                                to={`/visits/${result.appointment}`}
+                              >
+                                Посещение №{result.appointment}
+                              </Link>
+                            </TableCell>
 
-                    <div
-                      style={{
-                        display: "flex",
-                        gap: "2rem",
-                        alignItems: "center",
-                      }}
-                    >
-                      <Button
-                        variant="text"
-                        color="primary"
-                        startIcon={<Add />}
-                        className="add-button"
-                        sx={{
-                          textTransform: "none",
-                          padding: 0,
-                          fontSize: "1.4rem",
-                          fontWeight: 600,
-                        }}
-                        onClick={() => handleOpen(false)}
+                            <TableCell>{result.comment}</TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                    <div className={classes["transactions_table__container"]}>
+                      <div
+                        className={
+                          classes["transactions_table__container__row"]
+                        }
                       >
-                        Пополнить депозит
-                      </Button>
-                      <Button
-                        variant="text"
-                        color="primary"
-                        startIcon={<CachedOutlined />}
-                        className="add-button"
-                        sx={{
-                          textTransform: "none",
-                          padding: 0,
-                          fontSize: "1.4rem",
-                          fontWeight: 600,
-                        }}
-                        onClick={() => handleOpen(true)}
-                      >
-                        Обновить депозит
-                      </Button>
+                        <p
+                          className={
+                            classes["transactions_table__container__label"]
+                          }
+                        >
+                          Показано {clientTransactions?.results.length} из{" "}
+                          {clientTransactions?.count} записей
+                        </p>
+                        <div>
+                          <div className={classes["tableSettings"]}>
+                            Показывать
+                            <select
+                              name="pageSize"
+                              onChange={handlePageTransactionSizeChange}
+                              id="pageSize"
+                            >
+                              {pageSizeOptionsTransaction.map((option) => (
+                                <option key={option.value} value={option.value}>
+                                  {option.label}
+                                </option>
+                              ))}
+                            </select>
+                            записей
+                          </div>
+                        </div>
+                        <Pagination
+                          count={Math.ceil(
+                            clientTransactions?.count /
+                              pageSizeTransaction.value,
+                          )}
+                          page={pageTransaction}
+                          variant="outlined"
+                          shape="rounded"
+                          boundaryCount={1}
+                          color="primary"
+                          onChange={handlePageTransactionChange}
+                        />
+                      </div>
                     </div>
                   </div>
-                  <DepositModal
-                    open={open}
-                    onClose={handleClose}
-                    isUpdate={isUpdate}
-                  />
-                  <Divider />
-                </div>
+                  <div>
+                    <div style={{ padding: "1.6rem 0rem" }}>
+                      <div
+                        style={{
+                          display: "flex",
+                          marginBottom: "1rem",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                        }}
+                      >
+                        <p style={{ fontSize: "2.4rem" }}>Депозит</p>
 
-                <EventPlannedTable
-                  data={financeTableBodyData}
-                  headCells={financeTableHeadCells}
-                />
+                        <div
+                          style={{
+                            display: "flex",
+                            gap: "2rem",
+                            alignItems: "center",
+                          }}
+                        >
+                          <Button
+                            variant="text"
+                            color="primary"
+                            startIcon={<Add />}
+                            className="add-button"
+                            sx={{
+                              textTransform: "none",
+                              padding: 0,
+                              fontSize: "1.4rem",
+                              fontWeight: 600,
+                            }}
+                            onClick={() => handleOpen(false)}
+                          >
+                            Пополнить депозит
+                          </Button>
+                          <Button
+                            variant="text"
+                            color="primary"
+                            startIcon={<CachedOutlined />}
+                            className="add-button"
+                            sx={{
+                              textTransform: "none",
+                              padding: 0,
+                              fontSize: "1.4rem",
+                              fontWeight: 600,
+                            }}
+                            onClick={() => handleOpen(true)}
+                          >
+                            Обновить депозит
+                          </Button>
+                        </div>
+                      </div>
+                      <DepositModal
+                        open={open}
+                        onClose={handleClose}
+                        isUpdate={isUpdate}
+                      />
+                      <Divider />
+                    </div>
+
+                    <EventPlannedTable
+                      data={financeTableBodyData}
+                      headCells={financeTableHeadCells}
+                    />
+                  </div>
+                </div>
               </div>
-            </div>
-          </Grid>
+            </Grid>
+          )
         );
       case 3:
         return (

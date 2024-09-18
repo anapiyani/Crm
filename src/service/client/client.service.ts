@@ -7,7 +7,7 @@ import api from "../api";
 import { IUserDetails } from "@/ts/employee.interface";
 
 export const addClient = (
-  form: IClientAddForm
+  form: IClientAddForm,
 ): Promise<ICreateClientReturn> => {
   return api.post("/users/register-customer/", form).then((res) => res.data);
 };
