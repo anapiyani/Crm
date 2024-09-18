@@ -69,3 +69,30 @@ export interface IClientDeposit {
   id: number;
   date_updated: string;
 }
+
+export interface IClientDepositHistory {
+  page: number;
+  page_size: number;
+  user_id: number;
+}
+
+export interface IClientDepositHistoryResponse {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: IClientHistoryDeposit[];
+}
+
+export interface IClientHistoryDeposit {
+  id: number;
+  employee_full_name: string;
+  employee_role: string;
+  on_deposit: string;
+  change_amount: string;
+  operation: string;
+  comment: string;
+  date_created: string;
+  wallet: number;
+  employee: number;
+  appointment: number;
+}
