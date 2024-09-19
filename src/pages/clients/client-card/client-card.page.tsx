@@ -85,6 +85,7 @@ interface IOption {
   label: string;
   value: number;
 }
+import { IAppointmentHistory } from "@/ts/appointments.interface";
 
 type EditType =
   | "text"
@@ -142,16 +143,9 @@ const ClientCard = () => {
   };
 
   const params = useParams<{ id: string }>();
-  const [page, setPage] = useState(1);
+  // const [page, setPage] = useState(1);
   const pageCount = 10;
   dayjs.extend(relativeTime);
-
-  const handlePageChange = (
-    event: React.ChangeEvent<unknown>,
-    value: number
-  ) => {
-    setPage(value);
-  };
 
   const [pageSizeDeposit, setPageSizeDeposit] = useState<IOption>({
     label: "10",
@@ -212,6 +206,36 @@ const ClientCard = () => {
     staleTime: Infinity,
     refetchOnWindowFocus: false,
   });
+
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(5);
+
+  // Transform the fetched data to match the Visit interface
+  const transformAppointmentHistory = (appointments: IAppointmentHistory[]) => {
+    return appointments.map((appointment) => ({
+      description: appointment.services
+        .map((service) => service.service_name)
+        .join(", "),
+      cost: appointment.services
+        .reduce((total, service) => total + parseFloat(service.total_price), 0) + " ₸",
+      dateTime: `${appointment.date}, ${appointment.start_time}`,
+      link: "", // Empty for now
+    }));
+  };
+
+  const visitHistoryData = transformAppointmentHistory(customerAppointmentHistoryData || []);
+
+  // Pagination logic
+  const totalPages = Math.ceil(visitHistoryData.length / pageSize);
+  const paginatedData = visitHistoryData.slice(
+    (page - 1) * pageSize,
+    page * pageSize
+  );
+
+  // Handle page change
+  const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
+    setPage(value);
+  };
 
   const {
     data: customerAppointmentNoShowData,
@@ -736,11 +760,11 @@ const ClientCard = () => {
               rowGap={3}
             >
               <VisitHistory
-                visits={sampleVisits}
+                visits={paginatedData}
                 title="История посещений"
                 showEyeIcon={true}
                 page={page}
-                pageCount={pageCount}
+                pageCount={totalPages}
                 onPageChange={handlePageChange}
               />
             </Grid>
