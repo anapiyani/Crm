@@ -55,7 +55,7 @@ const ModalWindow: React.FC<ModalWindowProps> = ({
                   style={titleStyles}
                 >
                   {title}
-                </h2>{" "}
+                </h2>
               </div>
               <Divider />
             </>

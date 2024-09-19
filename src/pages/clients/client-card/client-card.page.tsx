@@ -11,11 +11,9 @@ import {
   CachedOutlined,
   CalendarMonthOutlined,
   CardGiftcardOutlined,
-  ContentCut,
   CreditCard,
   CreditScoreOutlined,
   ExitToApp,
-  HomeOutlined,
   LocalActivity,
   LocalActivityOutlined,
   MenuBook,
@@ -74,13 +72,15 @@ import {
   membershipChartLegendLabels,
 } from "./data";
 import EventPlannedTable from "@/modals/home/_components/event-planned-table/event-planned-table";
-import DepositModal from "@/modals/clients/deposit.modal";
 import PersonalDiscount from "./components/personal-discount/personalDiscountCard";
 import { r } from "node_modules/@fullcalendar/resource/internal-common";
 import MembershipTable from "./components/membership-table/membershipTable";
 import CommentList from "./components/comments-list/commentsList";
 import { searchKassaData } from "@/service/kassa/kassa.service";
 import { getDepositHistory } from "@/service/client/client.service";
+import NiceModal from "@ebay/nice-modal-react";
+import clientDepositTopupModal from "@/modals/clients/client-deposit-topup.modal";
+import clientDepositUpdateModal from "@/modals/clients/client-deposit-update.modal";
 
 interface IOption {
   label: string;
@@ -88,8 +88,7 @@ interface IOption {
 }
 
 const ClientCard = () => {
-  const [open, setOpen] = useState(false);
-  const [isUpdate, setIsUpdate] = useState(false);
+
   const [pageSizeTransaction, setPageSizeTransaction] = useState<IOption>({
     label: "10",
     value: 10,
@@ -104,29 +103,21 @@ const ClientCard = () => {
   ];
 
   const handlePageTransactionSizeChange = (
-    event: React.ChangeEvent<{ value: unknown }>,
+    event: React.ChangeEvent<{ value: unknown }>
   ) => {
     const selectedOption = pageSizeOptionsTransaction.find(
-      (option) => option.value === Number(event.target.value),
+      (option) => option.value === Number(event.target.value)
     ) || { label: "10", value: 10 };
     setPageSizeTransaction(selectedOption);
   };
 
   const handlePageTransactionChange = (
     event: React.ChangeEvent<unknown>,
-    value: number,
+    value: number
   ) => {
     setPageTransaction(value);
   };
 
-  const handleOpen = (update: boolean) => {
-    setIsUpdate(update);
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
   const [currentTab, setCurrentTab] = useState<number>(0);
   const handleTabChange = (tabIndex: number) => {
     setCurrentTab(tabIndex);
@@ -139,7 +130,7 @@ const ClientCard = () => {
 
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
-    value: number,
+    value: number
   ) => {
     setPage(value);
   };
@@ -159,17 +150,17 @@ const ClientCard = () => {
   ];
 
   const handlePageDepositSizeChange = (
-    event: React.ChangeEvent<{ value: unknown }>,
+    event: React.ChangeEvent<{ value: unknown }>
   ) => {
     const selectedOption = pageSizeOptionsDeposit.find(
-      (option) => option.value === Number(event.target.value),
+      (option) => option.value === Number(event.target.value)
     ) || { label: "10", value: 10 };
     setPageSizeDeposit(selectedOption);
   };
 
   const handlePageDepositChange = (
     event: React.ChangeEvent<unknown>,
-    value: number,
+    value: number
   ) => {
     setPageDeposit(value);
   };
@@ -399,7 +390,7 @@ const ClientCard = () => {
       dayjs(
         customerAppointmentHistoryData?.[
           customerAppointmentHistoryData.length - 1
-        ]?.date,
+        ]?.date
       ).format("DD.MM.YYYY") || "Не указано"
     );
   };
@@ -512,7 +503,7 @@ const ClientCard = () => {
                 textTitle="Дата последней операции"
                 valueText={
                   dayjs(financeData?.last_operation_date).format(
-                    "DD.MM.YYYY",
+                    "DD.MM.YYYY"
                   ) || "0"
                 }
               />
@@ -696,7 +687,6 @@ const ClientCard = () => {
           </Grid>
         );
       case 2:
-        // deposit main
         return (
           clientTransactions && (
             <Grid
@@ -747,7 +737,7 @@ const ClientCard = () => {
                               <p>
                                 {result.operation_name} <br />{" "}
                                 {dayjs(result.operation_date).format(
-                                  "DD.MM.YYYY",
+                                  "DD.MM.YYYY"
                                 )}
                               </p>
                             </TableCell>
@@ -826,7 +816,7 @@ const ClientCard = () => {
                             <TableCell>{result.deposit} </TableCell>
                             <TableCell>
                               {dayjs(result.operation_date).format(
-                                "DD.MM.YYYY",
+                                "DD.MM.YYYY"
                               )}
                             </TableCell>
                             <TableCell>
@@ -889,7 +879,7 @@ const ClientCard = () => {
                         <Pagination
                           count={Math.ceil(
                             clientTransactions?.count /
-                              pageSizeTransaction.value,
+                              pageSizeTransaction.value
                           )}
                           page={pageTransaction}
                           variant="outlined"
@@ -931,7 +921,9 @@ const ClientCard = () => {
                               fontSize: "1.4rem",
                               fontWeight: 600,
                             }}
-                            onClick={() => handleOpen(false)}
+                            onClick={() => {
+                              NiceModal.show(clientDepositTopupModal);
+                            }}
                           >
                             Пополнить депозит
                           </Button>
@@ -946,17 +938,14 @@ const ClientCard = () => {
                               fontSize: "1.4rem",
                               fontWeight: 600,
                             }}
-                            onClick={() => handleOpen(true)}
+                            onClick={() => {
+                              NiceModal.show(clientDepositUpdateModal);
+                            }}
                           >
                             Обновить депозит
                           </Button>
                         </div>
                       </div>
-                      <DepositModal
-                        open={open}
-                        onClose={handleClose}
-                        isUpdate={isUpdate}
-                      />
                       <Divider />
                     </div>
                     {clientDepositHistory && (
@@ -992,7 +981,7 @@ const ClientCard = () => {
                                   </TableCell>
                                   <TableCell>
                                     {dayjs(result.date_created).format(
-                                      "DD.MM.YYYY",
+                                      "DD.MM.YYYY"
                                     )}
                                   </TableCell>
                                   <TableCell>
@@ -1009,7 +998,7 @@ const ClientCard = () => {
                                   </TableCell>
                                   <TableCell>{result.comment}</TableCell>
                                 </TableRow>
-                              ),
+                              )
                             )}
                           </TableBody>
                         </Table>
@@ -1052,7 +1041,7 @@ const ClientCard = () => {
                             <Pagination
                               count={Math.ceil(
                                 clientDepositHistory?.count /
-                                  pageSizeDeposit.value,
+                                  pageSizeDeposit.value
                               )}
                               page={pageDeposit}
                               variant="outlined"
@@ -1223,7 +1212,7 @@ const ClientCard = () => {
                         fontSize: "1.4rem",
                         fontWeight: 400,
                         color: "#0B6BCB",
-                        gap:"0.4rem"
+                        gap: "0.4rem",
                       }}
                     >
                       Добавить
