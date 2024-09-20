@@ -36,10 +36,10 @@ interface TopBarProps {
 }
 
 const TopBar = (props: TopBarProps) => {
-
   const openMenu = () => {
     props.openMenuBar();
-  }
+  };
+  const userName = localStorage.getItem("full_name");
 
   const count = 10;
   return (
@@ -150,7 +150,7 @@ const TopBar = (props: TopBarProps) => {
                 fontSize: "1.6rem",
               }}
             >
-              User name
+              {userName}
             </Typography>
           </div>
           <IconButton

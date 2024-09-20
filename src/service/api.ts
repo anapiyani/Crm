@@ -43,7 +43,7 @@ api.interceptors.response.use(
         return refreshTokenPromise
           .then((res) => {
             const { access, refresh } = res;
-            setTokens(access, refresh);
+            setTokens(access, refresh, 0, "", "");
             api.defaults.headers.common["Authorization"] = `Bearer ${access}`;
             return api(originalRequest);
           })

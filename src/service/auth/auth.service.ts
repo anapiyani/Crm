@@ -3,6 +3,9 @@ import api from "../api";
 export interface ILoginResponse {
   access: string;
   refresh: string;
+  user_id: number;
+  full_name: string;
+  role: string;
 }
 
 export const login = (
