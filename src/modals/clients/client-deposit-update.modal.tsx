@@ -1,4 +1,6 @@
 import ModalWindow from "@/components/modal-window/modal-window";
+import { useDepositUpdate } from "@/service/client/client.hook";
+import { IClientDepositTopUp } from "@/ts/client.interface";
 
 import NiceModal, { useModal } from "@ebay/nice-modal-react";
 import {
@@ -8,8 +10,39 @@ import {
 } from "@mui/icons-material";
 import { Divider, Grid, TextField } from "@mui/material";
 
-const DepositUpdateModal = () => {
+const DepositUpdateModal = ({
+  id,
+  name,
+  deposit,
+}: {
+  id: string;
+  name: string;
+  deposit: number;
+}) => {
   const modal = useModal();
+  const mutation = useDepositUpdate();
+
+  const formData: IClientDepositTopUp = {
+    user_id: Number(id),
+    comment: "",
+    employee_id: 1,
+    payments: [],
+  };
+
+  const onSubmitDepositTopUp = async () => {
+    await mutation.mutate(formData);
+  };
+
+  const handlePaymentChange = (type: string, amount: number) => {
+    const existingPaymentIndex = formData.payments.findIndex(
+      (payment) => payment.money_type === type,
+    );
+    if (existingPaymentIndex !== -1) {
+      formData.payments[existingPaymentIndex].amount = amount;
+    } else {
+      formData.payments.push({ money_type: type, amount });
+    }
+  };
 
   return (
     <ModalWindow
@@ -17,6 +50,7 @@ const DepositUpdateModal = () => {
       open={modal.visible}
       handleClose={() => modal.hide()}
       handleSave={() => {
+        onSubmitDepositTopUp();
         modal.hide();
       }}
     >
@@ -51,7 +85,7 @@ const DepositUpdateModal = () => {
             </p>
           </Grid>
           <Grid item xs={7}>
-            <p style={{ fontSize: 16 }}>8</p>
+            <p style={{ fontSize: 16 }}>{id}</p>
           </Grid>
         </Grid>
 
@@ -73,7 +107,7 @@ const DepositUpdateModal = () => {
             </p>
           </Grid>
           <Grid item xs={7}>
-            <p style={{ fontSize: 16 }}>Имя Фамилия</p>
+            <p style={{ fontSize: 16 }}>{name}</p>
           </Grid>
         </Grid>
 
@@ -95,7 +129,7 @@ const DepositUpdateModal = () => {
             </p>
           </Grid>
           <Grid item xs={7}>
-            <p style={{ fontSize: 16 }}>0 тенге</p>
+            <p style={{ fontSize: 16 }}>{deposit} тенге</p>
           </Grid>
         </Grid>
 
@@ -160,6 +194,9 @@ const DepositUpdateModal = () => {
               fullWidth
               variant="outlined"
               size="small"
+              onChange={(e) =>
+                handlePaymentChange("cash", Number(e.target.value))
+              }
               sx={{ fontSize: 16, width: "10rem", "& input": { fontSize: 16 } }}
             />
           </Grid>
@@ -199,6 +236,9 @@ const DepositUpdateModal = () => {
               fullWidth
               variant="outlined"
               size="small"
+              onChange={(e) =>
+                handlePaymentChange("card", Number(e.target.value))
+              }
               sx={{ fontSize: 16, width: "10rem", "& input": { fontSize: 16 } }}
             />
           </Grid>
@@ -238,6 +278,9 @@ const DepositUpdateModal = () => {
               fullWidth
               variant="outlined"
               size="small"
+              onChange={(e) =>
+                handlePaymentChange("check", Number(e.target.value))
+              }
               sx={{ fontSize: 16, width: "10rem", "& input": { fontSize: 16 } }}
             />
           </Grid>
@@ -270,6 +313,9 @@ const DepositUpdateModal = () => {
               fullWidth
               variant="outlined"
               size="small"
+              onChange={(e) =>
+                handlePaymentChange("account", Number(e.target.value))
+              }
               sx={{ fontSize: 16, width: "10rem", "& input": { fontSize: 16 } }}
             />
           </Grid>
@@ -299,6 +345,10 @@ const DepositUpdateModal = () => {
               size="small"
               multiline
               rows={3}
+              defaultValue={formData.comment}
+              onChange={(e) => {
+                formData.comment = e.target.value;
+              }}
               sx={{ fontSize: 16, "& textarea": { fontSize: 16 } }}
             />
           </Grid>
