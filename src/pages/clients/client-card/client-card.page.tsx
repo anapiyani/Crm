@@ -88,7 +88,6 @@ interface IOption {
 }
 
 const ClientCard = () => {
-
   const [pageSizeTransaction, setPageSizeTransaction] = useState<IOption>({
     label: "10",
     value: 10,
@@ -103,17 +102,17 @@ const ClientCard = () => {
   ];
 
   const handlePageTransactionSizeChange = (
-    event: React.ChangeEvent<{ value: unknown }>
+    event: React.ChangeEvent<{ value: unknown }>,
   ) => {
     const selectedOption = pageSizeOptionsTransaction.find(
-      (option) => option.value === Number(event.target.value)
+      (option) => option.value === Number(event.target.value),
     ) || { label: "10", value: 10 };
     setPageSizeTransaction(selectedOption);
   };
 
   const handlePageTransactionChange = (
     event: React.ChangeEvent<unknown>,
-    value: number
+    value: number,
   ) => {
     setPageTransaction(value);
   };
@@ -130,7 +129,7 @@ const ClientCard = () => {
 
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
-    value: number
+    value: number,
   ) => {
     setPage(value);
   };
@@ -150,17 +149,17 @@ const ClientCard = () => {
   ];
 
   const handlePageDepositSizeChange = (
-    event: React.ChangeEvent<{ value: unknown }>
+    event: React.ChangeEvent<{ value: unknown }>,
   ) => {
     const selectedOption = pageSizeOptionsDeposit.find(
-      (option) => option.value === Number(event.target.value)
+      (option) => option.value === Number(event.target.value),
     ) || { label: "10", value: 10 };
     setPageSizeDeposit(selectedOption);
   };
 
   const handlePageDepositChange = (
     event: React.ChangeEvent<unknown>,
-    value: number
+    value: number,
   ) => {
     setPageDeposit(value);
   };
@@ -362,17 +361,6 @@ const ClientCard = () => {
     },
   ];
 
-  const financeTableHeadCells = [
-    { id: "number" as const, numeric: true, label: "№" },
-    { id: "deposit" as const, numeric: true, label: "На депозите" },
-    { id: "sumChange" as const, numeric: true, label: "Сумма изменения" },
-    { id: "operation" as const, numeric: false, label: "Операция" },
-    { id: "date" as const, numeric: false, label: "Дата" },
-    { id: "employee" as const, numeric: false, label: "Сотрудник" },
-    { id: "relation" as const, numeric: false, label: "Связь" },
-    { id: "comment" as const, numeric: false, label: "Комментарий" },
-  ];
-
   const getWorkingTime = () => {
     const today = new Date();
     const start_date = userInfoData?.first_visit;
@@ -390,7 +378,7 @@ const ClientCard = () => {
       dayjs(
         customerAppointmentHistoryData?.[
           customerAppointmentHistoryData.length - 1
-        ]?.date
+        ]?.date,
       ).format("DD.MM.YYYY") || "Не указано"
     );
   };
@@ -503,7 +491,7 @@ const ClientCard = () => {
                 textTitle="Дата последней операции"
                 valueText={
                   dayjs(financeData?.last_operation_date).format(
-                    "DD.MM.YYYY"
+                    "DD.MM.YYYY",
                   ) || "0"
                 }
               />
@@ -737,7 +725,7 @@ const ClientCard = () => {
                               <p>
                                 {result.operation_name} <br />{" "}
                                 {dayjs(result.operation_date).format(
-                                  "DD.MM.YYYY"
+                                  "DD.MM.YYYY",
                                 )}
                               </p>
                             </TableCell>
@@ -816,7 +804,7 @@ const ClientCard = () => {
                             <TableCell>{result.deposit} </TableCell>
                             <TableCell>
                               {dayjs(result.operation_date).format(
-                                "DD.MM.YYYY"
+                                "DD.MM.YYYY",
                               )}
                             </TableCell>
                             <TableCell>
@@ -879,7 +867,7 @@ const ClientCard = () => {
                         <Pagination
                           count={Math.ceil(
                             clientTransactions?.count /
-                              pageSizeTransaction.value
+                              pageSizeTransaction.value,
                           )}
                           page={pageTransaction}
                           variant="outlined"
@@ -922,7 +910,11 @@ const ClientCard = () => {
                               fontWeight: 600,
                             }}
                             onClick={() => {
-                              NiceModal.show(clientDepositTopupModal);
+                              NiceModal.show(clientDepositTopupModal, {
+                                id: params.id,
+                                name: `${userInfoData?.first_name} ${userInfoData?.last_name}`,
+                                deposit: Number(financeData?.balance),
+                              });
                             }}
                           >
                             Пополнить депозит
@@ -939,7 +931,11 @@ const ClientCard = () => {
                               fontWeight: 600,
                             }}
                             onClick={() => {
-                              NiceModal.show(clientDepositUpdateModal);
+                              NiceModal.show(clientDepositUpdateModal, {
+                                id: params.id,
+                                name: `${userInfoData?.first_name} ${userInfoData?.last_name}`,
+                                deposit: Number(financeData?.balance),
+                              });
                             }}
                           >
                             Обновить депозит
@@ -981,7 +977,7 @@ const ClientCard = () => {
                                   </TableCell>
                                   <TableCell>
                                     {dayjs(result.date_created).format(
-                                      "DD.MM.YYYY"
+                                      "DD.MM.YYYY",
                                     )}
                                   </TableCell>
                                   <TableCell>
@@ -998,7 +994,7 @@ const ClientCard = () => {
                                   </TableCell>
                                   <TableCell>{result.comment}</TableCell>
                                 </TableRow>
-                              )
+                              ),
                             )}
                           </TableBody>
                         </Table>
@@ -1041,7 +1037,7 @@ const ClientCard = () => {
                             <Pagination
                               count={Math.ceil(
                                 clientDepositHistory?.count /
-                                  pageSizeDeposit.value
+                                  pageSizeDeposit.value,
                               )}
                               page={pageDeposit}
                               variant="outlined"

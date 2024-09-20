@@ -3,6 +3,7 @@ import {
   IClientDeposit,
   IClientDepositHistory,
   IClientDepositHistoryResponse,
+  IClientDepositTopUp,
   ICreateClientReturn,
 } from "@/ts/client.interface";
 import api from "../api";
@@ -24,4 +25,12 @@ export const getDepositHistory = (
   return api
     .get("/deposit-history/", { params: formData })
     .then((res) => res.data);
+};
+
+export const depositTopUp = (formData: IClientDepositTopUp): Promise<any> => {
+  return api.post("/deposit/top-up/", formData).then((res) => res.data);
+};
+
+export const depositUpdate = (formData: IClientDepositTopUp): Promise<any> => {
+  return api.post("/deposit/update/", formData).then((res) => res.data);
 };

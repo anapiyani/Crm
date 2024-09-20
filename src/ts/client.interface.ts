@@ -1,9 +1,8 @@
+import { IPayment } from "./activity.interface";
 import { IUser } from "./types";
 
 export interface IClientAddForm {
   user: IUser;
-  // personal_discount_id: number | null;
-  // discount_card_id: number | null;
   category: string;
   occupation: string;
   invite_source: string;
@@ -95,4 +94,11 @@ export interface IClientHistoryDeposit {
   wallet: number;
   employee: number;
   appointment: number;
+}
+
+export interface IClientDepositTopUp {
+  user_id: number;
+  payments: IPayment[];
+  comment: string;
+  employee_id?: number | null;
 }
