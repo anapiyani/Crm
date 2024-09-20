@@ -11,6 +11,7 @@ export const useLoginMutation = () => {
   >({
     mutationFn: ({ email, password }) => login(email, password),
     onSuccess: (data: ILoginResponse) => {
+      console.log(data);
       if (data && data.access && data.refresh) {
         setTokens(data.access, data.refresh);
         window.location.href = "/";
