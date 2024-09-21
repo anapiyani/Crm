@@ -25,14 +25,11 @@ import {
 } from "@mui/icons-material";
 import {
   cardInfoEmplpyee,
-  getWalletHistory,
   mainInfoEmployee,
 } from "@/service/employee/employee.service";
 import { useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
-import ClientVisitsTable from "./components/visit-table-tab/visitTable";
-import { render } from "@fullcalendar/core/preact.js";
 import BreadcrumbsCustom from "@/components/navigation/breadcrumbs/breadcrumbs";
 import ResponsiveTabs from "@/components/tabs/tabs.component";
 import { clientsTabsData } from "./data";

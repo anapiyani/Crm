@@ -14,6 +14,7 @@ import {
   MenuItem,
   SelectChangeEvent,
   IconButton,
+  TextField,
 } from "@mui/material";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -61,7 +62,7 @@ const TableVertical: React.FC<TableVerticalProps> = ({
   showAddIcon = false, // Default is false, meaning no Add icon by default
 }) => {
   const [dropdownValue, setDropdownValue] = useState<string | number>(
-    data[data.length - 1].value as string | number
+    data[data.length - 1].value as string | number,
   );
 
   const handleDropdownChange = (event: SelectChangeEvent<string | number>) => {

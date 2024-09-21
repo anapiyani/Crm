@@ -31,7 +31,10 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
     const refreshToken = getRefreshToken();
-    if ([401].includes(error.response?.status)) {
+    if (
+      [401].includes(error.response?.status) ||
+      error.response?.data?.code === 401
+    ) {
       if (refreshToken) {
         if (!refreshTokenPromise) {
           refreshTokenPromise = getToken(refreshToken).then((data) => {
@@ -43,7 +46,7 @@ api.interceptors.response.use(
         return refreshTokenPromise
           .then((res) => {
             const { access, refresh } = res;
-            setTokens(access, refresh);
+            setTokens(access, refresh, 0, "", "");
             api.defaults.headers.common["Authorization"] = `Bearer ${access}`;
             return api(originalRequest);
           })

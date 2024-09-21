@@ -18,6 +18,7 @@ import {
   styled,
   Box,
   AppBar,
+  Button,
 } from "@mui/material";
 
 const StyledBadge = styled(Badge)<BadgeProps>(() => ({
@@ -36,10 +37,15 @@ interface TopBarProps {
 }
 
 const TopBar = (props: TopBarProps) => {
-
   const openMenu = () => {
     props.openMenuBar();
-  }
+  };
+  const userName = localStorage.getItem("full_name");
+
+  const handleLogOut = () => {
+    localStorage.clear();
+    window.location.href = "/login";
+  };
 
   const count = 10;
   return (
@@ -150,7 +156,7 @@ const TopBar = (props: TopBarProps) => {
                 fontSize: "1.6rem",
               }}
             >
-              User name
+              {userName}
             </Typography>
           </div>
           <IconButton
@@ -166,6 +172,7 @@ const TopBar = (props: TopBarProps) => {
               }}
             />
           </IconButton>
+          <Button onClick={handleLogOut}>Выйти</Button>
         </Toolbar>
       </AppBar>
     </Box>

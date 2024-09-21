@@ -12,7 +12,13 @@ export const useLoginMutation = () => {
     mutationFn: ({ email, password }) => login(email, password),
     onSuccess: (data: ILoginResponse) => {
       if (data && data.access && data.refresh) {
-        setTokens(data.access, data.refresh);
+        setTokens(
+          data.access,
+          data.refresh,
+          data.user_id,
+          data.full_name,
+          data.role,
+        );
         window.location.href = "/";
       } else {
         console.error(
@@ -50,7 +56,13 @@ export const useVerifyOtpMutation = () => {
     mutationFn: ({ phone_number, otp }) => verifyOtp(phone_number, otp),
     onSuccess: (data: ILoginResponse) => {
       if (data && data.access && data.refresh) {
-        setTokens(data.access, data.refresh);
+        setTokens(
+          data.access,
+          data.refresh,
+          data.user_id,
+          data.full_name,
+          data.role,
+        );
         window.location.href = "/";
       } else {
         toast.error("Что-то пошло не так повторите еще раз...");
