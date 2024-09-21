@@ -8,6 +8,9 @@
     font-size: 2.4rem;
     color: var(--primary-500);
     font-weight: 400;
+    justify-content: space-between;
+    flex-grow: 1;
+    display: flex;
   }
   &__top {
     display: flex;
@@ -21,4 +24,42 @@
     width: fit-content;
     height: fit-content;
   }
+  .icon {
+    // Styles for the icon
+    font-size: 24px; // Adjust size as needed
+    color: #666; // Adjust color as needed
+  }
+
+  .content {
+    padding: 15px; // Ensures padding around content when visible
+  }
 }
+
+// .container {
+//   margin-bottom: 10px; // Adjust as needed
+
+//   &__top {
+//     cursor: pointer;
+//     display: flex;
+//     align-items: center;
+//     padding: 10px 0; // Provides padding for click area
+//   }
+
+//   &__title {
+//     margin: 0; // Ensures there is no extra margin causing layout shifts
+//     flex-grow: 1;
+//     display: flex;
+//     align-items: center;
+//     justify-content: space-between;
+//   }
+
+//   .icon {
+//     // Styles for the icon
+//     font-size: 24px; // Adjust size as needed
+//     color: #666; // Adjust color as needed
+//   }
+
+//   .content {
+//     padding: 15px; // Ensures padding around content when visible
+//   }
+// }
