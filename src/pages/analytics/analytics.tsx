@@ -177,19 +177,19 @@ const AnalyticsPage = () => {
             <div className={classes["main__content__grid"]}>
               <Box className={classes["image-container"]}>
                 <img src={images[0]} onClick={() => openImageViewer(0)} />
-                <Typography variant="h6" align="center" className={classes["image-text"]}>
+                <Typography variant="h5" align="center" className={classes["image-text"]}>
                   {imageDescriptions["average_transaction.png"]}
                 </Typography>
               </Box>
               <Box className={classes["image-container"]}>
                 <img src={images[2]} onClick={() => openImageViewer(2)} />
-                <Typography variant="h6" align="center" className={classes["image-text"]}>
+                <Typography variant="h5" align="center" className={classes["image-text"]}>
                   {imageDescriptions["revenue_structure.png"]}
                 </Typography>
               </Box>
               <Box className={classes["image-container"]}>
                 <img src={images[3]} onClick={() => openImageViewer(3)} />
-                <Typography variant="h6" align="center" className={classes["image-text"]}>
+                <Typography variant="h5" align="center" className={classes["image-text"]}>
                   {imageDescriptions["top_services_revenue.png"]}
                 </Typography>
               </Box>
@@ -206,20 +206,20 @@ const AnalyticsPage = () => {
                   src={images[1]}
                   onClick={() => openImageViewer(1)}
                 />
-                <Typography variant="h6" align="center" className={classes["image-text"]}>
+                <Typography variant="h5" align="center" className={classes["image-text"]}>
                   {imageDescriptions["discount_detailed_analysis.png"]}
                 </Typography>
               </Box>
               <div>
                 <Box className={classes["image-container"]}>
                   <img src={images[4]} onClick={() => openImageViewer(4)} />
-                  <Typography variant="h6" align="center" className={classes["image-text"]}>
+                  <Typography variant="h5" align="center" className={classes["image-text"]}>
                     {imageDescriptions["total_before_after_discounts.png"]}
                   </Typography>
                 </Box>
                 <Box className={classes["image-container"]}>
                   <img src={images[20]} onClick={() => openImageViewer(20)} />
-                  <Typography variant="h6" align="center" className={classes["image-text"]}>
+                  <Typography variant="h5" align="center" className={classes["image-text"]}>
                     {imageDescriptions["total_before_discounts.png"]}
                   </Typography>
                 </Box>
@@ -233,37 +233,37 @@ const AnalyticsPage = () => {
             <div className={classes["main__content__grid"]}>
               <Box className={classes["image-container"]}>
                 <img src={images[6]} onClick={() => openImageViewer(6)} />
-                <Typography variant="h6" align="center" className={classes["image-text"]}>
+                <Typography variant="h5" align="center" className={classes["image-text"]}>
                   {imageDescriptions["visits_by_hour.png"]}
                 </Typography>
               </Box>
               <Box className={classes["image-container"]}>
                 <img src={images[7]} onClick={() => openImageViewer(7)} />
-                <Typography variant="h6" align="center" className={classes["image-text"]}>
+                <Typography variant="h5" align="center" className={classes["image-text"]}>
                   {imageDescriptions["visits_by_month.png"]}
                 </Typography>
               </Box>
               <Box className={classes["image-container"]}>
                 <img src={images[5]} onClick={() => openImageViewer(5)} />
-                <Typography variant="h6" align="center" className={classes["image-text"]}>
+                <Typography variant="h5" align="center" className={classes["image-text"]}>
                   {imageDescriptions["visits_by_day.png"]}
                 </Typography>
               </Box>
               <Box className={classes["image-container"]}>
                 <img src={images[12]} onClick={() => openImageViewer(12)} />
-                <Typography variant="h6" align="center" className={classes["image-text"]}>
+                <Typography variant="h5" align="center" className={classes["image-text"]}>
                   {imageDescriptions["avg_bill_visits_count.png"]}
                 </Typography>
               </Box>
               <Box className={classes["image-container"]}>
                 <img src={images[13]} onClick={() => openImageViewer(13)} />
-                <Typography variant="h6" align="center" className={classes["image-text"]}>
+                <Typography variant="h5" align="center" className={classes["image-text"]}>
                   {imageDescriptions["avg_bill.png"]}
                 </Typography>
               </Box>
               <Box className={classes["image-container"]}>
                 <img src={images[14]} onClick={() => openImageViewer(14)} />
-                <Typography variant="h6" align="center" className={classes["image-text"]}>
+                <Typography variant="h5" align="center" className={classes["image-text"]}>
                   {imageDescriptions["avg_bill_kde.png"]}
                 </Typography>
               </Box>
@@ -276,31 +276,31 @@ const AnalyticsPage = () => {
             <div className={classes["main__content__grid"]}>
               <Box className={classes["image-container"]}>
                 <img src={images[8]} onClick={() => openImageViewer(8)} />
-                <Typography variant="h6" align="center" className={classes["image-text"]}>
+                <Typography variant="h5" align="center" className={classes["image-text"]}>
                   {imageDescriptions["active_idle_hours.png"]}
                 </Typography>
               </Box>
               <Box className={classes["image-container"]}>
                 <img src={images[9]} onClick={() => openImageViewer(9)} />
-                <Typography variant="h6" align="center" className={classes["image-text"]}>
+                <Typography variant="h5" align="center" className={classes["image-text"]}>
                   {imageDescriptions["employee_analysis_revenue.png"]}
                 </Typography>
               </Box>
               <Box className={classes["image-container"]}>
                 <img src={images[10]} onClick={() => openImageViewer(10)} />
-                <Typography variant="h6" align="center" className={classes["image-text"]}>
+                <Typography variant="h5" align="center" className={classes["image-text"]}>
                   {imageDescriptions["corr_matrix.png"]}
                 </Typography>
               </Box>
               <Box className={classes["image-container"]}>
                 <img src={images[11]} onClick={() => openImageViewer(11)} />
-                <Typography variant="h6" align="center" className={classes["image-text"]}>
+                <Typography variant="h5" align="center" className={classes["image-text"]}>
                   {imageDescriptions["salary_distribution.png"]}
                 </Typography>
               </Box>
               <Box className={classes["image-container"]}>
                 <img src={images[17]} onClick={() => openImageViewer(17)} />
-                <Typography variant="h6" align="center" className={classes["image-text"]}>
+                <Typography variant="h5" align="center" className={classes["image-text"]}>
                   {imageDescriptions["master_rating.png"]}
                 </Typography>
               </Box>
@@ -313,13 +313,13 @@ const AnalyticsPage = () => {
             <div className={classes["main__content__grid"]}>
               <Box className={classes["image-container"]}>
                 <img src={images[15]} onClick={() => openImageViewer(15)} />
-                <Typography variant="h6" align="center" className={classes["image-text"]}>
+                <Typography variant="h5" align="center" className={classes["image-text"]}>
                   {imageDescriptions["client_types.png"]}
                 </Typography>
               </Box>
               <Box className={classes["image-container"]}>
                 <img src={images[16]} onClick={() => openImageViewer(16)} />
-                <Typography variant="h6" align="center" className={classes["image-text"]}>
+                <Typography variant="h5" align="center" className={classes["image-text"]}>
                   {imageDescriptions["clients_total.png"]}
                 </Typography>
               </Box>
@@ -332,7 +332,7 @@ const AnalyticsPage = () => {
             <div className={classes["main__content__grid"]}>
               <Box className={classes["image-container"]}>
                 <img src={images[19]} onClick={() => openImageViewer(19)} />
-                <Typography variant="h6" align="center" className={classes["image-text"]}>
+                <Typography variant="h5" align="center" className={classes["image-text"]}>
                   {imageDescriptions["pairplot.png"]}
                 </Typography>
               </Box>

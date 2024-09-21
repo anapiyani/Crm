@@ -43,8 +43,8 @@
 }
 
 .main__content__grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+  display: flex;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: 20px;
   justify-items: center;
 }
