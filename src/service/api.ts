@@ -31,7 +31,10 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
     const refreshToken = getRefreshToken();
-    if ([401].includes(error.response?.status)) {
+    if (
+      [401].includes(error.response?.status) ||
+      error.response?.data?.code === 401
+    ) {
       if (refreshToken) {
         if (!refreshTokenPromise) {
           refreshTokenPromise = getToken(refreshToken).then((data) => {
