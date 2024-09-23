@@ -73,10 +73,20 @@ const EmailLogin = ({ loginWPhone }: TProps) => {
                   mutation.reset();
                 }
               }}
+              sx={{
+                fontSize: "1.6rem",
+                "& .MuiFormLabel-root": {
+                  fontSize: "1.6rem",
+                },
+                ".MuiOutlinedInput-root": {
+                  fontSize: "1.6rem",
+                },
+              }}
             />
-            <TextField
+            {/* <TextField
               id="outlined-basic"
               label="Пароль"
+              autoComplete ="off"
               variant="outlined"
               sx={{
                 fontSize: "1.6rem",
@@ -111,6 +121,42 @@ const EmailLogin = ({ loginWPhone }: TProps) => {
                       ) : (
                         <VisibilityIcon style={{ fontSize: "2rem" }} />
                       )}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            /> */}
+            <TextField
+              id="outlined-basic"
+              label="Пароль"
+              variant="outlined"
+              type={showPassword ? "text" : "password"}
+              autoComplete="new-password" // important for disabling autofill
+              value={password}
+              sx={{
+                fontSize: "1.6rem",
+                "& .MuiFormLabel-root": {
+                  fontSize: "1.6rem",
+                },
+                ".MuiOutlinedInput-root": {
+                  fontSize: "1.6rem",
+                },
+              }}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                if (mutation.isError) {
+                  mutation.reset();
+                }
+              }}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={handleClickShowPassword}
+                      onMouseDown={handleMouseDownPassword}
+                      edge="end"
+                    >
+                      {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
                     </IconButton>
                   </InputAdornment>
                 ),
