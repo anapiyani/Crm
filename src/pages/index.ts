@@ -29,6 +29,7 @@ import AnalyticsPage from "./analytics/analytics";
 import Report from "./reports/report.page";
 import EmployeePage from "./employees/employee-card/employee.page";
 import DiscountPage from "./discounts/discounts.page";
+import StorageAccountingPage from "./storage/accounting/storage.accounting";
 
 export {
   Home,
@@ -60,4 +61,5 @@ export {
   AnalyticsPage,
   Report,
   DiscountPage,
+  StorageAccountingPage,
 };

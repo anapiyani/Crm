@@ -156,6 +156,7 @@ const ResponsiveDrawer = (props: IProps) => {
       children: [
         { text: "Склад", link: "/storage" },
         { text: "Настройки", link: "/storage/settings" },
+        {text: "Учет", link: "/storage/accounting"},
       ],
     },
     // { text: "Поставщики", icon: <ShoppingCart /> },
