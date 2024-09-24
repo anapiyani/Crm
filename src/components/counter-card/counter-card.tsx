@@ -2,6 +2,7 @@ import React from "react";
 import { Card, Button, CardActions, CardContent } from "@mui/material";
 import { AddRounded } from "@mui/icons-material";
 import classes from "./styles.module.scss";
+import classNames from "classnames";
 
 type CounterCardProps = {
   backgroundColor: string;
@@ -11,6 +12,8 @@ type CounterCardProps = {
   textTitleFocus?: string;
   valueText: string | number | undefined;
   isButton?: boolean;
+  isClickable?: boolean;
+  cardClicked?: () => void;
 };
 
 const CounterCard: React.FC<CounterCardProps> = ({
@@ -21,6 +24,8 @@ const CounterCard: React.FC<CounterCardProps> = ({
   textTitleFocus,
   valueText,
   isButton = false,
+  isClickable = false,
+  cardClicked,
 }) => {
   return (
     <Card
@@ -28,6 +33,16 @@ const CounterCard: React.FC<CounterCardProps> = ({
         maxHeight: "14.8rem",
         width: { xs: "22rem", md: "30rem" },
         alignItems: "center",
+        cursor: isClickable ? "pointer" : "default",
+        "&:hover": {
+          backgroundColor: isClickable ? "rgba(159, 166, 173, 0.5)" : "inherit",
+          transition: "all 0.3s ease-in-out",
+        },
+      }}
+      onClick={() => {
+        if (isClickable && cardClicked) {
+          cardClicked();
+        }
       }}
     >
       <CardContent>

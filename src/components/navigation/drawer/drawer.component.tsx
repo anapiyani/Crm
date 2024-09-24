@@ -61,10 +61,10 @@ const ResponsiveDrawer = (props: IProps) => {
   const location = useLocation();
   const [open, setOpen] = useState<string | null>(null);
   const [selectedParentIndex, setSelectedParentIndex] = useState<string | null>(
-    null
+    null,
   );
   const [selectedChildIndex, setSelectedChildIndex] = useState<string | null>(
-    null
+    null,
   );
   const [isChatOpen, setIsChatOpen] = useState<boolean>(false);
 
@@ -212,7 +212,7 @@ const ResponsiveDrawer = (props: IProps) => {
 
   const renderListItems = (
     items: Item[],
-    parentIndex: number | null = null
+    parentIndex: number | null = null,
   ) => {
     return items.map((item, index) => {
       const uniqueIndex =

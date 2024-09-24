@@ -18,7 +18,7 @@ export const getServices = (): Promise<IResponseData<IService[]>> => {
 };
 
 export const getServiceParametersById = (
-  service_id: number
+  service_id: number,
 ): Promise<IServiceParameters[]> => {
   return api
     .get(`/services/service-parameters/service/${service_id}/`)
@@ -26,7 +26,7 @@ export const getServiceParametersById = (
 };
 
 export const getServiceForEmployeeById = (
-  user_id: string
+  user_id: string | undefined,
 ): Promise<IUserService[]> => {
   return api
     .get(`/services/services/employee/${user_id}/`)
@@ -34,7 +34,7 @@ export const getServiceForEmployeeById = (
 };
 
 export const getServiceParent = (
-  service_id: number
+  service_id: number,
 ): Promise<IServiceParent[]> => {
   return api
     .get(`/hierarchy/hierarchy-parents/${service_id}/`)
@@ -42,7 +42,7 @@ export const getServiceParent = (
 };
 
 export const getServicePrices = (
-  service_id: number
+  service_id: number,
 ): Promise<IServicePrices> => {
   return api
     .get(`/services/services-prices/${service_id}`)
@@ -50,7 +50,7 @@ export const getServicePrices = (
 };
 
 export const getCalculations = (
-  service_id: number
+  service_id: number,
 ): Promise<IServiceCalculation[]> => {
   return api
     .get(`/percentage-position-employee/${service_id}`)
@@ -59,7 +59,7 @@ export const getCalculations = (
 
 export const deleteAllBreaks = (
   date: string,
-  employee_id: string
+  employee_id: string,
 ): Promise<void> => {
   return api
     .delete(`/schedule/breaks/delete/?date=${date}&employee_id=${employee_id}`)

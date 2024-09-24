@@ -79,6 +79,7 @@ import NiceModal from "@ebay/nice-modal-react";
 import clientDepositTopupModal from "@/modals/clients/client-deposit-topup.modal";
 import clientDepositUpdateModal from "@/modals/clients/client-deposit-update.modal";
 import clientCommentAddModal from "@/modals/clients/client-comment-add.modal";
+import { CreateAppointmentModal } from "@/modals";
 
 interface IOption {
   label: string;
@@ -100,17 +101,17 @@ const ClientCard = () => {
   ];
 
   const handlePageTransactionSizeChange = (
-    event: React.ChangeEvent<{ value: unknown }>
+    event: React.ChangeEvent<{ value: unknown }>,
   ) => {
     const selectedOption = pageSizeOptionsTransaction.find(
-      (option) => option.value === Number(event.target.value)
+      (option) => option.value === Number(event.target.value),
     ) || { label: "10", value: 10 };
     setPageSizeTransaction(selectedOption);
   };
 
   const handlePageTransactionChange = (
     event: React.ChangeEvent<unknown>,
-    value: number
+    value: number,
   ) => {
     setPageTransaction(value);
   };
@@ -127,7 +128,7 @@ const ClientCard = () => {
 
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
-    value: number
+    value: number,
   ) => {
     setPage(value);
   };
@@ -147,17 +148,17 @@ const ClientCard = () => {
   ];
 
   const handlePageDepositSizeChange = (
-    event: React.ChangeEvent<{ value: unknown }>
+    event: React.ChangeEvent<{ value: unknown }>,
   ) => {
     const selectedOption = pageSizeOptionsDeposit.find(
-      (option) => option.value === Number(event.target.value)
+      (option) => option.value === Number(event.target.value),
     ) || { label: "10", value: 10 };
     setPageSizeDeposit(selectedOption);
   };
 
   const handlePageDepositChange = (
     event: React.ChangeEvent<unknown>,
-    value: number
+    value: number,
   ) => {
     setPageDeposit(value);
   };
@@ -376,7 +377,7 @@ const ClientCard = () => {
       dayjs(
         customerAppointmentHistoryData?.[
           customerAppointmentHistoryData.length - 1
-        ]?.date
+        ]?.date,
       ).format("DD.MM.YYYY") || "Не указано"
     );
   };
@@ -433,6 +434,18 @@ const ClientCard = () => {
                 iconColor="var(--success-main)"
                 textTitle="Добавить новое посещение"
                 valueText={""}
+                isClickable={true}
+                cardClicked={() => {
+                  NiceModal.show(CreateAppointmentModal, {
+                    start: dayjs(Date.now()).format("YYYY-MM-DD, HH:mm"),
+                    end: dayjs(Date.now())
+                      .add(1, "hour")
+                      .format("YYYY-MM-DD, HH:mm"),
+                    hasClient: true,
+                    clientId: Number(params.id),
+                    clientName: `${userInfoData?.first_name} ${userInfoData?.last_name}`,
+                  });
+                }}
               />
               <CounterCard
                 backgroundColor={"rgba(33, 150, 243, 0.3)"}
@@ -489,7 +502,7 @@ const ClientCard = () => {
                 textTitle="Дата последней операции"
                 valueText={
                   dayjs(financeData?.last_operation_date).format(
-                    "DD.MM.YYYY"
+                    "DD.MM.YYYY",
                   ) || "0"
                 }
               />
@@ -723,7 +736,7 @@ const ClientCard = () => {
                               <p>
                                 {result.operation_name} <br />{" "}
                                 {dayjs(result.operation_date).format(
-                                  "DD.MM.YYYY"
+                                  "DD.MM.YYYY",
                                 )}
                               </p>
                             </TableCell>
@@ -802,7 +815,7 @@ const ClientCard = () => {
                             <TableCell>{result.deposit} </TableCell>
                             <TableCell>
                               {dayjs(result.operation_date).format(
-                                "DD.MM.YYYY"
+                                "DD.MM.YYYY",
                               )}
                             </TableCell>
                             <TableCell>
@@ -865,7 +878,7 @@ const ClientCard = () => {
                         <Pagination
                           count={Math.ceil(
                             clientTransactions?.count /
-                              pageSizeTransaction.value
+                              pageSizeTransaction.value,
                           )}
                           page={pageTransaction}
                           variant="outlined"
@@ -975,7 +988,7 @@ const ClientCard = () => {
                                   </TableCell>
                                   <TableCell>
                                     {dayjs(result.date_created).format(
-                                      "DD.MM.YYYY"
+                                      "DD.MM.YYYY",
                                     )}
                                   </TableCell>
                                   <TableCell>
@@ -992,7 +1005,7 @@ const ClientCard = () => {
                                   </TableCell>
                                   <TableCell>{result.comment}</TableCell>
                                 </TableRow>
-                              )
+                              ),
                             )}
                           </TableBody>
                         </Table>
@@ -1035,7 +1048,7 @@ const ClientCard = () => {
                             <Pagination
                               count={Math.ceil(
                                 clientDepositHistory?.count /
-                                  pageSizeDeposit.value
+                                  pageSizeDeposit.value,
                               )}
                               page={pageDeposit}
                               variant="outlined"
