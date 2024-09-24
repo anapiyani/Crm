@@ -21,6 +21,7 @@ interface ICustomAutoCompleteProps<T extends IOption> {
   size?: "small" | "medium";
   sx?: SxProps;
   fullWidth?: boolean;
+  isDisabled?: boolean;
 }
 
 const isString = (item: unknown): item is string => {
@@ -40,6 +41,7 @@ const CustomAutoComplete = <T extends IOption>({
   size = "medium",
   sx,
   fullWidth = true,
+  isDisabled,
 }: ICustomAutoCompleteProps<T>): React.ReactElement => {
   return (
     <div className={classNames(classes["autocomplete"], className)}>
@@ -56,6 +58,7 @@ const CustomAutoComplete = <T extends IOption>({
         options={options}
         value={value}
         fullWidth={fullWidth}
+        disabled={isDisabled}
         size={size}
         getOptionLabel={(option) => option[selectValue] as string}
         getOptionKey={(option) => option.value as string}
