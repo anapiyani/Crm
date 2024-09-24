@@ -51,9 +51,6 @@ interface ICreateAppointmentModalProps {
   clientName: string;
 }
 
-// 2 variants to do this:
-// 1. do the employee? this in interface and create new state for it and pass it to needed parts, and then add some interface like: "isNoEmployee: boolean" and if no emplpoyee then show the input autocomplete with employees and then after choose the employee, then show services of the employee. But if there is employee and isNoEmployee is true then hide the employee autocomplete and show the services of the employee that is coming from props.
-
 const initialAppointmentForm: IAppointmentCreateForm = {
   client_id: 0,
   employee_id: 0,
