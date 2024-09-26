@@ -1,0 +1,38 @@
+.saveAutoComplete {
+  display: flex;
+  flex-direction: column;
+  width: 500px;
+  max-width: 500px; /* Prevent expansion */
+  margin-bottom: 1rem;
+  margin-top: 1rem;
+  &__saved {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    font-weight: 500;
+    padding: 0.4rem;
+    margin-bottom: 1rem;
+    svg {
+      cursor: pointer;
+    }
+  }
+  &__inputDiv {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    input {
+      width: 100%;
+      height: 100%;
+      border: none;
+      padding: 1rem;
+      font-size: 1.3rem;
+      margin-top: 1rem;
+    }
+  }
+}
+
+.MuiAutocomplete-inputRoot {
+  flex-wrap: wrap !important;
+  max-width: 100%;
+}

@@ -37,6 +37,7 @@ import { flattenEmployeeHierarchy } from "@/utils/flatten-employee-hierarchy";
 import { getHierarchyByEmployeeId } from "@/service/hierarchy/hierarchy.service";
 import { useAddServiceForAppointment } from "@/service/appointments/appointments.hook";
 import { IServicesAdd } from "@/ts/appointments.interface";
+import addMaterialsModal from "@/modals/activity/add-materials.modal";
 
 const ViewVisits = () => {
   const params = useParams<{ id: string }>();
@@ -81,6 +82,10 @@ const ViewVisits = () => {
 
   const handleCancelPayment = (id: number | undefined) => {
     cancelMutation.mutate(id!.toString());
+  };
+
+  const handleAddMaterial = () => {
+    NiceModal.show(addMaterialsModal);
   };
 
   const handleSaveSelectedServices = (services: IServicesChoose[]) => {
@@ -257,6 +262,7 @@ const ViewVisits = () => {
                   icon={Inventory2Outlined}
                   backgroundIcon={"rgba(239, 108, 0, 0.3)"}
                   colorIcon={"rgba(239, 108, 0, 1)"}
+                  onButtonClick={handleAddMaterial}
                 />
                 <CardButton
                   text={"Добавить абонементы/сертификаты"}
