@@ -183,3 +183,14 @@ export interface IServicesChoose {
   serviceName: string;
   service_id: number;
 }
+
+export interface IAppointmentMaterials {
+  appointment_materials: IMaterialsForVisit[];
+}
+
+export interface IMaterialsForVisit {
+  material: number;
+  quantity: number;
+  storage: number;
+  sold_by: number;
+}

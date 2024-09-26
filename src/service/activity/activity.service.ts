@@ -1,4 +1,5 @@
 import {
+  IAppointmentMaterials,
   IClientBalance,
   IPaymentConfirm,
   IReviewFeedback,
@@ -63,4 +64,19 @@ export const getBalance = (id: string): Promise<IClientBalance> => {
 
 export const cancelPayment = (id: string): Promise<{ message: string }> => {
   return api.post(`/cancel_payment/${id}/`).then((res) => res.data);
+};
+
+export const addMaterialsForVisit = ({
+  appointment_id,
+  appointment_materials,
+}: {
+  appointment_id: number;
+  appointment_materials: IAppointmentMaterials;
+}): Promise<any> => {
+  return api
+    .put(
+      `/appointments/appointments/${appointment_id}/add-materials/`,
+      appointment_materials,
+    )
+    .then((res) => res.data);
 };
