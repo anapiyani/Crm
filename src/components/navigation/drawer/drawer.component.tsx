@@ -156,7 +156,7 @@ const ResponsiveDrawer = (props: IProps) => {
       children: [
         { text: "Склад", link: "/storage" },
         { text: "Настройки", link: "/storage/settings" },
-        {text: "Учет", link: "/storage/accounting"},
+        { text: "Учет", link: "/storage/accounting" },
       ],
     },
     // { text: "Поставщики", icon: <ShoppingCart /> },
@@ -374,7 +374,7 @@ const ResponsiveDrawer = (props: IProps) => {
         >
           {drawer}
         </StyledDrawerPaper>
-        <div
+        {/* <div
           onClick={() => {
             if (isChatOpen) {
               NiceModal.hide(chatModal);
@@ -387,7 +387,7 @@ const ResponsiveDrawer = (props: IProps) => {
           className={classes["assistant"]}
         >
           <AssistantIcon />
-        </div>
+        </div> */}
       </Box>
     </Box>
   );
