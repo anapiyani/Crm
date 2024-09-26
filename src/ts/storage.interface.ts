@@ -69,3 +69,12 @@ export interface IMaterials {
   volume: string;
   wholesale_price: string;
 }
+
+export interface IMaterialsStorage {
+  id: number;
+  material: number;
+  material_name: string;
+  quantity: string;
+  storage: number;
+  storage_name: string;
+}

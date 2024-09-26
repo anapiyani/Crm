@@ -2,6 +2,7 @@ import {
   IAddStorage,
   IEditStorage,
   IMaterials,
+  IMaterialsStorage,
   IStorage,
 } from "@/ts/storage.interface";
 import api from "../api";
@@ -20,4 +21,16 @@ export const editStorage = (storage: IEditStorage): Promise<any> => {
 
 export const getMaterials = (): Promise<IMaterials[]> => {
   return api.get("/materials/").then((res) => res.data);
+};
+
+export const getStorageMaterials = ({
+  material,
+  storage,
+}: {
+  material: number;
+  storage: number;
+}): Promise<IMaterialsStorage[]> => {
+  return api
+    .get(`/material-storage/?material=${material}&storage=${storage}`)
+    .then((res) => res.data);
 };

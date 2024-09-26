@@ -6,9 +6,13 @@ import SaveAutoComplete from "@/components/saveAutoComplete/saveAutoComplete.com
 import { Autocomplete, TextField } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
 import { processEmployeeOptions } from "@/utils/process-employees-departments";
-import { useQuery } from "@tanstack/react-query";
+import { useQueries, useQuery } from "@tanstack/react-query";
 import { getHierarchyEmployeesByDepartment } from "@/service/hierarchy/hierarchy.service";
-import { getMaterials, getStorages } from "@/service/storage/storage.service";
+import {
+  getMaterials,
+  getStorageMaterials,
+  getStorages,
+} from "@/service/storage/storage.service";
 import CustomAutoComplete from "@/components/autocomplete/custom-autocomplete.component";
 import { Warning } from "@mui/icons-material";
 
@@ -20,6 +24,45 @@ const addMaterials = () => {
     { label: string; value: string }[]
   >([]);
   const [selectedStorage, setSelectedStorage] = useState<number>();
+
+  const materialsQuantityData = useQueries({
+    queries: materials.map((item) => ({
+      queryKey: ["post", item.value],
+      queryFn: () =>
+        getStorageMaterials({
+          material: Number(item.value),
+          storage: selectedStorage || 0,
+        }),
+      staleTime: Infinity,
+    })),
+  });
+
+  useEffect(() => {
+    if (selectedStorage) {
+      materialsQuantityData.forEach((result) => result.refetch());
+    }
+  }, [selectedStorage]);
+
+  const materialsQuantity = useMemo(() => {
+    return materialsQuantityData.map((result, index) => {
+      if (result.data) {
+        const totalQuantity = result.data.reduce(
+          (acc, item) => acc + Number(item.quantity),
+          0,
+        );
+        return {
+          material: materials[index].value,
+          quantity: totalQuantity,
+        };
+      }
+      return {
+        material: materials[index].value,
+        quantity: 0,
+      };
+    });
+  }, [materialsQuantityData, materials]);
+
+  console.log(materialsQuantity);
 
   const useEmployees = () => {
     return useQuery({
@@ -71,8 +114,10 @@ const addMaterials = () => {
   };
 
   useEffect(() => {
-    console.log(selectedStorage);
-  }, [selectedStorage]);
+    if (storagesData && storagesData.length > 0 && !selectedStorage) {
+      setSelectedStorage(storagesData[0].id);
+    }
+  }, [storagesData, selectedStorage]);
 
   return (
     <ModalWindow
@@ -169,7 +214,13 @@ const addMaterials = () => {
                   key={index}
                   className={classes.materials__material_find__available__item}
                 >
-                  <p>{material.label}</p>
+                  <p>
+                    {material.label} -{" "}
+                    {materialsQuantity.find(
+                      (item) => item.material === material.value,
+                    )?.quantity || 0}{" "}
+                    шт
+                  </p>
                 </div>
               ))}
             </div>
@@ -191,9 +242,10 @@ const addMaterials = () => {
                 <p style={{ fontSize: "1.6rem" }}>{option.name}</p>
               </li>
             )}
-            value={storagesData?.find(
-              (option) => option.id === selectedStorage,
-            )}
+            value={
+              storagesData?.find((option) => option.id === selectedStorage) ||
+              null
+            }
             onChange={(event, value) => {
               setSelectedStorage(value?.id);
             }}
