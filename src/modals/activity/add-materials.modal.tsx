@@ -62,8 +62,6 @@ const addMaterials = () => {
     });
   }, [materialsQuantityData, materials]);
 
-  console.log(materialsQuantity);
-
   const useEmployees = () => {
     return useQuery({
       queryKey: ["employeeDepartmentHierarchyData"],
