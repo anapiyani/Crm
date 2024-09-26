@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Edit, Lock, Add } from "@mui/icons-material"; // Import the Add icon
+import { Edit, Lock, Add, Save, Close } from "@mui/icons-material"; // Import the Add icon
 import {
   Box,
   Paper,
@@ -35,11 +35,24 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
+type EditType =
+  | "text"
+  | "select"
+  | "number"
+  | "boolean"
+  | "nonEditable"
+  | "city"
+  | "date";
+
 type DataRow = {
   property?: string;
   value?: string | number | boolean;
   link?: string;
   linkLabel?: string;
+  editType?: EditType | "nonEditable";
+  autocomplete?: string[];
+  scnd_value?: string;
+  primary?: boolean;
 };
 
 interface TableVerticalProps {
@@ -50,6 +63,7 @@ interface TableVerticalProps {
   includeDropdown?: boolean;
   noIcon?: boolean;
   showAddIcon?: boolean;
+  onSave?: (Data: DataRow[]) => void;
 }
 
 const TableVertical: React.FC<TableVerticalProps> = ({
@@ -60,13 +74,30 @@ const TableVertical: React.FC<TableVerticalProps> = ({
   includeDropdown = false,
   noIcon = false,
   showAddIcon = false, // Default is false, meaning no Add icon by default
+  onSave,
 }) => {
   const [dropdownValue, setDropdownValue] = useState<string | number>(
-    data[data.length - 1].value as string | number,
+    data[data.length - 1].value as string | number
   );
+  const [isEdit, setIsEdit] = useState<boolean>(false);
+  const [changedData, setChangedData] = useState<DataRow[]>(data);
 
   const handleDropdownChange = (event: SelectChangeEvent<string | number>) => {
     setDropdownValue(event.target.value as string);
+  };
+
+  const handleEdit = () => {
+    setIsEdit(!isEdit);
+    console.log("Edit button clicked");
+  };
+
+  const onSaveTrigger = () => {
+    setIsEdit(false);
+
+    console.log("onSaveTrigger", changedData);
+    if (changedData) {
+      onSave?.(changedData);
+    }
   };
 
   return (
@@ -114,15 +145,36 @@ const TableVertical: React.FC<TableVerticalProps> = ({
                   pr: "2.4rem",
                 }}
               >
-                <IconButton>
-                  <Edit
-                    sx={{
-                      verticalAlign: "middle",
-                      fontSize: "2.4rem",
-                      color: "#2196F3",
-                    }}
-                  />
+                <IconButton onClick={handleEdit}>
+                  {!isEdit ? (
+                    <Edit
+                      sx={{
+                        verticalAlign: "middle",
+                        fontSize: "2.4rem",
+                        color: "#2196F3",
+                      }}
+                    />
+                  ) : (
+                    <Close
+                      sx={{
+                        verticalAlign: "middle",
+                        fontSize: "2.4rem",
+                        color: "#2196F3",
+                      }}
+                    />
+                  )}
                 </IconButton>
+                {isEdit && (
+                  <IconButton onClick={onSaveTrigger}>
+                    <Save
+                      sx={{
+                        verticalAlign: "middle",
+                        fontSize: "2.4rem",
+                        color: "#2196F3",
+                      }}
+                    />
+                  </IconButton>
+                )}
               </Box>
               {showAddIcon && (
                 <Box
@@ -156,15 +208,36 @@ const TableVertical: React.FC<TableVerticalProps> = ({
                   pr: "2.4rem",
                 }}
               >
-                <IconButton>
-                  <Edit
-                    sx={{
-                      verticalAlign: "middle",
-                      fontSize: "2.4rem",
-                      color: "#2196F3",
-                    }}
-                  />
+                <IconButton onClick={handleEdit}>
+                  {!isEdit ? (
+                    <Edit
+                      sx={{
+                        verticalAlign: "middle",
+                        fontSize: "2.4rem",
+                        color: "#2196F3",
+                      }}
+                    />
+                  ) : (
+                    <Close
+                      sx={{
+                        verticalAlign: "middle",
+                        fontSize: "2.4rem",
+                        color: "#2196F3",
+                      }}
+                    />
+                  )}
                 </IconButton>
+                {isEdit && (
+                  <IconButton onClick={onSaveTrigger}>
+                    <Save
+                      sx={{
+                        verticalAlign: "middle",
+                        fontSize: "2.4rem",
+                        color: "#2196F3",
+                      }}
+                    />
+                  </IconButton>
+                )}
               </Box>
               <Box sx={{ padding: "0.8rem" }}>
                 <IconButton>
@@ -201,7 +274,7 @@ const TableVertical: React.FC<TableVerticalProps> = ({
                 sx={{
                   textAlign: "left",
                   fontWeight: ["Фамилия", "Имя", "Отчество"].includes(
-                    row.property!,
+                    row.property!
                   )
                     ? "bold"
                     : "normal",
@@ -234,7 +307,138 @@ const TableVertical: React.FC<TableVerticalProps> = ({
                     </a>
                   </>
                 ) : (
-                  row.value
+                  <>
+                    {isEdit
+                      ? (() => {
+                          switch (row.editType) {
+                            case "text":
+                              return (
+                                <div
+                                  style={{
+                                    display: "flex",
+                                    flexDirection: "row",
+                                    width: "100%",
+                                    gap: "1rem",
+                                  }}
+                                >
+                                  <input
+                                    type="text"
+                                    defaultValue={row.value as string}
+                                    onChange={(e) => {
+                                      setChangedData((prev) => {
+                                        return prev.map((item) => {
+                                          if (item.property === row.property) {
+                                            return {
+                                              ...item,
+                                              value: e.target.value,
+                                            };
+                                          }
+                                          return item;
+                                        });
+                                      });
+                                    }}
+                                  />
+                                  {row.scnd_value && (
+                                    <input
+                                      type="text"
+                                      defaultValue={row.scnd_value as string}
+                                      style={{ width: "15%" }}
+                                      onChange={(e) => {
+                                        setChangedData((prev) => {
+                                          return prev.map((item) => {
+                                            if (
+                                              item.property === row.property
+                                            ) {
+                                              return {
+                                                ...item,
+                                                scnd_value: e.target.value,
+                                              };
+                                            }
+                                            return item;
+                                          });
+                                        });
+                                      }}
+                                    />
+                                  )}
+                                </div>
+                              );
+                            case "number":
+                              return (
+                                <input
+                                  type="number"
+                                  defaultValue={row.value as number}
+                                  onChange={(e) =>
+                                    setChangedData((prev) => {
+                                      return prev.map((item) => {
+                                        if (item.property === row.property) {
+                                          return {
+                                            ...item,
+                                            value: e.target.value,
+                                          };
+                                        }
+                                        return item;
+                                      });
+                                    })
+                                  }
+                                />
+                              );
+                            case "boolean":
+                              return (
+                                <Select
+                                  defaultValue={row.value as string}
+                                  sx={{ minWidth: 200 }}
+                                >
+                                  {row.autocomplete?.map((item) => (
+                                    <MenuItem
+                                      value={item}
+                                      key={item}
+                                      onClick={(l) => {
+                                        setChangedData((prev) => {
+                                          return prev.map((e) => {
+                                            if (e.property === row.property) {
+                                              return {
+                                                ...e,
+                                                value: item,
+                                              };
+                                            }
+                                            return e;
+                                          });
+                                        });
+                                      }}
+                                    >
+                                      {item}
+                                    </MenuItem>
+                                  ))}
+                                </Select>
+                              );
+                            case "date":
+                              return (
+                                <TextField
+                                  type="date"
+                                  defaultValue={row.value as string}
+                                  onChange={(e) => {
+                                    setChangedData((prev) => {
+                                      return prev.map((item) => {
+                                        if (item.property === row.property) {
+                                          return {
+                                            ...item,
+                                            value: e.target.value,
+                                          };
+                                        }
+                                        return item;
+                                      });
+                                    });
+                                  }}
+                                />
+                              );
+                            default:
+                              return row.value;
+                          }
+                        })()
+                      : row.value +
+                        " " +
+                        (row.scnd_value ? row.scnd_value : "")}
+                  </>
                 )}
               </StyledTableCell>
             </StyledTableRow>

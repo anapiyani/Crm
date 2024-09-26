@@ -38,7 +38,10 @@ import { searchVisits } from "@/service/activity/activity.service";
 import { TableData } from "../employee-visits/data";
 import YearlyCalendar from "@/components/calendar/yearly-calendar/yearly-calendar";
 import { getEmployeeScheduleYearly } from "@/service/schedule/schedule.service";
-import { useDeleteWallethistory } from "@/service/employee/employee.hook";
+import {
+  useDeleteWallethistory,
+  useEditEmployee,
+} from "@/service/employee/employee.hook";
 import NiceModal from "@ebay/nice-modal-react";
 import stepFormModal from "@/modals/step-form/step-form.modal";
 import {
@@ -46,6 +49,27 @@ import {
   revenueChartData,
   revenueChartLegendLabels,
 } from "@/pages/clients/client-card/data";
+import { IUserDetails, IUserDetailsChange } from "@/ts/employee.interface";
+
+type EditType =
+  | "text"
+  | "select"
+  | "number"
+  | "boolean"
+  | "nonEditable"
+  | "city"
+  | "date";
+
+type DataRow = {
+  property?: string;
+  value?: string | number | boolean;
+  link?: string;
+  linkLabel?: string;
+  editType?: EditType | "nonEditable";
+  autocomplete?: string[];
+  scnd_value?: string;
+  primary?: boolean;
+};
 
 const EmployeePage = () => {
   const [currentTab, setCurrentTab] = useState<number>(0);
@@ -60,6 +84,7 @@ const EmployeePage = () => {
   const [vacations, setVacations] = useState<string[]>([]);
 
   const mutationDeleteWalletHistory = useDeleteWallethistory();
+  const mutationEditEmployee = useEditEmployee();
 
   const params = useParams<{ id: string }>();
 
@@ -111,46 +136,74 @@ const EmployeePage = () => {
     queryFn: () => getWalletHistory(params.id!, 1),
   });
 
-  const mainTableData = [
-    { property: "ID сотрудника", value: userInfoData?.user_id },
+  const mainTableData: DataRow[] = [
+    {
+      property: "ID сотрудника",
+      value: userInfoData?.user_id,
+      editType: "nonEditable",
+    },
     {
       property: "Статус",
       value: userInfoData?.is_active ? "Активен" : "Неактивен",
+      editType: "boolean",
+      autocomplete: ["Активен", "Неактивен"],
     },
-    { property: "Должность", value: "Универсал, Парикмахерский зал" },
-    { property: "Фамилия", value: userInfoData?.last_name },
-    { property: "Имя", value: userInfoData?.first_name },
+    {
+      property: "Должность",
+      value: "Универсал, Парикмахерский зал",
+      editType: "nonEditable",
+    },
+    { property: "Фамилия", value: userInfoData?.last_name, editType: "text" },
+    { property: "Имя", value: userInfoData?.first_name, editType: "text" },
     {
       property: "Отобр. онлайн",
       value: userInfoData?.is_active ? "Да" : "Нет",
+      editType: "boolean",
+      autocomplete: ["Да", "Нет"],
     },
-    { property: "Моб. телефон", value: userInfoData?.phone_number },
+    {
+      property: "Моб. телефон",
+      value: userInfoData?.phone_number,
+      editType: "number",
+    },
   ];
 
-  const additionalTableData = [
-    { property: "Работает с.", value: userInfoData?.start_date },
+  const additionalTableData: DataRow[] = [
+    {
+      property: "Работает с.",
+      value: userInfoData?.start_date,
+      editType: "date",
+    },
     {
       property: "Пол",
       value: userInfoData?.gender ? userInfoData?.gender : "Не указан",
+      editType: "boolean",
+      autocomplete: ["мужской", "женский"],
     },
     { property: "Интервал", value: "По умолчанию" },
     { property: "Блокировать", value: "Да" },
   ];
 
-  const contactsData = [
+  const contactsData: DataRow[] = [
     {
-      type: "Моб. телефон",
-      contact: userInfoData?.phone_number || "Нет данных",
+      property: "Моб. телефон",
+      value: userInfoData?.phone_number || "Нет данных",
       primary: true,
+      editType: "number",
     },
   ];
 
-  const addressData = [
+  const addressData: DataRow[] = [
+    {
+      property: "Город",
+      value: userInfoData?.city ? `${userInfoData?.city}` : "Нет данных",
+      editType: "text",
+    },
     {
       property: "Адрес",
-      value: userInfoData?.city
-        ? `${userInfoData?.city}, ${userInfoData?.street}, ${userInfoData?.house}`
-        : "Нет данных",
+      value: userInfoData?.street,
+      scnd_value: userInfoData?.house,
+      editType: "text",
     },
   ];
 
@@ -175,11 +228,13 @@ const EmployeePage = () => {
             total: Number(service.price) || 0,
             employeeId: visit.employee_id,
             clientId: visit.client.id,
+            editType: "nonEditable",
           };
         }),
         grandTotal: visit.total_price,
         grandTotalCash: visit.total_cash,
         grandTotalCard: visit.total_card,
+        editType: "nonEditable",
       };
     }) || [];
 
@@ -205,6 +260,7 @@ const EmployeePage = () => {
           linkText: salary.appointment_name,
           employee: salary.client_name || "Не указан",
           id: salary.id,
+          editType: "nonEditable",
         };
       });
 
@@ -505,6 +561,103 @@ const EmployeePage = () => {
     }
   };
 
+  const onSave = (changedData: DataRow[]) => {
+    const originalData: IUserDetails | undefined = userInfoData;
+
+    if (!originalData) {
+      console.error("No original data found.");
+      return;
+    }
+
+    const updatedUserDetails: IUserDetailsChange = {
+      user: {
+        first_name: originalData.first_name,
+        last_name: originalData.last_name,
+        gender: originalData.gender,
+        date_of_birth: originalData.date_of_birth,
+        phone_number: originalData.phone_number,
+        phone_number_whatsapp: originalData.phone_number_whatsapp,
+      },
+      start_date: originalData.start_date,
+
+      city: originalData.city,
+      city_index: originalData.city_index,
+      street: originalData.street,
+      house: originalData.house,
+      apartment: originalData.apartment,
+      comment: originalData.comment,
+      is_active: originalData.is_active,
+      position: originalData.position,
+    };
+
+    changedData.forEach((row) => {
+      switch (row.property) {
+        case "Статус":
+          if (row.value === "") {
+            break;
+          }
+          updatedUserDetails.is_active = row.value === "Активен";
+          break;
+        case "Фамилия":
+          if (row.value === "") {
+            break;
+          }
+          updatedUserDetails.user.last_name = String(row.value);
+          break;
+        case "Имя":
+          if (row.value === "") {
+            break;
+          }
+          updatedUserDetails.user.first_name = String(row.value);
+          break;
+        case "Моб. телефон":
+          if (row.value === "") {
+            break;
+          }
+          updatedUserDetails.user.phone_number = String(row.value);
+          break;
+        case "Работает с.":
+          if (row.value === undefined) {
+            break;
+          }
+          updatedUserDetails.start_date = String(row.value);
+          break;
+        case "Пол": {
+          console.log(row.value);
+          updatedUserDetails.user.gender = String(row.value);
+          break;
+        }
+        case "Город": {
+          if (row.value === "") {
+            break;
+          }
+          updatedUserDetails.city = String(row.value);
+          break;
+        }
+        case "Адрес": {
+          if (row.value !== "") {
+            updatedUserDetails.street = String(row.value);
+            console.log(row.value);
+          }
+          if (row.scnd_value !== "") {
+            updatedUserDetails.house = String(row.scnd_value);
+            console.log(row.scnd_value);
+          }
+
+          break;
+        }
+
+        default:
+          break;
+      }
+    });
+
+    mutationEditEmployee.mutate({
+      user_id: Number(params.id),
+      form: updatedUserDetails,
+    });
+  };
+
   const renderContentMain = () => {
     switch (currentTab) {
       case 0:
@@ -523,6 +676,7 @@ const EmployeePage = () => {
                 data={mainTableData}
                 title="Главное"
                 showLockIcon
+                onSave={onSave}
               />
             </Grid>
 
@@ -530,16 +684,25 @@ const EmployeePage = () => {
               <TableVertical
                 data={additionalTableData}
                 title="Доп. информация"
+                onSave={onSave}
               />
             </Grid>
 
             <Grid xs={10} md={6} lg={4}>
               <Grid xs={12} container spacing={2}>
                 <Grid xs={12}>
-                  <TableHorizontal data={contactsData} title="Контакты" />
+                  <TableHorizontal
+                    data={contactsData}
+                    title="Контакты"
+                    onSave={onSave}
+                  />
                 </Grid>
                 <Grid xs={12}>
-                  <TableVertical data={addressData} title="Адрес проживания" />
+                  <TableVertical
+                    data={addressData}
+                    title="Адрес проживания"
+                    onSave={onSave}
+                  />
                 </Grid>
               </Grid>
             </Grid>

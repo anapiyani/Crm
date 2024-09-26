@@ -8,7 +8,6 @@ import {
 } from "@mui/icons-material";
 
 export const mainTableData = [
-  { property: "Автосегмент", value: "Не указано" },
   { property: "ID клиента", value: 7 },
   { property: "Категория", value: "Без категории" },
   { property: "Фамилия", value: "Едрес" },
@@ -70,7 +69,7 @@ export const contactsTableData = [
   { type: "Моб. телефон", contact: "+7 (777) 777-76-66", primary: true },
 ];
 
-export const commentsTableData = [{ contact: "Нет ни одного комментария" }];
+export const commentsTableData = [{ value: "Нет ни одного комментария" }];
 
 export const addressData = [{ property: "Адрес", value: "Нет данных." }];
 
