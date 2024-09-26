@@ -4,11 +4,11 @@ import classes from "./styles.module.scss";
 import classNames from "classnames";
 import SaveAutoComplete from "@/components/saveAutoComplete/saveAutoComplete.component";
 import { Autocomplete, TextField } from "@mui/material";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { processEmployeeOptions } from "@/utils/process-employees-departments";
 import { useQuery } from "@tanstack/react-query";
 import { getHierarchyEmployeesByDepartment } from "@/service/hierarchy/hierarchy.service";
-import { getStorages } from "@/service/storage/storage.service";
+import { getMaterials, getStorages } from "@/service/storage/storage.service";
 import CustomAutoComplete from "@/components/autocomplete/custom-autocomplete.component";
 import { Warning } from "@mui/icons-material";
 
@@ -19,6 +19,7 @@ const addMaterials = () => {
   const [materials, setMaterials] = useState<
     { label: string; value: string }[]
   >([]);
+  const [selectedStorage, setSelectedStorage] = useState<number>();
 
   const useEmployees = () => {
     return useQuery({
@@ -41,6 +42,22 @@ const addMaterials = () => {
     refetchOnWindowFocus: false,
   });
 
+  const { data: materialsData, isPending: materialsPending } = useQuery({
+    queryKey: ["materialsData"],
+    queryFn: getMaterials,
+    staleTime: Infinity,
+    refetchOnWindowFocus: false,
+  });
+
+  const materialsOptions = useMemo(() => {
+    return materialsData
+      ? materialsData.map((material) => ({
+          label: material.name,
+          value: material.id.toString(),
+        }))
+      : [];
+  }, [materialsData]);
+
   const { data: employeeDepartmentHierarchyData, isLoading } = useEmployees();
 
   const employeeOptions = useMemo(() => {
@@ -52,6 +69,10 @@ const addMaterials = () => {
   const savedMaterials = (materials: { label: string; value: string }[]) => {
     setMaterials(materials);
   };
+
+  useEffect(() => {
+    console.log(selectedStorage);
+  }, [selectedStorage]);
 
   return (
     <ModalWindow
@@ -129,7 +150,10 @@ const addMaterials = () => {
         </div>
         <div className={classes.materials__material_find}>
           <p>Товары</p>
-          <SaveAutoComplete savedMaterialsFunc={savedMaterials} />
+          <SaveAutoComplete
+            materials={materialsOptions}
+            savedMaterialsFunc={savedMaterials}
+          />
         </div>
         {materials.length > 0 && (
           <div
@@ -167,6 +191,12 @@ const addMaterials = () => {
                 <p style={{ fontSize: "1.6rem" }}>{option.name}</p>
               </li>
             )}
+            value={storagesData?.find(
+              (option) => option.id === selectedStorage,
+            )}
+            onChange={(event, value) => {
+              setSelectedStorage(value?.id);
+            }}
             renderInput={(params) => (
               <div className={classes["main__lower__auto"]}>
                 <TextField

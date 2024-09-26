@@ -5,8 +5,10 @@ import { useEffect, useState } from "react";
 
 const SaveAutoComplete = ({
   savedMaterialsFunc,
+  materials,
 }: {
   savedMaterialsFunc: (materials: { label: string; value: string }[]) => void;
+  materials: { label: string; value: string }[];
 }) => {
   const [savedMaterials, setSavedMaterials] = useState<
     { label: string; value: string }[]
@@ -16,21 +18,11 @@ const SaveAutoComplete = ({
     savedMaterialsFunc(savedMaterials);
   }, [savedMaterials]);
 
-  const options = [
-    { label: "Материал 1", value: "1" },
-    { label: "Материал 2", value: "2" },
-    { label: "Материал 3", value: "3" },
-    { label: "Материал 4", value: "4" },
-    { label: "Материал 5", value: "5" },
-    { label: "Материал 6", value: "6" },
-    { label: "Материал 7", value: "7" },
-  ];
-
   return (
     <Autocomplete
       multiple
       size="small"
-      options={options}
+      options={materials || []}
       getOptionDisabled={(option) =>
         savedMaterials.some((material) => material.value === option.value)
       }

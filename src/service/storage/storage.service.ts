@@ -1,4 +1,9 @@
-import { IAddStorage, IEditStorage, IStorage } from "@/ts/storage.interface";
+import {
+  IAddStorage,
+  IEditStorage,
+  IMaterials,
+  IStorage,
+} from "@/ts/storage.interface";
 import api from "../api";
 
 export const getStorages = (): Promise<IStorage[]> => {
@@ -11,4 +16,8 @@ export const addStorage = (storage: IAddStorage): Promise<any> => {
 
 export const editStorage = (storage: IEditStorage): Promise<any> => {
   return api.put(`/storages/${storage.id}/`, storage).then((res) => res.data);
+};
+
+export const getMaterials = (): Promise<IMaterials[]> => {
+  return api.get("/materials/").then((res) => res.data);
 };
