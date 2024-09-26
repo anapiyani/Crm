@@ -92,35 +92,41 @@ const EventDetails: React.FC<IEventDetailsModalProps> = ({ appointmentId }) => {
     refetchOnWindowFocus: false,
   });
 
-  const { data: customerAppointmentNoShowData, refetch: noDataRefetch } =
-    useQuery({
-      queryKey: ["customerAppointmentNoShowData", clientId],
-      queryFn: () =>
-        clientId ? getCustomerAppointmentNoShowById(clientId) : undefined,
-      enabled: !!clientId,
-      staleTime: Infinity,
-      refetchOnWindowFocus: false,
-    });
+  const {
+    data: customerAppointmentNoShowData,
+    refetch: noDataRefetch,
+  } = useQuery({
+    queryKey: ["customerAppointmentNoShowData", clientId],
+    queryFn: () =>
+      clientId ? getCustomerAppointmentNoShowById(clientId) : undefined,
+    enabled: !!clientId,
+    staleTime: Infinity,
+    refetchOnWindowFocus: false,
+  });
 
-  const { data: customerAppointmentPlanned, refetch: plannedRefetch } =
-    useQuery({
-      queryKey: ["customerAppointmentPlanned", clientId],
-      queryFn: () =>
-        clientId ? getCustomerAppointmentPlannedById(clientId) : undefined,
-      enabled: !!clientId,
-      staleTime: Infinity,
-      refetchOnWindowFocus: false,
-    });
+  const {
+    data: customerAppointmentPlanned,
+    refetch: plannedRefetch,
+  } = useQuery({
+    queryKey: ["customerAppointmentPlanned", clientId],
+    queryFn: () =>
+      clientId ? getCustomerAppointmentPlannedById(clientId) : undefined,
+    enabled: !!clientId,
+    staleTime: Infinity,
+    refetchOnWindowFocus: false,
+  });
 
-  const { data: customerDeletedAppointments, refetch: deletedRefetch } =
-    useQuery({
-      queryKey: ["customerDeletedAppointments", clientId],
-      queryFn: () =>
-        clientId ? getCustomerDeletedAppointments(clientId) : undefined,
-      enabled: !!clientId,
-      staleTime: Infinity,
-      refetchOnWindowFocus: false,
-    });
+  const {
+    data: customerDeletedAppointments,
+    refetch: deletedRefetch,
+  } = useQuery({
+    queryKey: ["customerDeletedAppointments", clientId],
+    queryFn: () =>
+      clientId ? getCustomerDeletedAppointments(clientId) : undefined,
+    enabled: !!clientId,
+    staleTime: Infinity,
+    refetchOnWindowFocus: false,
+  });
 
   useEffect(() => {
     if (appointmentId) {
@@ -163,7 +169,7 @@ const EventDetails: React.FC<IEventDetailsModalProps> = ({ appointmentId }) => {
 
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
-    value: number,
+    value: number
   ) => {
     setPage(value);
   };
@@ -284,7 +290,7 @@ const EventDetails: React.FC<IEventDetailsModalProps> = ({ appointmentId }) => {
     },
   ];
 
-  const commentsTableData = [{ contact: "Нет ни одного комментария" }];
+  const commentsTableData = [{ value: "Нет ни одного комментария" }];
 
   const renderContent = () => {
     switch (currentTab) {
@@ -399,7 +405,7 @@ const EventDetails: React.FC<IEventDetailsModalProps> = ({ appointmentId }) => {
       handleClose={() => modal.hide()}
       className={classNames(
         classes["u-p-0"],
-        currentTab === 2 && classes["event-details__modal"],
+        currentTab === 2 && classes["event-details__modal"]
       )}
       withButtons={false}
       withoutTitle={true}
