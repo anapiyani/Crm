@@ -7,7 +7,6 @@ import {
   ICreateClientReturn,
 } from "@/ts/client.interface";
 import api from "../api";
-import { IUserDetails } from "@/ts/employee.interface";
 
 export const addClient = (
   form: IClientAddForm,

@@ -182,3 +182,46 @@
 .services {
   min-width: 60rem;
 }
+
+.materials {
+  min-width: 40rem;
+  justify-items: right;
+  &__material_find {
+    display: flex;
+    align-items: center;
+    p {
+      font-size: 1.6rem;
+      width: 15rem;
+    }
+  }
+  &__materials_show {
+    display: flex;
+    flex-direction: column;
+    width: 500px;
+    p {
+      font-size: 1.2rem;
+      width: 200px;
+    }
+  }
+  &__alert {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    background-color: rgba(33, 150, 243, 0.08);
+    &__texts {
+      width: 500px;
+      display: flex;
+      align-items: start;
+      p {
+        width: 100%;
+        font-size: 1.2rem;
+      }
+      svg {
+        margin-right: 0.4rem;
+        margin-top: 0.1rem;
+      }
+    }
+  }
+}
