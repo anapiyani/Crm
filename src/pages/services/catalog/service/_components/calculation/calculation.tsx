@@ -62,46 +62,61 @@ const Calculation: React.FC<CalculationProps> = ({ material, data }) => {
 
         <div className={classes.calculation__content__item}>
           <p className={classes.calculation__content__item__label}>Должность</p>
-
-          {data[employeePercentage].positions.map((item, index) => (
-            <Button
-              onClick={() => {
-                setPosition(index);
-              }}
-              variant="contained"
-              sx={{
-                ...buttonStyle,
-              }}
-            >
-              {item.name}
-            </Button>
-          ))}
+          {employeePercentage === undefined ||
+          data[employeePercentage] === undefined ? (
+            <></>
+          ) : (
+            <>
+              {data[employeePercentage].positions.map((item, index) => (
+                <Button
+                  onClick={() => {
+                    setPosition(index);
+                  }}
+                  variant="contained"
+                  sx={{
+                    ...buttonStyle,
+                  }}
+                >
+                  {item.name}
+                </Button>
+              ))}
+            </>
+          )}
         </div>
 
         <div className={classes.calculation__content__item}>
           <p className={classes.calculation__content__item__label}>
             Сотрудники
           </p>
-          {data[employeePercentage].positions[position].employees.map(
-            (item, index) => (
-              <div
-                className={classes.calculation__content__item__employee}
-                onClick={() =>
-                  window.location.assign(`/employees/${item.user}`)
-                }
-              >
-                <IconButton sx={{ padding: 0, marginRight: "0.8rem" }}>
-                  <Man3Outlined
-                    sx={{ fontSize: "2.4rem", color: "var(--primary-500)" }}
-                  />
-                </IconButton>
-                <p
-                  className={classes.calculation__content__item__employee__name}
-                >
-                  {item.full_name}
-                </p>
-              </div>
-            )
+          {employeePercentage === undefined ||
+          data[employeePercentage] === undefined ? (
+            <></>
+          ) : (
+            <>
+              {data[employeePercentage].positions[position].employees.map(
+                (item, index) => (
+                  <div
+                    className={classes.calculation__content__item__employee}
+                    onClick={() =>
+                      window.location.assign(`/employees/${item.user}`)
+                    }
+                  >
+                    <IconButton sx={{ padding: 0, marginRight: "0.8rem" }}>
+                      <Man3Outlined
+                        sx={{ fontSize: "2.4rem", color: "var(--primary-500)" }}
+                      />
+                    </IconButton>
+                    <p
+                      className={
+                        classes.calculation__content__item__employee__name
+                      }
+                    >
+                      {item.full_name}
+                    </p>
+                  </div>
+                )
+              )}
+            </>
           )}
         </div>
       </div>

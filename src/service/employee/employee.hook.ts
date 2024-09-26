@@ -1,4 +1,8 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  QueryClient,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import {
   addEmployee,
@@ -6,11 +10,16 @@ import {
   assignTemplate,
   deleteTemplate,
   deleteWalletHistory,
+  editEmployee,
   editTemplatePut,
   IAddEmployeeInterface,
 } from "./employee.service";
 import { IEmployeeAddForm } from "@/ts/types";
-import { ITemplate } from "@/ts/employee.interface";
+import {
+  ITemplate,
+  IUserDetails,
+  IUserDetailsChange,
+} from "@/ts/employee.interface";
 
 export const useAddEmployee = () => {
   return useMutation<IAddEmployeeInterface, Error, IEmployeeAddForm>({
@@ -22,6 +31,27 @@ export const useAddEmployee = () => {
     onError: (error) => {
       const errorMessage =
         error.message || "Произошла ошибка при добавлении сотрудника.";
+      toast.error(errorMessage);
+    },
+  });
+};
+
+export const useEditEmployee = () => {
+  const queryClient = useQueryClient();
+  return useMutation<
+    IUserDetails,
+    Error,
+    { user_id: number; form: Partial<IUserDetailsChange> }
+  >({
+    mutationFn: editEmployee,
+    onSuccess: (data) => {
+      toast.success("Сотрудник успешно изменен!.");
+      queryClient.invalidateQueries({ queryKey: ["mainInfoEmployee"] });
+      return data;
+    },
+    onError: (error) => {
+      const errorMessage =
+        error.message || "Произошла ошибка при изменении сотрудника.";
       toast.error(errorMessage);
     },
   });

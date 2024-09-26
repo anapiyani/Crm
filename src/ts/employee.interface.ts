@@ -79,6 +79,27 @@ export interface IUserDetails {
   };
 }
 
+export interface IUserDetailsChange {
+  user: {
+    first_name: string;
+    last_name: string;
+    gender: string;
+    date_of_birth: string;
+    phone_number: string;
+    phone_number_whatsapp: string;
+  };
+  start_date: string;
+
+  city: string;
+  city_index: string;
+  street: string;
+  house: string;
+  apartment: string;
+  comment: string;
+  is_active: boolean | undefined;
+  position: string;
+}
+
 export interface IEmployeesData {
   count: number;
   next: string | null;

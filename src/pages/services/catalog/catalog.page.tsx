@@ -79,7 +79,7 @@ const ServiceCatalog = () => {
     const fetchCalculations = async () => {
       if (service) {
         const result = await getCalculations(service.id);
-        setCalculations(result);
+        if (result) setCalculations(result);
       }
     };
 
@@ -200,7 +200,9 @@ const ServiceCatalog = () => {
         />
 
         {/* <MaterialTable title="Материалы" data={materialData} /> */}
-        <Calculation material="Материалы салона" data={calculations} />
+        {calculations !== null ? (
+          <Calculation material="Материалы салона" data={calculations} />
+        ) : null}
       </div>
     );
   };

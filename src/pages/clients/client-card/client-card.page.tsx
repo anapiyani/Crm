@@ -86,6 +86,26 @@ interface IOption {
   value: number;
 }
 
+type EditType =
+  | "text"
+  | "select"
+  | "number"
+  | "boolean"
+  | "nonEditable"
+  | "city"
+  | "date";
+
+type DataRow = {
+  property?: string;
+  value?: string | number | boolean;
+  link?: string;
+  linkLabel?: string;
+  editType?: EditType | "nonEditable";
+  autocomplete?: string[];
+  scnd_value?: string;
+  primary?: boolean;
+};
+
 const ClientCard = () => {
   const [pageSizeTransaction, setPageSizeTransaction] = useState<IOption>({
     label: "10",
@@ -101,17 +121,17 @@ const ClientCard = () => {
   ];
 
   const handlePageTransactionSizeChange = (
-    event: React.ChangeEvent<{ value: unknown }>,
+    event: React.ChangeEvent<{ value: unknown }>
   ) => {
     const selectedOption = pageSizeOptionsTransaction.find(
-      (option) => option.value === Number(event.target.value),
+      (option) => option.value === Number(event.target.value)
     ) || { label: "10", value: 10 };
     setPageSizeTransaction(selectedOption);
   };
 
   const handlePageTransactionChange = (
     event: React.ChangeEvent<unknown>,
-    value: number,
+    value: number
   ) => {
     setPageTransaction(value);
   };
@@ -128,7 +148,7 @@ const ClientCard = () => {
 
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
-    value: number,
+    value: number
   ) => {
     setPage(value);
   };
@@ -148,17 +168,17 @@ const ClientCard = () => {
   ];
 
   const handlePageDepositSizeChange = (
-    event: React.ChangeEvent<{ value: unknown }>,
+    event: React.ChangeEvent<{ value: unknown }>
   ) => {
     const selectedOption = pageSizeOptionsDeposit.find(
-      (option) => option.value === Number(event.target.value),
+      (option) => option.value === Number(event.target.value)
     ) || { label: "10", value: 10 };
     setPageSizeDeposit(selectedOption);
   };
 
   const handlePageDepositChange = (
     event: React.ChangeEvent<unknown>,
-    value: number,
+    value: number
   ) => {
     setPageDeposit(value);
   };
@@ -193,85 +213,120 @@ const ClientCard = () => {
     refetchOnWindowFocus: false,
   });
 
-  const { data: customerAppointmentNoShowData, refetch: noDataRefetch } =
-    useQuery({
-      queryKey: ["customerAppointmentNoShowData", params.id],
-      queryFn: () =>
-        params.id
-          ? getCustomerAppointmentNoShowById(Number(params.id))
-          : undefined,
-      enabled: !!params.id,
-      staleTime: Infinity,
-      refetchOnWindowFocus: false,
-    });
+  const {
+    data: customerAppointmentNoShowData,
+    refetch: noDataRefetch,
+  } = useQuery({
+    queryKey: ["customerAppointmentNoShowData", params.id],
+    queryFn: () =>
+      params.id
+        ? getCustomerAppointmentNoShowById(Number(params.id))
+        : undefined,
+    enabled: !!params.id,
+    staleTime: Infinity,
+    refetchOnWindowFocus: false,
+  });
 
-  const { data: customerAppointmentPlanned, refetch: plannedRefetch } =
-    useQuery({
-      queryKey: ["customerAppointmentPlanned", params.id],
-      queryFn: () =>
-        params.id
-          ? getCustomerAppointmentPlannedById(Number(params.id))
-          : undefined,
-      enabled: !!params.id,
-      staleTime: Infinity,
-      refetchOnWindowFocus: false,
-    });
+  const {
+    data: customerAppointmentPlanned,
+    refetch: plannedRefetch,
+  } = useQuery({
+    queryKey: ["customerAppointmentPlanned", params.id],
+    queryFn: () =>
+      params.id
+        ? getCustomerAppointmentPlannedById(Number(params.id))
+        : undefined,
+    enabled: !!params.id,
+    staleTime: Infinity,
+    refetchOnWindowFocus: false,
+  });
 
-  const { data: customerDeletedAppointments, refetch: deletedRefetch } =
-    useQuery({
-      queryKey: ["customerDeletedAppointments", params.id],
-      queryFn: () =>
-        params.id
-          ? getCustomerDeletedAppointments(Number(params.id))
-          : undefined,
-      enabled: !!params.id,
-      staleTime: Infinity,
-      refetchOnWindowFocus: false,
-    });
+  const {
+    data: customerDeletedAppointments,
+    refetch: deletedRefetch,
+  } = useQuery({
+    queryKey: ["customerDeletedAppointments", params.id],
+    queryFn: () =>
+      params.id ? getCustomerDeletedAppointments(Number(params.id)) : undefined,
+    enabled: !!params.id,
+    staleTime: Infinity,
+    refetchOnWindowFocus: false,
+  });
 
-  const { data: clientTransactions, isLoading: clientTransactionsLoading } =
-    useQuery({
-      queryKey: [
-        "clientTransactions",
-        params.id,
-        pageSizeTransaction.value,
-        pageTransaction,
-      ],
-      queryFn: () =>
-        searchKassaData({
-          customer: Number(params.id),
-          page: pageTransaction,
-          page_size: pageSizeTransaction.value,
-        }),
-    });
+  const {
+    data: clientTransactions,
+    isLoading: clientTransactionsLoading,
+  } = useQuery({
+    queryKey: [
+      "clientTransactions",
+      params.id,
+      pageSizeTransaction.value,
+      pageTransaction,
+    ],
+    queryFn: () =>
+      searchKassaData({
+        customer: Number(params.id),
+        page: pageTransaction,
+        page_size: pageSizeTransaction.value,
+      }),
+  });
 
-  const { data: clientDepositHistory, isLoading: clientDepositHistoryLoading } =
-    useQuery({
-      queryKey: [
-        "getDepositHistory",
-        {
-          user_id: Number(params.id),
-          page: pageDeposit,
-          page_size: pageSizeDeposit,
-        },
-      ],
-      queryFn: () =>
-        getDepositHistory({
-          user_id: Number(params.id),
-          page: pageDeposit,
-          page_size: pageDepositCount,
-        }),
-    });
+  const {
+    data: clientDepositHistory,
+    isLoading: clientDepositHistoryLoading,
+  } = useQuery({
+    queryKey: [
+      "getDepositHistory",
+      {
+        user_id: Number(params.id),
+        page: pageDeposit,
+        page_size: pageSizeDeposit,
+      },
+    ],
+    queryFn: () =>
+      getDepositHistory({
+        user_id: Number(params.id),
+        page: pageDeposit,
+        page_size: pageDepositCount,
+      }),
+  });
 
-  const mainTableData = [
-    { property: "Автосегмент", value: "Не указано" },
+  const mainTableData: DataRow[] = [
     { property: "ID клиента", value: userInfoData?.user_id },
-    { property: "Категория", value: userInfoData?.category || "Без категории" },
-    { property: "Фамилия", value: userInfoData?.last_name || "Не указано" },
-    { property: "Имя", value: userInfoData?.first_name || "Не указано" },
+    {
+      property: "Категория",
+      value: userInfoData?.category || "Без категории",
+      editType: "text",
+    },
+    {
+      property: "Фамилия",
+      value: userInfoData?.last_name || "Не указано",
+      editType: "text",
+    },
+    {
+      property: "Имя",
+      value: userInfoData?.first_name || "Не указано",
+      editType: "text",
+    },
+    {
+      property: "Категория",
+      value: userInfoData?.category || "Без категории",
+      editType: "text",
+    },
+    {
+      property: "Фамилия",
+      value: userInfoData?.last_name || "Не указано",
+      editType: "text",
+    },
+    {
+      property: "Имя",
+      value: userInfoData?.first_name || "Не указано",
+      editType: "text",
+    },
     {
       property: "Моб. телефон",
       value: userInfoData?.phone_number || "Не указано",
+      editType: "text",
     },
     {
       property: "Явка",
@@ -283,18 +338,32 @@ const ClientCard = () => {
     },
   ];
 
-  const additionalInfoTableData = [
+  const additionalInfoTableData: DataRow[] = [
     {
       property: "1-е посещение",
       value: dayjs(userInfoData?.first_visit).format("DD.MM.YYYY"),
+      editType: "date",
     },
     {
       property: "Род занятий",
       value: userInfoData?.occupation || "Не указано",
+      editType: "select",
+      autocomplete: [
+        "Безработный/домохозяйка",
+        "Бизнесмен",
+        "Госслужащий",
+        "Инженер",
+        "Офисный сотрудник",
+        "Пенсионер",
+        "Рабочий",
+        "Студент",
+        "Не указано",
+      ],
     },
     {
       property: "Дата рождения",
       value: userInfoData?.date_of_birth || "Не указано",
+      editType: "date",
     },
     {
       property: "Возраст",
@@ -310,6 +379,8 @@ const ClientCard = () => {
     {
       property: "Договор подписан",
       value: userInfoData?.dogovor_podpisan ? "Да" : "Нет",
+      editType: "boolean",
+      autocomplete: ["Да", "Нет"],
     },
     {
       property: "Привлечение",
@@ -319,13 +390,24 @@ const ClientCard = () => {
       property: "Откуда узнали",
       value: userInfoData?.invite_source || "Не указано",
     },
-    { property: "Город", value: userInfoData?.city || "Не указано" },
+    {
+      property: "Город",
+      value: userInfoData?.city || "Не указано",
+      editType: "city",
+    },
+
     {
       property: "Дата добавления",
       value: userInfoData?.start_date || "Не указано",
+      editType: "date",
     },
     { property: "Добавил сотрудник", value: "Наталья Ильченко" },
-    { property: "Объединение", value: userInfoData?.connection ? "Да" : "Нет" },
+    {
+      property: "Объединение",
+      value: userInfoData?.connection ? "Да" : "Нет",
+      editType: "boolean",
+      autocomplete: ["Да", "Нет"],
+    },
   ];
 
   const financeTableData = [
@@ -337,11 +419,12 @@ const ClientCard = () => {
     },
   ];
 
-  const contactsTableData = [
+  const contactsTableData: DataRow[] = [
     {
-      type: "Моб. телефон",
-      contact: userInfoData?.phone_number || "Не указано",
+      property: "Моб. телефон",
+      value: userInfoData?.phone_number || "Не указано",
       primary: true,
+      editType: "text",
     },
   ];
 
@@ -377,7 +460,7 @@ const ClientCard = () => {
       dayjs(
         customerAppointmentHistoryData?.[
           customerAppointmentHistoryData.length - 1
-        ]?.date,
+        ]?.date
       ).format("DD.MM.YYYY") || "Не указано"
     );
   };
@@ -502,7 +585,7 @@ const ClientCard = () => {
                 textTitle="Дата последней операции"
                 valueText={
                   dayjs(financeData?.last_operation_date).format(
-                    "DD.MM.YYYY",
+                    "DD.MM.YYYY"
                   ) || "0"
                 }
               />
@@ -736,7 +819,7 @@ const ClientCard = () => {
                               <p>
                                 {result.operation_name} <br />{" "}
                                 {dayjs(result.operation_date).format(
-                                  "DD.MM.YYYY",
+                                  "DD.MM.YYYY"
                                 )}
                               </p>
                             </TableCell>
@@ -815,7 +898,7 @@ const ClientCard = () => {
                             <TableCell>{result.deposit} </TableCell>
                             <TableCell>
                               {dayjs(result.operation_date).format(
-                                "DD.MM.YYYY",
+                                "DD.MM.YYYY"
                               )}
                             </TableCell>
                             <TableCell>
@@ -878,7 +961,7 @@ const ClientCard = () => {
                         <Pagination
                           count={Math.ceil(
                             clientTransactions?.count /
-                              pageSizeTransaction.value,
+                              pageSizeTransaction.value
                           )}
                           page={pageTransaction}
                           variant="outlined"
@@ -988,7 +1071,7 @@ const ClientCard = () => {
                                   </TableCell>
                                   <TableCell>
                                     {dayjs(result.date_created).format(
-                                      "DD.MM.YYYY",
+                                      "DD.MM.YYYY"
                                     )}
                                   </TableCell>
                                   <TableCell>
@@ -1005,7 +1088,7 @@ const ClientCard = () => {
                                   </TableCell>
                                   <TableCell>{result.comment}</TableCell>
                                 </TableRow>
-                              ),
+                              )
                             )}
                           </TableBody>
                         </Table>
@@ -1048,7 +1131,7 @@ const ClientCard = () => {
                             <Pagination
                               count={Math.ceil(
                                 clientDepositHistory?.count /
-                                  pageSizeDeposit.value,
+                                  pageSizeDeposit.value
                               )}
                               page={pageDeposit}
                               variant="outlined"
