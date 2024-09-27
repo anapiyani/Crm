@@ -150,7 +150,7 @@ const EmployeePage = () => {
     },
     {
       property: "Должность",
-      value: "Универсал, Парикмахерский зал",
+      value: userInfoData?.position.name,
       editType: "nonEditable",
     },
     { property: "Фамилия", value: userInfoData?.last_name, editType: "text" },
@@ -587,7 +587,7 @@ const EmployeePage = () => {
       apartment: originalData.apartment,
       comment: originalData.comment,
       is_active: originalData.is_active,
-      position: originalData.position,
+      position: originalData.position.name,
     };
 
     changedData.forEach((row) => {
