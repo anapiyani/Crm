@@ -329,3 +329,31 @@
     }
   }
 }
+
+.predict {
+  width: 100%;
+  margin: 0.2rem;
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    p {
+      font-size: 1.6rem;
+      line-height: 2.4rem;
+      font-weight: 500;
+      color: var(--primary-500);
+    }
+  }
+  &__divider {
+    background-color: var(--primary-500);
+  }
+}
+
+.close_prediction {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+  font-size: 1.4rem;
+  color: var(--primary-500);
+  cursor: pointer;
+}

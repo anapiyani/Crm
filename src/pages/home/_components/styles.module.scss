@@ -17,3 +17,19 @@
     }
   }
 }
+
+.predictItems {
+  display: flex;
+  flex-direction: column;
+  &__content {
+    display: flex;
+    justify-content: space-between;
+    &__info {
+      p {
+        font-size: 1.4rem;
+        line-height: 2.4rem;
+        font-weight: 400;
+      }
+    }
+  }
+}

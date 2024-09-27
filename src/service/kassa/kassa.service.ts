@@ -2,6 +2,7 @@ import {
   ICashRegister,
   IDateRegisters,
   IEmployeeWalletInfo,
+  IForecastResult,
   IIndirectCategory,
   IIndirectCostsResponse,
   IIndirectSumarry,
@@ -116,4 +117,20 @@ export const deleteCategoryIndirectCosts = (id: number): Promise<any> => {
 
 export const kassaNow = (id: number): Promise<IResponseKassaNow> => {
   return api.get(`/kassa/${id}/`).then((res) => res.data);
+};
+
+export const getForecastInfo = ({
+  date_from,
+  date_to,
+}: IDateRegisters): Promise<IForecastResult> => {
+  const params = new URLSearchParams();
+  if (date_from) {
+    params.append("date_from", date_from);
+  }
+  if (date_to) {
+    params.append("date_to", date_to);
+  }
+  return api
+    .get(`/appointments/appointments/revenue-forecast/?${params.toString()}`)
+    .then((res) => res.data);
 };

@@ -72,6 +72,8 @@ import EventContent from "./_components/event-content";
 import ResourceCard from "./_components/resource-card";
 import { getHierarchyEmployeesByDepartment } from "@/service/hierarchy/hierarchy.service";
 import { processEmployeeOptions } from "@/utils/process-employees-departments";
+import ClientspredictItem from "./_components/clients-predict";
+import { getForecastInfo } from "@/service/kassa/kassa.service";
 
 const menuItems = [
   {
@@ -98,12 +100,10 @@ const Home: React.FC = () => {
   const calendarRef = useRef<FullCalendar | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-  const [
-    burgerMenuAnchorEl,
-    setBurgerMenuAnchorEl,
-  ] = useState<HTMLElement | null>(null);
+  const [burgerMenuAnchorEl, setBurgerMenuAnchorEl] =
+    useState<HTMLElement | null>(null);
   const [selectedResourceId, setSelectedResourceId] = useState<string | null>(
-    null
+    null,
   );
   const [selectedTitle, setSelectedTitle] = useState<string | null>(null);
   const [events, setEvents] = useState<any[]>([]);
@@ -111,11 +111,13 @@ const Home: React.FC = () => {
   const [selectedEmployee, setSelectedEmployee] = useState<number>();
   const [selectedEmployeeName, setSelectedEmployeeName] = useState<string>("");
   const [viewMode, setViewMode] = useState<"daily" | "weekly" | "monthly">(
-    "daily"
+    "daily",
   );
 
+  // prediction dates
   const [fromDate, setFromDate] = useState<string | null>(null);
   const [toDate, setToDate] = useState<string | null>(null);
+  const [hiden, setHiden] = useState<boolean>(false);
 
   const handleFromDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFromDate(e.target.value);
@@ -124,6 +126,27 @@ const Home: React.FC = () => {
   const handleToDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setToDate(e.target.value);
   };
+
+  const onSavePrediction = () => {
+    refetchPredictionData();
+    setHiden(true);
+  };
+
+  const hidePrediction = () => {
+    setHiden(false);
+  };
+
+  const {
+    data: predictionData,
+    isPending: predictionPending,
+    refetch: refetchPredictionData,
+  } = useQuery({
+    queryKey: ["predictionData", onSavePrediction],
+    queryFn: () =>
+      getForecastInfo({ date_from: fromDate || "", date_to: toDate || "" }),
+    enabled: !!fromDate && !!toDate,
+    staleTime: 1000 * 60 * 5,
+  });
 
   const {
     data: schedulesData,
@@ -192,9 +215,8 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     if (schedulesData) {
-      const { events, resources } = transformSchedulesToFullCalendar(
-        schedulesData
-      );
+      const { events, resources } =
+        transformSchedulesToFullCalendar(schedulesData);
       setEvents(events);
       setResources(resources);
     }
@@ -215,7 +237,7 @@ const Home: React.FC = () => {
     if (getEmployeeMonthlyScheduleData && selectedDate) {
       const { events, resources } = transformMonthlySchedulesToFullCalendar(
         getEmployeeMonthlyScheduleData.results,
-        selectedDate
+        selectedDate,
       );
       setEvents(events);
       setResources(resources);
@@ -233,7 +255,7 @@ const Home: React.FC = () => {
   const handleResourceClick = (
     resourceId: string,
     resourceTitle: string,
-    event: React.MouseEvent<HTMLElement>
+    event: React.MouseEvent<HTMLElement>,
   ) => {
     const [resourceEmployeeId, resourceDate] = resourceId.split("-");
     setSelectedResourceId(resourceEmployeeId);
@@ -314,14 +336,14 @@ const Home: React.FC = () => {
 
   const handleShowMonthlySchedule = (
     employeeId: number,
-    employeeName: string
+    employeeName: string,
   ) => {
     setSelectedEmployee(employeeId);
     setViewMode("monthly");
   };
 
   function ServerDay(
-    props: PickersDayProps<Dayjs> & { highlightedDays?: string[] }
+    props: PickersDayProps<Dayjs> & { highlightedDays?: string[] },
   ) {
     const { highlightedDays = [], day, outsideCurrentMonth, ...other } = props;
 
@@ -352,7 +374,7 @@ const Home: React.FC = () => {
     const newResponse = await refetchScheduleByDate();
     if (newResponse.data) {
       const { events, resources } = transformSchedulesToFullCalendar(
-        newResponse.data
+        newResponse.data,
       );
       setEvents(events);
       setResources(resources);
@@ -381,7 +403,7 @@ const Home: React.FC = () => {
 
   const handleMenuItemClick = (
     modal: any,
-    setAnchorEl: React.Dispatch<React.SetStateAction<HTMLElement | null>>
+    setAnchorEl: React.Dispatch<React.SetStateAction<HTMLElement | null>>,
   ) => {
     NiceModal.show(modal);
     setAnchorEl(null);
@@ -464,7 +486,7 @@ const Home: React.FC = () => {
                 ).split("-");
                 const resourceDate = dateParts.join("-");
                 const resource = resources.find(
-                  (res) => res.id === `${resourceEmployeeId}-${resourceDate}`
+                  (res) => res.id === `${resourceEmployeeId}-${resourceDate}`,
                 );
                 return resource?.extendedProps.working || false;
               }}
@@ -474,7 +496,7 @@ const Home: React.FC = () => {
                 ).split("-");
                 const resourceDate = dateParts.join("-");
                 const resource = resources.find(
-                  (res) => res.id === `${resourceEmployeeId}-${resourceDate}`
+                  (res) => res.id === `${resourceEmployeeId}-${resourceDate}`,
                 );
                 if (resource?.extendedProps.working !== true) {
                   info.el.style.backgroundColor = "#DDE7EE";
@@ -557,7 +579,7 @@ const Home: React.FC = () => {
                     classes["u-rotate-270"],
                     classes["u-m-md"],
                     classes["u-text-blue"],
-                    classes["u-cursor-pointer"]
+                    classes["u-cursor-pointer"],
                   )}
                 >
                   <span>Развернуть</span>
@@ -573,7 +595,7 @@ const Home: React.FC = () => {
                     className={classNames(
                       classes["u-flex-row"],
                       classes["u-text-blue"],
-                      classes["u-cursor-pointer"]
+                      classes["u-cursor-pointer"],
                     )}
                     onClick={handlePanelHide}
                   >
@@ -603,7 +625,7 @@ const Home: React.FC = () => {
                       }
                       value={
                         employeeOptions.find(
-                          (option) => option.nodeId === selectedEmployee
+                          (option) => option.nodeId === selectedEmployee,
                         ) || null
                       }
                       onChange={(event, value) => {
@@ -751,10 +773,40 @@ const Home: React.FC = () => {
                           borderRadius: "4px",
                         }}
                         startIcon={<Cached />}
+                        onClick={onSavePrediction}
                       >
                         Расчитать
                       </Button>
                     </div>
+                    {/* prediction result is here */}
+                    {hiden && predictionData ? (
+                      <div>
+                        <p
+                          onClick={hidePrediction}
+                          className={classes.close_prediction}
+                        >
+                          Закрыть
+                        </p>
+                        <div className={classes.predict}>
+                          <div className={classes.predict__header}>
+                            <p>Итого</p>{" "}
+                            <p>{predictionData?.total_revenue} тенге</p>
+                          </div>
+                          <Divider
+                            sx={{ marginTop: "0.5rem", marginBottom: "2rem" }}
+                            className={classes.predict__divider}
+                          />
+                          {predictionData?.appointment_details.map((item) => (
+                            <ClientspredictItem
+                              full_name={item.employee}
+                              start_time={item.start_time}
+                              end_time={item.end_time}
+                              toPay={item.revenue}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    ) : null}
                   </div>
 
                   <div className={classes["client"]}>
