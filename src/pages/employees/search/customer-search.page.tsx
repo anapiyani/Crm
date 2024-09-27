@@ -584,9 +584,12 @@ const EmployeeSearch = () => {
                       </TableCell>
                       <TableCell>{getUserAge(row.date_of_birth)}</TableCell>
                       <TableCell>
-                        {dayjs(row.date_of_birth).format("DD.MM.YYYY")}
+                        {row.date_of_birth
+                          ? dayjs(row.date_of_birth).format("DD.MM.YYYY")
+                          : "-"}
                       </TableCell>
-                      <TableCell>{row.role}</TableCell>
+                      {/* position */}
+                      <TableCell>{row.position.name}</TableCell>
                       <TableCell>
                         <Button>
                           <TextsmsOutlinedIcon sx={{ fontSize: "1.6rem" }} />
