@@ -13,10 +13,15 @@ import {
   getStorageMaterials,
   getStorages,
 } from "@/service/storage/storage.service";
-import CustomAutoComplete from "@/components/autocomplete/custom-autocomplete.component";
 import { Warning } from "@mui/icons-material";
+import { useAddMaterialsForVisit } from "@/service/activity/activity.hook";
+import {
+  IAppointmentMaterials,
+  IMaterialsForVisit,
+} from "@/ts/activity.interface";
 
-const addMaterials = () => {
+const addMaterials = ({ appointment_id }: { appointment_id: number }) => {
+  const addMaterialsMutation = useAddMaterialsForVisit();
   const modal = useModal();
   const [selectedEmployee, setSelectedEmployee] = useState<number>();
   const [selectedEmployeeName, setSelectedEmployeeName] = useState<string>("");
@@ -117,11 +122,29 @@ const addMaterials = () => {
     }
   }, [storagesData, selectedStorage]);
 
+  const onSave = () => {
+    const materialsToSend: IMaterialsForVisit[] = materials.map((material) => {
+      return {
+        material: Number(material.value),
+        quantity:
+          materialsQuantity.find((item) => item.material === material.value)
+            ?.quantity || 0,
+        storage: selectedStorage || 0,
+        sold_by: selectedEmployee || 0,
+      };
+    });
+    const appointment_materials: IAppointmentMaterials = {
+      appointment_materials: materialsToSend,
+    };
+    addMaterialsMutation.mutate({ appointment_id, appointment_materials });
+  };
+
   return (
     <ModalWindow
       title={"Добавить товары"}
       open={modal.visible}
       handleSave={() => {
+        onSave();
         modal.hide();
       }}
       handleClose={() => modal.hide()}

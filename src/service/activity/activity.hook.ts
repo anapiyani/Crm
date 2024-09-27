@@ -1,13 +1,18 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import {
+  addMaterialsForVisit,
   cancelPayment,
   confirmPayment,
   deleteVisit,
   feedback,
   report,
 } from "./activity.service";
-import { IPaymentConfirm, IReviewFeedback } from "@/ts/activity.interface";
+import {
+  IAppointmentMaterials,
+  IPaymentConfirm,
+  IReviewFeedback,
+} from "@/ts/activity.interface";
 
 export const useDeleteVisit = () => {
   const queryClient = useQueryClient();
@@ -90,6 +95,26 @@ export const useCancelPayment = () => {
     onError: (error) => {
       const errorMessage =
         error.message || "Произошла ошибка при отмене платежа.";
+      toast.error(errorMessage);
+    },
+  });
+};
+
+export const useAddMaterialsForVisit = () => {
+  const queryClient = useQueryClient();
+  return useMutation<
+    any,
+    Error,
+    { appointment_id: number; appointment_materials: IAppointmentMaterials }
+  >({
+    mutationFn: addMaterialsForVisit,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["visitInfo"] });
+      toast.success("Материалы успешно добавлены.");
+    },
+    onError: (error) => {
+      const errorMessage =
+        error.message || "Произошла ошибка при добавлении материалов.";
       toast.error(errorMessage);
     },
   });

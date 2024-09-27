@@ -85,7 +85,7 @@ const ViewVisits = () => {
   };
 
   const handleAddMaterial = () => {
-    NiceModal.show(addMaterialsModal);
+    NiceModal.show(addMaterialsModal, { appointment_id: Number(params.id) });
   };
 
   const handleSaveSelectedServices = (services: IServicesChoose[]) => {
