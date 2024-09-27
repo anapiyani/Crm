@@ -38,7 +38,10 @@ export interface IUserDetails {
   date_of_birth: string;
   phone_number: string;
   phone_number_whatsapp: string;
-  position: string;
+  position: {
+    id: number;
+    name: string;
+  };
   start_date: string;
   city: string;
   city_index: string;
