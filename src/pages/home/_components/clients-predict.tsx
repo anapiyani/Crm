@@ -24,7 +24,7 @@ const ClientspredictItem = ({
           </p>
         </div>
         <div className={classes.predictItems__content__info}>
-          <p>{toPay}</p>
+          <p>{toPay} тенге</p>
         </div>
       </div>
       <Divider sx={{ marginBottom: "1rem" }} />

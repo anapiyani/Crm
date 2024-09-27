@@ -134,6 +134,8 @@ const Home: React.FC = () => {
 
   const hidePrediction = () => {
     setHiden(false);
+    setFromDate(null);
+    setToDate(null);
   };
 
   const {
@@ -746,6 +748,8 @@ const Home: React.FC = () => {
                         >
                           <CustomDatePicker
                             value={fromDate || ""}
+                            min={dayjs().format("YYYY-MM-DD")}
+                            max={toDate || ""}
                             onChange={handleFromDateChange}
                           />
                         </div>
@@ -778,7 +782,6 @@ const Home: React.FC = () => {
                         Расчитать
                       </Button>
                     </div>
-                    {/* prediction result is here */}
                     {hiden && predictionData ? (
                       <div>
                         <p
@@ -796,13 +799,31 @@ const Home: React.FC = () => {
                             sx={{ marginTop: "0.5rem", marginBottom: "2rem" }}
                             className={classes.predict__divider}
                           />
-                          {predictionData?.appointment_details.map((item) => (
-                            <ClientspredictItem
-                              full_name={item.employee}
-                              start_time={item.start_time}
-                              end_time={item.end_time}
-                              toPay={item.revenue}
-                            />
+                          {predictionData?.daily_revenue.map((item) => (
+                            <div>
+                              <div className={classes.predict__header}>
+                                <p>{item.date}</p>
+                                <p>{item.revenue} тенге</p>
+                              </div>
+                              <Divider
+                                sx={{
+                                  marginTop: "0.5rem",
+                                  marginBottom: "2rem",
+                                }}
+                                className={classes.predict__divider}
+                              />
+                              {predictionData?.appointment_details.map(
+                                (appointment) =>
+                                  appointment.date === item.date ? (
+                                    <ClientspredictItem
+                                      full_name={appointment.employee}
+                                      start_time={appointment.start_time}
+                                      end_time={appointment.end_time}
+                                      toPay={appointment.revenue}
+                                    />
+                                  ) : null,
+                              )}
+                            </div>
                           ))}
                         </div>
                       </div>
