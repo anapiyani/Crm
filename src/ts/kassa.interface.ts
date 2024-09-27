@@ -162,3 +162,22 @@ export interface IResponseKassaNow {
   name: string;
   total_money: number;
 }
+
+export interface IForecastResult {
+  total_revenue: number;
+  appointment_details: IAppointmentDetails[];
+  daily_revenue: IDailyRevenue[];
+}
+
+export interface IAppointmentDetails {
+  date: string;
+  employee: string;
+  end_time: string;
+  revenue: number;
+  start_time: string;
+}
+
+export interface IDailyRevenue {
+  date: string;
+  revenue: number;
+}
