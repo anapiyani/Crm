@@ -27,6 +27,7 @@ import {
   Report,
   DiscountPage,
   StorageAccountingPage,
+  NotificationPage,
 } from "@/pages";
 
 // import { Role } from "@/ts/types";
@@ -172,7 +173,12 @@ export const ROUTES: IRoute[] = [
   },
   {
     name: "Storage Accounting",
-    path:"/storage/accounting",
+    path: "/storage/accounting",
     component: <StorageAccountingPage />,
-  }
+  },
+  {
+    name: "Notification",
+    path: "/activity/notification",
+    component: <NotificationPage />,
+  },
 ];

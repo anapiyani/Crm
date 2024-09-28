@@ -664,13 +664,10 @@ const EmployeePage = () => {
         case "Адрес": {
           if (row.value !== "") {
             updatedUserDetails.street = String(row.value);
-            console.log(row.value);
           }
           if (row.scnd_value !== "") {
             updatedUserDetails.house = String(row.scnd_value);
-            console.log(row.scnd_value);
           }
-
           break;
         }
 
