@@ -20,4 +20,11 @@ export default defineConfig({
       "@mui/material/FormControlLabel",
     ],
   },
+  build: {
+    rollupOptions: {
+      input: {
+        main: path.resolve(__dirname, "index.html"),
+      },
+    },
+  },
 });
