@@ -8,7 +8,8 @@ import axios from "axios";
 import { getToken } from "./auth/auth.service";
 
 export const api = axios.create({
-  baseURL: "https://crm-beauty-salon-94a93ffd62e6.herokuapp.com/",
+  // baseURL: "https://crm-beauty-salon-94a93ffd62e6.herokuapp.com/",
+  baseURL: import.meta.env.VITE_API_URL,
 });
 
 let refreshTokenPromise: Promise<any> | null = null;
@@ -23,7 +24,7 @@ api.interceptors.request.use(
   },
   (error) => {
     return Promise.reject(error);
-  },
+  }
 );
 
 api.interceptors.response.use(
@@ -61,7 +62,7 @@ api.interceptors.response.use(
       }
     }
     return Promise.reject(error);
-  },
+  }
 );
 
 export default api;
