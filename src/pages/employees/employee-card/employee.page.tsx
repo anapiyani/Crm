@@ -264,18 +264,6 @@ const EmployeePage = () => {
         };
       });
 
-  const getWorkingTime = () => {
-    const today = new Date();
-    const start_date = userInfoData?.start_date;
-
-    if (start_date) {
-      const startDate = new Date(start_date);
-      const diff = today.getTime() - startDate.getTime();
-      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-      return days;
-    }
-  };
-
   const getServiceAmount = () => {
     let amount = 0;
     data.forEach((visit) => {
@@ -345,6 +333,45 @@ const EmployeePage = () => {
     }
   }, [scheduleData]);
 
+  const handleWorkingDays = () => {
+    const today = new Date();
+    const start_date = userInfoData?.start_date;
+
+    if (!start_date) {
+      return "0 дней";
+    }
+
+    const startDate = new Date(start_date);
+
+    let year = today.getFullYear() - startDate.getFullYear();
+    let month = today.getMonth() - startDate.getMonth();
+    let days = today.getDate() - startDate.getDate();
+
+    if (month < 0) {
+      year--;
+      month += 12;
+    }
+
+    if (days < 0) {
+      month--;
+      const previousMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+      days += previousMonth.getDate();
+
+      if (month < 0) {
+        year--;
+        month += 12;
+      }
+    }
+
+    if (year > 0) {
+      return `${year} лет ${month} месяцев`;
+    } else if (month > 0) {
+      return `${month} месяцев ${days} дней`;
+    } else {
+      return `${days} дней`;
+    }
+  };
+
   const renderContentHeader = () => {
     switch (currentTab) {
       case 0:
@@ -377,7 +404,7 @@ const EmployeePage = () => {
                 icon={<CalendarMonthOutlined />}
                 iconColor="var(--secondary-main)"
                 textTitle="Является сотрудником"
-                valueText={getWorkingTime() + " дней"}
+                valueText={handleWorkingDays()}
               />
             </div>
             <RevenueChart
@@ -543,7 +570,7 @@ const EmployeePage = () => {
                 icon={<CalendarMonthOutlined />}
                 iconColor="var(--secondary-main)"
                 textTitle="Является сотрудником"
-                valueText={getWorkingTime() + " дней"}
+                valueText={handleWorkingDays() + " дней"}
               />
             </div>
             <RevenueChart
