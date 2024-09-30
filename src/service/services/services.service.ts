@@ -2,7 +2,9 @@ import {
   IService,
   IServiceCalculation,
   IServiceParameters,
+  IServicePriceCurrent,
   IServicePrices,
+  IServicePriceTree,
   IUserService,
 } from "@/ts/service.interface";
 import api from "../api";
@@ -64,4 +66,24 @@ export const deleteAllBreaks = (
   return api
     .delete(`/schedule/breaks/delete/?date=${date}&employee_id=${employee_id}`)
     .then((res) => res.data);
+};
+
+export const getServicePriceCurant = (
+  department: number,
+  category?: number,
+  section?: number,
+  subcategory?: number,
+  role?: string
+): Promise<IServicePriceTree[]> => {
+  const params = new URLSearchParams();
+  if (category) params.append("category", category.toString());
+  params.append("department", department.toString());
+  if (section) params.append("section", section.toString());
+  if (subcategory) params.append("subcategory", subcategory.toString());
+  if (role) params.append("role", role.toString());
+
+  const url = `/services/services-price-curant/?${params.toString()}`;
+  console.log("Full URL:", url);
+
+  return api.get(url).then((res) => res.data);
 };

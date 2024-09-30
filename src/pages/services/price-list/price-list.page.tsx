@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import BreadcrumbsCustom from "@/components/navigation/breadcrumbs/breadcrumbs";
 import {
   Divider,
@@ -15,51 +15,12 @@ import {
   getHierarchy,
   getRolesByDepartments,
 } from "@/service/hierarchy/hierarchy.service";
-import { IServiceCategory } from "@/ts/service.interface";
-import CustomAutoComplete from "@/components/autocomplete/custom-autocomplete.component";
-import { Label } from "recharts";
-
-// Example static table headers and data
-const tableHeaders = [
-  "Парикмахерский зал",
-  "Стоимость",
-  "Стоимость от",
-  "Стоимость до",
-  "Короткие волосы",
-  "Средние волосы",
-  "Длинные волосы",
-  "Корни",
-];
-
-const tableData = [
-  {
-    id: 1,
-    category: "Парикмахерский зал",
-    color: "#E0F7FA",
-    items: [
-      {
-        name: "Стрижка",
-        cost: "500",
-        costFrom: "300",
-        costTo: "700",
-        shortHair: "200",
-        mediumHair: "300",
-        longHair: "400",
-        roots: "100",
-      },
-      {
-        name: "Окрашивание",
-        cost: "1500",
-        costFrom: "1000",
-        costTo: "2000",
-        shortHair: "200",
-        mediumHair: "300",
-        longHair: "400",
-        roots: "100",
-      },
-    ],
-  },
-];
+import {
+  IServiceCategory,
+  IServicePriceCurrent,
+  IServicePriceTree,
+} from "@/ts/service.interface";
+import { getServicePriceCurant } from "@/service/services/services.service";
 
 const ServicePriceList = () => {
   const [selectedDepartment, setSelectedDepartment] =
@@ -70,20 +31,20 @@ const ServicePriceList = () => {
     useState<IServiceCategory | null>(null);
   const [selectedSubcategory, setSelectedSubcategory] =
     useState<IServiceCategory | null>(null);
-  const [roles, setRoles] = useState<string[]>([]);
+  const [roles, setRoles] = useState<{ id: number; name: string }[]>([]);
+  const [selectedRole, setSelectedRole] = useState<number | null>(null);
 
-  const {
-    data: hierarchyData,
-    isLoading: hierarchyLoading,
-    error,
-  } = useQuery({
+  const [tableData, setTableData] = useState<IServicePriceCurrent[]>([]);
+  const [hasParameters, setHasParameters] = useState(false);
+
+  const { data: hierarchyData, isLoading: hierarchyLoading } = useQuery({
     queryKey: ["hierarchyData"],
     queryFn: getHierarchy,
     staleTime: Infinity,
     refetchOnWindowFocus: false,
   });
 
-  const { data: rolesData, isLoading: rolesLoading } = useQuery({
+  const { data: rolesData } = useQuery({
     queryKey: ["roles"],
     queryFn: getRolesByDepartments,
     staleTime: Infinity,
@@ -92,59 +53,229 @@ const ServicePriceList = () => {
 
   const findRolesForDepartment = (departmentName: string | null) => {
     if (!rolesData || !departmentName) return [];
-
     const matchedDepartment = rolesData.find(
       (roleDep) => roleDep.department === departmentName
     );
-    return matchedDepartment
-      ? matchedDepartment.roles.map((role) => role.name)
-      : [];
+    return matchedDepartment ? matchedDepartment.roles : [];
   };
 
   const handleSelectionChange = (level: string, id: number) => {
-    if (level === "department") {
-      const department = hierarchyData?.find((dep) => dep.id === id);
-      setSelectedDepartment(department || null);
-      setSelectedSection(null);
-      setSelectedCategory(null);
-      setSelectedSubcategory(null);
-      setRoles([]);
-    } else if (level === "section" && selectedDepartment) {
-      const section = selectedDepartment.children?.find((sec) => sec.id === id);
-      setSelectedSection(section || null);
-      setSelectedCategory(null);
-      setSelectedSubcategory(null);
-      setRoles(findRolesForDepartment(selectedDepartment?.name ?? null));
-    } else if (level === "category" && selectedDepartment) {
-      const category = selectedDepartment.children?.find(
-        (cat) => cat.id === id
-      );
-      setSelectedCategory(category || null);
-      setSelectedSubcategory(null);
-      setRoles([]);
-      if (!category?.children || category.children.length === 0) {
+    switch (level) {
+      case "department":
+        const department = hierarchyData?.find((dep) => dep.id === id);
+        setSelectedDepartment(department || null);
+        setSelectedSection(null);
+        setSelectedCategory(null);
+        setSelectedSubcategory(null);
+        setSelectedRole(null);
+        if (!department?.children || department.children.length === 0) {
+          setRoles(findRolesForDepartment(department?.name ?? null));
+        } else {
+          setRoles([]);
+        }
+        break;
+
+      case "section":
+        const section = selectedDepartment?.children?.find(
+          (sec) => sec.id === id
+        );
+        setSelectedSection(section || null);
+        setSelectedCategory(null);
+        setSelectedSubcategory(null);
+        setSelectedRole(null);
+        if (!section?.children || section.children.length === 0) {
+          setRoles(findRolesForDepartment(selectedDepartment?.name ?? null));
+        } else {
+          setRoles([]);
+        }
+        break;
+
+      case "category":
+        const category = selectedSection
+          ? selectedSection.children?.find((cat) => cat.id === id)
+          : selectedDepartment?.children?.find((cat) => cat.id === id);
+        setSelectedCategory(category || null);
+        setSelectedSubcategory(null);
+        setSelectedRole(null);
+        if (!category?.children || category.children.length === 0) {
+          setRoles(findRolesForDepartment(selectedDepartment?.name ?? null));
+        } else {
+          setRoles([]);
+        }
+        break;
+
+      case "subcategory":
+        const subcategory = selectedCategory?.children?.find(
+          (subcat) => subcat.id === id
+        );
+        setSelectedSubcategory(subcategory || null);
+        setSelectedRole(null);
         setRoles(findRolesForDepartment(selectedDepartment?.name ?? null));
-      }
-    } else if (level === "subcategory" && selectedCategory) {
-      const subcategory = selectedCategory.children?.find(
-        (subcat) => subcat.id === id
-      );
-      setSelectedSubcategory(subcategory || null);
-      setRoles(findRolesForDepartment(selectedDepartment?.name ?? null));
+        break;
+
+      default:
+        break;
     }
   };
 
-  const getLabelForLevel = (level: "section" | "category" | "subcategory") => {
-    switch (level) {
-      case "section":
-        return "Секция";
-      case "category":
-        return "Категория";
-      case "subcategory":
-        return "Подкатегория";
-      default:
-        return "";
+  const handleRoleChange = (roleId: number) => {
+    const selected = roles.find((role) => role.id === roleId);
+    setSelectedRole(selected?.id || null);
+  };
+
+  useEffect(() => {
+    if (selectedDepartment) {
+      getServicePriceCurant(
+        selectedDepartment.id,
+        selectedCategory?.id,
+        selectedSection?.id,
+        selectedSubcategory?.id,
+        selectedRole?.toString() ?? ""
+      )
+        .then((response) => {
+          const { items, hasParameters } = traverse(response);
+          setTableData(items);
+          setHasParameters(hasParameters);
+        })
+        .catch((error) => {
+          console.error("Error fetching service price data:", error);
+        });
     }
+  }, [
+    selectedDepartment,
+    selectedSection,
+    selectedCategory,
+    selectedSubcategory,
+    selectedRole,
+    roles,
+  ]);
+
+  const traverse = (
+    data: IServicePriceTree[]
+  ): { items: IServicePriceCurrent[]; hasParameters: boolean } => {
+    let result: IServicePriceCurrent[] = [];
+    let foundParameters = false;
+
+    data.forEach((item) => {
+      let tableItem: IServicePriceCurrent = {
+        title: item.name,
+        isService: false,
+        isDepartment: item.level === "department",
+        children: [],
+        type: item.level as "department" | "section" | "category" | "subcategory" | "service",
+      };
+
+      if (item.children && item.children.length > 0) {
+        const { items, hasParameters: childHasParameters } = traverse(
+          item.children
+        );
+        tableItem.children = items;
+        if (childHasParameters) {
+          foundParameters = true;
+        }
+      }
+
+      if (item.services && item.services.length > 0) {
+        item.services.forEach((service) => {
+          let serviceItem: IServicePriceCurrent = {
+            title: service.service.name,
+            isService: true,
+            isDepartment: false,
+            cost: service.min_price
+              ? service.min_price
+              : service.service.price_details[0]?.price,
+            children: [],
+            type: "service",
+          };
+
+          serviceItem.costFrom = service.min_price;
+          serviceItem.costTo = service.min_price;
+
+          service.service.price_details.forEach((priceDetail) => {
+            switch (priceDetail.parameter_name) {
+              case "Короткие от 10 см":
+                serviceItem.shortHair = priceDetail.price;
+                break;
+              case "Средние 15-20 см":
+                serviceItem.mediumHair = priceDetail.price;
+                break;
+              case "Длинные 30-40 см":
+                serviceItem.longHair = priceDetail.price;
+                break;
+              case "Очень длинные 50-60 см":
+                serviceItem.veryLongHair = priceDetail.price;
+                break;
+              default:
+                break;
+            }
+          });
+
+          if (
+            serviceItem.shortHair !== undefined ||
+            serviceItem.mediumHair !== undefined ||
+            serviceItem.longHair !== undefined ||
+            serviceItem.veryLongHair !== undefined
+          ) {
+            foundParameters = true;
+          }
+
+          serviceItem.costFrom = Math.min(
+            serviceItem.shortHair ?? 0,
+            serviceItem.mediumHair ?? 0,
+            serviceItem.longHair ?? 0,
+            serviceItem.veryLongHair ?? 0
+          );
+
+          serviceItem.costTo = Math.max(
+            serviceItem.shortHair ?? 0,
+            serviceItem.mediumHair ?? 0,
+            serviceItem.longHair ?? 0,
+            serviceItem.veryLongHair ?? 0
+          );
+
+          tableItem.children.push(serviceItem);
+        });
+      }
+
+      result.push(tableItem);
+    });
+
+    return { items: result, hasParameters: foundParameters };
+  };
+
+  const renderTable = () => {
+    return (
+      <div style={{marginTop:"2rem"}}>
+        <TableService
+          data={tableData}
+          title={selectedDepartment?.name ?? "Отдел"}
+          hasParameters={hasParameters}
+          tableHeaders={
+            hasParameters
+              ? [
+                  {
+                    name: tableData[0] ? tableData[0].title : "Отдел",
+                    key: "title",
+                  },
+                  { name: "Стоимость", key: "cost" },
+                  { name: "Стоимость от", key: "costFrom" },
+                  { name: "Стоимость до", key: "costTo" },
+                  { name: "Короткие от 10 см", key: "shortHair" },
+                  { name: "Средние 15-20 см", key: "mediumHair" },
+                  { name: "Длинные 30-40 см", key: "longHair" },
+                  { name: "Очень длинные от 50 см", key: "veryLongHair" },
+                ]
+              : [
+                  {
+                    name: tableData[0] ? tableData[0].title : "Отдел",
+                    key: "title",
+                  },
+                  { name: "Стоимость", key: "cost" },
+                ]
+          }
+        />
+      </div>
+    );
   };
 
   return (
@@ -181,42 +312,78 @@ const ServicePriceList = () => {
             </RadioGroup>
           </div>
 
-          {selectedDepartment && selectedDepartment.children?.length > 0 && (
+          {selectedDepartment &&
+            selectedDepartment.children?.some(
+              (child) => child.level === "section"
+            ) && (
+              <div>
+                <FormLabel>
+                  <h5 className={classes["price__upper__header"]}>Секция</h5>
+                  <Divider sx={{ marginBottom: "1rem" }} />
+                </FormLabel>
+                <RadioGroup
+                  aria-labelledby="section"
+                  className={classes["price__upper__radio-container"]}
+                  onChange={(e) =>
+                    handleSelectionChange("section", parseInt(e.target.value))
+                  }
+                >
+                  {selectedDepartment.children.map(
+                    (section) =>
+                      section.level === "section" && (
+                        <FormControlLabel
+                          key={section.id}
+                          value={section.id.toString()}
+                          control={<Radio />}
+                          label={
+                            <span
+                              className={classes["price__upper__radio-text"]}
+                            >
+                              {section.name}
+                            </span>
+                          }
+                        />
+                      )
+                  )}
+                </RadioGroup>
+              </div>
+            )}
+
+          {(selectedSection?.children?.some(
+            (child) => child.level === "category"
+          ) ||
+            selectedDepartment?.children?.some(
+              (child) => child.level === "category"
+            )) && (
             <div>
               <FormLabel>
-                <h5 className={classes["price__upper__header"]}>
-                  {selectedDepartment.children[0].level === "section"
-                    ? getLabelForLevel("section")
-                    : getLabelForLevel("category")}
-                </h5>
+                <h5 className={classes["price__upper__header"]}>Категория</h5>
                 <Divider sx={{ marginBottom: "1rem" }} />
               </FormLabel>
               <RadioGroup
-                aria-labelledby={
-                  selectedDepartment.children[0].level === "section"
-                    ? "section"
-                    : "category"
-                }
+                aria-labelledby="category"
                 className={classes["price__upper__radio-container"]}
                 onChange={(e) =>
-                  handleSelectionChange(
-                    selectedDepartment.children[0].level,
-                    parseInt(e.target.value)
-                  )
+                  handleSelectionChange("category", parseInt(e.target.value))
                 }
               >
-                {selectedDepartment.children.map((child) => (
-                  <FormControlLabel
-                    key={child.id}
-                    value={child.id.toString()}
-                    control={<Radio />}
-                    label={
-                      <span className={classes["price__upper__radio-text"]}>
-                        {child.name}
-                      </span>
-                    }
-                  />
-                ))}
+                {(
+                  selectedSection?.children || selectedDepartment?.children
+                )?.map(
+                  (category) =>
+                    category.level === "category" && (
+                      <FormControlLabel
+                        key={category.id}
+                        value={category.id.toString()}
+                        control={<Radio />}
+                        label={
+                          <span className={classes["price__upper__radio-text"]}>
+                            {category.name}
+                          </span>
+                        }
+                      />
+                    )
+                )}
               </RadioGroup>
             </div>
           )}
@@ -225,7 +392,7 @@ const ServicePriceList = () => {
             <div>
               <FormLabel>
                 <h5 className={classes["price__upper__header"]}>
-                  {getLabelForLevel("subcategory")}
+                  Подкатегория
                 </h5>
                 <Divider sx={{ marginBottom: "1rem" }} />
               </FormLabel>
@@ -261,15 +428,16 @@ const ServicePriceList = () => {
               <RadioGroup
                 aria-labelledby="roles"
                 className={classes["price__upper__radio-container"]}
+                onChange={(e) => handleRoleChange(parseInt(e.target.value))}
               >
-                {roles.map((role, index) => (
+                {roles.map((role) => (
                   <FormControlLabel
-                    key={index}
-                    value={role}
+                    key={role.id}
+                    value={role.id.toString()}
                     control={<Radio />}
                     label={
                       <span className={classes["price__upper__radio-text"]}>
-                        {role}
+                        {role.name}
                       </span>
                     }
                   />
@@ -277,29 +445,10 @@ const ServicePriceList = () => {
               </RadioGroup>
             </div>
           )}
-          <div>
-            <FormLabel>
-              <h5 className={classes["price__upper__header"]}>Акции</h5>
-              <Divider sx={{ marginBottom: "1rem" }} />
-              <CustomAutoComplete
-                name="actiya"
-                selectValue={"label"}
-                options={[
-                  { label: "Без учета акций", value: "Без учета акций" },
-                  { label: "С акцией", value: "С акцией" },
-                ]}
-                size="small"
-                labelClassName={classes["u-label"]}
-                value={{ label: "Без учета акций", value: "Без учета акций" }}
-              />
-            </FormLabel>
-          </div>
         </div>
       </FormControl>
-
-      <div>
-        <TableService headers={tableHeaders} data={tableData} />
-      </div>
+      <Divider />
+      {renderTable()}
     </div>
   );
 };
