@@ -123,3 +123,43 @@ export interface IHierarchyFlattenService {
     price: number;
   }[];
 }
+
+export interface IServicePriceCurrent {
+  title: string;
+  isService: boolean;
+  isDepartment: boolean;
+  cost?: number;
+  costFrom?: number;
+  costTo?: number;
+  shortHair?: number;
+  mediumHair?: number;
+  longHair?: number;
+  veryLongHair?: number;
+  children: IServicePriceCurrent[];
+  type?: "department" | "section" | "category" | "subcategory" | "service";
+}
+
+export interface IServiceService {
+  min_price: number;
+  service: {
+    name: string;
+    role_id: number;
+    role_name: string;
+    price_details: {
+      parameter_id: number;
+      parameter_name: string;
+      service_price_id: number;
+      price: number;
+      type: string;
+    }[];
+  };
+  service_id: number;
+}
+
+export interface IServicePriceTree {
+  id: number;
+  name: string;
+  level: string;
+  children?: IServicePriceTree[] | [];
+  services?: IServiceService[] ;
+}
