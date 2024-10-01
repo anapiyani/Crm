@@ -1,7 +1,7 @@
 .date-picker {
   height: 4rem;
   width: 100%;
-  max-width: 100%;
+  min-width: 0; /* Allows the element to shrink */
   border: 1px solid rgba(0, 0, 0, 0.23);
   border-radius: 4px;
   font-size: 1.4rem;
