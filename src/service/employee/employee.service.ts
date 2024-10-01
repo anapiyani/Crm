@@ -10,6 +10,7 @@ import {
   IUserDetails,
   IUserDetailsChange,
 } from "@/ts/employee.interface";
+import { IClientSearch } from "@/ts/client.interface";
 
 export interface IAddEmployeeInterface {
   id: number;
@@ -117,4 +118,13 @@ export const assignTemplate = (form: {
 
 export const getEmployeeTemplate = (id: string): Promise<ITemplate> => {
   return api.get(`/templates/employee/${id}/`).then((res) => res.data);
+};
+
+export const employeeSearch = (search: string): Promise<IClientSearch[]> => {
+  const params = new URLSearchParams();
+  params.append("search", search);
+
+  return api
+    .get(`/search_for_employee/?${params.toString()}`)
+    .then((res) => res.data);
 };

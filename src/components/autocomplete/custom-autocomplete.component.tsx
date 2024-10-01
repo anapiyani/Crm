@@ -13,6 +13,7 @@ interface ICustomAutoCompleteProps<T extends IOption> {
   selectValue: keyof T;
   options: T[];
   onChange?: (value: T | null) => void;
+  onChangeText?: (value: string) => void;
   value?: T | null;
   label?: string;
   placeholder?: string;
@@ -34,6 +35,7 @@ const CustomAutoComplete = <T extends IOption>({
   options,
   label,
   onChange,
+  onChangeText,
   value,
   placeholder,
   className,
@@ -81,6 +83,7 @@ const CustomAutoComplete = <T extends IOption>({
           <TextField
             {...params}
             placeholder={placeholder}
+            onChange={onChangeText && ((e) => onChangeText(e.target.value))}
             className={classes["autocomplete__textfield"]}
             sx={{
               "& .MuiInputBase-root": {
