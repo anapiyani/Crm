@@ -1,10 +1,7 @@
 import CustomAutoComplete from "@/components/autocomplete/custom-autocomplete.component";
 import CustomDatePicker from "@/components/date-picker/date-picker-custom";
 import ModalWindow from "@/components/modal-window/modal-window";
-import {
-  employeeSearch,
-  searchEmployee,
-} from "@/service/employee/employee.service";
+import { searchEmployee } from "@/service/employee/employee.service";
 import { useSalary } from "@/service/kassa/kassa.hook";
 import { getEmployeeSalaryWallet } from "@/service/kassa/kassa.service";
 import { IEmployeeWalletInfo, ISalaryPayment } from "@/ts/kassa.interface";
@@ -24,18 +21,14 @@ import { useEffect, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import classes from "./styles.module.scss";
-import { IClientSearch } from "@/ts/client.interface";
 
 const SalaryModal: React.FC = () => {
   const mutation = useSalary();
   const [salaryType, setSalaryType] = useState<"advance" | "salary">("salary");
-  const [employeeData, setEmployeeData] = useState<IClientSearch[]>([]);
-  const [employeeOptions, setEmployeeOptions] = useState<
-    {
-      label: string;
-      value: number;
-    }[]
-  >([]);
+  const { data: employeeData } = useQuery({
+    queryKey: ["employeeData"],
+    queryFn: () => searchEmployee({ role: "employee" }),
+  });
   const [selectedEmployee, setSelectedEmployee] = useState<{
     label: string;
     value: number;
@@ -55,6 +48,11 @@ const SalaryModal: React.FC = () => {
   >([]);
 
   const type = watch("type");
+
+  const employeeOptions = employeeData?.results.map((item) => ({
+    label: item.first_name + " " + item.last_name,
+    value: item.user_id,
+  }));
 
   useEffect(() => {
     if (selectedEmployee) {
@@ -157,20 +155,6 @@ const SalaryModal: React.FC = () => {
                     setSelectedEmployee(value);
                     field.onChange(value?.value);
                   }}
-                  onChangeText={(value) => {
-                    employeeSearch(value).then((data) => {
-                      setEmployeeData(data);
-                      setEmployeeOptions(
-                        data.map((employee) => ({
-                          label:
-                            employee.user.first_name +
-                            " " +
-                            employee.user.last_name,
-                          value: employee.user.user_id,
-                        }))
-                      );
-                    });
-                  }}
                   value={
                     employeeOptions?.find(
                       (option) => option.value === field.value
@@ -192,7 +176,6 @@ const SalaryModal: React.FC = () => {
               style={{
                 marginRight: "1rem",
                 width: "33.33333% !important",
-
                 textWrap: "wrap",
                 maxLines: "2",
               }}
@@ -345,7 +328,7 @@ const SalaryModal: React.FC = () => {
                     />
                   )}
                 />
-                <p style={{ marginLeft: "20px" }}>
+                <p>
                   {nuzhno_vyplatit === "0"
                     ? employeeInfo?.amount_to_pay
                     : nuzhno_vyplatit === "1"
@@ -526,20 +509,6 @@ const SalaryModal: React.FC = () => {
                   onChange={(value) => {
                     setSelectedEmployee(value);
                     field.onChange(value?.value);
-                  }}
-                  onChangeText={(value) => {
-                    employeeSearch(value).then((data) => {
-                      setEmployeeData(data);
-                      setEmployeeOptions(
-                        data.map((employee) => ({
-                          label:
-                            employee.user.first_name +
-                            " " +
-                            employee.user.last_name,
-                          value: employee.user.user_id,
-                        }))
-                      );
-                    });
                   }}
                   value={
                     employeeOptions?.find(
