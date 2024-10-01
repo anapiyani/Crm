@@ -25,8 +25,9 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 
 const ClientSearch = () => {
-  const { register, handleSubmit, reset, setValue, watch } =
-    useForm<ISearchFormData>();
+  const { register, handleSubmit, reset, setValue, watch } = useForm<
+    ISearchFormData
+  >();
   const [searchParams, setSearchParams] = useState<ISearchFormData>({
     search: "",
     phone_number: "",
@@ -83,7 +84,7 @@ const ClientSearch = () => {
 
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
-    value: number,
+    value: number
   ) => {
     setPage(value);
     setSearchParams((prev) => ({
@@ -95,7 +96,7 @@ const ClientSearch = () => {
 
   const handlePageSizeChange = (
     event: React.ChangeEvent<{}>,
-    newSize: number,
+    newSize: number
   ) => {
     setPageSize(newSize);
     setSearchParams((prev) => ({
@@ -213,28 +214,46 @@ const ClientSearch = () => {
                   />
                   <div className={classes["main__upper__checkboxes"]}>
                     <p>Пол</p>
-                    <FormGroup sx={{ flexDirection: "row" }}>
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            checked={watch("gender") === "male"}
-                            value="male"
-                            onChange={() => setValue("gender", "male")}
-                          />
-                        }
-                        label="Муж"
-                      />
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            checked={watch("gender") === "female"}
-                            value="female"
-                            onChange={() => setValue("gender", "female")}
-                          />
-                        }
-                        label="Жен"
-                      />
-                    </FormGroup>
+                    <div
+                      style={{
+                        width: "40rem",
+                      }}
+                    >
+                      <FormGroup sx={{ flexDirection: "row" }}>
+                        <FormControlLabel
+                          sx={{
+                            "& .MuiFormControlLabel-label": {
+                              fontSize: "1.4rem",
+                            },
+                          }}
+                          control={
+                            <Checkbox
+                              checked={watch("gender") === "male"}
+                              value="male"
+                              onChange={() => setValue("gender", "male")}
+                              size="large"
+                            />
+                          }
+                          label="Муж"
+                        />
+                        <FormControlLabel
+                          sx={{
+                            "& .MuiFormControlLabel-label": {
+                              fontSize: "1.4rem",
+                            },
+                          }}
+                          control={
+                            <Checkbox
+                              checked={watch("gender") === "female"}
+                              value="female"
+                              onChange={() => setValue("gender", "female")}
+                              size="large"
+                            />
+                          }
+                          label="Жен"
+                        />
+                      </FormGroup>
+                    </div>
                   </div>
                   <VerticalTextField
                     label="Кл. сотрудн."

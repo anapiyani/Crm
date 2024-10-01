@@ -21,10 +21,10 @@ const WithdrawModal: React.FC = () => {
   const mutation = useWithdrawl();
   const [summ, setSumm] = useState<number>(0);
   const [selectedOperationId, setSelectedOperationId] = useState<string | null>(
-    null,
+    null
   );
   const [selectedMoneyType, setSelectedMoneyType] = useState<string | null>(
-    null,
+    null
   );
 
   const onSubmit: SubmitHandler<IWithdrawal> = async (data: IWithdrawal) => {
@@ -43,7 +43,7 @@ const WithdrawModal: React.FC = () => {
   };
 
   const processOperationsData = (
-    operations: IKassaOperations[],
+    operations: IKassaOperations[]
   ): { label: string; value: string; isParent: boolean; id: number }[] => {
     const result: {
       label: string;
@@ -53,7 +53,7 @@ const WithdrawModal: React.FC = () => {
     }[] = [];
     const traverse = (
       nodes: IKassaOperations[],
-      parent: IKassaOperations | null,
+      parent: IKassaOperations | null
     ) => {
       nodes.forEach((node) => {
         if (node.children && node.children.length > 0) {
@@ -104,7 +104,7 @@ const WithdrawModal: React.FC = () => {
           <div className={classes.modalContent__content__item}>
             <p>Назначение платежа</p>
             <Autocomplete
-              sx={{ width: 330, marginLeft: 1 }}
+              sx={{ width: "60%", marginLeft: 1, justifySelf: "right" }}
               options={options}
               getOptionLabel={(option) => option.label}
               onChange={(event, value) => {
@@ -142,7 +142,7 @@ const WithdrawModal: React.FC = () => {
               {...register("comment")}
               variant="outlined"
               sx={{
-                width: "290px",
+                width: "60%",
                 fontSize: "1.4rem",
                 "& .MuiFormLabel-root": {
                   fontSize: "1.4rem",
@@ -160,52 +160,61 @@ const WithdrawModal: React.FC = () => {
         <div className={classes.modalContent__content}>
           <div className={classes.modalContent__content__item}>
             <p>Сумма</p>
-            <TextField
-              variant="outlined"
-              label="Введите сумму"
-              size="small"
-              value={summ}
-              sx={{
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
                 fontSize: "1.4rem",
-                "& .MuiFormLabel-root": {
-                  fontSize: "1.4rem",
-                },
-                "& .MuiOutlinedInput-root": {
-                  fontSize: "1.4rem",
-                },
+                width: "60%",
               }}
-              {...register("amount", {
-                onChange: onChangeSumm,
-              })}
-            />
-            <Button
-              sx={{
-                minWidth: "40px",
-                width: "40px",
-                marginLeft: "10px",
-              }}
-              variant="outlined"
-              onClick={() => setSumm(summ + 1)}
             >
-              +
-            </Button>
-            <Button
-              sx={{
-                minWidth: "40px",
-                width: "40px",
-              }}
-              variant="outlined"
-              color="error"
-              onClick={() => setSumm(summ - 1)}
-            >
-              -
-            </Button>
-            <span>₸</span>
+              <TextField
+                variant="outlined"
+                label="Введите сумму"
+                size="small"
+                value={summ}
+                sx={{
+                  fontSize: "1.4rem",
+                  "& .MuiFormLabel-root": {
+                    fontSize: "1.4rem",
+                  },
+                  "& .MuiOutlinedInput-root": {
+                    fontSize: "1.4rem",
+                  },
+                }}
+                {...register("amount", {
+                  onChange: onChangeSumm,
+                })}
+              />
+              <Button
+                sx={{
+                  minWidth: "40px",
+                  width: "40px",
+                  marginLeft: "10px",
+                }}
+                variant="outlined"
+                onClick={() => setSumm(summ + 1)}
+              >
+                +
+              </Button>
+              <Button
+                sx={{
+                  minWidth: "40px",
+                  width: "40px",
+                }}
+                variant="outlined"
+                color="error"
+                onClick={() => setSumm(summ - 1)}
+              >
+                -
+              </Button>
+              <span>₸</span>
+            </div>
           </div>
           <div className={classes.modalContent__content__item}>
             <p>Назначение платежа</p>
             <Autocomplete
-              sx={{ width: 330, marginLeft: 1 }}
+              sx={{ width: "60%", marginLeft: 1 }}
               onChange={(event, value) => {
                 setSelectedMoneyType(value ? value.value : null);
               }}

@@ -67,7 +67,7 @@ const EmployeeSearch = () => {
     date_of_birth_to: "",
   });
   const [selectedRoles, setSelectedRoles] = useState(
-    formData.roleEmployee.split(", ").filter(Boolean),
+    formData.roleEmployee.split(", ").filter(Boolean)
   );
   const [pageSize, setPageSize] = useState<IOption>({ label: "10", value: 10 });
   const [page, setPage] = useState(1);
@@ -93,7 +93,7 @@ const EmployeeSearch = () => {
 
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
-    value: number,
+    value: number
   ) => {
     handleFormDataChange("page", value);
   };
@@ -336,7 +336,7 @@ const EmployeeSearch = () => {
                       setFormData((prev) => ({
                         ...prev,
                         [`date_of_birth_from`]: dayjs(e.target.value).format(
-                          "DD.MM.YYYY",
+                          "DD.MM.YYYY"
                         ),
                       }))
                     }
@@ -348,7 +348,7 @@ const EmployeeSearch = () => {
                       setFormData((prev) => ({
                         ...prev,
                         [`date_of_birth_to`]: dayjs(e.target.value).format(
-                          "DD.MM.YYYY",
+                          "DD.MM.YYYY"
                         ),
                       }));
                     }}
@@ -377,36 +377,43 @@ const EmployeeSearch = () => {
                 />
                 <div className={classes["main__upper__checkboxes"]}>
                   <p>Пол</p>
-                  <FormGroup sx={{ flexDirection: "row" }}>
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          checked={formData.gender === "male"}
-                          onChange={() =>
-                            setFormData((prev) => ({
-                              ...prev,
-                              gender: prev.gender === "male" ? "" : "male",
-                            }))
-                          }
-                        />
-                      }
-                      label="Муж"
-                    />
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          checked={formData.gender === "female"}
-                          onChange={() =>
-                            setFormData((prev) => ({
-                              ...prev,
-                              gender: prev.gender === "female" ? "" : "female",
-                            }))
-                          }
-                        />
-                      }
-                      label="Жен"
-                    />
-                  </FormGroup>
+                  <div
+                    style={{
+                      width: "40rem",
+                    }}
+                  >
+                    <FormGroup sx={{ flexDirection: "row" }}>
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={formData.gender === "male"}
+                            onChange={() =>
+                              setFormData((prev) => ({
+                                ...prev,
+                                gender: prev.gender === "male" ? "" : "male",
+                              }))
+                            }
+                          />
+                        }
+                        label="Муж"
+                      />
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={formData.gender === "female"}
+                            onChange={() =>
+                              setFormData((prev) => ({
+                                ...prev,
+                                gender:
+                                  prev.gender === "female" ? "" : "female",
+                              }))
+                            }
+                          />
+                        }
+                        label="Жен"
+                      />
+                    </FormGroup>
+                  </div>
                 </div>
                 <div className={classes["main__upper__autocomplete"]}>
                   <div
@@ -453,13 +460,13 @@ const EmployeeSearch = () => {
                           onInputChange={(isChecked) =>
                             handleCheckboxChange(
                               position.name,
-                              isChecked ? true : false,
+                              isChecked ? true : false
                             )
                           }
                         />
                       ))}
                     </TriStateCheckbox>
-                  ) : null,
+                  ) : null
                 )}
               </div>
             }
