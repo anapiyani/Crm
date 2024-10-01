@@ -132,7 +132,7 @@ const EmployeeAdd = () => {
           comment: "",
         });
 
-        window.location.assign(`/employees/${data.user.id}`);
+        window.location.assign(`/employees/${data.user.user_id}`);
       },
     });
   };
@@ -404,7 +404,7 @@ const EmployeeAdd = () => {
                       }
                     >
                       <FormControlLabel
-                        value="female"
+                        value="женский"
                         control={<Radio size="medium" />}
                         label="Жен."
                         sx={{
@@ -418,7 +418,7 @@ const EmployeeAdd = () => {
                         }}
                       />
                       <FormControlLabel
-                        value="male"
+                        value="мужской"
                         control={<Radio />}
                         label="Муж."
                         sx={{

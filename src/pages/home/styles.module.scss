@@ -222,7 +222,7 @@
     cursor: pointer;
 
     &--name {
-      font-size: 1.4rem;
+      font-size: 1.5rem;
       line-height: 2.4rem;
       font-weight: 500;
       color: var(--primary-500);
@@ -247,6 +247,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0.7rem;
+
   padding: 1rem;
   &__item {
     display: flex;

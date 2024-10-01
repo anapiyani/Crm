@@ -509,9 +509,10 @@ const Home: React.FC = () => {
               )}
               eventClick={handleEventClick}
               resources={resources}
+              resourceLabelClassNames={classes["user"]}
               resourceLabelContent={(arg) => (
                 <ResourceCard
-                  arg={arg.resource as ResourceApi}
+                  arg={arg.resource}
                   handleResourceClick={handleResourceClick}
                   viewMode={viewMode}
                 />

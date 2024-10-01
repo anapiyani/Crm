@@ -7,14 +7,16 @@ interface ICustomDatePickerProps
 const CustomDatePicker = forwardRef<HTMLInputElement, ICustomDatePickerProps>(
   (props, ref) => {
     return (
-      <input
-        type="date"
-        {...props}
-        ref={ref}
-        className={classes["date-picker"]}
-        placeholder={"DD.MM.YYYY"}
-        lang="ru"
-      />
+      <div>
+        <input
+          type="date"
+          {...props}
+          ref={ref}
+          className={classes["date-picker"]}
+          placeholder={"DD.MM.YYYY"}
+          lang="ru"
+        />
+      </div>
     );
   }
 );
