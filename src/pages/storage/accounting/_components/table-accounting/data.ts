@@ -104,7 +104,7 @@ export const tableConfig1: TableConfig = {
     {
       isTextFieldVisible: true,
       textFieldLabel: "Эстетика-лицо",
-      textFieldLength: "20rem",
+      textFieldLength: "25rem",
     },
     { visibleText: true, textFieldLabel: "Цена" },
     { visibleText: true, textFieldLabel: "Комментарий" },

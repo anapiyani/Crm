@@ -10,9 +10,14 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
+type TooltipDataItem = {
+  name: string;
+  value: number;
+};
+
 type TooltipProps = {
   active?: boolean;
-  payload?: any;
+  payload?: TooltipDataItem[];
   label?: string;
 };
 
@@ -27,13 +32,20 @@ const CustomTooltip: React.FC<TooltipProps> = ({ active, payload, label }) => {
         }}
       >
         <p>{`Месяц: ${label}`}</p>
-        <p>{`Закупки: ${payload[0]?.value || 0} шт.`}</p>
-        <p>{`Инвентарь: ${payload[1]?.value || 0} шт.`}</p>
-        <p>{`Материалы: ${payload[2]?.value || 0} шт.`}</p>
+        <p>{`Закупки: ${payload?.[0]?.value || 0} шт.`}</p>
+        <p>{`Инвентарь: ${payload?.[1]?.value || 0} шт.`}</p>
+        <p>{`Материалы: ${payload?.[2]?.value || 0} шт.`}</p>
       </div>
     );
   }
   return null;
+};
+
+type InventoryData = {
+  month: string;
+  inventory: number;
+  materials: number;
+  purchase: number;
 };
 
 const InventoryChart = ({
@@ -46,14 +58,14 @@ const InventoryChart = ({
     purchase: "#ff7043",
   },
 }: {
-  data: any[];
+  data: InventoryData[];
   yAxisLabel?: string;
   yAxisTickFormatter?: (value: number) => string;
   colors?: { inventory: string; materials: string; purchase: string };
 }) => {
-  const [showDiscounts, setShowDiscounts] = useState(true);
-  const [showVisits, setShowVisits] = useState(true);
-  const [showActiveDiscounts, setShowActiveDiscounts] = useState(true);
+  const [showDiscounts, setShowDiscounts] = useState<boolean>(true);
+  const [showVisits, setShowVisits] = useState<boolean>(true);
+  const [showActiveDiscounts, setShowActiveDiscounts] = useState<boolean>(true);
 
   return (
     <div
@@ -79,7 +91,11 @@ const InventoryChart = ({
               <stop offset="95%" stopColor={colors.inventory} stopOpacity={0} />
             </linearGradient>
             <linearGradient id="colorVisits" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor={colors.materials} stopOpacity={0.8} />
+              <stop
+                offset="5%"
+                stopColor={colors.materials}
+                stopOpacity={0.8}
+              />
               <stop offset="95%" stopColor={colors.materials} stopOpacity={0} />
             </linearGradient>
             <linearGradient
@@ -89,16 +105,8 @@ const InventoryChart = ({
               x2="0"
               y2="1"
             >
-              <stop
-                offset="5%"
-                stopColor={colors.purchase}
-                stopOpacity={0.8}
-              />
-              <stop
-                offset="95%"
-                stopColor={colors.purchase}
-                stopOpacity={0}
-              />
+              <stop offset="5%" stopColor={colors.purchase} stopOpacity={0.8} />
+              <stop offset="95%" stopColor={colors.purchase} stopOpacity={0} />
             </linearGradient>
           </defs>
           <CartesianGrid strokeDasharray="3 3" />

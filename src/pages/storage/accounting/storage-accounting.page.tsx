@@ -24,6 +24,7 @@ import {
   Science,
   TaskAlt,
   TransferWithinAStation,
+  SvgIconComponent,
 } from "@mui/icons-material";
 import { useState } from "react";
 import CounterCard from "@/components/counter-card/counter-card";
@@ -46,7 +47,6 @@ import {
   getServicePrices,
 } from "@/service/services/services.service";
 import CustomTextField from "@/components/textField/textField.component";
-import { ISearchFormData } from "@/ts/employee.interface";
 import StepInput from "@/pages/employees/salary/_components/step-input/step-input.component";
 import Table1 from "./_components/table1/table1";
 import TableView from "./_components/table-view/tableView";
@@ -69,20 +69,33 @@ import {
 } from "./_components/table-accounting/data";
 
 const InventoryPage: React.FC = () => {
-  const tabs = [
+  type TabItem = {
+    to: string;
+    icon: SvgIconComponent;
+    label: string;
+  };
+
+  const tabs: TabItem[] = [
     { to: "", icon: Inventory, label: "Инвентаризация" },
     { to: "", icon: Inventory, label: "Закупка" },
     { to: "", icon: Inventory, label: "Списание" },
-    {
-      to: "",
-      icon: TransferWithinAStation,
-      label: "Перемещение",
-    },
+    { to: "", icon: TransferWithinAStation, label: "Перемещение" },
   ];
   const [service, setService] = useState<IService | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [serviceParents, setServiceParents] = useState<IServiceParent[]>();
-  const [formData, setFormData] = useState({
+  type FormData = {
+    category: string;
+    department: string;
+    group: string;
+    keyword: string;
+    role: string;
+    section: string;
+    service_type: string;
+    subcategory: string;
+  };
+
+  const [formData, setFormData] = useState<FormData>({
     category: "",
     department: "",
     group: "",
@@ -93,7 +106,7 @@ const InventoryPage: React.FC = () => {
     subcategory: "",
   });
 
-  const [currentTab, setCurrentTab] = useState(0);
+  const [currentTab, setCurrentTab] = useState<number>(0);
   const handleTabChange = (tabIndex: number) => {
     setCurrentTab(tabIndex);
   };
@@ -113,7 +126,7 @@ const InventoryPage: React.FC = () => {
   });
 
   const [searchResults, setSearchResults] = useState<ISearchResult>();
-  const [hasParameters, setHasParameters] = useState(false);
+  const [hasParameters, setHasParameters] = useState<boolean>(false);
   const [costData, setCostData] = useState<IServiceCostData[]>([
     {
       position: "Unknown",
@@ -121,11 +134,13 @@ const InventoryPage: React.FC = () => {
     },
   ]);
 
-  const handleSearch = () => {
-    getSearchResults(formData).then((data) => setSearchResults(data));
+  type RowItem = {
+    IconComponent: React.ElementType;
+    color: string;
+    label: string;
   };
 
-  const rows = [
+  const rows: RowItem[] = [
     { IconComponent: Folder, color: "#0B6BCB", label: "Поиск" },
     { IconComponent: Folder, color: "#1E88E5", label: "Отделы" },
     { IconComponent: Folder, color: "#1565C0", label: "Категория" },
@@ -134,10 +149,6 @@ const InventoryPage: React.FC = () => {
     { IconComponent: Folder, color: "#FBC02D", label: "Линия" },
     { IconComponent: Folder, color: "#388E3C", label: "Подлиния" },
   ];
-
-  function handleAutocompleteChange(value: any, fieldName: string): void {
-    setFormData((prev) => ({ ...prev, [fieldName]: value }));
-  }
 
   const handleServiceSelect = (service: IService) => {
     setService(service);
@@ -191,21 +202,12 @@ const InventoryPage: React.FC = () => {
 
   const [filterOptions, setFilterOptions] = useState<IfiltersResponse>();
 
-  const handleFormDataChange = (field: keyof ISearchFormData, value: any) => {
-    setFormData((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
+  type TableActionItem = {
+    icon: JSX.Element;
+    label: string;
   };
 
-  const handlePageChange = (
-    event: React.ChangeEvent<unknown>,
-    value: number
-  ) => {
-    handleFormDataChange("page", value);
-  };
-
-  const tableActions = [
+  const tableActions: TableActionItem[] = [
     { icon: <RemoveRedEye />, label: "Посмотреть" },
     { icon: <ContentPaste />, label: "Накладная" },
     { icon: <LocalOffer />, label: "Ценники" },
@@ -244,14 +246,8 @@ const InventoryPage: React.FC = () => {
             <InventoryChart data={graphData} />
           </Grid>
         );
-      case 1:
-        return <div />;
-      case 2:
-        return <div />;
-      case 3:
-        return <div />;
       default:
-        return <div></div>;
+        return <div>Select a tab above to see more details.</div>;
     }
   };
 
@@ -323,9 +319,6 @@ const InventoryPage: React.FC = () => {
                       sx={{ width: "100%" }}
                       options={filterOptions?.departments || []}
                       getOptionLabel={(option) => option.name}
-                      onChange={(event, newValue) =>
-                        handleAutocompleteChange(newValue?.name, "department")
-                      }
                       renderInput={(params) => (
                         <CustomTextField {...params} label={"Введите Отдел"} />
                       )}
@@ -341,9 +334,6 @@ const InventoryPage: React.FC = () => {
                       sx={{ width: "100%" }}
                       options={filterOptions?.sections || []}
                       getOptionLabel={(option) => option.name}
-                      onChange={(event, newValue) =>
-                        handleAutocompleteChange(newValue?.name, "section")
-                      }
                       renderInput={(params) => (
                         <CustomTextField
                           {...params}
@@ -362,9 +352,6 @@ const InventoryPage: React.FC = () => {
                       sx={{ width: "100%" }}
                       options={filterOptions?.service_types || []}
                       getOptionLabel={(option) => option.name}
-                      onChange={(event, newValue) =>
-                        handleAutocompleteChange(newValue?.name, "service_type")
-                      }
                       renderInput={(params) => (
                         <CustomTextField {...params} label={"Введите группу"} />
                       )}
@@ -380,9 +367,6 @@ const InventoryPage: React.FC = () => {
                       sx={{ width: "100%" }}
                       options={filterOptions?.categories || []}
                       getOptionLabel={(option) => option.name}
-                      onChange={(event, newValue) =>
-                        handleAutocompleteChange(newValue?.name, "category")
-                      }
                       renderInput={(params) => (
                         <CustomTextField {...params} label={"Введите марку"} />
                       )}
@@ -398,9 +382,6 @@ const InventoryPage: React.FC = () => {
                       sx={{ width: "100%" }}
                       options={filterOptions?.subcategories || []}
                       getOptionLabel={(option) => option.name}
-                      onChange={(event, newValue) =>
-                        handleAutocompleteChange(newValue?.name, "subcategory")
-                      }
                       renderInput={(params) => (
                         <CustomTextField {...params} label={"Введите линию"} />
                       )}
@@ -416,9 +397,6 @@ const InventoryPage: React.FC = () => {
                       sx={{ width: "100%" }}
                       options={filterOptions?.roles || []}
                       getOptionLabel={(option) => option.name}
-                      onChange={(event, newValue) =>
-                        handleAutocompleteChange(newValue?.name, "role")
-                      }
                       renderInput={(params) => (
                         <CustomTextField
                           {...params}
@@ -443,7 +421,6 @@ const InventoryPage: React.FC = () => {
                       size="medium"
                       sx={{ fontSize: "1.6rem", fontWeight: "400" }}
                       type="submit"
-                      onClick={handleSearch}
                     >
                       Искать
                     </Button>
@@ -652,7 +629,7 @@ const InventoryPage: React.FC = () => {
           </div>
         );
       default:
-        return <div></div>;
+        return <div>Select a tab above to see more details.</div>;
     }
   };
 
