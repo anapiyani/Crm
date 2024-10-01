@@ -2,30 +2,6 @@
     width: 100%;
     border-collapse: initial;
     background-color: white;
-    // &__cell {
-    //   align-items: center;
-    //   justify-content: center;
-    //   text-align: center;
-    //   gap:1rem;
-    // }
-    //   &__quantity {
-    //     display: flex;
-    //     flex-direction: column;
-    //     align-items: flex-start;
-    //     justify-content: flex-start;
-    //     &__row {
-    //       display: flex;
-    //       flex-direction: row;
-    //       align-items: center;
-    //     }
-    //   }
-    //   &__counter {
-    //     display: flex;
-    //     align-items: center;
-    //     justify-content: center;
-    //   }
-    // }
-    
     thead tr th {
       padding: 1rem;
       text-align: center;
@@ -46,7 +22,7 @@
         }
         td {
           border: none;
-          text-align: left; /* Align text to the left in nested table */
+          text-align: left;
         }
       }
     }
@@ -56,49 +32,8 @@
         padding: 8px;
         text-align: left;
       }
-      
-    
-    
   
     tbody td {
       border: 1px solid #cdd7e1;
     }
   }
-
-// .table-container {
-//     box-shadow: 0 0 12px rgba(21, 21, 21, 0.08), 0 2px 8px rgba(21, 21, 21, 0.08);
-//     border-radius: 8px;
-//     border: 0.1rem solid var(--neutral-300);
-//     padding: 0.8rem;
-//   }
-  
-//   /* Styling for the Box around the table */
-//   .table-box {
-//     border-radius: 8px;
-//     border: 0.1rem solid var(--neutral-300);
-//   }
-  
-//   /* General table styling */
-//   .table {
-//     min-width: 650px;
-//     border-collapse: collapse; /* Ensures there is no spacing between borders */
-//   }
-  
-//   /* General table cell styling */
-//   .table__cell {
-//     border: 1px solid #e0e0e0; /* Adds borders between all cells */
-//     padding: 12px;
-//   }
-  
-//   /* Styling specifically for table headers */
-//   .table__header {
-//     background-color: #f8f8f8;
-//     font-weight: bold;
-//     padding: 16px;
-//     border: 1px solid #e0e0e0; /* Adds borders to header cells */
-//   }
-  
-//   /* Optional: Styling for the table rows (zebra striping) */
-//   .table__row:nth-of-type(odd) {
-//     background-color: #f9f9f9;
-//   }

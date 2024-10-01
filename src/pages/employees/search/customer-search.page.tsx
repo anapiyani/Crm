@@ -223,6 +223,7 @@ const EmployeeSearch = () => {
         <div className={classes["main__upper__main"]}>
           <SearchFilterCard
             title={"Основные данные"}
+            openEnabled={true}
             children={
               <div className={classes["main__upper__card"]}>
                 <VerticalTextField
@@ -267,6 +268,7 @@ const EmployeeSearch = () => {
           ></SearchFilterCard>
           <SearchFilterCard
             title={"Доп. информация"}
+            openEnabled={true}
             children={
               <div className={classes["main__upper__card"]}>
                 <VerticalTextField
@@ -446,6 +448,7 @@ const EmployeeSearch = () => {
         <div className={classes["main__upper__position"]}>
           <SearchFilterCard
             title={"Должность"}
+            openEnabled={true}
             children={
               <div className={classes["main__upper__card"]}>
                 {departmentData?.map((item: IDepartmentData) =>
@@ -475,6 +478,7 @@ const EmployeeSearch = () => {
         <div className={classes["main__upper__reviews"]}>
           <SearchFilterCard
             title={"Отзывы"}
+            openEnabled={true}
             children={
               <div className={classes["main__upper__card"]}>
                 <VerticalTextField

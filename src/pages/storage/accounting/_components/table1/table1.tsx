@@ -21,7 +21,7 @@ const Table1 = () => {
                 border: "0.1rem solid var(--neutral-300)",
                 padding: "0.8rem",
             }}>
-            <Box sx={{ borderRadius: "8px", border: "0.1rem solid var(--neutral-300)" }}>
+            <div style={{ borderRadius: "8px", border: "0.1rem solid var(--neutral-300)" }}>
                 <Table className={classes.table}>
                 <TableHead>
                     <TableRow>
@@ -76,7 +76,7 @@ const Table1 = () => {
                     </TableRow>
                 </TableBody>
                 </Table>
-            </Box>
+            </div>
         </TableContainer>
     );
 }

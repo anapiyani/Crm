@@ -143,7 +143,7 @@ const ClientCard = () => {
   };
 
   const params = useParams<{ id: string }>();
-  // const [page, setPage] = useState(1);
+  const [page, setPage] = useState(1);
   const pageCount = 10;
   dayjs.extend(relativeTime);
 
@@ -207,10 +207,8 @@ const ClientCard = () => {
     refetchOnWindowFocus: false,
   });
 
-  const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(5);
 
-  // Transform the fetched data to match the Visit interface
   const transformAppointmentHistory = (appointments: IAppointmentHistory[]) => {
     return appointments.map((appointment) => ({
       description: appointment.services
@@ -219,20 +217,18 @@ const ClientCard = () => {
       cost: appointment.services
         .reduce((total, service) => total + parseFloat(service.total_price), 0) + " ₸",
       dateTime: `${appointment.date}, ${appointment.start_time}`,
-      link: "", // Empty for now
+      link: "",
     }));
   };
 
   const visitHistoryData = transformAppointmentHistory(customerAppointmentHistoryData || []);
 
-  // Pagination logic
   const totalPages = Math.ceil(visitHistoryData.length / pageSize);
   const paginatedData = visitHistoryData.slice(
     (page - 1) * pageSize,
     page * pageSize
   );
 
-  // Handle page change
   const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
     setPage(value);
   };
@@ -819,7 +815,6 @@ const ClientCard = () => {
                     </p>
                     <Divider />
                   </div>
-
                   <div className={classes["transactions_table"]}>
                     <Table className={classes.table}>
                       <TableHead>
@@ -1351,12 +1346,6 @@ const ClientCard = () => {
 
   return (
     <div className={classes["main"]}>
-      {/* <InfoHeader
-        tabsData={clientTabsData}
-        nameData={clientNameData}
-        counterCardData={counterCardData}
-        onTabChange={handleTabChange}
-      /> */}
       <div className={classes["main__header"]}>
         <Box sx={{ ml: { xs: "2rem", xl: "7.6rem" } }}>
           <div className={classes["main__header__upper"]}>

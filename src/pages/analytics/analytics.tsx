@@ -77,6 +77,7 @@ const AnalyticsPage = () => {
       <div className={classes["main__content"]}>
         <SearchFilterCard
           title={"Прибыль"}
+          openEnabled={true}
           children={
             <div className={classes["main__content__grid"]}>
               <div className={classes["image-container"]}>
@@ -102,6 +103,7 @@ const AnalyticsPage = () => {
         />
         <SearchFilterCard
           title={"Скидки"}
+          openEnabled={true}
           children={
             <div className={classes["main__content__grid"]}>
               <div className={classes["image-container"]}>
@@ -133,6 +135,7 @@ const AnalyticsPage = () => {
         />
         <SearchFilterCard
           title={"Посещения"}
+          openEnabled={true}
           children={
             <div className={classes["main__content__grid"]}>
               <div className={classes["image-container"]}>
@@ -176,6 +179,7 @@ const AnalyticsPage = () => {
         />
         <SearchFilterCard
           title={"Сотрудники"}
+          openEnabled={true}
           children={
             <div className={classes["main__content__grid"]}>
               <div className={classes["image-container"]}>
@@ -213,6 +217,7 @@ const AnalyticsPage = () => {
         />
         <SearchFilterCard
           title={"Клиенты"}
+          openEnabled={true}
           children={
             <div className={classes["main__content__grid"]}>
               <div className={classes["image-container"]}>
@@ -232,6 +237,7 @@ const AnalyticsPage = () => {
         />
         <SearchFilterCard
           title={"Общее"}
+          openEnabled={true}
           children={
             <div className={classes["main__content__grid"]}>
               <div className={classes["image-container"]}>

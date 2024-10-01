@@ -85,7 +85,7 @@ const StepInput: React.FC<StepInputProps> = ({
 
   return (
     <div className={classes.stepInput}>
-      <p style={labelLength}>{labelName}</p>
+      <p style={labelLength ? labelLength : undefined}>{labelName}</p>
       {isCheckbox ? (
         <FormControlLabel
           control={
