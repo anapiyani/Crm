@@ -52,9 +52,9 @@ const NotificationPage = () => {
                   classes.notification__main__content__body__item__datePicker
                 }
               >
-                <CustomDatePicker style={{ width: "100%" }} />
+                <CustomDatePicker />
                 <span>-</span>
-                <CustomDatePicker style={{ width: "100%" }} />
+                <CustomDatePicker />
               </div>
             </div>
             <div className={classes.notification__main__content__body__item}>
@@ -173,7 +173,7 @@ const NotificationPage = () => {
             />
             <RoleEmployeeCheckbox
               onEmployeeSelectionChange={(
-                selectedEmployeeIds: { id: number; color?: string }[],
+                selectedEmployeeIds: { id: number; color?: string }[]
               ) => {
                 console.log(selectedEmployeeIds);
               }}
