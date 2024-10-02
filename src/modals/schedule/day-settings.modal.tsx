@@ -231,7 +231,7 @@ const DaySettings = ({ TodayData }: { TodayData: string }) => {
   };
 
   const handleStartDate = () => {
-    return dayjs(TodayData).format("YYYY-MM-DD");
+    return dayjs(TodayData).format("YYYY-DD-MM");
   };
 
   const handleWeekdayChange = (

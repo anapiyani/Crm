@@ -194,3 +194,13 @@ export interface IMaterialsForVisit {
   storage: number;
   sold_by: number;
 }
+
+export interface ICreateNotification {
+  date: string;
+  time: string;
+  status: string;
+  type: string;
+  comment: string;
+  customer: string;
+  employee: number | string | null;
+}

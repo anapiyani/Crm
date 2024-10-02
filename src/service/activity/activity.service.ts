@@ -1,6 +1,7 @@
 import {
   IAppointmentMaterials,
   IClientBalance,
+  ICreateNotification,
   IPaymentConfirm,
   IReviewFeedback,
   IViewVistInfo,
@@ -79,4 +80,8 @@ export const addMaterialsForVisit = ({
       appointment_materials,
     )
     .then((res) => res.data);
+};
+
+export const createNotification = (form: ICreateNotification): Promise<any> => {
+  return api.post("/reminder/", form).then((res) => res.data);
 };

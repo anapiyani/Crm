@@ -225,3 +225,43 @@
     }
   }
 }
+
+.notification {
+  display: flex;
+  width: 50rem;
+  justify-content: center;
+  &__content {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    &__settings {
+      &__dateTime {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        p {
+          font-size: 1.6rem;
+        }
+        input {
+          width: 12rem;
+        }
+      }
+    }
+    &__comments {
+      display: flex;
+      flex-direction: column;
+      margin-top: 1rem;
+      &__content {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1rem;
+        p {
+          font-size: 1.6rem;
+        }
+        input {
+          width: 100%;
+        }
+      }
+    }
+  }
+}
