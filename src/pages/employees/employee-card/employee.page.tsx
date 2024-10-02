@@ -50,6 +50,7 @@ import {
   revenueChartLegendLabels,
 } from "@/pages/clients/client-card/data";
 import { IUserDetails, IUserDetailsChange } from "@/ts/employee.interface";
+import dayjs from "dayjs";
 
 type EditType =
   | "text"
@@ -171,7 +172,9 @@ const EmployeePage = () => {
   const additionalTableData: DataRow[] = [
     {
       property: "Работает с.",
-      value: userInfoData?.start_date,
+      value: userInfoData?.start_date
+        ? dayjs(userInfoData?.start_date).format("DD/MM/YYYY")
+        : "",
       editType: "date",
     },
     {
@@ -201,8 +204,8 @@ const EmployeePage = () => {
     },
     {
       property: "Адрес",
-      value: userInfoData?.street,
-      scnd_value: userInfoData?.house,
+      value: userInfoData?.street ? `${userInfoData?.street}` : "Нет данных",
+      scnd_value: userInfoData?.house ? `${userInfoData?.house}` : "",
       editType: "text",
     },
   ];

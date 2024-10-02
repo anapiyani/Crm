@@ -31,10 +31,10 @@ const CustomTimePicker: React.FC<CustomTimePickerProps> = ({
   dayjs.extend(customParseFormat);
 
   const [selectedHour, setSelectedHour] = useState<string>(
-    dayjs(value, "HH:mm", true).format("hh"),
+    dayjs(value, "HH:mm", true).format("hh")
   );
   const [selectedMinute, setSelectedMinute] = useState<string>(
-    dayjs(value, "HH:mm", true).format("mm"),
+    dayjs(value, "HH:mm", true).format("mm")
   );
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
@@ -129,7 +129,7 @@ const CustomTimePicker: React.FC<CustomTimePickerProps> = ({
             </Box>
             <Box display="flex" justifyContent="space-between" p={1} gap={1}>
               <TextField
-                value={selectedHour}
+                defaultValue={selectedHour}
                 onChange={(e) => handleHourChange(e.target.value)}
                 inputProps={{ maxLength: 2 }}
                 sx={{
@@ -140,7 +140,7 @@ const CustomTimePicker: React.FC<CustomTimePickerProps> = ({
                 }}
               />
               <TextField
-                value={selectedMinute}
+                defaultValue={selectedMinute}
                 onChange={(e) => handleMinuteChange(e.target.value)}
                 inputProps={{ maxLength: 2 }}
                 sx={{

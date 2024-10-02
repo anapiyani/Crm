@@ -10,6 +10,7 @@ import { getHierarchyEmployeesByDepartment } from "@/service/hierarchy/hierarchy
 import { processEmployeeOptions } from "@/utils/process-employees-departments";
 import { useAddEmployeeToSchedule } from "@/service/schedule/schedule.hook";
 import toast from "react-hot-toast";
+import dayjs from "dayjs";
 
 const AddEmployeeSchedule = () => {
   const modal = useModal();
@@ -153,6 +154,7 @@ const AddEmployeeSchedule = () => {
               Дата
             </p>
             <CustomDatePicker
+              value={selectedDate}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 setSelectedDate(e.target.value);
               }}
