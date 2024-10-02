@@ -1,0 +1,42 @@
+.quantity {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  &__input {
+    display: flex;
+    direction: row;
+    align-items: center;
+    margin-bottom: 10px;
+    &__container {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      &__input {
+        width: 5rem;
+        height: 3rem;
+        text-align: center;
+        justify-content: center;
+        margin-left: 5px;
+        &__buttons {
+          display: flex;
+          flex-direction: column;
+        }
+      }
+    }
+  }
+
+  &__unit {
+    margin-left: 5px;
+  }
+}
+
+.button {
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 0 5px;
+  cursor: pointer;
+  height: 1.5rem;
+  width: 2.5rem;
+  font-size: 10px;
+}

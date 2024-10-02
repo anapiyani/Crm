@@ -190,7 +190,7 @@ const IndirectCostsPage: FC = () => {
               backgroundColor={"#2196F34D"}
               icon={<PaymentsOutlined />}
               iconColor={"var(--primary-main)"}
-              textTitle={"Разходы за отчетный период"}
+              textTitle={"Расходы за отчетный период"}
               valueText={indirectCostsSumarryData?.expenses_all_time}
             />
             <CounterCard
