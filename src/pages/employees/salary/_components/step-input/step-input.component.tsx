@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, CSSProperties } from "react";
 import {
   Button,
   TextField,
@@ -22,6 +22,7 @@ interface StepInputProps {
   selectedOption?: IOptions | null;
   isCheckbox?: boolean;
   checked?: boolean;
+  labelLength?: CSSProperties;
 }
 
 const StepInput: React.FC<StepInputProps> = ({
@@ -37,6 +38,7 @@ const StepInput: React.FC<StepInputProps> = ({
   selectedOption,
   isCheckbox,
   checked,
+  labelLength,
 }) => {
   const [inputValue, setInputValue] = useState(dataValue || "");
   const [selectedAutoCompleteOption, setSelectedAutoCompleteOption] =
@@ -83,7 +85,7 @@ const StepInput: React.FC<StepInputProps> = ({
 
   return (
     <div className={classes.stepInput}>
-      <p>{labelName}</p>
+      <p style={labelLength ? labelLength : undefined}>{labelName}</p>
       {isCheckbox ? (
         <FormControlLabel
           control={

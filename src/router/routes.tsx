@@ -26,7 +26,7 @@ import {
   AnalyticsPage,
   Report,
   DiscountPage,
-  StorageAccountingPage,
+  InventoryPage,
   NotificationPage,
 } from "@/pages";
 
@@ -172,13 +172,13 @@ export const ROUTES: IRoute[] = [
     component: <DiscountPage />,
   },
   {
-    name: "Storage Accounting",
-    path: "/storage/accounting",
-    component: <StorageAccountingPage />,
+    name: "Notification",
+    path: "/visits/notification",
+    component: <NotificationPage />,
   },
   {
-    name: "Notification",
-    path: "/activity/notification",
-    component: <NotificationPage />,
+    name: "Inventory",
+    path: "/inventory",
+    component: <InventoryPage />,
   },
 ];

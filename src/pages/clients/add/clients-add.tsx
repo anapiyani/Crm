@@ -644,10 +644,10 @@ const ClientsAdd: React.FC = () => {
                       aria-labelledby="demo-radio-buttons-group-label"
                       name="gender"
                       row
-                      defaultValue="female"
+                      defaultValue="женский"
                     >
                       <FormControlLabel
-                        value="female"
+                        value="женский"
                         control={<Radio />}
                         label="Жен."
                         {...register("gender")}
@@ -662,7 +662,7 @@ const ClientsAdd: React.FC = () => {
                         }}
                       />
                       <FormControlLabel
-                        value="male"
+                        value="мужской"
                         control={<Radio />}
                         label="Муж."
                         {...register("gender")}

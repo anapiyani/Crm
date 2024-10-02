@@ -85,6 +85,7 @@ interface IOption {
   label: string;
   value: number;
 }
+import { IAppointmentHistory } from "@/ts/appointments.interface";
 
 type EditType =
   | "text"
@@ -146,13 +147,6 @@ const ClientCard = () => {
   const pageCount = 10;
   dayjs.extend(relativeTime);
 
-  const handlePageChange = (
-    event: React.ChangeEvent<unknown>,
-    value: number
-  ) => {
-    setPage(value);
-  };
-
   const [pageSizeDeposit, setPageSizeDeposit] = useState<IOption>({
     label: "10",
     value: 10,
@@ -212,6 +206,32 @@ const ClientCard = () => {
     staleTime: Infinity,
     refetchOnWindowFocus: false,
   });
+
+  const [pageSize, setPageSize] = useState(5);
+
+  const transformAppointmentHistory = (appointments: IAppointmentHistory[]) => {
+    return appointments.map((appointment) => ({
+      description: appointment.services
+        .map((service) => service.service_name)
+        .join(", "),
+      cost: appointment.services
+        .reduce((total, service) => total + parseFloat(service.total_price), 0) + " ₸",
+      dateTime: `${appointment.date}, ${appointment.start_time}`,
+      link: "",
+    }));
+  };
+
+  const visitHistoryData = transformAppointmentHistory(customerAppointmentHistoryData || []);
+
+  const totalPages = Math.ceil(visitHistoryData.length / pageSize);
+  const paginatedData = visitHistoryData.slice(
+    (page - 1) * pageSize,
+    page * pageSize
+  );
+
+  const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
+    setPage(value);
+  };
 
   const {
     data: customerAppointmentNoShowData,
@@ -736,11 +756,11 @@ const ClientCard = () => {
               rowGap={3}
             >
               <VisitHistory
-                visits={sampleVisits}
+                visits={paginatedData}
                 title="История посещений"
                 showEyeIcon={true}
                 page={page}
-                pageCount={pageCount}
+                pageCount={totalPages}
                 onPageChange={handlePageChange}
               />
             </Grid>
@@ -795,7 +815,6 @@ const ClientCard = () => {
                     </p>
                     <Divider />
                   </div>
-
                   <div className={classes["transactions_table"]}>
                     <Table className={classes.table}>
                       <TableHead>
@@ -1327,12 +1346,6 @@ const ClientCard = () => {
 
   return (
     <div className={classes["main"]}>
-      {/* <InfoHeader
-        tabsData={clientTabsData}
-        nameData={clientNameData}
-        counterCardData={counterCardData}
-        onTabChange={handleTabChange}
-      /> */}
       <div className={classes["main__header"]}>
         <Box sx={{ ml: { xs: "2rem", xl: "7.6rem" } }}>
           <div className={classes["main__header__upper"]}>

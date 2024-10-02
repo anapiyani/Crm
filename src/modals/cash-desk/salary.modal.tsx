@@ -34,8 +34,15 @@ const SalaryModal: React.FC = () => {
     value: number;
   } | null>(null);
   const [employeeInfo, setEmployeeInfo] = useState<IEmployeeWalletInfo>();
-  const { register, handleSubmit, reset, control, watch, setValue, getValues } =
-    useForm<ISalaryPayment>();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    control,
+    watch,
+    setValue,
+    getValues,
+  } = useForm<ISalaryPayment>();
   const [payment, setPayment] = useState<
     { money_type: string; amount: string }[]
   >([]);
@@ -51,7 +58,7 @@ const SalaryModal: React.FC = () => {
     if (selectedEmployee) {
       const fetchEmployeeInfo = async () => {
         const resultEmployee = await getEmployeeSalaryWallet(
-          selectedEmployee.value,
+          selectedEmployee.value
         );
         setEmployeeInfo(resultEmployee);
       };
@@ -90,7 +97,7 @@ const SalaryModal: React.FC = () => {
   }, [employeeInfo, getValues("nuzhno_vyplatit")]);
 
   const onSubmit: SubmitHandler<ISalaryPayment> = async (
-    data: ISalaryPayment,
+    data: ISalaryPayment
   ) => {
     const updatedData = { ...data, payment };
     if (updatedData.withdrawal_method === "mixed") {
@@ -105,11 +112,11 @@ const SalaryModal: React.FC = () => {
   const handlePaymentChange = (moneyType: string, amount: string) => {
     setPayment((prevPayments) => {
       const existingPayment = prevPayments.find(
-        (payment) => payment.money_type === moneyType,
+        (payment) => payment.money_type === moneyType
       );
       if (existingPayment) {
         return prevPayments.map((payment) =>
-          payment.money_type === moneyType ? { ...payment, amount } : payment,
+          payment.money_type === moneyType ? { ...payment, amount } : payment
         );
       } else {
         return [...prevPayments, { money_type: moneyType, amount }];
@@ -150,7 +157,7 @@ const SalaryModal: React.FC = () => {
                   }}
                   value={
                     employeeOptions?.find(
-                      (option) => option.value === field.value,
+                      (option) => option.value === field.value
                     ) || null
                   }
                 />
@@ -169,7 +176,6 @@ const SalaryModal: React.FC = () => {
               style={{
                 marginRight: "1rem",
                 width: "33.33333% !important",
-
                 textWrap: "wrap",
                 maxLines: "2",
               }}
@@ -322,16 +328,16 @@ const SalaryModal: React.FC = () => {
                     />
                   )}
                 />
-                <p style={{ marginLeft: "20px" }}>
+                <p>
                   {nuzhno_vyplatit === "0"
                     ? employeeInfo?.amount_to_pay
                     : nuzhno_vyplatit === "1"
-                      ? employeeInfo?.fixed_part_amount
-                      : nuzhno_vyplatit === "2"
-                        ? employeeInfo?.floating_part_amount
-                        : nuzhno_vyplatit === "3"
-                          ? employeeInfo?.client_development_amount
-                          : ""}
+                    ? employeeInfo?.fixed_part_amount
+                    : nuzhno_vyplatit === "2"
+                    ? employeeInfo?.floating_part_amount
+                    : nuzhno_vyplatit === "3"
+                    ? employeeInfo?.client_development_amount
+                    : ""}
                 </p>
               </div>
             )}
@@ -506,7 +512,7 @@ const SalaryModal: React.FC = () => {
                   }}
                   value={
                     employeeOptions?.find(
-                      (option) => option.value === field.value,
+                      (option) => option.value === field.value
                     ) || null
                   }
                 />

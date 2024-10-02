@@ -233,7 +233,7 @@ const ServiceCatalog = () => {
             <Divider />
             <div className={classes.catalog__upper__content__hint}>
               {rows.map((row, index) => (
-                <div className={classes.catalog__upper__content__hint__row}>
+                <div key={index} className={classes.catalog__upper__content__hint__row}>
                   <row.IconComponent
                     style={{ color: row.color, fontSize: "24px" }}
                   />

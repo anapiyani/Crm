@@ -31,10 +31,10 @@ const CustomTimePicker: React.FC<CustomTimePickerProps> = ({
   dayjs.extend(customParseFormat);
 
   const [selectedHour, setSelectedHour] = useState<string>(
-    dayjs(value, "HH:mm", true).format("hh")
+    dayjs(value, "HH:mm", true).format("hh"),
   );
   const [selectedMinute, setSelectedMinute] = useState<string>(
-    dayjs(value, "HH:mm", true).format("mm")
+    dayjs(value, "HH:mm", true).format("mm"),
   );
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 

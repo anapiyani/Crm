@@ -102,3 +102,12 @@ export interface IClientDepositTopUp {
   comment: string;
   employee_id?: number | null;
 }
+
+export interface IClientSearch {
+  id: number;
+  user: {
+    user_id: number;
+    first_name: string;
+    last_name: string;
+  };
+}

@@ -91,7 +91,7 @@ const VisitHistory: React.FC<VisitHistoryProps> = ({
           variant="outlined"
           shape="rounded"
           color="primary"
-          count={3}
+          count={pageCount}
           page={page}
           onChange={onPageChange}
         />

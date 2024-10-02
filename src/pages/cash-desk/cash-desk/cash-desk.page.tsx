@@ -652,12 +652,12 @@ const CashDesk = () => {
                 variant="outlined"
                 size="small"
                 placeholder="Заканчивая"
-                style={{ width: "41%" }}
+                style={{ width: "42%" }}
                 {...register("to_date")}
               />
             </div>
             <Autocomplete
-              sx={{ width: 330 }}
+              sx={{ width: "90%" }}
               options={options}
               getOptionLabel={(option) => option.label}
               onChange={(event, value) => {

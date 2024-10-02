@@ -13,6 +13,7 @@ import AddEmployeeScheduleModal from "./home/add-employee-schedule.modal";
 import ExportAppointmentsModal from "./home/export-appointments.modal";
 import ShowDeletedAppointmentsModal from "./home/show-deleted-appointments.modal";
 import ChangeEmployeeModal from "./home/change-employee-order.modal";
+import NotificationPage from "@/pages/activity/notification/notification.page";
 
 export {
   AddBreakModal,
@@ -30,4 +31,5 @@ export {
   ExportAppointmentsModal,
   ShowDeletedAppointmentsModal,
   ChangeEmployeeModal,
+  NotificationPage,
 };

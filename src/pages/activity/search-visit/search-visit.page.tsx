@@ -44,8 +44,9 @@ interface IOption {
 }
 
 const SearchVisits = () => {
-  const { register, handleSubmit, reset, control, setValue } =
-    useForm<IVisitsInfo>();
+  const { register, handleSubmit, reset, control, setValue } = useForm<
+    IVisitsInfo
+  >();
   const [selectedEmployeeIds, setSelectedEmployeeIds] = useState<number[]>([]);
   const [selectedItems, setSelectedItems] = useState<ITreeItemProps[]>([]);
   const [visitsData, setVisitsData] = useState<IVisitsResponse | null>(null);
@@ -132,7 +133,7 @@ const SearchVisits = () => {
     type: "service" | "category",
     serviceName: string,
     parent: number | null,
-    parent_name: string | null,
+    parent_name: string | null
   ) => {
     setSelectedItems((prev) => {
       if (isChecked === 1) {
@@ -159,38 +160,38 @@ const SearchVisits = () => {
 
   const onParentChange = async (
     parentCategoryId: number | null,
-    childCheckedState: number,
+    childCheckedState: number
   ) => {
     if (parentCategoryId === null) return;
 
     const parentCategory = await getHierarchyById(parentCategoryId);
     const childStates = parentCategory.children.map((child) => {
       const isChecked = selectedItems.some(
-        (item) => item.id === child.id && item.type === "category",
+        (item) => item.id === child.id && item.type === "category"
       );
 
       const allServicesChecked = child.services.every((service) =>
         selectedItems.some(
-          (item) => item.id === service.id && item.type === "service",
-        ),
+          (item) => item.id === service.id && item.type === "service"
+        )
       );
 
       const allChildrenChecked = child.children.every((subChild) =>
         selectedItems.some(
-          (item) => item.id === subChild.id && item.type === "category",
-        ),
+          (item) => item.id === subChild.id && item.type === "category"
+        )
       );
 
       const anyChildrenChecked = child.children.some((subChild) =>
         selectedItems.some(
-          (item) => item.id === subChild.id && item.type === "category",
-        ),
+          (item) => item.id === subChild.id && item.type === "category"
+        )
       );
 
       const anyServicesChecked = child.services.some((service) =>
         selectedItems.some(
-          (item) => item.id === service.id && item.type === "service",
-        ),
+          (item) => item.id === service.id && item.type === "service"
+        )
       );
 
       if (allServicesChecked && allChildrenChecked) {
@@ -224,7 +225,7 @@ const SearchVisits = () => {
       "category",
       parentCategory.name,
       parentCategory.parent!,
-      parentCategory.parent_name,
+      parentCategory.parent_name
     );
 
     // Recursively propagate the state change to the parent's parent
@@ -319,14 +320,14 @@ const SearchVisits = () => {
 
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
-    value: number,
+    value: number
   ) => {
     setCurrentPage(value);
     refetchVistsData();
   };
 
   const handlePageSizeChange = (
-    event: React.ChangeEvent<HTMLSelectElement>,
+    event: React.ChangeEvent<HTMLSelectElement>
   ) => {
     setPageSize(Number(event.target.value));
     setCurrentPage(1);
@@ -437,26 +438,42 @@ const SearchVisits = () => {
                 }}
               /> */}
 
-              <div style={{ display: "flex", width: "100%" }} className={classes.visits__content__infos__form__date
-              }>
+              <div
+                style={{ display: "flex", width: "100%" }}
+                className={classes.visits__content__infos__form__date}
+              >
                 <label className={classes["date-picker-label"]}>Дата</label>
-                <div style={{width:"78%",display:"flex", flexDirection:"row",alignItems:"center"}}>
-                <CustomDatePicker
-                  value={fromDate}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    setFromDate(e.target.value)
-                  }
-                />
-                <p style={{ marginRight: "1rem", marginLeft: "1rem", fontSize:"1.6rem" }}>-</p>
-                <CustomDatePicker
-                  value={toDate}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    setToDate(e.target.value)
-                  }
-                  min={fromDate}
-                />
+                <div
+                  style={{
+                    width: "75%",
+                    display: "flex",
+                    flexDirection: "row",
+                    alignItems: "center",
+                  }}
+                >
+                  <CustomDatePicker
+                    value={fromDate}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      setFromDate(e.target.value)
+                    }
+                  />
+                  <p
+                    style={{
+                      marginRight: "1rem",
+                      marginLeft: "1rem",
+                      fontSize: "1.6rem",
+                    }}
+                  >
+                    -
+                  </p>
+                  <CustomDatePicker
+                    value={toDate}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      setToDate(e.target.value)
+                    }
+                    min={fromDate}
+                  />
                 </div>
-                
               </div>
 
               <VerticalTextField
