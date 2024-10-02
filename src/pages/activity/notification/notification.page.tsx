@@ -14,7 +14,6 @@ import {
 } from "@mui/material";
 import CustomDatePicker from "@/components/date-picker/date-picker-custom";
 import CustomTimePicker from "@/components/time-picker/time-picker-custom";
-import StepInput from "@/pages/employees/salary/_components/step-input/step-input.component";
 import RoleEmployeeCheckbox from "@/components/role-employee-checkbox/role-employee-checkbox";
 import { Link } from "react-router-dom";
 import { Chat } from "@mui/icons-material";
@@ -117,9 +116,7 @@ const NotificationPage = () => {
                     }
                   >
                     <input type="checkbox" value="cash" />
-                    <span className={classes["checkLabel"]}>
-                      Оплата наличными
-                    </span>
+                    <span className={classes["checkLabel"]}>Посещение</span>
                   </div>
                   <div
                     className={
@@ -127,9 +124,7 @@ const NotificationPage = () => {
                     }
                   >
                     <input type="checkbox" value="card" />
-                    <span className={classes["checkLabel"]}>
-                      Оплата по карте
-                    </span>
+                    <span className={classes["checkLabel"]}>Услуга</span>
                   </div>
                   <div
                     className={
@@ -137,7 +132,7 @@ const NotificationPage = () => {
                     }
                   >
                     <input type="checkbox" value="check" />
-                    <span className={classes["checkLabel"]}>Оплата чеками</span>
+                    <span className={classes["checkLabel"]}>День рождения</span>
                   </div>
                   <div
                     className={
@@ -145,9 +140,7 @@ const NotificationPage = () => {
                     }
                   >
                     <input type="checkbox" value="checking_account" />
-                    <span className={classes["checkLabel"]}>
-                      С расчетного счета
-                    </span>
+                    <span className={classes["checkLabel"]}>Лист ожидания</span>
                   </div>
                 </div>
               </div>

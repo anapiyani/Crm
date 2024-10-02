@@ -10,7 +10,7 @@ interface IResourceCardProps {
   handleResourceClick: (
     id: string,
     username: string,
-    e: React.MouseEvent<HTMLElement>
+    e: React.MouseEvent<HTMLElement>,
   ) => void;
   viewMode: "daily" | "weekly" | "monthly";
 }
@@ -39,7 +39,7 @@ const ResourceCard: React.FC<IResourceCardProps> = ({
       <div
         className={classNames(
           classes["fullcalendar__user--profession"],
-          classes["fullcalendar__user--time"]
+          classes["fullcalendar__user--time"],
         )}
       >
         <img src={Icons["pan-tool-alt"]} alt="pan-tool" />
