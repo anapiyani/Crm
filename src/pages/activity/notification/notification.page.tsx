@@ -19,6 +19,8 @@ import { Link } from "react-router-dom";
 import { Chat } from "@mui/icons-material";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import NiceModal from "@ebay/nice-modal-react";
+import createNotification from "@/modals/activity/create-notification";
 
 interface IOption {
   label: string;
@@ -32,6 +34,10 @@ const NotificationPage = () => {
     { label: "50", value: 50 },
     { label: "100", value: 100 },
   ];
+
+  const onHandleCreateNotification = () => {
+    NiceModal.show(createNotification);
+  };
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -256,7 +262,9 @@ const NotificationPage = () => {
           <div className={classes.notification__main__search}>
             <Button variant="outlined">Сбросить</Button>
             <Button variant="contained">Поиск</Button>
-            <Button variant="contained">Создать напоминание</Button>
+            <Button onClick={onHandleCreateNotification} variant="contained">
+              Создать напоминание
+            </Button>
           </div>
         </div>
         <div className={classes.notification__main__tables}>
