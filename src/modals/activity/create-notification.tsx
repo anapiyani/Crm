@@ -167,7 +167,12 @@ const CreateNotificationModal = () => {
               justifyContent: "space-between",
             }}
           >
-            <Button type="reset" variant="outlined" color="error">
+            <Button
+              onClick={() => modal.hide()}
+              type="reset"
+              variant="outlined"
+              color="error"
+            >
               Отмена
             </Button>
             <Button type="submit" variant="contained">
