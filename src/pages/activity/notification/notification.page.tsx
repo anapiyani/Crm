@@ -166,7 +166,7 @@ const NotificationPage = () => {
             />
             <RoleEmployeeCheckbox
               onEmployeeSelectionChange={(
-                selectedEmployeeIds: { id: number; color?: string }[]
+                selectedEmployeeIds: { id: number; color?: string }[],
               ) => {
                 console.log(selectedEmployeeIds);
               }}
