@@ -1,9 +1,7 @@
 import React, { useState } from "react";
-import React, { useState } from "react";
 import classes from "./styles.module.scss";
 
 interface QuantitySelectorProps {
-  unit?: string;
   unit?: string;
 }
 
@@ -12,8 +10,6 @@ const QuantitySelector: React.FC<QuantitySelectorProps> = ({
 }) => {
   const [quantity, setQuantity] = useState<number>(0);
 
-  const handleIncrease = () => setQuantity((prev) => prev + 1);
-  const handleDecrease = () => setQuantity((prev) => (prev > 0 ? prev - 1 : 0));
   const handleIncrease = () => setQuantity((prev) => prev + 1);
   const handleDecrease = () => setQuantity((prev) => (prev > 0 ? prev - 1 : 0));
 
