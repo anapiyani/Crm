@@ -18,7 +18,7 @@ const CustomDatePicker = forwardRef<HTMLInputElement, ICustomDatePickerProps>(
         />
       </div>
     );
-  }
+  },
 );
 
 export default CustomDatePicker;
