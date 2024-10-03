@@ -4,12 +4,14 @@ import {
   addMaterialsForVisit,
   cancelPayment,
   confirmPayment,
+  createNotification,
   deleteVisit,
   feedback,
   report,
 } from "./activity.service";
 import {
   IAppointmentMaterials,
+  ICreateNotification,
   IPaymentConfirm,
   IReviewFeedback,
 } from "@/ts/activity.interface";
@@ -115,6 +117,22 @@ export const useAddMaterialsForVisit = () => {
     onError: (error) => {
       const errorMessage =
         error.message || "Произошла ошибка при добавлении материалов.";
+      toast.error(errorMessage);
+    },
+  });
+};
+
+export const useCreateNotification = () => {
+  const queryClient = useQueryClient();
+  return useMutation<ICreateNotification, Error, any>({
+    mutationFn: createNotification,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["notifications"] });
+      toast.success("Напоминание успешно создано.");
+    },
+    onError: (error) => {
+      const errorMessage =
+        error.message || "Произошла ошибка при создании напоминании.";
       toast.error(errorMessage);
     },
   });

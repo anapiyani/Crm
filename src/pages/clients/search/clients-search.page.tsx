@@ -130,7 +130,7 @@ const ClientSearch = () => {
           <div className={classes["main__upper__main"]}>
             <SearchFilterCard
               title={"Основные данные"}
-              openEnabled={true}
+              openEnabled={false}
               children={
                 <div className={classes["main__upper__card"]}>
                   <VerticalTextField
@@ -161,7 +161,7 @@ const ClientSearch = () => {
             ></SearchFilterCard>
             <SearchFilterCard
               title={"Доп. информация"}
-              openEnabled={true}
+              openEnabled={false}
               children={
                 <div className={classes["main__upper__card"]}>
                   <VerticalTextField
@@ -282,7 +282,7 @@ const ClientSearch = () => {
           <div className={classes["main__upper__reviews"]}>
             <SearchFilterCard
               title={"Отзывы"}
-              openEnabled={true}
+              openEnabled={false}
               children={
                 <div className={classes["main__upper__card"]}>
                   <VerticalTextField

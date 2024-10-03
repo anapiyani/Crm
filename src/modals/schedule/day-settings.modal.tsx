@@ -82,7 +82,7 @@ const DaySettings = ({ TodayData }: { TodayData: string }) => {
     string | undefined
   >("");
   const [selectedPattern, setSelectedPattern] = useState<ScheduleOption | null>(
-    { label: "Только выбранная дата", pattern: "only_choosen_date" },
+    { label: "Только выбранная дата", pattern: "only_choosen_date" }
   );
   const [startTime, setStartTime] = useState<string>("00:00");
   const [endTime, setEndTime] = useState<string>("23:59");
@@ -135,7 +135,7 @@ const DaySettings = ({ TodayData }: { TodayData: string }) => {
       { label: "2 - 2 - 3 - 3", pattern: [2, 2, 3, 3] },
       { label: "2 - 2 - 3 - 2 - 2 - 3", pattern: [2, 2, 3, 2, 2, 3] },
     ],
-    [],
+    []
   );
 
   const useEmployees = () => {
@@ -223,7 +223,7 @@ const DaySettings = ({ TodayData }: { TodayData: string }) => {
 
   const handlePatternChange = (
     event: React.SyntheticEvent,
-    value: ScheduleOption | null,
+    value: ScheduleOption | null
   ) => {
     if (!value?.isParent) {
       setSelectedPattern(value);
@@ -237,7 +237,7 @@ const DaySettings = ({ TodayData }: { TodayData: string }) => {
   const handleWeekdayChange = (
     day: WeekDays,
     field: keyof WeekDayTimes["monday"],
-    value: any,
+    value: any
   ) => {
     setWeekDayTimes((prev) => ({
       ...prev,
@@ -278,7 +278,7 @@ const DaySettings = ({ TodayData }: { TodayData: string }) => {
               fullWidth={true}
               value={
                 employeeOptions.find(
-                  (option) => option.nodeId === selectedEmployee,
+                  (option) => option.nodeId === selectedEmployee
                 ) || null
               }
               onChange={(event, value) => {
@@ -465,7 +465,7 @@ const DaySettings = ({ TodayData }: { TodayData: string }) => {
                         handleWeekdayChange(
                           day.value as WeekDays,
                           "checked",
-                          e.target.checked,
+                          e.target.checked
                         )
                       }
                     />
@@ -487,7 +487,7 @@ const DaySettings = ({ TodayData }: { TodayData: string }) => {
                             handleWeekdayChange(
                               day.value as WeekDays,
                               "startTime",
-                              value,
+                              value
                             )
                           }
                         />
@@ -499,7 +499,7 @@ const DaySettings = ({ TodayData }: { TodayData: string }) => {
                             handleWeekdayChange(
                               day.value as WeekDays,
                               "endTime",
-                              value,
+                              value
                             )
                           }
                         />

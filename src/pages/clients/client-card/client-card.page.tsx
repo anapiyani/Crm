@@ -214,14 +214,19 @@ const ClientCard = () => {
       description: appointment.services
         .map((service) => service.service_name)
         .join(", "),
-      cost: appointment.services
-        .reduce((total, service) => total + parseFloat(service.total_price), 0) + " ₸",
+      cost:
+        appointment.services.reduce(
+          (total, service) => total + parseFloat(service.total_price),
+          0
+        ) + " ₸",
       dateTime: `${appointment.date}, ${appointment.start_time}`,
       link: "",
     }));
   };
 
-  const visitHistoryData = transformAppointmentHistory(customerAppointmentHistoryData || []);
+  const visitHistoryData = transformAppointmentHistory(
+    customerAppointmentHistoryData || []
+  );
 
   const totalPages = Math.ceil(visitHistoryData.length / pageSize);
   const paginatedData = visitHistoryData.slice(
@@ -229,7 +234,10 @@ const ClientCard = () => {
     page * pageSize
   );
 
-  const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
+  const handlePageChange = (
+    event: React.ChangeEvent<unknown>,
+    value: number
+  ) => {
     setPage(value);
   };
 
@@ -382,13 +390,15 @@ const ClientCard = () => {
     },
     {
       property: "Дата рождения",
-      value: userInfoData?.date_of_birth || "Не указано",
+      value: userInfoData?.date_of_birth
+        ? dayjs(userInfoData.date_of_birth).format("DD/MM/YYYY")
+        : "Не указано",
       editType: "date",
     },
     {
       property: "Возраст",
       value: userInfoData?.date_of_birth
-        ? dayjs(userInfoData.date_of_birth).fromNow()
+        ? dayjs(userInfoData.date_of_birth).fromNow().split(" ")[0]
         : "Не указано",
     },
     {
@@ -515,7 +525,7 @@ const ClientCard = () => {
                 icon={<CalendarMonthOutlined />}
                 iconColor="var(--secondary-main)"
                 textTitle="Является клиентом"
-                valueText={getWorkingTime() + " дней"}
+                valueText={getWorkingTime() ? getWorkingTime() : 0 + " дней"}
               />
             </div>
             <RevenueChart
@@ -595,7 +605,11 @@ const ClientCard = () => {
                 icon={<ReceiptLongOutlined />}
                 iconColor="#FF5722"
                 textTitle="Сумма последнего чека"
-                valueText={financeData?.last_check_price + " тенге" || "0"}
+                valueText={
+                  financeData?.last_check_price
+                    ? financeData.last_check_price
+                    : 0 + " тенге" || "0"
+                }
               />
 
               <CounterCard
