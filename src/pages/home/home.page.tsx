@@ -62,6 +62,7 @@ import {
   getEmployeeScheduleDates,
   getEmployeeWeeklySchedule,
   getScheduleByDate,
+  updateAppointment,
 } from "@/service/schedule/schedule.service";
 import {
   transformMonthlySchedulesToFullCalendar,
@@ -73,6 +74,8 @@ import { getHierarchyEmployeesByDepartment } from "@/service/hierarchy/hierarchy
 import { processEmployeeOptions } from "@/utils/process-employees-departments";
 import ClientspredictItem from "./_components/clients-predict";
 import { getForecastInfo } from "@/service/kassa/kassa.service";
+import { IAppointment } from "@/ts/schedule.interface";
+import { start } from "repl";
 
 const menuItems = [
   {
@@ -99,10 +102,12 @@ const Home: React.FC = () => {
   const calendarRef = useRef<FullCalendar | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-  const [burgerMenuAnchorEl, setBurgerMenuAnchorEl] =
-    useState<HTMLElement | null>(null);
+  const [
+    burgerMenuAnchorEl,
+    setBurgerMenuAnchorEl,
+  ] = useState<HTMLElement | null>(null);
   const [selectedResourceId, setSelectedResourceId] = useState<string | null>(
-    null,
+    null
   );
   const [selectedTitle, setSelectedTitle] = useState<string | null>(null);
   const [events, setEvents] = useState<any[]>([]);
@@ -110,7 +115,7 @@ const Home: React.FC = () => {
   const [selectedEmployee, setSelectedEmployee] = useState<number>();
   const [selectedEmployeeName, setSelectedEmployeeName] = useState<string>("");
   const [viewMode, setViewMode] = useState<"daily" | "weekly" | "monthly">(
-    "daily",
+    "daily"
   );
 
   // prediction dates
@@ -216,8 +221,9 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     if (schedulesData) {
-      const { events, resources } =
-        transformSchedulesToFullCalendar(schedulesData);
+      const { events, resources } = transformSchedulesToFullCalendar(
+        schedulesData
+      );
       setEvents(events);
       setResources(resources);
     }
@@ -238,7 +244,7 @@ const Home: React.FC = () => {
     if (getEmployeeMonthlyScheduleData && selectedDate) {
       const { events, resources } = transformMonthlySchedulesToFullCalendar(
         getEmployeeMonthlyScheduleData.results,
-        selectedDate,
+        selectedDate
       );
       setEvents(events);
       setResources(resources);
@@ -256,7 +262,7 @@ const Home: React.FC = () => {
   const handleResourceClick = (
     resourceId: string,
     resourceTitle: string,
-    event: React.MouseEvent<HTMLElement>,
+    event: React.MouseEvent<HTMLElement>
   ) => {
     const [resourceEmployeeId, resourceDate] = resourceId.split("-");
     setSelectedResourceId(resourceEmployeeId);
@@ -337,14 +343,14 @@ const Home: React.FC = () => {
 
   const handleShowMonthlySchedule = (
     employeeId: number,
-    employeeName: string,
+    employeeName: string
   ) => {
     setSelectedEmployee(employeeId);
     setViewMode("monthly");
   };
 
   function ServerDay(
-    props: PickersDayProps<Dayjs> & { highlightedDays?: string[] },
+    props: PickersDayProps<Dayjs> & { highlightedDays?: string[] }
   ) {
     const { highlightedDays = [], day, outsideCurrentMonth, ...other } = props;
 
@@ -375,7 +381,7 @@ const Home: React.FC = () => {
     const newResponse = await refetchScheduleByDate();
     if (newResponse.data) {
       const { events, resources } = transformSchedulesToFullCalendar(
-        newResponse.data,
+        newResponse.data
       );
       setEvents(events);
       setResources(resources);
@@ -387,24 +393,49 @@ const Home: React.FC = () => {
       calendarApi.refetchResources();
     }
   };
+  const handleResize = (eventResizeInfo: any) => {
+    const eventId = eventResizeInfo.event._def.publicId;
+    const start = dayjs(eventResizeInfo.event._instance.range.start)
+      .utcOffset(0)
+      .format("HH:mm");
+    const end = dayjs(eventResizeInfo.event._instance.range.end)
+      .utcOffset(0)
+      .format("HH:mm");
+
+    const date = dayjs(eventResizeInfo.event._instance.range.start).format(
+      "YYYY-MM-DD"
+    );
+
+    let data = {
+      dates: [date],
+      start_times: [start],
+      end_times: [end],
+    };
+    updateAppointment(eventId, data);
+  };
 
   const handleDropElement = (eventDragged: any) => {
-    console.log(dayjs.tz.guess());
-
-    console.log(eventDragged.el);
     const start = dayjs(eventDragged.event._instance.range.start)
-      .tz("Atlantic/Reykjavik")
+      .utcOffset(0)
       .format("HH:mm");
     const end = dayjs(eventDragged.event._instance.range.end)
-      .tz("Atlantic/Reykjavik")
+      .utcOffset(0)
       .format("HH:mm");
-    console.log("start", start);
-    console.log("end", end);
+
+    let data = {
+      dates: [
+        dayjs(eventDragged.event._instance.range.start).format("YYYY-MM-DD"),
+      ],
+      start_times: [start],
+      end_times: [end],
+    };
+
+    updateAppointment(eventDragged.event._def.publicId, data);
   };
 
   const handleMenuItemClick = (
     modal: any,
-    setAnchorEl: React.Dispatch<React.SetStateAction<HTMLElement | null>>,
+    setAnchorEl: React.Dispatch<React.SetStateAction<HTMLElement | null>>
   ) => {
     NiceModal.show(modal);
     setAnchorEl(null);
@@ -436,12 +467,18 @@ const Home: React.FC = () => {
               selectable={true}
               selectMirror={true}
               droppable={true}
+              eventResizableFromStart={true}
+              eventResize={(eventResizeInfo) => {
+                handleResize(eventResizeInfo);
+              }}
               select={handleCalendarDateSelect}
               datesSet={handleDatesSet}
               eventAllow={(_, draggedEvent) =>
                 draggedEvent?.extendedProps.type !== "break"
               }
-              eventDragStop={(eventDragged) => handleDropElement(eventDragged)}
+              eventDrop={(eventDragged) => {
+                handleDropElement(eventDragged);
+              }}
               customButtons={{
                 shiftReport: {
                   text: "Отчет смены",
@@ -487,7 +524,7 @@ const Home: React.FC = () => {
                 ).split("-");
                 const resourceDate = dateParts.join("-");
                 const resource = resources.find(
-                  (res) => res.id === `${resourceEmployeeId}-${resourceDate}`,
+                  (res) => res.id === `${resourceEmployeeId}-${resourceDate}`
                 );
                 return resource?.extendedProps.working || false;
               }}
@@ -497,7 +534,7 @@ const Home: React.FC = () => {
                 ).split("-");
                 const resourceDate = dateParts.join("-");
                 const resource = resources.find(
-                  (res) => res.id === `${resourceEmployeeId}-${resourceDate}`,
+                  (res) => res.id === `${resourceEmployeeId}-${resourceDate}`
                 );
                 if (resource?.extendedProps.working !== true) {
                   info.el.style.backgroundColor = "#DDE7EE";
@@ -581,7 +618,7 @@ const Home: React.FC = () => {
                     classes["u-rotate-270"],
                     classes["u-m-md"],
                     classes["u-text-blue"],
-                    classes["u-cursor-pointer"],
+                    classes["u-cursor-pointer"]
                   )}
                 >
                   <span>Развернуть</span>
@@ -597,7 +634,7 @@ const Home: React.FC = () => {
                     className={classNames(
                       classes["u-flex-row"],
                       classes["u-text-blue"],
-                      classes["u-cursor-pointer"],
+                      classes["u-cursor-pointer"]
                     )}
                     onClick={handlePanelHide}
                   >
@@ -627,7 +664,7 @@ const Home: React.FC = () => {
                       }
                       value={
                         employeeOptions.find(
-                          (option) => option.nodeId === selectedEmployee,
+                          (option) => option.nodeId === selectedEmployee
                         ) || null
                       }
                       onChange={(event, value) => {
@@ -821,7 +858,7 @@ const Home: React.FC = () => {
                                       end_time={appointment.end_time}
                                       toPay={appointment.revenue}
                                     />
-                                  ) : null,
+                                  ) : null
                               )}
                             </div>
                           ))}

@@ -19,7 +19,6 @@ const CreateNotificationModal = () => {
   const modal = useModal();
   const { register, handleSubmit, control, setValue } =
     useForm<ICreateNotification>();
-  const employee = localStorage.getItem("user_id");
   const mutation = useCreateNotification();
 
   const { data: employeeData } = useQuery({
@@ -70,7 +69,7 @@ const CreateNotificationModal = () => {
                 <StepInput
                   {...field}
                   placeholder="Имя / ID / Телефон / карта"
-                  labelName="Сотрудник"
+                  labelName="Клиент"
                   isAutoComplete={true}
                   options={employeeOptions || []}
                   onChange={(value) => {

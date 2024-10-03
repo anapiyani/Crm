@@ -2,6 +2,7 @@ import {
   IAppointmentMaterials,
   IClientBalance,
   ICreateNotification,
+  INotificationGet,
   IPaymentConfirm,
   IReviewFeedback,
   IViewVistInfo,
@@ -84,4 +85,17 @@ export const addMaterialsForVisit = ({
 
 export const createNotification = (form: ICreateNotification): Promise<any> => {
   return api.post("/reminder/", form).then((res) => res.data);
+};
+
+export const searchNotifications = (
+  formData: INotificationGet,
+): Promise<any> => {
+  const params = new URLSearchParams();
+  Object.entries(formData).forEach(([key, value]) => {
+    if (value) {
+      params.append(key, value.toString());
+    }
+  });
+  const url = `/reminder/?${params.toString()}`;
+  return api.get(url).then((res) => res.data);
 };

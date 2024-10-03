@@ -1,5 +1,6 @@
 import api from "../api";
 import {
+  IAppointment,
   IBreaks,
   IFormDataEmployeeSettings,
   ILongBreaks,
@@ -32,18 +33,18 @@ export const deleteBreakFromSchedule = (id: number) => {
 export const addTimeOffToSchedule = (
   employee_id: number,
   data: { status: string },
-  date: string,
+  date: string
 ) => {
   return api
     .post(
       `/schedule/day-statuses/add-time-off/${employee_id}/date/?date=${date}`,
-      data,
+      data
     )
     .then((res) => res.data);
 };
 
 export const getEmployeeScheduleDates = (
-  employee_id: number,
+  employee_id: number
 ): Promise<{ date: string }[]> => {
   return api
     .get(`/schedule/schedules/employee/dates/?employee_id=${employee_id}`)
@@ -52,7 +53,7 @@ export const getEmployeeScheduleDates = (
 
 export const addTimeOffToScheduleByDate = (
   employee_id: string,
-  date: string,
+  date: string
 ): Promise<{
   id: number;
   status: string;
@@ -65,7 +66,7 @@ export const addTimeOffToScheduleByDate = (
 };
 
 export const getEmployeeMonthlySchedule = (
-  employee_id: number,
+  employee_id: number
 ): Promise<IResponseData<ISchedule[]>> => {
   return api
     .get(`/schedule/schedules/monthly/${employee_id}/`)
@@ -73,7 +74,7 @@ export const getEmployeeMonthlySchedule = (
 };
 
 export const getEmployeeWeeklySchedule = (
-  employee_id: number,
+  employee_id: number
 ): Promise<IResponseData<ISchedule[]>> => {
   return api
     .get(`/schedule/schedules/weekly/${employee_id}/`)
@@ -93,7 +94,7 @@ export const addEmployeeToSchedule = ({
 }) => {
   return api
     .post(
-      `/schedule/schedules/add/?date=${date}&employee_id=${employee_id}&end_time=${end_time}&start_time=${start_time}`,
+      `/schedule/schedules/add/?date=${date}&employee_id=${employee_id}&end_time=${end_time}&start_time=${start_time}`
     )
     .then((res) => res.data);
 };
@@ -107,7 +108,7 @@ export const updateEmployeePosition = (orderData: {
 };
 
 export const getEmployeeScheduleEachDay = (
-  id: number,
+  id: number
 ): Promise<IResponseScheduleData[]> => {
   return api
     .get(`/schedule/schedules/employee/${id}/?pagination_on=false`)
@@ -115,7 +116,7 @@ export const getEmployeeScheduleEachDay = (
 };
 
 export const getEmployeeScheduleYearly = (
-  id: number,
+  id: number
 ): Promise<IYearlySchedule[]> => {
   return api
     .get(`/schedule/schedules/employee/dates_with_status/?employee_id=${id}`)
@@ -129,19 +130,28 @@ export const longBreak = (formData: ILongBreaks): Promise<any> => {
 };
 
 export const scheduleEmployeeChange = (
-  formData: IScheduleEmployeeChange,
+  formData: IScheduleEmployeeChange
 ): Promise<any> => {
   return api
     .patch(
-      `/schedule/schedules/change/?current_date=${formData.current_date}&employee_id=${formData.employee_id}&end_time=${formData.end_time}&new_date=${formData.new_date}&start_time=${formData.start_time}`,
+      `/schedule/schedules/change/?current_date=${formData.current_date}&employee_id=${formData.employee_id}&end_time=${formData.end_time}&new_date=${formData.new_date}&start_time=${formData.start_time}`
     )
     .then((res) => res.data);
 };
 
 export const scheduleEmployeeSettings = (
-  formData: IFormDataEmployeeSettings,
+  formData: IFormDataEmployeeSettings
 ): Promise<any> => {
   return api
     .post(`/schedule/schedules/settings/`, formData)
+    .then((res) => res.data);
+};
+
+export const updateAppointment = (
+  id: number,
+  data: any
+): Promise<IAppointment> => {
+  return api
+    .patch(`/appointments/appointments/${id}/`, data)
     .then((res) => res.data);
 };
