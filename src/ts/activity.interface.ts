@@ -204,3 +204,20 @@ export interface ICreateNotification {
   customer: string;
   employee: number | string | null;
 }
+
+export interface INotificationGet {
+  customer: number;
+  date_from: string;
+  date_to: string;
+  employee: number[];
+  page: number;
+  page_size: number;
+  status:
+    | "Любой"
+    | "Необходимо позвонить клиенту"
+    | "Клиенту уже позвонили"
+    | "Клиент не берет трубку";
+  time_from: string;
+  time_to: string;
+  type: string[];
+}
