@@ -29,6 +29,10 @@ import { searchEmployee } from "@/service/employee/employee.service";
 import { useQuery } from "@tanstack/react-query";
 import { IOptions } from "@/ts/employee.interface";
 import StepInput from "@/pages/employees/salary/_components/step-input/step-input.component";
+import {
+  searchNotifications,
+  searchVisits,
+} from "@/service/activity/activity.service";
 
 interface IOption {
   label: string;
@@ -39,19 +43,20 @@ const NotificationPage = () => {
   const { register, handleSubmit, control, setValue, getValues } =
     useForm<INotificationGet>();
 
-  const { data: employeeData } = useQuery({
-    queryKey: ["employeeData"],
-    queryFn: () => searchEmployee({ role: "customer" }),
-  });
-
-  const employeeOptions: IOptions[] =
-    employeeData?.results.map((item) => ({
-      label: item.first_name + " " + item.last_name,
-      value: item.user_id.toString(),
-    })) || [];
-
   const [page_size, setPage_size] = useState<number>(10);
   const [page, setPage] = useState<number>(1);
+  const [formData, setFormData] = useState<INotificationGet>({
+    customer: 0,
+    date_from: "",
+    date_to: "",
+    employee: [],
+    page_size,
+    page,
+    status: "Любой",
+    time_from: "",
+    time_to: "",
+    type: [],
+  });
 
   const pageSizeOptions: IOption[] = [
     { label: "10", value: 10 },
@@ -64,14 +69,49 @@ const NotificationPage = () => {
     NiceModal.show(createNotification);
   };
 
+  const { data: employeeData } = useQuery({
+    queryKey: ["employeeData"],
+    queryFn: () => searchEmployee({ role: "customer" }),
+  });
+
+  const employeeOptions: IOptions[] =
+    employeeData?.results.map((item) => ({
+      label: item.first_name + " " + item.last_name,
+      value: item.user_id.toString(),
+    })) || [];
+
+  const {
+    data: notificationData,
+    isLoading: notificationLoading,
+    refetch: notificationRefetch,
+  } = useQuery({
+    queryKey: ["notificationData", formData, page_size, page],
+    queryFn: () =>
+      searchNotifications({
+        ...formData,
+        page_size,
+        page,
+      }),
+    enabled: false,
+  });
+
   const onSubmit = (data: INotificationGet) => {
-    const formData = {
+    if (!data.time_from || !data.time_to) {
+      data.time_from = "9:00";
+      data.time_to = "9:00";
+    }
+
+    const newFormData = {
       ...data,
       page_size,
       page,
     };
-    console.log(formData);
+
+    setFormData(newFormData);
+    notificationRefetch();
   };
+
+  console.log(notificationData);
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -102,6 +142,7 @@ const NotificationPage = () => {
                       control={control}
                       render={({ field }) => (
                         <DatePicker
+                          format="DD.MM.YYYY"
                           label="Выберите дату"
                           sx={{
                             "& .MuiTypography-root": {
@@ -137,6 +178,7 @@ const NotificationPage = () => {
                       control={control}
                       render={({ field }) => (
                         <DatePicker
+                          format="DD.MM.YYYY"
                           label="Выберите дату"
                           sx={{
                             "& .MuiTypography-root": {
