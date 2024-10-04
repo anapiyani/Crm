@@ -91,11 +91,17 @@ export const searchNotifications = (
   formData: INotificationGet,
 ): Promise<any> => {
   const params = new URLSearchParams();
+
   Object.entries(formData).forEach(([key, value]) => {
-    if (value) {
+    if (Array.isArray(value)) {
+      value.forEach((item) => {
+        params.append(key, item.toString());
+      });
+    } else if (value) {
       params.append(key, value.toString());
     }
   });
+
   const url = `/reminder/?${params.toString()}`;
   return api.get(url).then((res) => res.data);
 };
