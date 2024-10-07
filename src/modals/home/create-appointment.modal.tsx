@@ -43,6 +43,7 @@ import { flattenEmployeeHierarchy } from "@/utils/flatten-employee-hierarchy";
 import { getScheduleByDate } from "@/service/schedule/schedule.service";
 import { searchClient } from "@/service/client/client.service";
 import { IClientSearch } from "@/ts/client.interface";
+import { debounce } from "lodash";
 
 interface ICreateAppointmentModalProps {
   start: string;
@@ -165,14 +166,6 @@ const CreateAppointment: React.FC<ICreateAppointmentModalProps> = ({
     staleTime: Infinity,
     refetchOnWindowFocus: false,
   });
-
-  // const { data: parametersData } = useQuery({
-  //   queryKey: ["parametersData", selectedServices?.value],
-  //   queryFn: () => getServiceParametersById(selectedServices?.value as number),
-  //   enabled: selectedServices !== null && selectedServices?.value !== 0,
-  //   staleTime: Infinity,
-  //   refetchOnWindowFocus: false,
-  // });
 
   const { data: employeeHierarchyData } = useQuery({
     queryKey: ["employeeHierarchyData", selectedEmployeeId],
@@ -339,6 +332,16 @@ const CreateAppointment: React.FC<ICreateAppointmentModalProps> = ({
     }));
   }, [clientsData]);
 
+  const debouncedSearchClient = useMemo(
+    () =>
+      debounce((value: string) => {
+        searchClient(value).then((res) => {
+          setClientsData(res);
+        });
+      }, 300),
+    [],
+  );
+
   return (
     <ModalWindow
       title={"Запись клиента"}
@@ -370,11 +373,9 @@ const CreateAppointment: React.FC<ICreateAppointmentModalProps> = ({
                 isDisabled={hasClient ? true : false}
                 value={selectedEmployee}
                 onChange={(value) => setSelectedEmployee(value)}
-                onChangeText={(value) => {
-                  searchClient(value ? value : "").then((res) => {
-                    setClientsData(res);
-                  });
-                }}
+                onChangeText={(value) =>
+                  debouncedSearchClient(value ? value : "")
+                }
                 options={clientOptions}
                 placeholder="Фамилия Имя"
               />

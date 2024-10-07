@@ -33,7 +33,7 @@ api.interceptors.response.use(
     const originalRequest = error.config;
     const refreshToken = getRefreshToken();
     if (
-      [401].includes(error.response?.status) ||
+      [401].includes(error.response?.status) &&
       error.response?.data?.code === 401
     ) {
       if (refreshToken) {
