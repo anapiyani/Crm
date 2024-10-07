@@ -38,6 +38,7 @@ export interface IAppointmentCreateForm {
   type: string;
   appointment_services: IAppointmentService[];
   material_purchases: IMaterialPurchases[];
+  with_employee?: boolean;
 }
 
 export interface IAppointmentReturn
