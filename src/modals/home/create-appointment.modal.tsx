@@ -2,7 +2,15 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import NiceModal, { useModal } from "@ebay/nice-modal-react";
 import toast from "react-hot-toast";
-import { Autocomplete, Button, Divider, TextField } from "@mui/material";
+import {
+  Autocomplete,
+  Button,
+  Divider,
+  FormControlLabel,
+  Radio,
+  RadioGroup,
+  TextField,
+} from "@mui/material";
 import {
   Add,
   Clear,
@@ -17,7 +25,10 @@ import {
 import ModalWindow from "@/components/modal-window/modal-window";
 import { ChooseServiceModal } from "..";
 import CustomAutoComplete from "@/components/autocomplete/custom-autocomplete.component";
-import { searchEmployee } from "@/service/employee/employee.service";
+import {
+  employeeSearch,
+  searchEmployee,
+} from "@/service/employee/employee.service";
 import {
   IAppointmentCreateForm,
   IAppointmentService,
@@ -132,7 +143,9 @@ const CreateAppointment: React.FC<ICreateAppointmentModalProps> = ({
     },
   ]);
   const [clientsData, setClientsData] = useState<IClientSearch[]>([]);
+  const [employeeData, setEmployeeData] = useState<IClientSearch[]>([]);
   const AppointmentMutation = useCreateAppointment();
+  const [isEmployee, setIsEmployee] = useState<boolean>(false);
 
   useEffect(() => {
     setAppointmentDates([
@@ -218,6 +231,12 @@ const CreateAppointment: React.FC<ICreateAppointmentModalProps> = ({
       appointment_services: services,
       material_purchases: [],
     };
+
+    if (isEmployee) {
+      updatedForm.with_employee = true;
+    } else {
+      updatedForm.with_employee = false;
+    }
 
     AppointmentMutation.mutate(updatedForm);
   };
@@ -342,6 +361,23 @@ const CreateAppointment: React.FC<ICreateAppointmentModalProps> = ({
     [],
   );
 
+  const debouncedSearchEmployee = useMemo(
+    () =>
+      debounce((value: string) => {
+        employeeSearch(value).then((res) => {
+          setEmployeeData(res);
+        });
+      }, 300),
+    [],
+  );
+
+  const employeeOptions = useMemo(() => {
+    return employeeData.map((employee) => ({
+      label: `${employee.user.first_name} ${employee.user.last_name}`,
+      value: employee.user.user_id,
+    }));
+  }, [employeeData]);
+
   return (
     <ModalWindow
       title={"Запись клиента"}
@@ -364,21 +400,59 @@ const CreateAppointment: React.FC<ICreateAppointmentModalProps> = ({
           </p>
           <Divider />
           <div>
+            <div className={classes["create-appointment__checkboxes"]}>
+              <RadioGroup
+                aria-labelledby="demo-radio-buttons-group-label"
+                row
+                onChange={(e) => {
+                  setIsEmployee(e.target.value === "employee");
+                }}
+                defaultValue="client"
+              >
+                <FormControlLabel
+                  value="client"
+                  control={<Radio size="medium" />}
+                  label="Клиент."
+                />
+                <FormControlLabel
+                  value="employee"
+                  control={<Radio />}
+                  label="Сотрудник."
+                />
+              </RadioGroup>
+            </div>
             <div className={classes["create-appointment__params"]}>
-              <CustomAutoComplete
-                className={classes["u-w-full"]}
-                name="client"
-                selectValue={"label"}
-                label="Клиент"
-                isDisabled={hasClient ? true : false}
-                value={selectedEmployee}
-                onChange={(value) => setSelectedEmployee(value)}
-                onChangeText={(value) =>
-                  debouncedSearchClient(value ? value : "")
-                }
-                options={clientOptions}
-                placeholder="Фамилия Имя"
-              />
+              {isEmployee ? (
+                <CustomAutoComplete
+                  className={classes["u-w-full"]}
+                  name="client"
+                  selectValue={"label"}
+                  label="Сотрудник"
+                  isDisabled={hasClient ? true : false}
+                  value={selectedEmployee}
+                  onChange={(value) => setSelectedEmployee(value)}
+                  onChangeText={(value) =>
+                    debouncedSearchEmployee(value ? value : "")
+                  }
+                  options={employeeOptions}
+                  placeholder="Фамилия Имя"
+                />
+              ) : (
+                <CustomAutoComplete
+                  className={classes["u-w-full"]}
+                  name="client"
+                  selectValue={"label"}
+                  label="Клиент"
+                  isDisabled={hasClient ? true : false}
+                  value={selectedEmployee}
+                  onChange={(value) => setSelectedEmployee(value)}
+                  onChangeText={(value) =>
+                    debouncedSearchClient(value ? value : "")
+                  }
+                  options={clientOptions}
+                  placeholder="Фамилия Имя"
+                />
+              )}
               <div className={classes["create-appointment__params--icon"]}>
                 <Button
                   sx={{
