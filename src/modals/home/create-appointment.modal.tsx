@@ -25,7 +25,10 @@ import {
 import ModalWindow from "@/components/modal-window/modal-window";
 import { ChooseServiceModal } from "..";
 import CustomAutoComplete from "@/components/autocomplete/custom-autocomplete.component";
-import { searchEmployee } from "@/service/employee/employee.service";
+import {
+  employeeSearch,
+  searchEmployee,
+} from "@/service/employee/employee.service";
 import {
   IAppointmentCreateForm,
   IAppointmentService,
@@ -140,7 +143,7 @@ const CreateAppointment: React.FC<ICreateAppointmentModalProps> = ({
     },
   ]);
   const [clientsData, setClientsData] = useState<IClientSearch[]>([]);
-  const [employeeData, setEmployeeData] = useState<[]>([]);
+  const [employeeData, setEmployeeData] = useState<IClientSearch[]>([]);
   const AppointmentMutation = useCreateAppointment();
   const [isEmployee, setIsEmployee] = useState<boolean>(false);
 
@@ -358,18 +361,22 @@ const CreateAppointment: React.FC<ICreateAppointmentModalProps> = ({
     [],
   );
 
-  const { data: employeeDatas } = useQuery({
-    queryKey: ["employeeData"],
-    queryFn: () => searchEmployee({ role: "employee" }),
-    staleTime: 1000 * 60 * 5,
-  });
+  const debouncedSearchEmployee = useMemo(
+    () =>
+      debounce((value: string) => {
+        employeeSearch(value).then((res) => {
+          setEmployeeData(res);
+        });
+      }, 300),
+    [],
+  );
 
   const employeeOptions = useMemo(() => {
-    return employeeDatas?.results.map((employee) => ({
-      label: `${employee.first_name} ${employee.last_name}`,
-      value: employee.user_id,
+    return employeeData.map((employee) => ({
+      label: `${employee.user.first_name} ${employee.user.last_name}`,
+      value: employee.user.user_id,
     }));
-  }, [employeeDatas]);
+  }, [employeeData]);
 
   return (
     <ModalWindow
@@ -425,9 +432,9 @@ const CreateAppointment: React.FC<ICreateAppointmentModalProps> = ({
                   value={selectedEmployee}
                   onChange={(value) => setSelectedEmployee(value)}
                   onChangeText={(value) =>
-                    debouncedSearchClient(value ? value : "")
+                    debouncedSearchEmployee(value ? value : "")
                   }
-                  options={employeeOptions || []}
+                  options={employeeOptions}
                   placeholder="Фамилия Имя"
                 />
               ) : (
