@@ -104,6 +104,8 @@ const Home: React.FC = () => {
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [burgerMenuAnchorEl, setBurgerMenuAnchorEl] =
     useState<HTMLElement | null>(null);
+  const [burgerMenuEmployeeEl, setBurgerMenuEmployeeEl] =
+    useState<HTMLElement | null>(null);
   const [selectedResourceId, setSelectedResourceId] = useState<string | null>(
     null,
   );
@@ -313,7 +315,10 @@ const Home: React.FC = () => {
   };
 
   // Показать запись на неделю
-  const handleShowWeeklySchedule = (employeeId: number) => {
+  const handleShowWeeklySchedule = (
+    employeeId: number,
+    employeeName?: string,
+  ) => {
     setSelectedEmployee(employeeId);
     setViewMode("weekly");
 
@@ -439,6 +444,21 @@ const Home: React.FC = () => {
     setAnchorEl(null);
   };
 
+  const resourceMenuItems = resources.map((item) => {
+    return {
+      name: item.title,
+      id: item.extendedProps.employeeId,
+    };
+  });
+
+  const handleBurgerMenuEmployeeClick = (event: MouseEvent) => {
+    setBurgerMenuEmployeeEl(event.currentTarget as HTMLElement);
+  };
+
+  const handleClosehandleBurgerMenuEmployee = () => {
+    setBurgerMenuEmployeeEl(null);
+  };
+
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <div className={classes["home"]}>
@@ -486,11 +506,7 @@ const Home: React.FC = () => {
                 },
                 weekButton: {
                   text: "Неделя",
-                  click: function () {
-                    setViewMode("weekly");
-                    handleShowWeeklySchedule(selectedEmployee!);
-                    toast.success("Неделя");
-                  },
+                  click: handleBurgerMenuEmployeeClick,
                 },
 
                 burgetMenuButton: {
@@ -573,6 +589,29 @@ const Home: React.FC = () => {
               handleMonthSchedule={handleShowMonthlySchedule}
               handleWeekSchedule={handleShowWeeklySchedule}
             />
+            <Menu
+              anchorEl={burgerMenuEmployeeEl}
+              open={Boolean(burgerMenuEmployeeEl)}
+              onClose={handleClosehandleBurgerMenuEmployee}
+              anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "center",
+              }}
+            >
+              {resourceMenuItems.map(({ name, id }) => (
+                <MenuItem
+                  key={name}
+                  onClick={() => {
+                    setViewMode("weekly");
+                    handleShowWeeklySchedule(id, name);
+                    handleClosehandleBurgerMenuEmployee;
+                  }}
+                >
+                  <div className={classNames(classes["u-font-lg"])}>{name}</div>
+                </MenuItem>
+              ))}
+            </Menu>
             <Menu
               anchorEl={burgerMenuAnchorEl}
               open={Boolean(burgerMenuAnchorEl)}
