@@ -331,7 +331,7 @@ const Home: React.FC = () => {
       const date = startOfWeek.add(i, "day").format("YYYY-MM-DD");
       newResources.push({
         id: `${employeeId}-${date}`,
-        title: selectedEmployeeName,
+        title: employeeName,
         eventColor: "gray",
         extendedProps: {
           role: "employee",
