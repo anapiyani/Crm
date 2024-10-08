@@ -43,3 +43,5 @@ export const searchClient = (search: string): Promise<IClientSearch[]> => {
     .get(`/search_for_customer/?${params.toString()}`)
     .then((res) => res.data);
 };
+
+
