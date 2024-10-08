@@ -102,12 +102,12 @@ const Home: React.FC = () => {
   const calendarRef = useRef<FullCalendar | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-  const [
-    burgerMenuAnchorEl,
-    setBurgerMenuAnchorEl,
-  ] = useState<HTMLElement | null>(null);
+  const [burgerMenuAnchorEl, setBurgerMenuAnchorEl] =
+    useState<HTMLElement | null>(null);
+  const [burgerMenuEmployeeEl, setBurgerMenuEmployeeEl] =
+    useState<HTMLElement | null>(null);
   const [selectedResourceId, setSelectedResourceId] = useState<string | null>(
-    null
+    null,
   );
   const [selectedTitle, setSelectedTitle] = useState<string | null>(null);
   const [events, setEvents] = useState<any[]>([]);
@@ -115,7 +115,7 @@ const Home: React.FC = () => {
   const [selectedEmployee, setSelectedEmployee] = useState<number>();
   const [selectedEmployeeName, setSelectedEmployeeName] = useState<string>("");
   const [viewMode, setViewMode] = useState<"daily" | "weekly" | "monthly">(
-    "daily"
+    "daily",
   );
 
   // prediction dates
@@ -221,9 +221,8 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     if (schedulesData) {
-      const { events, resources } = transformSchedulesToFullCalendar(
-        schedulesData
-      );
+      const { events, resources } =
+        transformSchedulesToFullCalendar(schedulesData);
       setEvents(events);
       setResources(resources);
     }
@@ -244,7 +243,7 @@ const Home: React.FC = () => {
     if (getEmployeeMonthlyScheduleData && selectedDate) {
       const { events, resources } = transformMonthlySchedulesToFullCalendar(
         getEmployeeMonthlyScheduleData.results,
-        selectedDate
+        selectedDate,
       );
       setEvents(events);
       setResources(resources);
@@ -262,7 +261,7 @@ const Home: React.FC = () => {
   const handleResourceClick = (
     resourceId: string,
     resourceTitle: string,
-    event: React.MouseEvent<HTMLElement>
+    event: React.MouseEvent<HTMLElement>,
   ) => {
     const [resourceEmployeeId, resourceDate] = resourceId.split("-");
     setSelectedResourceId(resourceEmployeeId);
@@ -315,20 +314,22 @@ const Home: React.FC = () => {
     setBurgerMenuAnchorEl(null);
   };
 
-  const handleShowWeeklySchedule = (employeeId: number) => {
+  const handleShowWeeklySchedule = (
+    employeeId: number,
+    employeeName?: string,
+  ) => {
     setSelectedEmployee(employeeId);
     setViewMode("weekly");
 
-    const startOfWeek = dayjs(selectedDate).startOf("week");
-    const endOfWeek = dayjs(selectedDate).endOf("week");
-    const daysInWeek = endOfWeek.diff(startOfWeek, "days") + 1;
+    const startOfWeek = dayjs(selectedDate).startOf("week").add(1, "day");
+    const daysInWeek = 7;
 
     const newResources = [];
     for (let i = 0; i < daysInWeek; i++) {
       const date = startOfWeek.add(i, "day").format("YYYY-MM-DD");
       newResources.push({
         id: `${employeeId}-${date}`,
-        title: date,
+        title: employeeName,
         eventColor: "gray",
         extendedProps: {
           role: "employee",
@@ -343,14 +344,14 @@ const Home: React.FC = () => {
 
   const handleShowMonthlySchedule = (
     employeeId: number,
-    employeeName: string
+    employeeName: string,
   ) => {
     setSelectedEmployee(employeeId);
     setViewMode("monthly");
   };
 
   function ServerDay(
-    props: PickersDayProps<Dayjs> & { highlightedDays?: string[] }
+    props: PickersDayProps<Dayjs> & { highlightedDays?: string[] },
   ) {
     const { highlightedDays = [], day, outsideCurrentMonth, ...other } = props;
 
@@ -381,7 +382,7 @@ const Home: React.FC = () => {
     const newResponse = await refetchScheduleByDate();
     if (newResponse.data) {
       const { events, resources } = transformSchedulesToFullCalendar(
-        newResponse.data
+        newResponse.data,
       );
       setEvents(events);
       setResources(resources);
@@ -403,7 +404,7 @@ const Home: React.FC = () => {
       .format("HH:mm");
 
     const date = dayjs(eventResizeInfo.event._instance.range.start).format(
-      "YYYY-MM-DD"
+      "YYYY-MM-DD",
     );
 
     let data = {
@@ -435,11 +436,42 @@ const Home: React.FC = () => {
 
   const handleMenuItemClick = (
     modal: any,
-    setAnchorEl: React.Dispatch<React.SetStateAction<HTMLElement | null>>
+    setAnchorEl: React.Dispatch<React.SetStateAction<HTMLElement | null>>,
   ) => {
     NiceModal.show(modal);
     setAnchorEl(null);
   };
+
+  const resourceMenuItems = resources.map((item) => {
+    return {
+      name: item.title,
+      id: item.extendedProps.employeeId,
+    };
+  });
+
+  const handleBurgerMenuEmployeeClick = (event: MouseEvent) => {
+    setBurgerMenuEmployeeEl(event.currentTarget as HTMLElement);
+  };
+
+  const handleClosehandleBurgerMenuEmployee = () => {
+    setBurgerMenuEmployeeEl(null);
+  };
+
+  useEffect(() => {
+    if (viewMode === "weekly") {
+      handleClosehandleBurgerMenuEmployee();
+    }
+  }, [viewMode]);
+
+  useEffect(() => {
+    if (viewMode === "weekly" && getEmployeeWeeklyScheduleData) {
+      const { events, resources } = transformSchedulesToFullCalendar(
+        getEmployeeWeeklyScheduleData.results,
+      );
+      setEvents(events);
+      setResources(resources);
+    }
+  }, [viewMode, getEmployeeWeeklyScheduleData]);
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -488,9 +520,7 @@ const Home: React.FC = () => {
                 },
                 weekButton: {
                   text: "Неделя",
-                  click: function () {
-                    toast.success("Неделя");
-                  },
+                  click: handleBurgerMenuEmployeeClick,
                 },
                 burgetMenuButton: {
                   text: "Меню",
@@ -510,7 +540,7 @@ const Home: React.FC = () => {
                 center: ["weekly", "monthly"].includes(viewMode)
                   ? "backToDailyView"
                   : "title",
-                right: "weekButton burgetMenuButton settingsButton",
+                right: `${viewMode !== "weekly" ? "weekButton " : ""}burgetMenuButton settingsButton`,
               }}
               slotLabelFormat={{
                 hour: "numeric",
@@ -524,7 +554,7 @@ const Home: React.FC = () => {
                 ).split("-");
                 const resourceDate = dateParts.join("-");
                 const resource = resources.find(
-                  (res) => res.id === `${resourceEmployeeId}-${resourceDate}`
+                  (res) => res.id === `${resourceEmployeeId}-${resourceDate}`,
                 );
                 return resource?.extendedProps.working || false;
               }}
@@ -534,7 +564,7 @@ const Home: React.FC = () => {
                 ).split("-");
                 const resourceDate = dateParts.join("-");
                 const resource = resources.find(
-                  (res) => res.id === `${resourceEmployeeId}-${resourceDate}`
+                  (res) => res.id === `${resourceEmployeeId}-${resourceDate}`,
                 );
                 if (resource?.extendedProps.working !== true) {
                   info.el.style.backgroundColor = "#DDE7EE";
@@ -572,6 +602,29 @@ const Home: React.FC = () => {
               handleMonthSchedule={handleShowMonthlySchedule}
               handleWeekSchedule={handleShowWeeklySchedule}
             />
+            <Menu
+              anchorEl={burgerMenuEmployeeEl}
+              open={Boolean(burgerMenuEmployeeEl)}
+              onClose={handleClosehandleBurgerMenuEmployee}
+              anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "center",
+              }}
+            >
+              {resourceMenuItems.map(({ name, id }) => (
+                <MenuItem
+                  key={name}
+                  onClick={() => {
+                    setViewMode("weekly");
+                    handleShowWeeklySchedule(id, name);
+                    handleClosehandleBurgerMenuEmployee;
+                  }}
+                >
+                  <div className={classNames(classes["u-font-lg"])}>{name}</div>
+                </MenuItem>
+              ))}
+            </Menu>
             <Menu
               anchorEl={burgerMenuAnchorEl}
               open={Boolean(burgerMenuAnchorEl)}
@@ -618,7 +671,7 @@ const Home: React.FC = () => {
                     classes["u-rotate-270"],
                     classes["u-m-md"],
                     classes["u-text-blue"],
-                    classes["u-cursor-pointer"]
+                    classes["u-cursor-pointer"],
                   )}
                 >
                   <span>Развернуть</span>
@@ -634,7 +687,7 @@ const Home: React.FC = () => {
                     className={classNames(
                       classes["u-flex-row"],
                       classes["u-text-blue"],
-                      classes["u-cursor-pointer"]
+                      classes["u-cursor-pointer"],
                     )}
                     onClick={handlePanelHide}
                   >
@@ -664,7 +717,7 @@ const Home: React.FC = () => {
                       }
                       value={
                         employeeOptions.find(
-                          (option) => option.nodeId === selectedEmployee
+                          (option) => option.nodeId === selectedEmployee,
                         ) || null
                       }
                       onChange={(event, value) => {
@@ -858,7 +911,7 @@ const Home: React.FC = () => {
                                       end_time={appointment.end_time}
                                       toPay={appointment.revenue}
                                     />
-                                  ) : null
+                                  ) : null,
                               )}
                             </div>
                           ))}
