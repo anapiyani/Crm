@@ -314,7 +314,6 @@ const Home: React.FC = () => {
     setBurgerMenuAnchorEl(null);
   };
 
-  // Показать запись на неделю
   const handleShowWeeklySchedule = (
     employeeId: number,
     employeeName?: string,
@@ -322,9 +321,8 @@ const Home: React.FC = () => {
     setSelectedEmployee(employeeId);
     setViewMode("weekly");
 
-    const startOfWeek = dayjs(selectedDate).startOf("week");
-    const endOfWeek = dayjs(selectedDate).endOf("week");
-    const daysInWeek = endOfWeek.diff(startOfWeek, "days") + 1;
+    const startOfWeek = dayjs(selectedDate).startOf("week").add(1, "day");
+    const daysInWeek = 7;
 
     const newResources = [];
     for (let i = 0; i < daysInWeek; i++) {
