@@ -463,6 +463,16 @@ const Home: React.FC = () => {
     }
   }, [viewMode]);
 
+  useEffect(() => {
+    if (viewMode === "weekly" && getEmployeeWeeklyScheduleData) {
+      const { events, resources } = transformSchedulesToFullCalendar(
+        getEmployeeWeeklyScheduleData.results,
+      );
+      setEvents(events);
+      setResources(resources);
+    }
+  }, [viewMode, getEmployeeWeeklyScheduleData]);
+
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <div className={classes["home"]}>
