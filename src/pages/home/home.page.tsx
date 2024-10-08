@@ -459,6 +459,12 @@ const Home: React.FC = () => {
     setBurgerMenuEmployeeEl(null);
   };
 
+  useEffect(() => {
+    if (viewMode === "weekly") {
+      handleClosehandleBurgerMenuEmployee();
+    }
+  }, [viewMode]);
+
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <div className={classes["home"]}>
@@ -508,7 +514,6 @@ const Home: React.FC = () => {
                   text: "Неделя",
                   click: handleBurgerMenuEmployeeClick,
                 },
-
                 burgetMenuButton: {
                   text: "Меню",
                   click: handleBurgerMenuClick,
@@ -527,7 +532,7 @@ const Home: React.FC = () => {
                 center: ["weekly", "monthly"].includes(viewMode)
                   ? "backToDailyView"
                   : "title",
-                right: "weekButton burgetMenuButton settingsButton",
+                right: `${viewMode !== "weekly" ? "weekButton " : ""}burgetMenuButton settingsButton`,
               }}
               slotLabelFormat={{
                 hour: "numeric",
