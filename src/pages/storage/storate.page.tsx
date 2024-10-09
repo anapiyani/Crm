@@ -53,7 +53,11 @@ import FloatingPriceTable from "./_components/table-floatingPrice/tableFloatingP
 import NormativeService from "./_components/table-normativeService/tableNormativeService";
 import TableView from "./_components/table-view/tableView";
 import TableStock from "./_components/table-stock/tableStock.tsx";
-import { getMaterialInformation } from "@/service/storage/storage.service.ts";
+import {
+  getMaterialInformation,
+  purchaseMaterial,
+  writeOff,
+} from "@/service/storage/storage.service.ts";
 
 const StoragePage: React.FC = () => {
   const [materialId, setMaterialIds] = useState<IMaterialnameId | null>(null);
@@ -191,6 +195,21 @@ const StoragePage: React.FC = () => {
     // Add your save logic here
     setIsEditing(false);
   };
+
+  // ERRORS 500
+  const { data: writeOffData, isLoading: writeOffLoading } = useQuery({
+    queryKey: ["writeOffData"],
+    queryFn: () => writeOff(1),
+    staleTime: Infinity,
+    refetchOnWindowFocus: false,
+  });
+
+  const { data: purchaseData, isLoading: purchaseLoading } = useQuery({
+    queryKey: ["purchaseData"],
+    queryFn: () => purchaseMaterial(1),
+    staleTime: Infinity,
+    refetchOnWindowFocus: false,
+  });
 
   const renderUpperContent = () => {
     switch (currentTab) {

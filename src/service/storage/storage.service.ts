@@ -41,3 +41,11 @@ export const getMaterialInformation = (
 ): Promise<IMaterial> => {
   return api.get(`/materials/${id}/`).then((res) => res.data);
 };
+
+export const writeOff = (page: number): Promise<any> => {
+  return api.get(`/write-off/?page=${page}`).then((res) => res.data);
+};
+
+export const purchaseMaterial = (page: number): Promise<any> => {
+  return api.get(`/purchase/?page=${page}`).then((res) => res.data);
+};
