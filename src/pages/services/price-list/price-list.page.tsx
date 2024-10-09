@@ -447,7 +447,7 @@ const ServicePriceList = () => {
           )}
         </div>
       </FormControl>
-      <Divider />
+      <Divider sx={{mt:"2rem"}}/>
       {renderTable()}
     </div>
   );

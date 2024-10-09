@@ -1,0 +1,15 @@
+.layout {
+  display: flex;
+  min-height: 100vh;
+
+  &__sidebar {
+    flex-shrink: 0;
+  }
+
+  &__main {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+  }
+}
