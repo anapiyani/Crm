@@ -1,6 +1,7 @@
 import {
   IAddStorage,
   IEditStorage,
+  IMaterial,
   IMaterials,
   IMaterialsStorage,
   IStorage,
@@ -33,4 +34,10 @@ export const getStorageMaterials = ({
   return api
     .get(`/material-storage/?material=${material}&storage=${storage}`)
     .then((res) => res.data);
+};
+
+export const getMaterialInformation = (
+  id: number | undefined,
+): Promise<IMaterial> => {
+  return api.get(`/materials/${id}/`).then((res) => res.data);
 };

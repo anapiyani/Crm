@@ -7,9 +7,16 @@ export interface IStorage {
   type: string;
 }
 
+export interface IMaterialnameId {
+  id: number;
+  name: string;
+}
+
 export interface IMaterial {
   id: number;
   vendor_code: string;
+  alternative_name: string | null;
+  barcode: string;
   name: string;
   description: string;
   provider: string;

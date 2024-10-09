@@ -169,7 +169,7 @@ const TreeItem: React.FC<ICategoryProps> = ({
     (item) =>
       item.id === category.id &&
       item.level === category.level &&
-      item.name === category.name
+      item.name === category.name,
   );
 
   return (
@@ -231,7 +231,7 @@ const TreeItem: React.FC<ICategoryProps> = ({
                   isSelected={material.id === selectedMaterialId}
                   onSelect={onSelectMaterial}
                   isHighlighted={searchResults?.materials.some(
-                    (materialResult) => materialResult.id === material.id
+                    (materialResult) => materialResult.id === material.id,
                   )}
                 />
               ))}
@@ -255,21 +255,17 @@ const TreeViewStorage: React.FC<TreeViewProps> = ({
   searchResults,
 }) => {
   const [selectedMaterialId, setSelectedMaterialId] = useState<number | null>(
-    null
+    null,
   );
-  const [
-    selectedCategoryId,
-    setSelectedCategoryId,
-  ] = useState<IStorageCategory | null>(null);
+  const [selectedCategoryId, setSelectedCategoryId] =
+    useState<IStorageCategory | null>(null);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const [isDropping, setIsDropping] = useState<boolean>(false);
-  const [
-    hoveredCategory,
-    setHoveredCategory,
-  ] = useState<IStorageCategory | null>(null);
+  const [hoveredCategory, setHoveredCategory] =
+    useState<IStorageCategory | null>(null);
   const [copiedCategory, setCopiedCategory] = useState<IStorageCategory | null>(
-    null
+    null,
   );
 
   const moveHierarchyItems = useMoveStorageHierarchy();
@@ -303,7 +299,7 @@ const TreeViewStorage: React.FC<TreeViewProps> = ({
   const handleDropItem = (
     itemId: number,
     itemType: string,
-    targetId: number
+    targetId: number,
   ) => {
     if (isDropping) {
       console.log("Drop event ignored because another drop is in progress.");
@@ -432,7 +428,7 @@ const TreeViewStorage: React.FC<TreeViewProps> = ({
             </MenuItem>
             <MenuItem
               disabled={["category", "subcategory", undefined].includes(
-                selectedCategoryId?.level
+                selectedCategoryId?.level,
               )}
               onClick={() => handleAddHierarchy("category")}
             >
