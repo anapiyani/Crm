@@ -3,7 +3,8 @@ import LoginPage from "./pages/login/login.page";
 import { ROUTES } from "./router/routes";
 import MainLayout from "./layout/main.layout";
 import ProtectedRoute from "./utils/protected-route";
-import { NotFound } from "./pages";
+import { NotFound, Report } from "./pages";
+import ReportsLayout from "./layout/reportsLayout/reports.layout";
 
 const App = () => {
   return (
@@ -18,6 +19,16 @@ const App = () => {
               element={<ProtectedRoute>{route.component}</ProtectedRoute>}
             />
           ))}
+          <Route
+            path="/analytics/reports"
+            element={
+              <ProtectedRoute>
+                <ReportsLayout />
+              </ProtectedRoute>
+            }
+          >
+            <Route index element={<Report />} />
+          </Route>
         </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>

@@ -38,3 +38,7 @@
     }
   }
 }
+
+table tr:last-child td {
+  border-bottom: none !important;
+}
