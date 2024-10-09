@@ -10,7 +10,22 @@ import {
   getSearchResults,
 } from "@/service/hierarchy/hierarchy.service";
 import { IMaterial, IMaterialnameId } from "@/ts/storage.interface";
-import { Divider, CircularProgress, Autocomplete, Button } from "@mui/material";
+import {
+  Divider,
+  CircularProgress,
+  Autocomplete,
+  Button,
+  Pagination,
+  TableContainer,
+  Table,
+  TableBody,
+  TableRow,
+  TableCell,
+  Link,
+  TableHead,
+  Paper,
+  Box,
+} from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
 
 import { useQuery } from "@tanstack/react-query";
@@ -36,8 +51,6 @@ import TableVertical from "@/components/tables/tableVertical/vertical-info-card"
 import { purchaseHistoryData } from "./data";
 import FloatingPriceTable from "./_components/table-floatingPrice/tableFloatingPrice";
 import NormativeService from "./_components/table-normativeService/tableNormativeService";
-import PurchaseHistoryTable from "./_components/table-purchaseHistory/tablePurchaseHistory";
-import TablePhotography from "./_components/table-photography/tablePhotography.tsx";
 import TableView from "./_components/table-view/tableView";
 import TableStock from "./_components/table-stock/tableStock.tsx";
 import { getMaterialInformation } from "@/service/storage/storage.service.ts";
@@ -45,6 +58,7 @@ import { getMaterialInformation } from "@/service/storage/storage.service.ts";
 const StoragePage: React.FC = () => {
   const [materialId, setMaterialIds] = useState<IMaterialnameId | null>(null);
   const [material, setMaterial] = useState<IMaterial | null>(null);
+  const [isWriteDown, setIsWriteDown] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState(true);
   const [overviewData, setOverviewData] = useState([
     { property: "Артикул", value: "Не указано" },
@@ -160,6 +174,14 @@ const StoragePage: React.FC = () => {
   const handleEditClick = () => {
     setIsEditing(true);
   };
+
+  const headers = [
+    { id: "number", label: "№", align: "left" },
+    { id: "date", label: "Дата", align: "left" },
+    { id: "action", label: "Действие", align: "left" },
+    { id: "price", label: "Закуп. цена", align: "left" },
+    { id: "employee", label: "Сотрудник", align: "left" },
+  ];
 
   const handleCancelClick = () => {
     setIsEditing(false);
@@ -554,10 +576,196 @@ const StoragePage: React.FC = () => {
                     />
                   </Grid>
                   <Grid xs={12}>
-                    <PurchaseHistoryTable
-                      data={purchaseHistoryData}
-                      title="История закупок и списаний"
-                    />
+                    <Paper
+                      sx={{
+                        border: "0.1rem solid #CDD7E1",
+                        borderRadius: "8px",
+                        boxShadow:
+                          "0rem 0.1rem 0.2rem 0rem rgba(21, 21, 21, 0.08)",
+                        width: "100%",
+                      }}
+                    >
+                      <Box
+                        sx={{
+                          fontSize: "2.4rem",
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                          padding: "1.6rem",
+                          borderBottom: "0.1rem solid #CDD7E1",
+                        }}
+                      >
+                        <p style={{ fontSize: "2.4rem" }}>
+                          {isWriteDown ? "История списаний" : "История закупок"}
+                        </p>
+                        <Button
+                          onClick={() =>
+                            !isWriteDown
+                              ? setIsWriteDown(true)
+                              : setIsWriteDown(false)
+                          }
+                        >
+                          {isWriteDown ? "История закупок" : "История списаний"}
+                        </Button>
+                      </Box>
+                      <div
+                        style={{
+                          padding: "0.8rem",
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: "1rem",
+                        }}
+                      >
+                        <TableContainer
+                          sx={{
+                            borderRadius: "4px",
+                            border: "0.1rem solid #CDD7E1",
+                          }}
+                        >
+                          <Table aria-label="purchase history table">
+                            <TableHead
+                              sx={{
+                                backgroundColor: "#FBFCFE",
+                              }}
+                            >
+                              <TableRow>
+                                {headers.map((header) => (
+                                  <TableCell
+                                    key={header.id}
+                                    sx={{
+                                      fontSize: "1.4rem",
+                                      border: "0.1rem solid #CDD7E1",
+                                      textAlign: header.align,
+                                    }}
+                                  >
+                                    {header.label}
+                                  </TableCell>
+                                ))}
+                              </TableRow>
+                            </TableHead>
+                            {isWriteDown ? (
+                              <TableBody>
+                                <TableRow
+                                  sx={{
+                                    backgroundColor: "white",
+                                    "&:last-child td, &:last-child th": {
+                                      borderBottom: "none", // Remove the bottom border for the last row
+                                    },
+                                  }}
+                                >
+                                  <TableCell
+                                    sx={{
+                                      fontSize: "1.6rem",
+                                      border: "0.1rem solid #CDD7E1",
+                                    }}
+                                  >
+                                    12321
+                                  </TableCell>
+                                  <TableCell
+                                    sx={{
+                                      fontSize: "1.4rem",
+                                      border: "0.1rem solid #CDD7E1",
+                                    }}
+                                  >
+                                    12.12.2020
+                                  </TableCell>
+                                  <TableCell
+                                    sx={{
+                                      fontSize: "1.4rem",
+                                      border: "0.1rem solid #CDD7E1",
+                                    }}
+                                  >
+                                    <Link color="primary">action</Link>
+                                  </TableCell>
+                                  <TableCell
+                                    sx={{
+                                      fontSize: "1.4rem",
+                                      border: "0.1rem solid #CDD7E1",
+                                    }}
+                                  >
+                                    123
+                                  </TableCell>
+                                  <TableCell
+                                    sx={{
+                                      fontSize: "1.4rem",
+                                      border: "0.1rem solid #CDD7E1",
+                                    }}
+                                  >
+                                    <Link color="primary">Employee</Link>
+                                  </TableCell>
+                                </TableRow>
+                              </TableBody>
+                            ) : (
+                              <TableBody>
+                                <TableRow
+                                  sx={{
+                                    backgroundColor: "white",
+                                    "&:last-child td, &:last-child th": {
+                                      borderBottom: "none", // Remove the bottom border for the last row
+                                    },
+                                  }}
+                                >
+                                  <TableCell
+                                    sx={{
+                                      fontSize: "1.6rem",
+                                      border: "0.1rem solid #CDD7E1",
+                                    }}
+                                  >
+                                    12321
+                                  </TableCell>
+                                  <TableCell
+                                    sx={{
+                                      fontSize: "1.4rem",
+                                      border: "0.1rem solid #CDD7E1",
+                                    }}
+                                  >
+                                    12.12.2020
+                                  </TableCell>
+                                  <TableCell
+                                    sx={{
+                                      fontSize: "1.4rem",
+                                      border: "0.1rem solid #CDD7E1",
+                                    }}
+                                  >
+                                    <Link color="primary">action</Link>
+                                  </TableCell>
+                                  <TableCell
+                                    sx={{
+                                      fontSize: "1.4rem",
+                                      border: "0.1rem solid #CDD7E1",
+                                    }}
+                                  >
+                                    123
+                                  </TableCell>
+                                  <TableCell
+                                    sx={{
+                                      fontSize: "1.4rem",
+                                      border: "0.1rem solid #CDD7E1",
+                                    }}
+                                  >
+                                    <Link color="primary">Employee</Link>
+                                  </TableCell>
+                                </TableRow>
+                              </TableBody>
+                            )}
+                          </Table>
+                        </TableContainer>
+                        <div
+                          style={{
+                            display: "flex",
+                            justifyContent: "flex-end",
+                          }}
+                        >
+                          <Pagination
+                            page={10}
+                            variant="outlined"
+                            shape="rounded"
+                            boundaryCount={1}
+                            color="primary"
+                          />
+                        </div>
+                      </div>
+                    </Paper>
                   </Grid>
                 </Grid>
               </Grid>
