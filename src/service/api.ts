@@ -24,7 +24,7 @@ api.interceptors.request.use(
   },
   (error) => {
     return Promise.reject(error);
-  }
+  },
 );
 
 api.interceptors.response.use(
@@ -33,7 +33,7 @@ api.interceptors.response.use(
     const originalRequest = error.config;
     const refreshToken = getRefreshToken();
     if (
-      [401].includes(error.response?.status) ||
+      [401].includes(error.response?.status) &&
       error.response?.data?.code === 401
     ) {
       if (refreshToken) {
@@ -62,7 +62,7 @@ api.interceptors.response.use(
       }
     }
     return Promise.reject(error);
-  }
+  },
 );
 
 export default api;

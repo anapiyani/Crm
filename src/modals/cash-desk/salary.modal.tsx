@@ -1,7 +1,10 @@
 import CustomAutoComplete from "@/components/autocomplete/custom-autocomplete.component";
 import CustomDatePicker from "@/components/date-picker/date-picker-custom";
 import ModalWindow from "@/components/modal-window/modal-window";
-import { searchEmployee } from "@/service/employee/employee.service";
+import {
+  employeeSearch,
+  searchEmployee,
+} from "@/service/employee/employee.service";
 import { useSalary } from "@/service/kassa/kassa.hook";
 import { getEmployeeSalaryWallet } from "@/service/kassa/kassa.service";
 import { IEmployeeWalletInfo, ISalaryPayment } from "@/ts/kassa.interface";
@@ -17,48 +20,52 @@ import {
   TextField,
 } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import classes from "./styles.module.scss";
+import { debounce } from "lodash";
+import { IClientSearch } from "@/ts/client.interface";
 
 const SalaryModal: React.FC = () => {
   const mutation = useSalary();
   const [salaryType, setSalaryType] = useState<"advance" | "salary">("salary");
-  const { data: employeeData } = useQuery({
-    queryKey: ["employeeData"],
-    queryFn: () => searchEmployee({ role: "employee" }),
-  });
   const [selectedEmployee, setSelectedEmployee] = useState<{
     label: string;
     value: number;
   } | null>(null);
   const [employeeInfo, setEmployeeInfo] = useState<IEmployeeWalletInfo>();
-  const {
-    register,
-    handleSubmit,
-    reset,
-    control,
-    watch,
-    setValue,
-    getValues,
-  } = useForm<ISalaryPayment>();
+  const { register, handleSubmit, reset, control, watch, setValue, getValues } =
+    useForm<ISalaryPayment>();
   const [payment, setPayment] = useState<
     { money_type: string; amount: string }[]
   >([]);
+  const [employeeData, setEmployeeData] = useState<IClientSearch[]>([]);
 
   const type = watch("type");
 
-  const employeeOptions = employeeData?.results.map((item) => ({
-    label: item.first_name + " " + item.last_name,
-    value: item.user_id,
-  }));
+  const debouncedSearchEmployee = useMemo(
+    () =>
+      debounce((value: string) => {
+        employeeSearch(value).then((res) => {
+          setEmployeeData(res);
+        });
+      }, 300),
+    [],
+  );
+
+  const employeeOptions = useMemo(() => {
+    return employeeData.map((employee) => ({
+      label: `${employee.user.first_name} ${employee.user.last_name}`,
+      value: employee.user.user_id,
+    }));
+  }, [employeeData]);
 
   useEffect(() => {
     if (selectedEmployee) {
       const fetchEmployeeInfo = async () => {
         const resultEmployee = await getEmployeeSalaryWallet(
-          selectedEmployee.value
+          selectedEmployee.value,
         );
         setEmployeeInfo(resultEmployee);
       };
@@ -97,7 +104,7 @@ const SalaryModal: React.FC = () => {
   }, [employeeInfo, getValues("nuzhno_vyplatit")]);
 
   const onSubmit: SubmitHandler<ISalaryPayment> = async (
-    data: ISalaryPayment
+    data: ISalaryPayment,
   ) => {
     const updatedData = { ...data, payment };
     if (updatedData.withdrawal_method === "mixed") {
@@ -112,11 +119,11 @@ const SalaryModal: React.FC = () => {
   const handlePaymentChange = (moneyType: string, amount: string) => {
     setPayment((prevPayments) => {
       const existingPayment = prevPayments.find(
-        (payment) => payment.money_type === moneyType
+        (payment) => payment.money_type === moneyType,
       );
       if (existingPayment) {
         return prevPayments.map((payment) =>
-          payment.money_type === moneyType ? { ...payment, amount } : payment
+          payment.money_type === moneyType ? { ...payment, amount } : payment,
         );
       } else {
         return [...prevPayments, { money_type: moneyType, amount }];
@@ -144,22 +151,20 @@ const SalaryModal: React.FC = () => {
               control={control}
               render={({ field }) => (
                 <CustomAutoComplete
-                  className={classes["u-w-ratio"]}
-                  {...field}
-                  selectValue="label"
-                  placeholder="Имя Фамилия, Администратор"
-                  size="small"
+                  className={classes["u-w-full"]}
+                  name="employee"
+                  selectValue={"label"}
                   label="Сотрудник"
-                  options={employeeOptions || []}
+                  value={selectedEmployee}
                   onChange={(value) => {
                     setSelectedEmployee(value);
                     field.onChange(value?.value);
                   }}
-                  value={
-                    employeeOptions?.find(
-                      (option) => option.value === field.value
-                    ) || null
+                  onChangeText={(value) =>
+                    debouncedSearchEmployee(value ? value : "")
                   }
+                  options={employeeOptions}
+                  placeholder="Имя Фамилия, Администратор"
                 />
               )}
             />
@@ -168,7 +173,6 @@ const SalaryModal: React.FC = () => {
             className={classes.modalContent__content__item}
             style={{
               display: "flex",
-
               alignItems: "center",
             }}
           >
@@ -192,7 +196,6 @@ const SalaryModal: React.FC = () => {
             className={classes.modalContent__content__item}
             style={{
               display: "flex",
-
               alignItems: "center",
             }}
           >
@@ -332,12 +335,12 @@ const SalaryModal: React.FC = () => {
                   {nuzhno_vyplatit === "0"
                     ? employeeInfo?.amount_to_pay
                     : nuzhno_vyplatit === "1"
-                    ? employeeInfo?.fixed_part_amount
-                    : nuzhno_vyplatit === "2"
-                    ? employeeInfo?.floating_part_amount
-                    : nuzhno_vyplatit === "3"
-                    ? employeeInfo?.client_development_amount
-                    : ""}
+                      ? employeeInfo?.fixed_part_amount
+                      : nuzhno_vyplatit === "2"
+                        ? employeeInfo?.floating_part_amount
+                        : nuzhno_vyplatit === "3"
+                          ? employeeInfo?.client_development_amount
+                          : ""}
                 </p>
               </div>
             )}
@@ -507,14 +510,9 @@ const SalaryModal: React.FC = () => {
                   label="Сотрудник"
                   options={employeeOptions || []}
                   onChange={(value) => {
-                    setSelectedEmployee(value);
                     field.onChange(value?.value);
                   }}
-                  value={
-                    employeeOptions?.find(
-                      (option) => option.value === field.value
-                    ) || null
-                  }
+                  value={null}
                 />
               )}
             />
