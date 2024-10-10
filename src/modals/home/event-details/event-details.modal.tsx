@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import ModalWindow from "@/components/modal-window/modal-window";
 import NiceModal, { useModal } from "@ebay/nice-modal-react";
 import classes from "@/modals/home/styles.module.scss";
@@ -30,6 +30,7 @@ import {
   RemoveRedEye,
 } from "@mui/icons-material";
 import {
+  useAddServiceForAppointment,
   useTemporaryDeleteAppointment,
   useUpdateAppointmentStatus,
 } from "@/service/appointments/appointments.hook";
@@ -42,6 +43,7 @@ import {
   IAppointmentServiceToAdd,
   IServicesAdd,
 } from "@/ts/appointments.interface";
+import toast from "react-hot-toast";
 
 interface IEventDetailsModalProps {
   appointmentId: number;
@@ -49,10 +51,48 @@ interface IEventDetailsModalProps {
 
 const EventDetails: React.FC<IEventDetailsModalProps> = ({ appointmentId }) => {
   const modal = useModal();
+  const addServicesMutation = useAddServiceForAppointment();
   const [currentTab, setCurrentTab] = useState(0);
   const [page, setPage] = useState(1);
   const TemporaryDeleteAppointment = useTemporaryDeleteAppointment();
   const updateAppointmentStatus = useUpdateAppointmentStatus().mutate;
+  const [serviceAppointments, setServiceAppointments] =
+    useState<IServicesAdd | null>(null);
+
+  const onAddServices = (servicesData: ITableRowData[]) => {
+    const appointment_services: IAppointmentServiceToAdd[] = servicesData.map(
+      (item) => ({
+        parameter: Number(item.parameter_id),
+        quantity: item.quantity,
+        service: item.service_id,
+      }),
+    );
+
+    const servicesToAdd: IServicesAdd = {
+      appointment_services,
+    };
+
+    setServiceAppointments(servicesToAdd);
+  };
+
+  const handleSaveServicesClick = () => {
+    if (serviceAppointments) {
+      addServicesMutation.mutate({
+        id: appointmentId.toString(),
+        services: serviceAppointments,
+      });
+    } else {
+      toast.error("Выберите минимум 1 услугу");
+    }
+
+    if (addServicesMutation.isSuccess) {
+      setServiceAppointments(null);
+      modal.hide();
+    } else if (addServicesMutation.isError) {
+      toast.error("Ошибка при добавлении");
+      modal.hide();
+    }
+  };
 
   const {
     data: singleAppointmentData,
@@ -126,10 +166,7 @@ const EventDetails: React.FC<IEventDetailsModalProps> = ({ appointmentId }) => {
       refetchOnWindowFocus: false,
     });
 
-  useEffect(() => {
-    if (appointmentId) {
-      refetch();
-    }
+  const refetchAll = useCallback(() => {
     if (clientId) {
       customerRefetch();
       noDataRefetch();
@@ -137,14 +174,19 @@ const EventDetails: React.FC<IEventDetailsModalProps> = ({ appointmentId }) => {
       deletedRefetch();
     }
   }, [
-    appointmentId,
     clientId,
     customerRefetch,
     deletedRefetch,
     noDataRefetch,
     plannedRefetch,
-    refetch,
   ]);
+
+  useEffect(() => {
+    if (appointmentId) {
+      refetch();
+    }
+    refetchAll();
+  }, [appointmentId, refetch, refetchAll]);
 
   if (customerAppointmentPending) {
     return (
@@ -377,14 +419,6 @@ const EventDetails: React.FC<IEventDetailsModalProps> = ({ appointmentId }) => {
     padding: "0",
   };
 
-  const [serviceAppointments, setServiceAppointments] = useState<
-    ITableRowData[] | null
-  >();
-
-  const onAddServices = (servicesData: ITableRowData[]) => {
-    console.log(servicesData);
-  };
-
   return (
     <ModalWindow
       title={"Запись клиента"}
@@ -561,6 +595,7 @@ const EventDetails: React.FC<IEventDetailsModalProps> = ({ appointmentId }) => {
               sx={{
                 fontSize: "1.4rem",
               }}
+              onClick={handleSaveServicesClick}
             >
               Сохранить
             </Button>
