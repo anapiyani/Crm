@@ -18,44 +18,12 @@ export const overviewData = [
   },
 ];
 
-// Main Characteristics Table Data
-export const characteristicsData = [
-  { property: "Отдел", value: "Парикмахерский зал" },
-  { property: "Марка", value: "WELLA" },
-  { property: "Линия", value: "WELLA Красители для волос" },
-  { property: "Подлиния", value: "WELLA Color Fresh" },
-];
-
 // Price Table Data
-export const priceData = [
-  { property: "Закупочная цена", value: "600 ₸" },
-  { property: "Розничная цена", value: "1200 ₸" },
-  { property: "Оптовая цена", value: "1000 ₸" },
-  { property: "Отпускная цена", value: "600 ₸" },
-];
 
 // Bonus Table Data
-export const bonusData = [
-  { property: "Система бонуса", value: "Процент сотрудника" },
-];
 
 // Discount Table Data
-export const discountData = [
-  { property: "Размер", value: "10%" },
-  { property: "Действует", value: "C 05.11.2020" },
-  {
-    property: "По акции",
-    value: "",
-    link: "#",
-    linkLabel: "скидка",
-  },
-  {
-    property: "Все скидки",
-    value: "",
-    link: "#",
-    linkLabel: "Показать",
-  },
-];
+export const discountData = [];
 
 // Normatives Table Data
 export const normativesData = [
@@ -121,7 +89,6 @@ export const purchaseHistoryData = [
   },
 ];
 
-
 // Табличный Вид
 export const tableViewHeaders = [
   { id: "number", label: "№" },
@@ -155,4 +122,3 @@ export const tableViewData = [
   },
   // Add more data rows as needed
 ];
-

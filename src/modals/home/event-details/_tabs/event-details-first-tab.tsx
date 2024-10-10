@@ -32,6 +32,7 @@ import { co } from "node_modules/@fullcalendar/core/internal-common";
 
 interface IEventDetailsFirstTabProps {
   data?: ISingleAppointmentReturn;
+  onAddServices: (servicesData: ITableRowData[]) => void;
 }
 
 interface IOption {
@@ -41,20 +42,21 @@ interface IOption {
 
 const EventDetailsFirstTab: React.FC<IEventDetailsFirstTabProps> = ({
   data,
+  onAddServices,
 }) => {
   const [servicesData, setServicesData] = useState<ITableRowData[]>([]);
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(
-    dayjs(data?.date)
+    dayjs(data?.date),
   );
   const [startTime, setStartTime] = useState<Dayjs | null>(
-    data ? dayjs(`${data.date} ${data.start_time}`) : null
+    data ? dayjs(`${data.date} ${data.start_time}`) : null,
   );
   const [endTime, setEndTime] = useState<Dayjs | null>(
-    data ? dayjs(`${data.date} ${data.end_time}`) : null
+    data ? dayjs(`${data.date} ${data.end_time}`) : null,
   );
   const [selectedService, setSelectedService] = useState<IOption | null>(null);
   const [selectedParameter, setSelectedParameter] = useState<IOption | null>(
-    null
+    null,
   );
   const [parametersData, setParametersData] = useState<
     {
@@ -64,6 +66,10 @@ const EventDetailsFirstTab: React.FC<IEventDetailsFirstTabProps> = ({
       type: string;
     }[]
   >([]);
+
+  useEffect(() => {
+    onAddServices(servicesData);
+  }, [servicesData]);
 
   const { data: servicesDataByEmployee } = useQuery({
     queryKey: ["servicesData", data?.employee_id],
@@ -93,7 +99,7 @@ const EventDetailsFirstTab: React.FC<IEventDetailsFirstTabProps> = ({
           quantity: service.quantity,
           parameter: service.parameter,
           parameter_id: service.service,
-        }))
+        })),
       );
       setSelectedDate(dayjs(data.date));
       setStartTime(dayjs(`${data.date} ${data.start_time}`));
@@ -104,8 +110,8 @@ const EventDetailsFirstTab: React.FC<IEventDetailsFirstTabProps> = ({
   const handleQuantityChange = (id: number, quantity: number) => {
     setServicesData(
       servicesData.map((item) =>
-        item.id === id ? { ...item, quantity } : item
-      )
+        item.id === id ? { ...item, quantity } : item,
+      ),
     );
   };
 
@@ -116,7 +122,7 @@ const EventDetailsFirstTab: React.FC<IEventDetailsFirstTabProps> = ({
   const handleAddService = () => {
     if (selectedService && selectedParameter) {
       const service = servicesDataByEmployee?.find(
-        (service) => service.id === selectedService.value
+        (service) => service.id === selectedService.value,
       );
 
       if (service) {
@@ -132,8 +138,8 @@ const EventDetailsFirstTab: React.FC<IEventDetailsFirstTabProps> = ({
                 ?.price.toString() || "0",
             unitPrice: Number(
               service.parameters.find(
-                (param) => param.id === selectedParameter.value
-              )?.price
+                (param) => param.id === selectedParameter.value,
+              )?.price,
             ),
             quantity: 1,
             parameter: selectedParameter.label,
@@ -155,7 +161,7 @@ const EventDetailsFirstTab: React.FC<IEventDetailsFirstTabProps> = ({
           <div
             className={classNames(
               classes["first__params--client"],
-              classes["u-mt-1"]
+              classes["u-mt-1"],
             )}
           >
             <p className={classes["u-w-equal"]}>Клиент</p>
@@ -238,8 +244,8 @@ const EventDetailsFirstTab: React.FC<IEventDetailsFirstTabProps> = ({
 
                 setParametersData(
                   servicesDataByEmployee?.find(
-                    (service) => service.id === value?.value
-                  )?.parameters || []
+                    (service) => service.id === value?.value,
+                  )?.parameters || [],
                 );
               }}
               options={
