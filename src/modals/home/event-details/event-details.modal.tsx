@@ -77,8 +77,16 @@ const EventDetails: React.FC<IEventDetailsModalProps> = ({ appointmentId }) => {
     setServiceAppointments(servicesToAdd);
   };
 
-  const onDeleteService = (service_id: number) => {
-    deleteServiceMutation.mutate({ id: appointmentId, services: [service_id] });
+  const onDeleteService = (service_id: number, parameter_id: number) => {
+    deleteServiceMutation.mutate({
+      id: appointmentId,
+      services: [
+        {
+          service_id: service_id,
+          parameter_id: parameter_id,
+        },
+      ],
+    });
   };
 
   const handleSaveServicesClick = () => {

@@ -33,7 +33,7 @@ import { co } from "node_modules/@fullcalendar/core/internal-common";
 interface IEventDetailsFirstTabProps {
   data?: ISingleAppointmentReturn;
   onAddServices: (servicesData: ITableRowData[]) => void;
-  onDeleteService: (id: number) => void;
+  onDeleteService: (id: number, parameter_id: number) => void;
 }
 
 interface IOption {
@@ -109,8 +109,8 @@ const EventDetailsFirstTab: React.FC<IEventDetailsFirstTabProps> = ({
     );
   };
 
-  const handleDeleteService = (id: number) => {
-    onDeleteService(id);
+  const handleDeleteService = (id: number, parameter_id: number) => {
+    onDeleteService(id, parameter_id);
     setServicesData(servicesData.filter((item) => item.id !== id));
   };
 

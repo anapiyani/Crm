@@ -120,7 +120,10 @@ export const deleteAppointmentService = ({
   services,
 }: {
   id: number;
-  services: number[];
+  services: {
+    service_id: number;
+    parameter_id: number;
+  }[];
 }): Promise<any> => {
   return api
     .put(`/appointments/appointments/${id}/remove-selected-services/`, {

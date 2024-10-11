@@ -82,7 +82,17 @@ export const useAddServiceForAppointment = () => {
 
 export const useDeleteAppointmentService = () => {
   const queryClient = useQueryClient();
-  return useMutation<any, Error, { id: number; services: number[] }>({
+  return useMutation<
+    any,
+    Error,
+    {
+      id: number;
+      services: {
+        service_id: number;
+        parameter_id: number;
+      }[];
+    }
+  >({
     mutationFn: deleteAppointmentService,
     onSuccess: (data) => {
       toast.success("Успешно удален!");
