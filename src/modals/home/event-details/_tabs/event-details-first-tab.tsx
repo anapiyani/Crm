@@ -81,14 +81,6 @@ const EventDetailsFirstTab: React.FC<IEventDetailsFirstTabProps> = ({
     refetchOnWindowFocus: false,
   });
 
-  // const { data: parametersData } = useQuery({
-  //   queryKey: ["parametersData", selectedService?.value],
-  //   queryFn: () => getServiceParametersById(selectedService?.value as number),
-  //   enabled: selectedService !== null && selectedService?.value !== 0,
-  //   staleTime: Infinity,
-  //   refetchOnWindowFocus: false,
-  // });
-
   useEffect(() => {
     if (data && data.appointment_services) {
       setServicesData(
@@ -117,7 +109,6 @@ const EventDetailsFirstTab: React.FC<IEventDetailsFirstTabProps> = ({
     );
   };
 
-  // handleDeleteService
   const handleDeleteService = (id: number) => {
     onDeleteService(id);
     setServicesData(servicesData.filter((item) => item.id !== id));
