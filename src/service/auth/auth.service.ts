@@ -21,12 +21,10 @@ export const phoneLogin = (phone_number: string): Promise<any> => {
   return api.post("/send-otp/", { phone_number }).then((res) => res.data);
 };
 
-export const getToken = (
-  refresh: string,
-): Promise<Omit<ILoginResponse, "refresh">> => {
-  return api.post("/api/token/refresh/", { refresh }).then((res) => {
-    return res.data;
-  });
+export const getToken = async (refreshToken: string) => {
+  return await api.post<{
+    access: string;
+  }>("/api/token/refresh/", { refresh: refreshToken });
 };
 
 export const verifyOtp = (phone_number: string, otp: string): Promise<any> => {

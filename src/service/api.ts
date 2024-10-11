@@ -1,18 +1,15 @@
 import {
   getAccessToken,
   getRefreshToken,
-  setTokens,
   removeTokens,
+  setAccessToken,
 } from "@/utils/token";
 import axios from "axios";
 import { getToken } from "./auth/auth.service";
 
 export const api = axios.create({
-  // baseURL: "https://crm-beauty-salon-94a93ffd62e6.herokuapp.com/",
   baseURL: import.meta.env.VITE_API_URL,
 });
-
-let refreshTokenPromise: Promise<any> | null = null;
 
 api.interceptors.request.use(
   (config) => {
@@ -31,35 +28,38 @@ api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
-    const refreshToken = getRefreshToken();
     if (
-      [401].includes(error.response?.status) &&
-      error.response?.data?.code === 401
+      error.response?.status === 401 &&
+      error.response?.data?.code === "token_not_valid" &&
+      originalRequest.url !== "/api/token/refresh/"
     ) {
+      originalRequest._retry = true;
+      const refreshToken = getRefreshToken();
       if (refreshToken) {
-        if (!refreshTokenPromise) {
-          refreshTokenPromise = getToken(refreshToken).then((data) => {
-            refreshTokenPromise = null;
-            return data;
-          });
-        }
-
-        return refreshTokenPromise
-          .then((res) => {
-            const { access, refresh } = res;
-            setTokens(access, refresh, 0, "", "");
-            api.defaults.headers.common["Authorization"] = `Bearer ${access}`;
-            return api(originalRequest);
-          })
-          .catch(() => {
+        try {
+          const { status, data } = await getToken(refreshToken);
+          if (status === 401) {
             removeTokens();
-            window.location.href = "/login";
-            return Promise.reject(error);
-          });
-      } else {
-        removeTokens();
-        window.location.href = "/login";
+            window.location.replace("/login");
+            return;
+          } else {
+            setAccessToken(data.access);
+            api.defaults.headers.common["Authorization"] = `Bearer ${data}`;
+            return api(originalRequest);
+          }
+        } catch (refreshError) {
+          console.log("Не удалось обновить токен, перенаправление на логин");
+          removeTokens();
+          // window.location.replace("/login");
+          return Promise.reject(refreshError);
+        }
       }
+    } else {
+      console.log(
+        "Отсутствует действительный refreshToken, перенаправление на логин",
+      );
+      removeTokens();
+      window.location.replace("/login");
     }
     return Promise.reject(error);
   },
