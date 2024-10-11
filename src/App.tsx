@@ -1,13 +1,15 @@
-import { Routes, Route } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import LoginPage from "./pages/login/login.page";
 import { ROUTES } from "./router/routes";
 import MainLayout from "./layout/main.layout";
 import ProtectedRoute from "./utils/protected-route";
 import { NotFound } from "./pages";
+import { ErrorBoundary } from "react-error-boundary";
+import ErrorFallback from "./ErrorBoundary";
 
 const App = () => {
   return (
-    <div>
+    <ErrorBoundary FallbackComponent={ErrorFallback}>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/" element={<MainLayout />}>
@@ -21,7 +23,7 @@ const App = () => {
         </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>
-    </div>
+    </ErrorBoundary>
   );
 };
 
