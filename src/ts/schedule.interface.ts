@@ -58,6 +58,10 @@ export interface ISchedule {
   notes: string;
   breaks: IBreaks[];
   appointments: IAppointment[];
+  position: {
+    id: number;
+    name: string;
+  };
 }
 
 export interface IResponseScheduleData {

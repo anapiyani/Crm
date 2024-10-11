@@ -114,3 +114,17 @@ export const addServiceForAppointment = ({
     .put(`/appointments/appointments/${id}/edit/`, services)
     .then((res) => res.data);
 };
+
+export const deleteAppointmentService = ({
+  id,
+  services,
+}: {
+  id: number;
+  services: number[];
+}): Promise<any> => {
+  return api
+    .put(`/appointments/appointments/${id}/remove-selected-services/`, {
+      services: services,
+    })
+    .then((res) => res.data);
+};

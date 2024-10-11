@@ -380,7 +380,7 @@ const ResponsiveDrawer = (props: IProps) => {
         >
           {drawer}
         </StyledDrawerPaper>
-        {/* <div
+        <div
           onClick={() => {
             if (isChatOpen) {
               NiceModal.hide(chatModal);
@@ -393,7 +393,7 @@ const ResponsiveDrawer = (props: IProps) => {
           className={classes["assistant"]}
         >
           <AssistantIcon />
-        </div> */}
+        </div>
       </Box>
     </Box>
   );

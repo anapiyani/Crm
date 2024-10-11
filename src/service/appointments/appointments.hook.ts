@@ -5,6 +5,7 @@ import {
 import {
   addServiceForAppointment,
   createAppointments,
+  deleteAppointmentService,
   temporaryDeleteAppointment,
   updateAppointmentStatus,
 } from "./appointments.service";
@@ -74,6 +75,22 @@ export const useAddServiceForAppointment = () => {
     onError: (error) => {
       const errorMessage =
         error.message || "Произошла ошибка при добавлении услуги.";
+      toast.error(errorMessage);
+    },
+  });
+};
+
+export const useDeleteAppointmentService = () => {
+  const queryClient = useQueryClient();
+  return useMutation<any, Error, { id: number; services: number[] }>({
+    mutationFn: deleteAppointmentService,
+    onSuccess: (data) => {
+      toast.success("Успешно удален!");
+      queryClient.invalidateQueries({ queryKey: ["appointmentByIdData"] });
+      return data;
+    },
+    onError: (error) => {
+      const errorMessage = error.message || "Произошла ошибка при удалении.";
       toast.error(errorMessage);
     },
   });
