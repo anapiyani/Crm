@@ -23,11 +23,11 @@ import { useQuery } from "@tanstack/react-query";
 import { searchEmployee } from "@/service/employee/employee.service";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import getUserAge from "@/utils/getUserAge";
 
 const ClientSearch = () => {
-  const { register, handleSubmit, reset, setValue, watch } = useForm<
-    ISearchFormData
-  >();
+  const { register, handleSubmit, reset, setValue, watch } =
+    useForm<ISearchFormData>();
   const [searchParams, setSearchParams] = useState<ISearchFormData>({
     search: "",
     phone_number: "",
@@ -84,7 +84,7 @@ const ClientSearch = () => {
 
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
-    value: number
+    value: number,
   ) => {
     setPage(value);
     setSearchParams((prev) => ({
@@ -96,7 +96,7 @@ const ClientSearch = () => {
 
   const handlePageSizeChange = (
     event: React.ChangeEvent<{}>,
-    newSize: number
+    newSize: number,
   ) => {
     setPageSize(newSize);
     setSearchParams((prev) => ({
@@ -106,17 +106,6 @@ const ClientSearch = () => {
     }));
     setPage(1);
     refetchCustomerData();
-  };
-
-  const getUserAge = (dateOfBirth: string) => {
-    const today = new Date();
-    const birthDate = new Date(dateOfBirth);
-    let age = today.getFullYear() - birthDate.getFullYear();
-    const m = today.getMonth() - birthDate.getMonth();
-    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-      age--;
-    }
-    return age;
   };
 
   return (

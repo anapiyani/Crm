@@ -1,5 +1,6 @@
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "@/ts/auth.interface";
 
+// TODO: divide the responsibilities of this function
 export const setTokens = (
   accessToken: string,
   refreshToken: string,
@@ -12,6 +13,13 @@ export const setTokens = (
   localStorage.setItem("user_id", user_id.toString());
   localStorage.setItem("full_name", full_name);
   localStorage.setItem("role", role);
+};
+
+export const setAccessToken = (accessToken: string) => {
+  localStorage.setItem(ACCESS_TOKEN, accessToken);
+};
+export const setRefreshToken = (token: string) => {
+  localStorage.setItem(REFRESH_TOKEN, token);
 };
 
 export const getAccessToken = () => {

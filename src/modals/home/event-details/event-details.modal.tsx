@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import ModalWindow from "@/components/modal-window/modal-window";
 import NiceModal, { useModal } from "@ebay/nice-modal-react";
 import classes from "@/modals/home/styles.module.scss";
@@ -30,6 +30,8 @@ import {
   RemoveRedEye,
 } from "@mui/icons-material";
 import {
+  useAddServiceForAppointment,
+  useDeleteAppointmentService,
   useTemporaryDeleteAppointment,
   useUpdateAppointmentStatus,
 } from "@/service/appointments/appointments.hook";
@@ -37,6 +39,12 @@ import EventDetailsThirdTab from "./_tabs/event-details-third-tab";
 import classNames from "classnames";
 import { mainInfoEmployee } from "@/service/employee/employee.service";
 import { getDeposit } from "@/service/client/client.service";
+import { ITableRowData } from "../_components/reusable-service-table/reusable-service-table";
+import {
+  IAppointmentServiceToAdd,
+  IServicesAdd,
+} from "@/ts/appointments.interface";
+import toast from "react-hot-toast";
 
 interface IEventDetailsModalProps {
   appointmentId: number;
@@ -44,11 +52,61 @@ interface IEventDetailsModalProps {
 
 const EventDetails: React.FC<IEventDetailsModalProps> = ({ appointmentId }) => {
   const modal = useModal();
+  const deleteServiceMutation = useDeleteAppointmentService();
+  const addServicesMutation = useAddServiceForAppointment();
   const [currentTab, setCurrentTab] = useState(0);
   const [page, setPage] = useState(1);
   const TemporaryDeleteAppointment = useTemporaryDeleteAppointment();
-
   const updateAppointmentStatus = useUpdateAppointmentStatus().mutate;
+  const [serviceAppointments, setServiceAppointments] =
+    useState<IServicesAdd | null>(null);
+
+  const onAddServices = (servicesData: ITableRowData[]) => {
+    const appointment_services: IAppointmentServiceToAdd[] = servicesData.map(
+      (item) => ({
+        parameter: Number(item.parameter_id),
+        quantity: item.quantity,
+        service: item.service_id,
+      }),
+    );
+
+    const servicesToAdd: IServicesAdd = {
+      appointment_services,
+    };
+
+    setServiceAppointments(servicesToAdd);
+  };
+
+  const onDeleteService = (service_id: number, parameter_id: number) => {
+    deleteServiceMutation.mutate({
+      id: appointmentId,
+      services: [
+        {
+          service_id: service_id,
+          parameter_id: parameter_id,
+        },
+      ],
+    });
+  };
+
+  const handleSaveServicesClick = () => {
+    if (serviceAppointments) {
+      addServicesMutation.mutate({
+        id: appointmentId.toString(),
+        services: serviceAppointments,
+      });
+    } else {
+      toast.error("Выберите минимум 1 услугу");
+    }
+
+    if (addServicesMutation.isSuccess) {
+      setServiceAppointments(null);
+      modal.hide();
+    } else if (addServicesMutation.isError) {
+      toast.error("Ошибка при добавлении");
+      modal.hide();
+    }
+  };
 
   const {
     data: singleAppointmentData,
@@ -92,46 +150,37 @@ const EventDetails: React.FC<IEventDetailsModalProps> = ({ appointmentId }) => {
     refetchOnWindowFocus: false,
   });
 
-  const {
-    data: customerAppointmentNoShowData,
-    refetch: noDataRefetch,
-  } = useQuery({
-    queryKey: ["customerAppointmentNoShowData", clientId],
-    queryFn: () =>
-      clientId ? getCustomerAppointmentNoShowById(clientId) : undefined,
-    enabled: !!clientId,
-    staleTime: Infinity,
-    refetchOnWindowFocus: false,
-  });
+  const { data: customerAppointmentNoShowData, refetch: noDataRefetch } =
+    useQuery({
+      queryKey: ["customerAppointmentNoShowData", clientId],
+      queryFn: () =>
+        clientId ? getCustomerAppointmentNoShowById(clientId) : undefined,
+      enabled: !!clientId,
+      staleTime: Infinity,
+      refetchOnWindowFocus: false,
+    });
 
-  const {
-    data: customerAppointmentPlanned,
-    refetch: plannedRefetch,
-  } = useQuery({
-    queryKey: ["customerAppointmentPlanned", clientId],
-    queryFn: () =>
-      clientId ? getCustomerAppointmentPlannedById(clientId) : undefined,
-    enabled: !!clientId,
-    staleTime: Infinity,
-    refetchOnWindowFocus: false,
-  });
+  const { data: customerAppointmentPlanned, refetch: plannedRefetch } =
+    useQuery({
+      queryKey: ["customerAppointmentPlanned", clientId],
+      queryFn: () =>
+        clientId ? getCustomerAppointmentPlannedById(clientId) : undefined,
+      enabled: !!clientId,
+      staleTime: Infinity,
+      refetchOnWindowFocus: false,
+    });
 
-  const {
-    data: customerDeletedAppointments,
-    refetch: deletedRefetch,
-  } = useQuery({
-    queryKey: ["customerDeletedAppointments", clientId],
-    queryFn: () =>
-      clientId ? getCustomerDeletedAppointments(clientId) : undefined,
-    enabled: !!clientId,
-    staleTime: Infinity,
-    refetchOnWindowFocus: false,
-  });
+  const { data: customerDeletedAppointments, refetch: deletedRefetch } =
+    useQuery({
+      queryKey: ["customerDeletedAppointments", clientId],
+      queryFn: () =>
+        clientId ? getCustomerDeletedAppointments(clientId) : undefined,
+      enabled: !!clientId,
+      staleTime: Infinity,
+      refetchOnWindowFocus: false,
+    });
 
-  useEffect(() => {
-    if (appointmentId) {
-      refetch();
-    }
+  const refetchAll = useCallback(() => {
     if (clientId) {
       customerRefetch();
       noDataRefetch();
@@ -139,14 +188,19 @@ const EventDetails: React.FC<IEventDetailsModalProps> = ({ appointmentId }) => {
       deletedRefetch();
     }
   }, [
-    appointmentId,
     clientId,
     customerRefetch,
     deletedRefetch,
     noDataRefetch,
     plannedRefetch,
-    refetch,
   ]);
+
+  useEffect(() => {
+    if (appointmentId) {
+      refetch();
+    }
+    refetchAll();
+  }, [appointmentId, refetch, refetchAll]);
 
   if (customerAppointmentPending) {
     return (
@@ -169,7 +223,7 @@ const EventDetails: React.FC<IEventDetailsModalProps> = ({ appointmentId }) => {
 
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
-    value: number
+    value: number,
   ) => {
     setPage(value);
   };
@@ -183,7 +237,6 @@ const EventDetails: React.FC<IEventDetailsModalProps> = ({ appointmentId }) => {
     },
     { property: "Фамилия", value: userInfoData?.last_name },
     { property: "Имя", value: userInfoData?.first_name },
-    // { property: "Отчество", value: userInfoData?.middle_name },
     { property: "Моб. телефон", value: userInfoData?.phone_number },
     {
       property: "Рассылка SMS",
@@ -191,10 +244,6 @@ const EventDetails: React.FC<IEventDetailsModalProps> = ({ appointmentId }) => {
         ? "Запрет на рассылку"
         : "Разрешено",
     },
-    // { property: "Черный список", value: "Нет" },
-    // { property: "Онлайн запись", value: "Да" },
-    // { property: "Явка", value: "100% (0 из 48 не пришёл)" },
-    // { property: "Явка", value: "" },
   ];
 
   const additionalInfoTableData = [
@@ -216,20 +265,17 @@ const EventDetails: React.FC<IEventDetailsModalProps> = ({ appointmentId }) => {
       value: userInfoData?.occupation ? userInfoData?.occupation : "Не указано",
     },
     { property: "Дата рождения", value: userInfoData?.date_of_birth },
-    // { property: "Возраст", value: "30 лет" },
     {
       property: "Пол",
       value: userInfoData?.gender ? userInfoData?.gender : "Не указан",
     },
     { property: "Анкета", value: userInfoData?.description ? "Есть" : "Нет" },
-    // { property: "Договор подписан", value: "Нет" },
     {
       property: "Привлечение",
       value: userInfoData?.invite_source
         ? userInfoData?.invite_source
         : "Не указано",
     },
-    // { property: "Откуда узнали", value: "Не указано" },
     { property: "Удобство расположения", value: "Не указано" },
     {
       property: "Город",
@@ -242,8 +288,6 @@ const EventDetails: React.FC<IEventDetailsModalProps> = ({ appointmentId }) => {
         : "Не указано",
     },
     { property: "Добавил сотрудник", value: userInfoData?.employee },
-    // { property: "Объединение", value: "Есть" },
-    // { property: "Салон клиента", value: "" },
   ];
 
   const discountsTableData = [
@@ -268,18 +312,6 @@ const EventDetails: React.FC<IEventDetailsModalProps> = ({ appointmentId }) => {
       link: "/clients/deposits/history",
       linkLabel: "История",
     },
-    // {
-    //   property: "Бонусы",
-    //   value: "0",
-    //   link: "/clients/bonuses/history",
-    //   linkLabel: "История",
-    // },
-    // {
-    //   property: "Деп. абонемент",
-    //   value: "0",
-    //   link: "/clients/membership",
-    //   linkLabel: "Подробности",
-    // },
   ];
 
   const contactsTableData = [
@@ -309,7 +341,11 @@ const EventDetails: React.FC<IEventDetailsModalProps> = ({ appointmentId }) => {
                 <CircularProgress />
               </div>
             ) : (
-              <EventDetailsFirstTab data={singleAppointmentData} />
+              <EventDetailsFirstTab
+                onAddServices={onAddServices}
+                data={singleAppointmentData}
+                onDeleteService={onDeleteService}
+              />
             )}
           </div>
         );
@@ -405,7 +441,7 @@ const EventDetails: React.FC<IEventDetailsModalProps> = ({ appointmentId }) => {
       handleClose={() => modal.hide()}
       className={classNames(
         classes["u-p-0"],
-        currentTab === 2 && classes["event-details__modal"]
+        currentTab === 2 && classes["event-details__modal"],
       )}
       withButtons={false}
       withoutTitle={true}
@@ -574,6 +610,7 @@ const EventDetails: React.FC<IEventDetailsModalProps> = ({ appointmentId }) => {
               sx={{
                 fontSize: "1.4rem",
               }}
+              onClick={handleSaveServicesClick}
             >
               Сохранить
             </Button>
