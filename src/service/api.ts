@@ -54,7 +54,7 @@ api.interceptors.response.use(
           return Promise.reject(refreshError);
         }
       }
-    } else {
+    } else if (error.response?.status === 401) {
       console.log(
         "Отсутствует действительный refreshToken, перенаправление на логин",
       );

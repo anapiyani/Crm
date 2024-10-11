@@ -34,6 +34,7 @@ import TextsmsOutlinedIcon from "@mui/icons-material/TextsmsOutlined";
 import { Link } from "react-router-dom";
 import dayjs from "dayjs";
 import CustomDatePicker from "@/components/date-picker/date-picker-custom";
+import getUserAge from "@/utils/getUserAge";
 
 interface IOption {
   label: string;
@@ -67,7 +68,7 @@ const EmployeeSearch = () => {
     date_of_birth_to: "",
   });
   const [selectedRoles, setSelectedRoles] = useState(
-    formData.roleEmployee.split(", ").filter(Boolean)
+    formData.roleEmployee.split(", ").filter(Boolean),
   );
   const [pageSize, setPageSize] = useState<IOption>({ label: "10", value: 10 });
   const [page, setPage] = useState(1);
@@ -93,7 +94,7 @@ const EmployeeSearch = () => {
 
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
-    value: number
+    value: number,
   ) => {
     handleFormDataChange("page", value);
   };
@@ -131,24 +132,6 @@ const EmployeeSearch = () => {
       [fieldName]: value,
     }));
   };
-
-  // const handleRangeChange = (
-  //   fieldPrefix: string,
-  //   value: string,
-  //   boundary:
-  //     | "age_from"
-  //     | "age_to"
-  //     | "works_from"
-  //     | "works_to"
-  //     | "date_of_birth_from"
-  //     | "date_of_birth_to",
-  // ) => {
-  //   console.log(fieldPrefix, value, boundary);
-  //   setFormData((prev) => ({
-  //     ...prev,
-  //     [`${fieldPrefix}${boundary}`]: value,
-  //   }));
-  // };
 
   const handleCheckboxChange = (role: string, isChecked: boolean) => {
     setSelectedRoles((prev) => {
@@ -200,17 +183,6 @@ const EmployeeSearch = () => {
   useEffect(() => {
     refetchEmployeeData();
   }, [formData.page_size, formData.page]);
-
-  const getUserAge = (dateOfBirth: string) => {
-    const today = new Date();
-    const birthDate = new Date(dateOfBirth);
-    let age = today.getFullYear() - birthDate.getFullYear();
-    const m = today.getMonth() - birthDate.getMonth();
-    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-      age--;
-    }
-    return age;
-  };
 
   return (
     <div className={classes["main"]}>
@@ -336,7 +308,7 @@ const EmployeeSearch = () => {
                       setFormData((prev) => ({
                         ...prev,
                         [`date_of_birth_from`]: dayjs(e.target.value).format(
-                          "DD.MM.YYYY"
+                          "DD.MM.YYYY",
                         ),
                       }))
                     }
@@ -348,7 +320,7 @@ const EmployeeSearch = () => {
                       setFormData((prev) => ({
                         ...prev,
                         [`date_of_birth_to`]: dayjs(e.target.value).format(
-                          "DD.MM.YYYY"
+                          "DD.MM.YYYY",
                         ),
                       }));
                     }}
@@ -460,13 +432,13 @@ const EmployeeSearch = () => {
                           onInputChange={(isChecked) =>
                             handleCheckboxChange(
                               position.name,
-                              isChecked ? true : false
+                              isChecked ? true : false,
                             )
                           }
                         />
                       ))}
                     </TriStateCheckbox>
-                  ) : null
+                  ) : null,
                 )}
               </div>
             }
