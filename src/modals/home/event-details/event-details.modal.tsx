@@ -31,6 +31,7 @@ import {
 } from "@mui/icons-material";
 import {
   useAddServiceForAppointment,
+  useDeleteAppointmentService,
   useTemporaryDeleteAppointment,
   useUpdateAppointmentStatus,
 } from "@/service/appointments/appointments.hook";
@@ -51,6 +52,7 @@ interface IEventDetailsModalProps {
 
 const EventDetails: React.FC<IEventDetailsModalProps> = ({ appointmentId }) => {
   const modal = useModal();
+  const deleteServiceMutation = useDeleteAppointmentService();
   const addServicesMutation = useAddServiceForAppointment();
   const [currentTab, setCurrentTab] = useState(0);
   const [page, setPage] = useState(1);
@@ -73,6 +75,18 @@ const EventDetails: React.FC<IEventDetailsModalProps> = ({ appointmentId }) => {
     };
 
     setServiceAppointments(servicesToAdd);
+  };
+
+  const onDeleteService = (service_id: number, parameter_id: number) => {
+    deleteServiceMutation.mutate({
+      id: appointmentId,
+      services: [
+        {
+          service_id: service_id,
+          parameter_id: parameter_id,
+        },
+      ],
+    });
   };
 
   const handleSaveServicesClick = () => {
@@ -330,6 +344,7 @@ const EventDetails: React.FC<IEventDetailsModalProps> = ({ appointmentId }) => {
               <EventDetailsFirstTab
                 onAddServices={onAddServices}
                 data={singleAppointmentData}
+                onDeleteService={onDeleteService}
               />
             )}
           </div>

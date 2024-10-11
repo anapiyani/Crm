@@ -21,18 +21,14 @@ import ReusableServiceTable, {
 } from "../../_components/reusable-service-table/reusable-service-table";
 import CustomAutoComplete from "@/components/autocomplete/custom-autocomplete.component";
 import { useQuery } from "@tanstack/react-query";
-import {
-  getServiceForEmployeeById,
-  getServiceParametersById,
-} from "@/service/services/services.service";
+import { getServiceForEmployeeById } from "@/service/services/services.service";
 import { Add } from "@mui/icons-material";
 import classNames from "classnames";
-import { set } from "react-hook-form";
-import { co } from "node_modules/@fullcalendar/core/internal-common";
 
 interface IEventDetailsFirstTabProps {
   data?: ISingleAppointmentReturn;
   onAddServices: (servicesData: ITableRowData[]) => void;
+  onDeleteService: (id: number, parameter_id: number) => void;
 }
 
 interface IOption {
@@ -43,6 +39,7 @@ interface IOption {
 const EventDetailsFirstTab: React.FC<IEventDetailsFirstTabProps> = ({
   data,
   onAddServices,
+  onDeleteService,
 }) => {
   const [servicesData, setServicesData] = useState<ITableRowData[]>([]);
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>(
@@ -79,14 +76,6 @@ const EventDetailsFirstTab: React.FC<IEventDetailsFirstTabProps> = ({
     refetchOnWindowFocus: false,
   });
 
-  // const { data: parametersData } = useQuery({
-  //   queryKey: ["parametersData", selectedService?.value],
-  //   queryFn: () => getServiceParametersById(selectedService?.value as number),
-  //   enabled: selectedService !== null && selectedService?.value !== 0,
-  //   staleTime: Infinity,
-  //   refetchOnWindowFocus: false,
-  // });
-
   useEffect(() => {
     if (data && data.appointment_services) {
       setServicesData(
@@ -115,7 +104,8 @@ const EventDetailsFirstTab: React.FC<IEventDetailsFirstTabProps> = ({
     );
   };
 
-  const handleDeleteService = (id: number) => {
+  const handleDeleteService = (id: number, parameter_id: number) => {
+    onDeleteService(id, parameter_id);
     setServicesData(servicesData.filter((item) => item.id !== id));
   };
 
