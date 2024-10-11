@@ -24,7 +24,7 @@ export interface ITableRowData {
 interface IReusableTableProps {
   data: ITableRowData[];
   onQuantityChange: (id: number, quantity: number) => void;
-  onDelete: (id: number) => void;
+  onDelete: (id: number, parameter_id: number) => void;
 }
 
 const ReusableServiceTable: React.FC<IReusableTableProps> = ({
@@ -71,7 +71,9 @@ const ReusableServiceTable: React.FC<IReusableTableProps> = ({
                 {(item.unitPrice * item.quantity).toFixed(2)}
               </TableCell>
               <TableCell>
-                <div onClick={() => onDelete(item.id)}>
+                <div
+                  onClick={() => onDelete(item.service_id, item.parameter_id)}
+                >
                   <Close />
                 </div>
               </TableCell>

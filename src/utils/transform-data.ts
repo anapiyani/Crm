@@ -59,7 +59,7 @@ export const transformSchedulesToFullCalendar = (schedules: ISchedule[]) => {
       id: resourceId,
       title: `${employee.first_name} ${employee.last_name}`,
       extendedProps: {
-        role: employee.role,
+        role: schedule.position.name,
         employeeId: employee.id,
         working: day_status.status === "working_day",
         date: date,
@@ -103,7 +103,7 @@ export const transformSchedulesToFullCalendar = (schedules: ISchedule[]) => {
 
 export const transformMonthlySchedulesToFullCalendar = (
   schedules: ISchedule[],
-  date: dayjs.Dayjs
+  date: dayjs.Dayjs,
 ) => {
   const events: IAppointmentReturn[] & IBreakReturn[] = [];
   const resources: IResourceReturn[] = [];
