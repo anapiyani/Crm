@@ -4,7 +4,7 @@ import classes from "./styles.module.scss";
 import { useState } from "react";
 
 const ReportsLayout = () => {
-  const [isReportsDrawerOpen, setReportsDrawerOpen] = useState(true);
+  const [isReportsDrawerOpen, setReportsDrawerOpen] = useState(false);
 
   const toggleReportsDrawer = () => {
     setReportsDrawerOpen(!isReportsDrawerOpen);

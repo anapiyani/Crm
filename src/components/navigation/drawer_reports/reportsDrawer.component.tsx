@@ -59,7 +59,7 @@ const IconContainer = styled(ListItemIcon)({
 const ReportsDrawer = (props: IProps) => {
   const [open, setOpen] = useState<string | null>(null);
   const [selectedIndex, setSelectedIndex] = useState<string | null>(null);
-  const [isMinimized, setIsMinimized] = useState<boolean>(false);
+  const [isMinimized, setIsMinimized] = useState<boolean>(true);
 
   const handleParentClick = (text: string) => {
     setOpen(open === text ? null : text);
@@ -200,7 +200,6 @@ const ReportsDrawer = (props: IProps) => {
   return (
     <Box
       sx={{
-        display: props.isOpen ? "block" : "none",
         width: isMinimized ? minimizedWidth : expandedWidth,
         backgroundColor: "#0B6BCB",
         padding: isMinimized ? "0.5rem" : "1rem",
