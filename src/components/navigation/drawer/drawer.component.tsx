@@ -380,7 +380,6 @@ const ResponsiveDrawer = (props: IProps) => {
         >
           {drawer}
         </StyledDrawerPaper>
-
         <div
           onClick={() => {
             if (isChatOpen) {

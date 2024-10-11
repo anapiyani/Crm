@@ -124,7 +124,7 @@ export const deleteAppointmentService = ({
     service_id: number;
     parameter_id: number;
   }[];
-}): Promise<any> => {
+}): Promise<IAppointmentReturn> => {
   return api
     .put(`/appointments/appointments/${id}/remove-selected-services/`, {
       services: services,

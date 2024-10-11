@@ -21,14 +21,9 @@ import ReusableServiceTable, {
 } from "../../_components/reusable-service-table/reusable-service-table";
 import CustomAutoComplete from "@/components/autocomplete/custom-autocomplete.component";
 import { useQuery } from "@tanstack/react-query";
-import {
-  getServiceForEmployeeById,
-  getServiceParametersById,
-} from "@/service/services/services.service";
+import { getServiceForEmployeeById } from "@/service/services/services.service";
 import { Add } from "@mui/icons-material";
 import classNames from "classnames";
-import { set } from "react-hook-form";
-import { co } from "node_modules/@fullcalendar/core/internal-common";
 
 interface IEventDetailsFirstTabProps {
   data?: ISingleAppointmentReturn;

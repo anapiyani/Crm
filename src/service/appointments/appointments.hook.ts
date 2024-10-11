@@ -83,7 +83,7 @@ export const useAddServiceForAppointment = () => {
 export const useDeleteAppointmentService = () => {
   const queryClient = useQueryClient();
   return useMutation<
-    any,
+    IAppointmentReturn,
     Error,
     {
       id: number;
