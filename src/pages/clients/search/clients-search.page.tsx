@@ -24,7 +24,6 @@ import { searchEmployee } from "@/service/employee/employee.service";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import getUserAge from "@/utils/getUserAge";
-import getUserAge from "@/utils/getUserAge";
 
 const ClientSearch = () => {
   const { register, handleSubmit, reset, setValue, watch } =
