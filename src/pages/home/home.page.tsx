@@ -102,11 +102,18 @@ const Home: React.FC = () => {
   const calendarRef = useRef<FullCalendar | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-  const [burgerMenuAnchorEl, setBurgerMenuAnchorEl] =
-    useState<HTMLElement | null>(null);
-  const [burgerMenuEmployeeEl, setBurgerMenuEmployeeEl] =
-    useState<HTMLElement | null>(null);
+  const [
+    burgerMenuAnchorEl,
+    setBurgerMenuAnchorEl,
+  ] = useState<HTMLElement | null>(null);
+  const [
+    burgerMenuEmployeeEl,
+    setBurgerMenuEmployeeEl,
+  ] = useState<HTMLElement | null>(null);
   const [selectedResourceId, setSelectedResourceId] = useState<string | null>(
+    null
+  );
+  const [selectedScheduleId, setSelectedScheduleId] = useState<string | null>(
     null
   );
   const [selectedTitle, setSelectedTitle] = useState<string | null>(null);
@@ -221,8 +228,9 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     if (schedulesData) {
-      const { events, resources } =
-        transformSchedulesToFullCalendar(schedulesData);
+      const { events, resources } = transformSchedulesToFullCalendar(
+        schedulesData
+      );
       setEvents(events);
       setResources(resources);
     }
@@ -262,9 +270,11 @@ const Home: React.FC = () => {
     resourceId: string,
     resourceTitle: string,
     event: React.MouseEvent<HTMLElement>
+    scheduleId: string | null
   ) => {
     const [resourceEmployeeId, resourceDate] = resourceId.split("-");
     setSelectedResourceId(resourceEmployeeId);
+    setSelectedScheduleId(scheduleId);
     setSelectedTitle(resourceTitle);
     setAnchorEl(event.currentTarget);
   };
@@ -540,7 +550,9 @@ const Home: React.FC = () => {
                 center: ["weekly", "monthly"].includes(viewMode)
                   ? "backToDailyView"
                   : "title",
-                right: `${viewMode !== "weekly" ? "weekButton " : ""}burgetMenuButton settingsButton`,
+                right: `${
+                  viewMode !== "weekly" ? "weekButton " : ""
+                }burgetMenuButton settingsButton`,
               }}
               slotLabelFormat={{
                 hour: "numeric",
@@ -596,6 +608,7 @@ const Home: React.FC = () => {
               anchorEl={anchorEl}
               onClose={handleCloseDropdownMenu}
               resourceId={selectedResourceId || ""}
+              scheduleId={selectedScheduleId || ""}
               username={selectedTitle || ""}
               date={selectedDate?.format("YYYY-MM-DD") || ""}
               handleOpenSchedule={handleOpenSchedule}

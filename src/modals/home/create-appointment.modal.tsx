@@ -92,8 +92,9 @@ const CreateAppointment: React.FC<ICreateAppointmentModalProps> = ({
   clientName,
 }) => {
   const modal = useModal();
-  const [appointmentForm, setAppointmentForm] =
-    useState<IAppointmentCreateForm>(initialAppointmentForm);
+  const [appointmentForm, setAppointmentForm] = useState<
+    IAppointmentCreateForm
+  >(initialAppointmentForm);
   const [selectedEmployee, setSelectedEmployee] = useState<IOption | null>(
     clientId ? { label: clientName, value: clientId } : null
   );
@@ -627,6 +628,12 @@ const CreateAppointment: React.FC<ICreateAppointmentModalProps> = ({
                       (service) => service.id === value?.value
                     )?.parameters || []
                   );
+                  if ((parametersData.length = 1)) {
+                    setSelectedParameters({
+                      label: parametersData[0].name,
+                      value: parametersData[0].id,
+                    });
+                  }
                 }}
                 options={
                   servicesDataByEmployee

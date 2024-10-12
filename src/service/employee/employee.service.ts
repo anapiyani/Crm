@@ -125,6 +125,6 @@ export const employeeSearch = (search: string): Promise<IClientSearch[]> => {
   params.append("search", search);
 
   return api
-    .get(`/search_for_employee/?${params.toString()}`)
+    .get(`users/search_for_employee/?${params.toString()}`)
     .then((res) => res.data);
 };
