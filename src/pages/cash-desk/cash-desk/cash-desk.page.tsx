@@ -10,12 +10,7 @@ import {
   kassaNow,
   searchKassaData,
 } from "@/service/kassa/kassa.service";
-import {
-  ICashRegister,
-  IKassaOperations,
-  ISearchKassa,
-  KassaOperationsItem,
-} from "@/ts/kassa.interface";
+import { ICashRegister, ISearchKassa } from "@/ts/kassa.interface";
 import NiceModal from "@ebay/nice-modal-react";
 import {
   CalendarMonth,
@@ -45,11 +40,12 @@ import {
 } from "@mui/material";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import dayjs from "dayjs";
-import { UIEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import CashCard from "../_components/cash-card/cash-card";
 import classes from "./style.module.scss";
+import useProcessedOperationsData from "../hooks/useProcessedOperationsData";
 
 type IOption = {
   label: string;
@@ -118,10 +114,6 @@ const CashDesk = () => {
       }),
   });
 
-  const onOptionsScroll = (scrollEvent: UIEvent<HTMLDivElement>) => {
-    scrollEvent();
-  };
-
   const onSearchSubmit: SubmitHandler<ISearchKassa> = async (
     data: ISearchKassa,
   ) => {
@@ -161,6 +153,8 @@ const CashDesk = () => {
     queryFn: () => getCashRegister(cashRegister),
   });
 
+  const options = useProcessedOperationsData(operationsData);
+
   useEffect(() => {
     refetchCashRegister();
   }, [activeTab]);
@@ -170,42 +164,12 @@ const CashDesk = () => {
     await refetchCashRegister();
   };
 
-  const processOperationsData = (
-    operations: IKassaOperations,
-  ): { label: string; value: string; isParent: boolean }[] => {
-    const result: { label: string; value: string; isParent: boolean }[] = [];
-
-    const traverse = (nodes: KassaOperationsItem[]) => {
-      if (nodes) {
-        nodes.forEach((node) => {
-          if (node.children && node.children.length > 0) {
-            result.push({
-              label: node.name,
-              value: node.id.toString(),
-              isParent: true,
-            });
-            traverse(node.children, node);
-          } else {
-            result.push({
-              label: node.name,
-              value: node.id.toString(),
-              isParent: false,
-            });
-          }
-        });
-      }
-    };
-    traverse(operations.results);
-    return result;
-  };
-
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value, checked } = event.target;
     setMoney_type((prev) =>
       checked ? [...prev, value] : prev.filter((type) => type !== value),
     );
   };
-  const options = operationsData ? processOperationsData(operationsData) : [];
 
   const handleSalaryModal = () => {
     NiceModal.show(salaryModal);
@@ -652,7 +616,6 @@ const CashDesk = () => {
             <Autocomplete
               sx={{ width: "90%" }}
               options={options}
-              onScroll={onOptionsScroll}
               getOptionLabel={(option) => option.label}
               onChange={(event, value) => {
                 setSelectedOperationId(value ? value.value : null);
