@@ -1,15 +1,16 @@
-import React, { ChangeEvent, FC, useState } from "react";
+import React, { useState } from "react";
 import ModalWindow from "@/components/modal-window/modal-window";
-import NiceModal, { create, hide, useModal } from "@ebay/nice-modal-react";
+import NiceModal, { useModal } from "@ebay/nice-modal-react";
 import classes from "./styles.module.scss";
 import { Autocomplete, Button, Divider, TextField } from "@mui/material";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { getOperations } from "@/service/kassa/kassa.service";
-import { IKassaOperations, IWithdrawal } from "@/ts/kassa.interface";
-import { useForm, SubmitHandler } from "react-hook-form";
+import { IWithdrawal } from "@/ts/kassa.interface";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { Clear, Done } from "@mui/icons-material";
 import { useDepositKassa } from "@/service/kassa/kassa.hook";
 import toast from "react-hot-toast";
+import useProcessedOperationsData from "@/pages/cash-desk/hooks/useProcessedOperationsData.ts";
 
 const EndureModal: React.FC = () => {
   const { register, handleSubmit, reset } = useForm<IWithdrawal>();
@@ -34,51 +35,15 @@ const EndureModal: React.FC = () => {
       money_type: selectedMoneyType!,
     };
     if ((selectedOperationId && selectedMoneyType) || summ === 0) {
-      await mutation.mutate(formData);
-      modal.hide();
+      mutation.mutate(formData);
+      await modal.hide();
       reset();
     } else {
       toast.error("Заполните все поля");
     }
   };
 
-  const processOperationsData = (
-    operations: IKassaOperations[]
-  ): { label: string; value: string; isParent: boolean; id: number }[] => {
-    const result: {
-      label: string;
-      value: string;
-      isParent: boolean;
-      id: number;
-    }[] = [];
-    const traverse = (
-      nodes: IKassaOperations[],
-      parent: IKassaOperations | null
-    ) => {
-      nodes.forEach((node) => {
-        if (node.children && node.children.length > 0) {
-          result.push({
-            label: node.name,
-            value: node.id.toString(),
-            isParent: true,
-            id: node.id,
-          });
-          traverse(node.children, node);
-        } else {
-          result.push({
-            label: node.name,
-            value: node.id.toString(),
-            isParent: false,
-            id: node.id,
-          });
-        }
-      });
-    };
-    traverse(operations, null);
-    return result;
-  };
-
-  const options = operationsData ? processOperationsData(operationsData) : [];
+  const options = useProcessedOperationsData(operationsData);
 
   const handleCloseModal = () => {
     modal.hide();

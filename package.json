@@ -12,6 +12,7 @@
     "production": "tsc -b && vite build --mode production",
     "start": "vite --mode development",
     "startProd": "vite --mode production",
+    "prepare": "husky",
     "format": "prettier --write ."
   },
   "dependencies": {
