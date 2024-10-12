@@ -2,14 +2,12 @@ import { TopBar } from "@/components/";
 import ResponsiveDrawer from "@/components/navigation/drawer/drawer.component";
 import { Outlet } from "react-router-dom";
 import classes from "./styles.module.scss";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
+import ChatModal from "@/components/chat/chat.component";
 
 export default function MainLayout() {
   const [isOpenMenu, setIsOpenMenu] = useState<boolean>(false);
   const [socket, setSocket] = useState<WebSocket | null>(null);
-  const [chatMenuWidth, setChatMenuWidth] = useState(420);
-  const chatMenuRef = useRef<HTMLDivElement>(null);
-  const isResizingRef = useRef(false);
 
   const openMenuBar = () => {
     setIsOpenMenu(!isOpenMenu);
@@ -81,34 +79,6 @@ export default function MainLayout() {
     setIsOpenMenu(true);
   };
 
-  const startResizing = useCallback((e: React.MouseEvent) => {
-    e.preventDefault();
-    isResizingRef.current = true;
-    document.addEventListener("mousemove", handleMouseMove);
-    document.addEventListener("mouseup", stopResizing);
-  }, []);
-
-  const handleMouseMove = useCallback((e: MouseEvent) => {
-    if (!isResizingRef.current) return;
-    const newWidth = e.offsetX;
-    if (newWidth >= 300 && newWidth <= 800) {
-      setChatMenuWidth(newWidth);
-    }
-  }, []);
-
-  const stopResizing = useCallback(() => {
-    isResizingRef.current = false;
-    document.removeEventListener("mousemove", handleMouseMove);
-    document.removeEventListener("mouseup", stopResizing);
-  }, [handleMouseMove]);
-
-  useEffect(() => {
-    return () => {
-      document.removeEventListener("mousemove", handleMouseMove);
-      document.removeEventListener("mouseup", stopResizing);
-    };
-  }, [handleMouseMove, stopResizing]);
-
   return (
     <div className={classes["layout"]}>
       <div className={classes["layout__sidebar"]}>
@@ -121,21 +91,7 @@ export default function MainLayout() {
       <div className={classes["layout__main"]}>
         <TopBar mobileOpen={isOpenMenu} openMenuBar={openMenuBar} />
         <div className={classes["layout__content-wrapper"]}>
-          {isOpenMenu && (
-            <div
-              ref={chatMenuRef}
-              className={classes["layout__chat-menu"]}
-              style={{ width: `${chatMenuWidth}px` }}
-            >
-              <div className={classes["layout__chat-menu-content"]}>
-                smth hier alles nitch ready
-              </div>
-              <div
-                className={classes["layout__chat-menu-resizer"]}
-                onMouseDown={startResizing}
-              />
-            </div>
-          )}
+          {isOpenMenu && <ChatModal />}
           <div className={classes["layout__content"]}>
             {isOpenMenu && (
               <div
