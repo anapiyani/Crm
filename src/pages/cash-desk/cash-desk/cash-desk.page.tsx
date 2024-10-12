@@ -14,6 +14,7 @@ import {
   ICashRegister,
   IKassaOperations,
   ISearchKassa,
+  KassaOperationsItem,
 } from "@/ts/kassa.interface";
 import NiceModal from "@ebay/nice-modal-react";
 import {
@@ -44,16 +45,16 @@ import {
 } from "@mui/material";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import dayjs from "dayjs";
-import { useEffect, useState } from "react";
+import { UIEvent, useEffect, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import CashCard from "../_components/cash-card/cash-card";
 import classes from "./style.module.scss";
 
-interface IOption {
+type IOption = {
   label: string;
   value: number;
-}
+};
 
 const CashDesk = () => {
   const { data: operationsData } = useQuery({
@@ -78,7 +79,7 @@ const CashDesk = () => {
   const { register, handleSubmit, reset, getValues } = useForm<ISearchKassa>();
   const [money_type, setMoney_type] = useState<string[]>([]);
   const [selectedOperationId, setSelectedOperationId] = useState<string | null>(
-    null
+    null,
   );
   const queryClient = useQueryClient();
 
@@ -117,8 +118,12 @@ const CashDesk = () => {
       }),
   });
 
+  const onOptionsScroll = (scrollEvent: UIEvent<HTMLDivElement>) => {
+    scrollEvent();
+  };
+
   const onSearchSubmit: SubmitHandler<ISearchKassa> = async (
-    data: ISearchKassa
+    data: ISearchKassa,
   ) => {
     const formData = {
       ...data,
@@ -136,7 +141,7 @@ const CashDesk = () => {
         formData.page_size,
         formData.page,
       ],
-      formData
+      formData,
     );
     refetchSearchResult();
   };
@@ -161,45 +166,43 @@ const CashDesk = () => {
   }, [activeTab]);
 
   const onRefetchCashRegister = async () => {
-    await setToday(false);
-    refetchCashRegister();
+    setToday(false);
+    await refetchCashRegister();
   };
 
   const processOperationsData = (
-    operations: IKassaOperations[]
+    operations: IKassaOperations,
   ): { label: string; value: string; isParent: boolean }[] => {
     const result: { label: string; value: string; isParent: boolean }[] = [];
 
-    const traverse = (
-      nodes: IKassaOperations[],
-      parent: IKassaOperations | null
-    ) => {
-      nodes.forEach((node) => {
-        if (node.children && node.children.length > 0) {
-          result.push({
-            label: node.name,
-            value: node.id.toString(),
-            isParent: true,
-          });
-          traverse(node.children, node);
-        } else {
-          result.push({
-            label: node.name,
-            value: node.id.toString(),
-            isParent: false,
-          });
-        }
-      });
+    const traverse = (nodes: KassaOperationsItem[]) => {
+      if (nodes) {
+        nodes.forEach((node) => {
+          if (node.children && node.children.length > 0) {
+            result.push({
+              label: node.name,
+              value: node.id.toString(),
+              isParent: true,
+            });
+            traverse(node.children, node);
+          } else {
+            result.push({
+              label: node.name,
+              value: node.id.toString(),
+              isParent: false,
+            });
+          }
+        });
+      }
     };
-
-    traverse(operations, null);
+    traverse(operations.results);
     return result;
   };
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value, checked } = event.target;
     setMoney_type((prev) =>
-      checked ? [...prev, value] : prev.filter((type) => type !== value)
+      checked ? [...prev, value] : prev.filter((type) => type !== value),
     );
   };
   const options = operationsData ? processOperationsData(operationsData) : [];
@@ -229,16 +232,16 @@ const CashDesk = () => {
 
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
-    value: number
+    value: number,
   ) => {
     setPage(value);
   };
 
   const handlePageSizeChange = (
-    event: React.ChangeEvent<{ value: unknown }>
+    event: React.ChangeEvent<{ value: unknown }>,
   ) => {
     const selectedOption = pageSizeOptions.find(
-      (option) => option.value === Number(event.target.value)
+      (option) => option.value === Number(event.target.value),
     ) || { label: "10", value: 10 };
     setPageSize(selectedOption);
   };
@@ -297,16 +300,6 @@ const CashDesk = () => {
     }
   };
 
-  const incomeAllMoneyPeriod = () => {
-    if (cashRegisterData) {
-      return (
-        Number(cashRegisterData.overall_cash_money) +
-        Number(cashRegisterData.overall_card_money) +
-        Number(cashRegisterData.overall_check_money) +
-        Number(cashRegisterData.overall_checking_account_money)
-      );
-    }
-  };
   const overall_AllMoney = () => {
     return incomeAllMoney()! - expenseAllMoney()!;
   };
@@ -659,6 +652,7 @@ const CashDesk = () => {
             <Autocomplete
               sx={{ width: "90%" }}
               options={options}
+              onScroll={onOptionsScroll}
               getOptionLabel={(option) => option.label}
               onChange={(event, value) => {
                 setSelectedOperationId(value ? value.value : null);

@@ -17,14 +17,25 @@ import {
 import { IResponseData } from "@/ts/types";
 import api from "../api";
 
-export const getOperations = (
+export const getOperations = async (
   q?: string,
-  kassa_transaction?: boolean,
-): Promise<IKassaOperations[]> => {
-  const url = kassa_transaction
-    ? "/operations/?kassa_transaction=true&q=" + q
-    : "/operations/";
-  return api.get(url).then((res) => res.data);
+  kassaTransaction = false,
+): Promise<IKassaOperations> => {
+  const baseUrl = "/operations/";
+  const params = new URLSearchParams();
+
+  if (kassaTransaction) {
+    params.append("kassa_transaction", "true");
+  }
+
+  if (q) {
+    params.append("q", q);
+  }
+
+  const url = params.toString() ? `${baseUrl}?${params.toString()}` : baseUrl;
+
+  const response = await api.get<IKassaOperations>(url);
+  return response.data;
 };
 
 export const getCashRegister = (
