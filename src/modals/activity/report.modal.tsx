@@ -120,7 +120,7 @@ const ReportModal = () => {
                       }}
                       value={
                         employeeOptions?.find(
-                          (option) => option.value === field.value,
+                          (option) => option.value === field.value
                         ) || null
                       }
                     />

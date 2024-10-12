@@ -10,7 +10,7 @@ import {
 import api from "../api";
 
 export const addClient = (
-  form: IClientAddForm,
+  form: IClientAddForm
 ): Promise<ICreateClientReturn> => {
   return api.post("/users/register-customer/", form).then((res) => res.data);
 };
@@ -20,7 +20,7 @@ export const getDeposit = (user_id: number): Promise<IClientDeposit> => {
 };
 
 export const getDepositHistory = (
-  formData: IClientDepositHistory,
+  formData: IClientDepositHistory
 ): Promise<IClientDepositHistoryResponse> => {
   return api
     .get("/deposit-history/", { params: formData })

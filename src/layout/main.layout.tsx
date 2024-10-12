@@ -15,7 +15,7 @@ export default function MainLayout() {
 
   useEffect(() => {
     const ws = new WebSocket(
-      "wss://crm-beauty-salon-94a93ffd62e6.herokuapp.com/ws/notifications/",
+      "wss://crm-beauty-salon-94a93ffd62e6.herokuapp.com/ws/notifications/"
     );
     let startTime = Date.now();
 
@@ -91,7 +91,14 @@ export default function MainLayout() {
       <div className={classes["layout__main"]}>
         <TopBar mobileOpen={isOpenMenu} openMenuBar={openMenuBar} />
         <div className={classes["layout__content-wrapper"]}>
-          {isOpenMenu && <ChatModal />}
+          {isOpenMenu && (
+            <ChatModal
+              closeMenuChat={() => {
+                setIsOpenMenu(false);
+              }}
+              open={isOpenMenu}
+            />
+          )}
           <div className={classes["layout__content"]}>
             {isOpenMenu && (
               <div

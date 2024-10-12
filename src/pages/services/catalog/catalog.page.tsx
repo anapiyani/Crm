@@ -233,7 +233,10 @@ const ServiceCatalog = () => {
             <Divider />
             <div className={classes.catalog__upper__content__hint}>
               {rows.map((row, index) => (
-                <div key={index} className={classes.catalog__upper__content__hint__row}>
+                <div
+                  key={index}
+                  className={classes.catalog__upper__content__hint__row}
+                >
                   <row.IconComponent
                     style={{ color: row.color, fontSize: "24px" }}
                   />
@@ -512,16 +515,16 @@ const ServiceCatalog = () => {
                           {parent.level === "department"
                             ? "Отдел"
                             : parent.level === "section"
-                            ? "Секция"
-                            : parent.level === "service_type"
-                            ? "Тип"
-                            : parent.level === "group"
-                            ? "Группа"
-                            : parent.level === "category"
-                            ? "Категория"
-                            : parent.level === "subcategory"
-                            ? "Подкатегория"
-                            : "Unknown"}
+                              ? "Секция"
+                              : parent.level === "service_type"
+                                ? "Тип"
+                                : parent.level === "group"
+                                  ? "Группа"
+                                  : parent.level === "category"
+                                    ? "Категория"
+                                    : parent.level === "subcategory"
+                                      ? "Подкатегория"
+                                      : "Unknown"}
                         </p>
                         <TextField
                           className={classes.catalog__lower__info__row__input}

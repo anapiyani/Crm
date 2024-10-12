@@ -32,7 +32,7 @@ import NiceModal from "@ebay/nice-modal-react";
 import DiscountModal from "@/modals/discounts/discountProgram.modal";
 
 import { LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs"; 
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 interface IDiscountsInfo {
   nomination: string;
@@ -120,9 +120,6 @@ const DiscountPage = () => {
   const handleCloseModal = () => {
     setModalOpen(false);
   };
-
-
- 
 
   const renderContentHeader = () => {
     switch (currentTab) {
@@ -436,7 +433,7 @@ const DiscountPage = () => {
                       padding: 0,
                       fontSize: "1.4rem",
                     }}
-                    onClick={handleOpenModal} 
+                    onClick={handleOpenModal}
                   >
                     Добавить
                   </Button>

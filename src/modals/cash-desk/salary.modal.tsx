@@ -51,7 +51,7 @@ const SalaryModal: React.FC = () => {
           setEmployeeData(res);
         });
       }, 300),
-    [],
+    []
   );
 
   const employeeOptions = useMemo(() => {
@@ -65,7 +65,7 @@ const SalaryModal: React.FC = () => {
     if (selectedEmployee) {
       const fetchEmployeeInfo = async () => {
         const resultEmployee = await getEmployeeSalaryWallet(
-          selectedEmployee.value,
+          selectedEmployee.value
         );
         setEmployeeInfo(resultEmployee);
       };
@@ -104,7 +104,7 @@ const SalaryModal: React.FC = () => {
   }, [employeeInfo, getValues("nuzhno_vyplatit")]);
 
   const onSubmit: SubmitHandler<ISalaryPayment> = async (
-    data: ISalaryPayment,
+    data: ISalaryPayment
   ) => {
     const updatedData = { ...data, payment };
     if (updatedData.withdrawal_method === "mixed") {
@@ -119,11 +119,11 @@ const SalaryModal: React.FC = () => {
   const handlePaymentChange = (moneyType: string, amount: string) => {
     setPayment((prevPayments) => {
       const existingPayment = prevPayments.find(
-        (payment) => payment.money_type === moneyType,
+        (payment) => payment.money_type === moneyType
       );
       if (existingPayment) {
         return prevPayments.map((payment) =>
-          payment.money_type === moneyType ? { ...payment, amount } : payment,
+          payment.money_type === moneyType ? { ...payment, amount } : payment
         );
       } else {
         return [...prevPayments, { money_type: moneyType, amount }];

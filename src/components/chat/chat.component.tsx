@@ -1,15 +1,24 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { FormEvent, useCallback, useEffect, useRef, useState } from "react";
 import classes from "./style.module.scss";
 import { Button, Divider, SxProps, TextField } from "@mui/material";
 import { ArrowBack, Send, DragHandle } from "@mui/icons-material";
 import Icons from "@/assets/icons/icons";
+import classNames from "classnames";
+import { useTextToBot } from "@/service/bot/bot.hook";
 
 type TMessages = {
   sender: "user" | "bot";
   text: string;
 };
 
-const ChatModal = () => {
+const ChatModal = ({
+  closeMenuChat,
+  open,
+}: {
+  closeMenuChat: () => void;
+  open: boolean;
+}) => {
+  const mutation = useTextToBot();
   const [chatMenuWidth, setChatMenuWidth] = useState<number>(470);
   const chatMenuRef = useRef<HTMLDivElement>(null);
   const isResizingRef = useRef(false);
@@ -52,6 +61,53 @@ const ChatModal = () => {
     document.removeEventListener("mouseup", stopResizing);
   }, [handleMouseMove]);
 
+  const handleSendMessage = async (event: FormEvent) => {
+    event.preventDefault();
+
+    if (userMessage.trim() === "") return;
+    const newMessages: TMessages[] = [
+      ...messages,
+      { sender: "user", text: userMessage },
+    ];
+    setMessages(newMessages);
+
+    const loadingIndex = newMessages.length;
+    const loadingMessages: TMessages[] = [
+      ...newMessages,
+      { sender: "bot", text: "Ассистент печатает..." },
+    ];
+    setMessages(loadingMessages);
+    setLoadingMessageId(loadingIndex);
+
+    try {
+      const response = await mutation.mutateAsync({ query: userMessage });
+      setMessages((prevMessages) => {
+        const updatedMessages = [...prevMessages];
+        updatedMessages[loadingIndex] = {
+          sender: "bot",
+          text: response?.response || "Ошибка получения ответа",
+        };
+        return updatedMessages;
+      });
+    } catch (error) {
+      setMessages((prevMessages) => {
+        const updatedMessages = [...prevMessages];
+        updatedMessages[loadingIndex] = {
+          sender: "bot",
+          text: "Что-то пошло не так",
+        };
+        return updatedMessages;
+      });
+    }
+
+    setUserMessage("");
+    setLoadingMessageId(null);
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
   useEffect(() => {
     return () => {
       document.removeEventListener("mousemove", handleMouseMove);
@@ -72,12 +128,17 @@ const ChatModal = () => {
   return (
     <div
       ref={chatMenuRef}
-      className={classes["chat-menu"]}
+      className={classNames(
+        classes["chat-menu"],
+        open ? classes["show_side_bar"] : classes["close_side_bar"]
+      )}
       style={{ width: `${chatMenuWidth}px` }}
     >
       <div className={classes["chat-menu-content"]}>
         <div className={classes["chat-menu-content__header"]}>
-          <Button startIcon={<ArrowBack />}>Закрыть</Button>
+          <Button onClick={closeMenuChat} startIcon={<ArrowBack />}>
+            Закрыть
+          </Button>
           <h1>Чат-бот</h1>
           <p>Поддержка</p>
         </div>
@@ -100,17 +161,27 @@ const ChatModal = () => {
             </div>
           ))}
         </div>
-        <div className={classes["chat-menu-content__form"]}>
+        <form
+          onSubmit={handleSendMessage}
+          className={classes["chat-menu-content__form"]}
+        >
           <TextField
             size="small"
             placeholder="Введите ваш запрос"
             autoComplete="off"
             sx={FormInputStyles}
+            value={userMessage}
+            onChange={(e) => setUserMessage(e.target.value)}
+            disabled={loadingMessageId !== null}
           />
-          <Button variant="contained">
+          <Button
+            disabled={loadingMessageId !== null}
+            type="submit"
+            variant="contained"
+          >
             <Send />
           </Button>
-        </div>
+        </form>
       </div>
       <div className={classes["chat-menu-resizer"]} onMouseDown={startResizing}>
         <DragHandle />

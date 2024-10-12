@@ -84,4 +84,3 @@ export const subcategoryOptions = [
   { label: "Не указано", value: "Не указано" },
 ];
 export const cityOptions = [{ label: "Не обнаружено", value: "Не обнаружено" }];
-

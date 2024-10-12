@@ -77,7 +77,7 @@ const CreateNotificationModal = () => {
                   }}
                   selectedOption={
                     employeeOptions?.find(
-                      (option) => option.value.toString() === field.value,
+                      (option) => option.value.toString() === field.value
                     ) || null
                   }
                 />

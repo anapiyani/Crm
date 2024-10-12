@@ -11,7 +11,7 @@ interface FixedPartProps {
 
 const FixedPart: React.FC<FixedPartProps> = ({ control }) => {
   const [choosenOption, setChoosenOption] = React.useState<string>(
-    control._defaultValues.fixed_part?.payroll_type || "",
+    control._defaultValues.fixed_part?.payroll_type || ""
   );
 
   const options: IOptions[] = [

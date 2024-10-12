@@ -35,25 +35,34 @@ const ServiceAccordion: React.FC<ServiceAccordionProps> = ({
 }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [quantities, setQuantities] = useState<Record<string, number>>(
-    childrenServices.reduce((acc, service) => {
-      acc[service.service_id] = service.quantity;
-      return acc;
-    }, {} as Record<string, number>)
+    childrenServices.reduce(
+      (acc, service) => {
+        acc[service.service_id] = service.quantity;
+        return acc;
+      },
+      {} as Record<string, number>
+    )
   );
   const [selectedItems, setSelectedItems] = useState<Record<string, boolean>>(
-    childrenServices.reduce((acc, service) => {
-      acc[service.service_id] = false;
-      return acc;
-    }, {} as Record<string, boolean>)
+    childrenServices.reduce(
+      (acc, service) => {
+        acc[service.service_id] = false;
+        return acc;
+      },
+      {} as Record<string, boolean>
+    )
   );
 
   const [selectedParameter, setSelectedParameter] = useState<
     Record<string, number | null>
   >(
-    childrenServices.reduce((acc, service) => {
-      acc[service.service_id] = null;
-      return acc;
-    }, {} as Record<string, number | null>)
+    childrenServices.reduce(
+      (acc, service) => {
+        acc[service.service_id] = null;
+        return acc;
+      },
+      {} as Record<string, number | null>
+    )
   );
 
   const handleQuantityChange = (service: ChildService, amount: number) => {

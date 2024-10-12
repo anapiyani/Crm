@@ -59,7 +59,7 @@ const ResponsiveTabs = ({
         </MenuItem>
         {tabsData.map((tab, index) => (
           <MenuItem
-            key={index} 
+            key={index}
             value={index.toString()}
             sx={{ fontSize: "1.4rem" }}
           >

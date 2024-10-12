@@ -12,7 +12,7 @@ import {
 import api from "../api";
 
 export const searchVisits = (
-  formData: IVisitsInfo,
+  formData: IVisitsInfo
 ): Promise<IVisitsResponse> => {
   const params = new URLSearchParams();
   Object.entries(formData).forEach(([key, value]) => {
@@ -78,7 +78,7 @@ export const addMaterialsForVisit = ({
   return api
     .put(
       `/appointments/appointments/${appointment_id}/add-materials/`,
-      appointment_materials,
+      appointment_materials
     )
     .then((res) => res.data);
 };
@@ -88,7 +88,7 @@ export const createNotification = (form: ICreateNotification): Promise<any> => {
 };
 
 export const searchNotifications = (
-  formData: INotificationGet,
+  formData: INotificationGet
 ): Promise<any> => {
   const params = new URLSearchParams();
 

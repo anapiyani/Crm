@@ -103,7 +103,7 @@ export const transformSchedulesToFullCalendar = (schedules: ISchedule[]) => {
 
 export const transformMonthlySchedulesToFullCalendar = (
   schedules: ISchedule[],
-  date: dayjs.Dayjs,
+  date: dayjs.Dayjs
 ) => {
   const events: IAppointmentReturn[] & IBreakReturn[] = [];
   const resources: IResourceReturn[] = [];

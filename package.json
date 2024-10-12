@@ -11,7 +11,8 @@
     "development": "tsc -b &&vite build --mode development",
     "production": "tsc -b && vite build --mode production",
     "start": "vite --mode development",
-    "startProd": "vite --mode production"
+    "startProd": "vite --mode production",
+    "format": "prettier --write ."
   },
   "dependencies": {
     "@date-io/date-fns": "^3.0.0",

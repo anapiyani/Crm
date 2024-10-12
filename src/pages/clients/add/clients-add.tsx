@@ -194,7 +194,7 @@ const ClientsAdd: React.FC = () => {
                       placeholder="Выберите категорию"
                       value={
                         categoryOptions?.find(
-                          (option) => option.value === field.value,
+                          (option) => option.value === field.value
                         ) || null
                       }
                     />
@@ -227,7 +227,7 @@ const ClientsAdd: React.FC = () => {
                       }}
                       value={
                         subcategoryOptions?.find(
-                          (option) => option.value === field.value,
+                          (option) => option.value === field.value
                         ) || null
                       }
                     />
@@ -259,7 +259,7 @@ const ClientsAdd: React.FC = () => {
                       }}
                       value={
                         cityOptions?.find(
-                          (option) => option.value === field.value,
+                          (option) => option.value === field.value
                         ) || null
                       }
                     />
@@ -455,7 +455,7 @@ const ClientsAdd: React.FC = () => {
                         }}
                         value={
                           sourceOptions?.find(
-                            (option) => option.value === field.value,
+                            (option) => option.value === field.value
                           ) || null
                         }
                       />
@@ -494,7 +494,7 @@ const ClientsAdd: React.FC = () => {
                       }}
                       value={
                         smsOptions?.find(
-                          (option) => option.value === field.value,
+                          (option) => option.value === field.value
                         ) || null
                       }
                     />
@@ -526,7 +526,7 @@ const ClientsAdd: React.FC = () => {
                       }}
                       value={
                         occupationOptions?.find(
-                          (option) => option.value === field.value,
+                          (option) => option.value === field.value
                         ) || null
                       }
                     />
@@ -558,7 +558,7 @@ const ClientsAdd: React.FC = () => {
                       }}
                       value={
                         salonLocationOptions?.find(
-                          (option) => option.value === field.value,
+                          (option) => option.value === field.value
                         ) || null
                       }
                     />

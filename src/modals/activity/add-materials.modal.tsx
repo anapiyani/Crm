@@ -53,7 +53,7 @@ const addMaterials = ({ appointment_id }: { appointment_id: number }) => {
       if (result.data) {
         const totalQuantity = result.data.reduce(
           (acc, item) => acc + Number(item.quantity),
-          0,
+          0
         );
         return {
           material: materials[index].value,
@@ -168,7 +168,7 @@ const addMaterials = ({ appointment_id }: { appointment_id: number }) => {
             }
             value={
               employeeOptions.find(
-                (option) => option.nodeId === selectedEmployee,
+                (option) => option.nodeId === selectedEmployee
               ) || null
             }
             onChange={(event, value) => {
@@ -225,7 +225,7 @@ const addMaterials = ({ appointment_id }: { appointment_id: number }) => {
           <div
             className={classNames(
               classes.materials__material_find,
-              classes.materials__materials_show,
+              classes.materials__materials_show
             )}
           >
             <p>Доступно для продажи:</p>
@@ -238,7 +238,7 @@ const addMaterials = ({ appointment_id }: { appointment_id: number }) => {
                   <p>
                     {material.label} -{" "}
                     {materialsQuantity.find(
-                      (item) => item.material === material.value,
+                      (item) => item.material === material.value
                     )?.quantity || 0}{" "}
                     шт
                   </p>

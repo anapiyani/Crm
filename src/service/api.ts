@@ -21,7 +21,7 @@ api.interceptors.request.use(
   },
   (error) => {
     return Promise.reject(error);
-  },
+  }
 );
 
 api.interceptors.response.use(
@@ -56,13 +56,13 @@ api.interceptors.response.use(
       }
     } else if (error.response?.status === 401) {
       console.log(
-        "Отсутствует действительный refreshToken, перенаправление на логин",
+        "Отсутствует действительный refreshToken, перенаправление на логин"
       );
       removeTokens();
       window.location.replace("/login");
     }
     return Promise.reject(error);
-  },
+  }
 );
 
 export default api;

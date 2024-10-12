@@ -1,0 +1,7 @@
+**/.git
+**/node_modules
+.eslintrc
+.prettierrc
+build
+dist
+*.log

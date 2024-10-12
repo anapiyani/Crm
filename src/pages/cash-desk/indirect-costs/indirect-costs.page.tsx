@@ -512,7 +512,7 @@ const IndirectCostsPage: FC = () => {
                                       <TableCell>{itemDetail.name}</TableCell>
                                       <TableCell>
                                         {dayjs(operation.date).format(
-                                          "DD.MM.YYYY",
+                                          "DD.MM.YYYY"
                                         )}
                                       </TableCell>
                                       <TableCell>
@@ -531,7 +531,7 @@ const IndirectCostsPage: FC = () => {
                                         </TableCell>
                                       )}
                                     </TableRow>
-                                  ),
+                                  )
                                 )
                               ) : (
                                 <TableRow key={detailIndex}>
@@ -547,7 +547,7 @@ const IndirectCostsPage: FC = () => {
                                     </TableCell>
                                   )}
                                 </TableRow>
-                              ),
+                              )
                             )}
                           </TableBody>
                         </Table>

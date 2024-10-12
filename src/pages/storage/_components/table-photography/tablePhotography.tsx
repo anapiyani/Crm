@@ -1,9 +1,8 @@
-
 import { Edit, Add } from "@mui/icons-material";
 import { Box, Paper, IconButton, Divider, Button } from "@mui/material";
 import React from "react";
 
- const TablePhotography = () => {
+const TablePhotography = () => {
   return (
     <Box
       component={Paper}

@@ -8,6 +8,29 @@
   left: 25.5rem;
   right: 0;
   bottom: 0;
+  animation: showMenu 0.5s ease-in-out;
+}
+
+.close_side_bar {
+  animation: hideMenu 0.5 ease-in-out;
+}
+
+@keyframes showMenu {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes hideMenu {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
 }
 
 .chat-menu-content {

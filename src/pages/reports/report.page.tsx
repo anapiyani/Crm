@@ -38,7 +38,7 @@ const Report = () => {
         link.href = url;
         link.setAttribute(
           "download",
-          `Отчет_${dayjs(dateFirst).format("DD.MM.YYYY")}_to_${dayjs(dateSecond).format("DD.MM.YYYY")}.xlsx`,
+          `Отчет_${dayjs(dateFirst).format("DD.MM.YYYY")}_to_${dayjs(dateSecond).format("DD.MM.YYYY")}.xlsx`
         );
         document.body.appendChild(link);
         link.click();
@@ -72,21 +72,36 @@ const Report = () => {
             onChangeTo={(e) => setDateSecond(e.target.value)}
           /> */}
           <div>
-            <div style={{width:"78%",display:"flex", flexDirection:"row",alignItems:"center"}}>
-            <CustomDatePicker
-              value={fromDate}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setFromDate(e.target.value)
-              }
-            />
-            <p style={{ marginRight: "1rem", marginLeft: "1rem", fontSize:"1.6rem" }}>-</p>
-            <CustomDatePicker
-              value={toDate}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setToDate(e.target.value)
-              }
-              min={fromDate}
-            />
+            <div
+              style={{
+                width: "78%",
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+              }}
+            >
+              <CustomDatePicker
+                value={fromDate}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setFromDate(e.target.value)
+                }
+              />
+              <p
+                style={{
+                  marginRight: "1rem",
+                  marginLeft: "1rem",
+                  fontSize: "1.6rem",
+                }}
+              >
+                -
+              </p>
+              <CustomDatePicker
+                value={toDate}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  setToDate(e.target.value)
+                }
+                min={fromDate}
+              />
             </div>
           </div>
           <Button

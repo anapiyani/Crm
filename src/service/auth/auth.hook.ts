@@ -17,13 +17,13 @@ export const useLoginMutation = () => {
           data.refresh,
           data.user_id,
           data.full_name,
-          data.role,
+          data.role
         );
         window.location.href = "/";
       } else {
         console.error(
           "Login response does not contain access and refresh tokens",
-          data,
+          data
         );
       }
     },
@@ -61,7 +61,7 @@ export const useVerifyOtpMutation = () => {
           data.refresh,
           data.user_id,
           data.full_name,
-          data.role,
+          data.role
         );
         window.location.href = "/";
       } else {

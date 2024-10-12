@@ -12,14 +12,18 @@ import styles from "./styles.module.scss";
 
 const MembershipTable: React.FC = () => {
   return (
-    <TableContainer component={Paper} className={styles.tableContainer} sx={{borderRadius:"16px", boxShadow:"none"}}>
+    <TableContainer
+      component={Paper}
+      className={styles.tableContainer}
+      sx={{ borderRadius: "16px", boxShadow: "none" }}
+    >
       <div
         style={{
           borderRadius: "8px",
           border: "0.1rem solid var(--neutral-300)",
         }}
       >
-        <Table className={styles.table} sx={{borderRadius:"8px"}}>
+        <Table className={styles.table} sx={{ borderRadius: "8px" }}>
           <TableHead className={styles.tableHead}>
             <TableRow>
               <TableCell align="left" className={styles.headerCell}>

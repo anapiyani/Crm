@@ -19,7 +19,7 @@ const VisitRow: React.FC<VisitRowProps> = ({
   <div className={classes["row-container"]}>
     <div className={classes["row-container__content"]}>
       <div
-        style={{backgroundColor: "var(--success-main)", borderRadius: "50%"}}
+        style={{ backgroundColor: "var(--success-main)", borderRadius: "50%" }}
         className={classes["row-container__content__tick"]}
       >
         <Done sx={{ fontSize: "2.4rem", color: "#fff" }} />
