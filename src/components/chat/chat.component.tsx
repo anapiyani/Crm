@@ -35,7 +35,7 @@ const ChatModal = ({
       fontSize: "1.4rem",
     },
     "& .MuiInputLabel-root": {
-      fontSize: "1.4rem",
+      fontSize: "1.5rem",
       padding: "0 1rem",
     },
   };
