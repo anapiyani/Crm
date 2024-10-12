@@ -44,10 +44,20 @@
   &__chat-contnet {
     padding: 2rem;
   }
+  &__form {
+    padding: 1rem;
+    position: absolute;
+    bottom: 7rem;
+    display: flex;
+    width: 100%;
+    button {
+      margin-left: 1rem;
+    }
+  }
 }
 
 .chat-menu-resizer {
-  width: 5px;
+  width: 15px;
   background: #999;
   cursor: col-resize;
   &:hover {

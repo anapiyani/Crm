@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import classes from "./style.module.scss";
-import { Button, Divider } from "@mui/material";
-import { ArrowBack } from "@mui/icons-material";
+import { Button, Divider, SxProps, TextField } from "@mui/material";
+import { ArrowBack, Send } from "@mui/icons-material";
 import Icons from "@/assets/icons/icons";
 
 type TMessages = {
@@ -19,6 +19,17 @@ const ChatModal = () => {
     { sender: "user", text: "Привет, иди нахуй" },
   ]);
   const [loadingMessageId, setLoadingMessageId] = useState<number | null>(null);
+
+  const FormInputStyles: SxProps = {
+    width: "100%",
+    "& .MuiOutlinedInput-root": {
+      fontSize: "1.4rem",
+    },
+    "& .MuiInputLabel-root": {
+      fontSize: "1.4rem",
+      padding: "0 1rem",
+    },
+  };
 
   const startResizing = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
@@ -88,6 +99,17 @@ const ChatModal = () => {
               </div>
             </div>
           ))}
+        </div>
+        <div className={classes["chat-menu-content__form"]}>
+          <TextField
+            size="small"
+            placeholder="Введите ваш запрос"
+            autoComplete="off"
+            sx={FormInputStyles}
+          />
+          <Button variant="contained">
+            <Send />
+          </Button>
         </div>
       </div>
       <div
