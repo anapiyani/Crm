@@ -38,12 +38,10 @@ const NormativeService: React.FC<NormativeServiceProps> = ({
               display: "flex",
               alignItems: "center",
               marginBottom: index < items.length - 1 ? "0.4rem" : 0,
-              gap:"1.6rem"
+              gap: "1.6rem",
             }}
           >
-            <Typography
-              sx={{ fontSize: "1.4rem", color: "var(--link-500)" }}
-            >
+            <Typography sx={{ fontSize: "1.4rem", color: "var(--link-500)" }}>
               {item.name}
             </Typography>
             <Typography

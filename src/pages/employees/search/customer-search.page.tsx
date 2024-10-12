@@ -68,7 +68,7 @@ const EmployeeSearch = () => {
     date_of_birth_to: "",
   });
   const [selectedRoles, setSelectedRoles] = useState(
-    formData.roleEmployee.split(", ").filter(Boolean),
+    formData.roleEmployee.split(", ").filter(Boolean)
   );
   const [pageSize, setPageSize] = useState<IOption>({ label: "10", value: 10 });
   const [page, setPage] = useState(1);
@@ -94,7 +94,7 @@ const EmployeeSearch = () => {
 
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
-    value: number,
+    value: number
   ) => {
     handleFormDataChange("page", value);
   };
@@ -308,7 +308,7 @@ const EmployeeSearch = () => {
                       setFormData((prev) => ({
                         ...prev,
                         [`date_of_birth_from`]: dayjs(e.target.value).format(
-                          "DD.MM.YYYY",
+                          "DD.MM.YYYY"
                         ),
                       }))
                     }
@@ -320,7 +320,7 @@ const EmployeeSearch = () => {
                       setFormData((prev) => ({
                         ...prev,
                         [`date_of_birth_to`]: dayjs(e.target.value).format(
-                          "DD.MM.YYYY",
+                          "DD.MM.YYYY"
                         ),
                       }));
                     }}
@@ -432,13 +432,13 @@ const EmployeeSearch = () => {
                           onInputChange={(isChecked) =>
                             handleCheckboxChange(
                               position.name,
-                              isChecked ? true : false,
+                              isChecked ? true : false
                             )
                           }
                         />
                       ))}
                     </TriStateCheckbox>
-                  ) : null,
+                  ) : null
                 )}
               </div>
             }

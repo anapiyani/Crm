@@ -51,7 +51,6 @@ const StyledTableRow = styled(TableRow, {
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   fontSize: "1.4rem",
   fontWeight: 600,
-  
 }));
 
 const ClientVisitsTable: React.FC = () => {

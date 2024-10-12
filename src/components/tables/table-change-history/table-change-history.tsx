@@ -92,7 +92,7 @@ const ChangeHistoryTable: React.FC<ChangeHistoryTableProps> = ({
                     >
                       <div style={{ padding: "0.6rem 0.8rem" }}>{headCell}</div>
 
-                      <IconButton sx={{pr:0}}>
+                      <IconButton sx={{ pr: 0 }}>
                         <SwapVert />
                       </IconButton>
                     </div>

@@ -9,7 +9,7 @@ const CommentItem = () => {
       <Checkbox
         sx={{
           "& svg": { width: 20, height: 20 },
-          mt:"2.6rem"
+          mt: "2.6rem",
         }}
       />
       <div className={styles.commentItem}>

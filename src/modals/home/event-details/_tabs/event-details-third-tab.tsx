@@ -64,15 +64,15 @@ const EventDetailsThirdTab: React.FC<IEventDetailsThirdTabProps> = ({
 
   const transformedPlannedData = transformDataToTableFormat(
     plannedVisitsData,
-    plannedTableHeadCells,
+    plannedTableHeadCells
   );
   const transformedDeletedData = transformDataToTableFormat(
     deletedData,
-    deletedTableHeadCells,
+    deletedTableHeadCells
   );
   const transformedNoShowData = transformDataToTableFormat(
     noShowData,
-    noShowTableHeadCells,
+    noShowTableHeadCells
   );
 
   const tabsData = [

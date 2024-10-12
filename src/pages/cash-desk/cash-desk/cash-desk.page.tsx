@@ -10,11 +10,7 @@ import {
   kassaNow,
   searchKassaData,
 } from "@/service/kassa/kassa.service";
-import {
-  ICashRegister,
-  IKassaOperations,
-  ISearchKassa,
-} from "@/ts/kassa.interface";
+import { ICashRegister, ISearchKassa } from "@/ts/kassa.interface";
 import NiceModal from "@ebay/nice-modal-react";
 import {
   CalendarMonth,
@@ -49,11 +45,12 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import CashCard from "../_components/cash-card/cash-card";
 import classes from "./style.module.scss";
+import useProcessedOperationsData from "../hooks/useProcessedOperationsData";
 
-interface IOption {
+type IOption = {
   label: string;
   value: number;
-}
+};
 
 const CashDesk = () => {
   const { data: operationsData } = useQuery({
@@ -138,7 +135,7 @@ const CashDesk = () => {
       ],
       formData
     );
-    refetchSearchResult();
+    await refetchSearchResult();
   };
 
   const cashRegister: ICashRegister = {
@@ -156,44 +153,15 @@ const CashDesk = () => {
     queryFn: () => getCashRegister(cashRegister),
   });
 
+  const options = useProcessedOperationsData(operationsData);
+
   useEffect(() => {
     refetchCashRegister();
   }, [activeTab]);
 
   const onRefetchCashRegister = async () => {
-    await setToday(false);
-    refetchCashRegister();
-  };
-
-  const processOperationsData = (
-    operations: IKassaOperations[]
-  ): { label: string; value: string; isParent: boolean }[] => {
-    const result: { label: string; value: string; isParent: boolean }[] = [];
-
-    const traverse = (
-      nodes: IKassaOperations[],
-      parent: IKassaOperations | null
-    ) => {
-      nodes.forEach((node) => {
-        if (node.children && node.children.length > 0) {
-          result.push({
-            label: node.name,
-            value: node.id.toString(),
-            isParent: true,
-          });
-          traverse(node.children, node);
-        } else {
-          result.push({
-            label: node.name,
-            value: node.id.toString(),
-            isParent: false,
-          });
-        }
-      });
-    };
-
-    traverse(operations, null);
-    return result;
+    setToday(false);
+    await refetchCashRegister();
   };
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -202,7 +170,6 @@ const CashDesk = () => {
       checked ? [...prev, value] : prev.filter((type) => type !== value)
     );
   };
-  const options = operationsData ? processOperationsData(operationsData) : [];
 
   const handleSalaryModal = () => {
     NiceModal.show(salaryModal);
@@ -297,16 +264,6 @@ const CashDesk = () => {
     }
   };
 
-  const incomeAllMoneyPeriod = () => {
-    if (cashRegisterData) {
-      return (
-        Number(cashRegisterData.overall_cash_money) +
-        Number(cashRegisterData.overall_card_money) +
-        Number(cashRegisterData.overall_check_money) +
-        Number(cashRegisterData.overall_checking_account_money)
-      );
-    }
-  };
   const overall_AllMoney = () => {
     return incomeAllMoney()! - expenseAllMoney()!;
   };

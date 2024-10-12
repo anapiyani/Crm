@@ -14,7 +14,7 @@ import {
   Box,
   Typography,
 } from "@mui/material";
-import { Search, Edit, Delete, } from "@mui/icons-material";
+import { Search, Edit, Delete } from "@mui/icons-material";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import classes from "./styles.module.scss";

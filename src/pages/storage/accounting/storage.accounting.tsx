@@ -34,8 +34,6 @@ import ResponsiveTabs from "@/components/tabs/tabs.component";
 import classes from "./styles.module.scss";
 import TableVertical from "@/components/tables/tableVertical/vertical-info-card";
 
-
-
 const StorageAccountingPage: React.FC = () => {
   const [material, setMaterial] = useState<IMaterial | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -77,7 +75,6 @@ const StorageAccountingPage: React.FC = () => {
     setCurrentTab(tabIndex);
   };
 
-  
   const [formData, setFormData] = useState({
     category: "",
     department: "",
@@ -149,7 +146,7 @@ const StorageAccountingPage: React.FC = () => {
             </div>
           </div>
         );
-      
+
       default:
         return <div></div>;
     }
@@ -204,7 +201,7 @@ const StorageAccountingPage: React.FC = () => {
             <Divider />
           </div>
         );
-      
+
       default:
         return <div></div>;
     }
@@ -222,42 +219,27 @@ const StorageAccountingPage: React.FC = () => {
                     <TableVertical data={overviewData} title="Обзор" />
                   </Grid>
 
-                  <Grid xs={12}>
-                    
-                  </Grid>
+                  <Grid xs={12}></Grid>
 
-                  <Grid xs={12}>
-                  </Grid>
+                  <Grid xs={12}></Grid>
                 </Grid>
               </Grid>
 
               <Grid container md={3.7}>
                 <Grid container xs={12}>
-                  <Grid xs={12}>
-                  </Grid>
-                  <Grid xs={12}>
-            
-                  </Grid>
-                  <Grid xs={12}>
-                
-                  </Grid>
-                  <Grid xs={12}>
-                  </Grid>
+                  <Grid xs={12}></Grid>
+                  <Grid xs={12}></Grid>
+                  <Grid xs={12}></Grid>
+                  <Grid xs={12}></Grid>
                 </Grid>
               </Grid>
 
               <Grid container md={4.6}>
                 <Grid container xs={12}>
-                  <Grid xs={12}>
-                  </Grid>
-                  <Grid xs={12}>
-                  
-                  </Grid>
-                  <Grid xs={12}>
-                  </Grid>
-                  <Grid xs={12}>
-                  
-                  </Grid>
+                  <Grid xs={12}></Grid>
+                  <Grid xs={12}></Grid>
+                  <Grid xs={12}></Grid>
+                  <Grid xs={12}></Grid>
                 </Grid>
               </Grid>
             </Grid>

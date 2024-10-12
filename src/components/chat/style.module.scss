@@ -1,0 +1,131 @@
+.chat-menu {
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  z-index: 997;
+  position: fixed;
+  top: 6.4rem;
+  left: 25.5rem;
+  right: 0;
+  bottom: 0;
+  animation: showMenu 0.5s ease-in-out;
+}
+
+.close_side_bar {
+  animation: hideMenu 0.5 ease-in-out;
+}
+
+@keyframes showMenu {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes hideMenu {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
+
+.chat-menu-content {
+  flex: 1;
+  background: white;
+  overflow-y: auto;
+
+  &__header {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    padding: 1rem;
+
+    h1 {
+      font-weight: 700;
+      font-size: 3rem;
+      line-height: 39.9px;
+      padding-left: 0.5rem;
+    }
+    p {
+      font-weight: 600;
+      font-size: 1.6rem;
+      color: var(--neutral-500);
+      line-height: 2.4rem;
+      padding-left: 0.5rem;
+    }
+    button {
+      font-size: 1.6rem;
+      text-transform: capitalize;
+    }
+  }
+
+  &__chat-contnet {
+    padding: 2rem;
+  }
+  &__form {
+    padding: 2rem;
+    position: absolute;
+    bottom: 7rem;
+    display: flex;
+    width: 100%;
+    button {
+      margin-left: 1rem;
+    }
+  }
+}
+
+.chat-menu-resizer {
+  width: 15px;
+  background: white;
+  display: flex;
+  align-items: center;
+  cursor: col-resize;
+  svg {
+    color: var(--neutral-500);
+    rotate: 90deg;
+    scale: 1.4;
+  }
+}
+
+.messages-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  img {
+    width: 30.76px;
+    height: 29px;
+  }
+}
+
+.bot {
+  align-self: flex-start;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  display: inline-block;
+  border-bottom-left-radius: 0;
+  font-size: 1.4rem;
+  max-width: 50%;
+  width: fit-content;
+  border: 1px solid var(--neutral-200);
+  padding: 8px 12px;
+  border-radius: 8px;
+}
+
+.user {
+  margin-left: auto;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  display: inline-block;
+  border-radius: 8px;
+  padding: 8px 15px;
+  background: rgba(237, 245, 253, 1);
+  font-size: 1.4rem;
+  max-width: 50%;
+  width: fit-content;
+}

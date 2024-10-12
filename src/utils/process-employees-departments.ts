@@ -9,7 +9,7 @@ interface EmployeeOption {
 
 export const processEmployeeOptions = (
   data: IEmployeeDepartment[],
-  isHasAll?: boolean,
+  isHasAll?: boolean
 ): EmployeeOption[] => {
   const options: EmployeeOption[] = [];
 

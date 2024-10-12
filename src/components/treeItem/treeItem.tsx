@@ -248,17 +248,13 @@ const TreeView: React.FC<TreeViewProps> = ({
   const [selectedServiceId, setSelectedServiceId] = useState<number | null>(
     null
   );
-  const [
-    selectedCategoryId,
-    setSelectedCategoryId,
-  ] = useState<IServiceCategory | null>(null);
+  const [selectedCategoryId, setSelectedCategoryId] =
+    useState<IServiceCategory | null>(null);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const [isDropping, setIsDropping] = useState<boolean>(false);
-  const [
-    hoveredCategory,
-    setHoveredCategory,
-  ] = useState<IServiceCategory | null>(null);
+  const [hoveredCategory, setHoveredCategory] =
+    useState<IServiceCategory | null>(null);
 
   const moveHierarchyItems = useMoveHierarchy();
   const deleteHierarchyItems = useDeleteHierarchy();

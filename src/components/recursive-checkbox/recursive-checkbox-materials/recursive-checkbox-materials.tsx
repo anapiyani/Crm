@@ -144,17 +144,18 @@ const RecursiveCheckboxMaterials: React.FC<ITreeItemProps> = ({
         cat.parent_name
       );
 
-      cat.materials.forEach((
-        material // Update to materials
-      ) =>
-        onServiceChange(
-          material.id,
-          checked,
-          "material", // Update to "material"
-          material.name,
-          material.parent_id!,
-          material.parent_name
-        )
+      cat.materials.forEach(
+        (
+          material // Update to materials
+        ) =>
+          onServiceChange(
+            material.id,
+            checked,
+            "material", // Update to "material"
+            material.name,
+            material.parent_id!,
+            material.parent_name
+          )
       );
 
       cat.children.forEach((child) => updateItems(child, checked));
@@ -178,15 +179,16 @@ const RecursiveCheckboxMaterials: React.FC<ITreeItemProps> = ({
         (item) => item.id === child.id && item.type === "category"
       );
 
-      const allMaterialsChecked = child.materials.every((
-        material // Update to materials
-      ) =>
-        preCheckedItems.some(
-          (item) =>
-            item.id === material.id &&
-            item.type === "material" &&
-            item.isChecked === 1
-        )
+      const allMaterialsChecked = child.materials.every(
+        (
+          material // Update to materials
+        ) =>
+          preCheckedItems.some(
+            (item) =>
+              item.id === material.id &&
+              item.type === "material" &&
+              item.isChecked === 1
+          )
       );
 
       const allChildrenChecked = child.children.every((subChild) =>
@@ -198,15 +200,16 @@ const RecursiveCheckboxMaterials: React.FC<ITreeItemProps> = ({
         )
       );
 
-      const anyMaterialsChecked = child.materials.some((
-        material // Update to materials
-      ) =>
-        preCheckedItems.some(
-          (item) =>
-            item.id === material.id &&
-            item.type === "material" &&
-            item.isChecked === 1
-        )
+      const anyMaterialsChecked = child.materials.some(
+        (
+          material // Update to materials
+        ) =>
+          preCheckedItems.some(
+            (item) =>
+              item.id === material.id &&
+              item.type === "material" &&
+              item.isChecked === 1
+          )
       );
 
       const anyChildrenChecked = child.children.some((subChild) =>
@@ -283,29 +286,31 @@ const RecursiveCheckboxMaterials: React.FC<ITreeItemProps> = ({
           ))}
           {category.materials.length > 0 && ( // Update to materials
             <ul className={classes["tree__service-list"]}>
-              {category.materials.map((
-                material // Update to materials
-              ) => (
-                <li
-                  key={`material-${material.id}`} // Update to materials
-                  className={classes["tree__service"]}
-                >
-                  <input
-                    type="checkbox"
-                    checked={preCheckedItems.some(
-                      (preChecked) =>
-                        preChecked.id === material.id &&
-                        preChecked.type === "material" &&
-                        preChecked.isChecked === 1
-                    )}
-                    onChange={() => handleMaterialCheckboxChange(material)} // Update to materials
-                  />
-                  <span className={classes["tree__label"]}>
-                    {material.name}
-                  </span>{" "}
-                  // Update to materials
-                </li>
-              ))}
+              {category.materials.map(
+                (
+                  material // Update to materials
+                ) => (
+                  <li
+                    key={`material-${material.id}`} // Update to materials
+                    className={classes["tree__service"]}
+                  >
+                    <input
+                      type="checkbox"
+                      checked={preCheckedItems.some(
+                        (preChecked) =>
+                          preChecked.id === material.id &&
+                          preChecked.type === "material" &&
+                          preChecked.isChecked === 1
+                      )}
+                      onChange={() => handleMaterialCheckboxChange(material)} // Update to materials
+                    />
+                    <span className={classes["tree__label"]}>
+                      {material.name}
+                    </span>{" "}
+                    // Update to materials
+                  </li>
+                )
+              )}
             </ul>
           )}
         </div>

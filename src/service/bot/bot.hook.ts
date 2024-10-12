@@ -3,7 +3,11 @@ import { textToBot } from "./bot.service";
 import toast from "react-hot-toast";
 
 export const useTextToBot = () => {
-  return useMutation<{ response: string }, Error, { query: string }>({
+  return useMutation<
+    { response: string; history: unknown[] },
+    Error,
+    { query: string }
+  >({
     mutationFn: textToBot,
     onSuccess: () => {
       console.log("Success");

@@ -4,6 +4,6 @@ export const textToBot = ({
   query,
 }: {
   query: string;
-}): Promise<{ response: string }> => {
-  return api.post("/bot/bot/", { query }).then((res) => res.data);
+}): Promise<{ response: string; history: unknown[] }> => {
+  return api.post("/bot/chat/", { query }).then((res) => res.data);
 };

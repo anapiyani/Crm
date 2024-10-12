@@ -37,7 +37,7 @@ export const getStorageMaterials = ({
 };
 
 export const getMaterialInformation = (
-  id: number | undefined,
+  id: number | undefined
 ): Promise<IMaterial> => {
   return api.get(`/materials/${id}/`).then((res) => res.data);
 };

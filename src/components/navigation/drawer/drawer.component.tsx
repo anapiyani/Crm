@@ -11,7 +11,6 @@ import {
   ListItemText,
   styled,
 } from "@mui/material";
-import AssistantIcon from "@mui/icons-material/Assistant";
 import { Fragment, ReactNode, useEffect, useState } from "react";
 import logo from "@/assets/icons/icon_wise_white.svg";
 import {
@@ -24,19 +23,16 @@ import {
   ExpandMore,
   Groups,
   Home,
-  Info,
   Inventory2,
-  Mail,
   Notifications,
   Person,
   Settings,
   ShoppingCart,
   Store,
+  SupportAgent,
 } from "@mui/icons-material";
 import { NavLink, useLocation } from "react-router-dom";
 import classes from "./styles.module.scss";
-import NiceModal from "@ebay/nice-modal-react";
-import chatModal from "@/modals/chat/chat.modal";
 
 const drawerWidth = "25.6rem";
 
@@ -44,6 +40,7 @@ interface IProps {
   window?: () => Window;
   isOpen: boolean;
   handleClose: () => void;
+  openChatMenu: () => void;
 }
 
 interface BaseItem {
@@ -61,12 +58,15 @@ const ResponsiveDrawer = (props: IProps) => {
   const location = useLocation();
   const [open, setOpen] = useState<string | null>(null);
   const [selectedParentIndex, setSelectedParentIndex] = useState<string | null>(
-    null,
+    null
   );
   const [selectedChildIndex, setSelectedChildIndex] = useState<string | null>(
-    null,
+    null
   );
-  const [isChatOpen, setIsChatOpen] = useState<boolean>(false);
+
+  const handleOpenChat = () => {
+    props.openChatMenu();
+  };
 
   useEffect(() => {
     const path = location.pathname;
@@ -129,8 +129,6 @@ const ResponsiveDrawer = (props: IProps) => {
       children: [
         { text: "Найти", link: "/clients" },
         { text: "Добавить", link: "/clients/add" },
-        // { text: "Настройки", link: "/clients/settings" },
-        // { text: "Лист ожидания", link: "/clients/waiting-list" },
       ],
     },
     {
@@ -143,9 +141,7 @@ const ResponsiveDrawer = (props: IProps) => {
         { text: "Зарплата", link: "/employees/salary" },
         { text: "Отделы", link: "/employees/department" },
         { text: "Кабинеты", link: "/employees/cabinet" },
-        // { text: "Права доступа" },
         { text: "Посещаемость" },
-        // { text: "Рейтинг", link: "/employees/rating" },
       ],
     },
     {
@@ -165,7 +161,6 @@ const ResponsiveDrawer = (props: IProps) => {
         { text: "Учет", link: "/storage/accounting" },
       ],
     },
-    // { text: "Поставщики", icon: <ShoppingCart /> },
     { text: "Карты и скидки", icon: <CreditCard />, link: "/discounts" },
     {
       text: "Аналитика",
@@ -188,6 +183,21 @@ const ResponsiveDrawer = (props: IProps) => {
 
   const LogoImage = styled("img")({
     height: "3.6rem",
+  });
+
+  const FooterButton = styled("div")({
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "flex-start",
+    padding: "1rem 1rem",
+    cursor: "pointer",
+    color: "#97C3F0",
+    margin: "1rem",
+    borderRadius: "4px",
+    backgroundColor: props.isOpen ? "#0B6BCB" : "",
+    "&:hover": {
+      backgroundColor: "#12467B",
+    },
   });
 
   const IconContainer = styled(ListItemIcon)({
@@ -219,7 +229,7 @@ const ResponsiveDrawer = (props: IProps) => {
 
   const renderListItems = (
     items: Item[],
-    parentIndex: number | null = null,
+    parentIndex: number | null = null
   ) => {
     return items.map((item, index) => {
       const uniqueIndex =
@@ -316,21 +326,72 @@ const ResponsiveDrawer = (props: IProps) => {
   };
 
   const drawer = (
-    <div>
-      <LogoContainer
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          mr: "1.6rem",
-        }}
-      >
-        <LogoImage src={logo} alt="SuperWise" />
+    <div style={{ display: "flex", flexDirection: "column", height: "100%" }}>
+      <div>
+        <LogoContainer
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            mr: "1.6rem",
+          }}
+        >
+          <LogoImage src={logo} alt="SuperWise" />
 
-        <IconButton sx={{ color: "#fff" }} onClick={handleCloseMenu}>
-          <Close sx={{ display: { sm: "none" } }} />
-        </IconButton>
-      </LogoContainer>
-      <List sx={{ padding: "0.8rem" }}>{renderListItems(items)}</List>
+          <IconButton sx={{ color: "#fff" }} onClick={handleCloseMenu}>
+            <Close sx={{ display: { sm: "none" } }} />
+          </IconButton>
+        </LogoContainer>
+        <List sx={{ padding: "0.8rem" }}>{renderListItems(items)}</List>
+      </div>
+      <div style={{ marginTop: "auto", marginBottom: "3rem" }}>
+        <FooterButton onClick={handleOpenChat}>
+          <ListItem disablePadding>
+            <ListItemButton
+              sx={{
+                "&.Mui-selected": {
+                  borderRadius: "4px",
+                  color: "#97C3F0",
+                  width: "100%",
+                  backgroundColor: "#0B6BCB",
+                  "& .MuiListItemIcon-root": {
+                    color: "#fff",
+                  },
+                },
+                color: "#97C3F0",
+                pl: "0.5rem",
+                pr: "1.4rem",
+                pb: "0.4rem",
+                pt: "0.4rem",
+              }}
+            >
+              <NavLink
+                to={"#"}
+                style={{
+                  textDecoration: "none",
+                  display: "flex",
+                  alignItems: "center",
+                  width: "100%",
+                }}
+                className={classes["link"]}
+              >
+                <IconContainer>
+                  <SupportAgent />
+                </IconContainer>
+                <ListItemText
+                  primary="Чат-бот/поддержка"
+                  primaryTypographyProps={{
+                    color: "common.white",
+                    fontWeight: "400",
+                    variant: "body2",
+                    fontSize: "1.6rem",
+                    padding: "0.4rem 0 0.4rem 0",
+                  }}
+                />
+              </NavLink>
+            </ListItemButton>
+          </ListItem>
+        </FooterButton>
+      </div>
     </div>
   );
 
@@ -380,20 +441,6 @@ const ResponsiveDrawer = (props: IProps) => {
         >
           {drawer}
         </StyledDrawerPaper>
-        <div
-          onClick={() => {
-            if (isChatOpen) {
-              NiceModal.hide(chatModal);
-              setIsChatOpen(false);
-            } else {
-              NiceModal.show(chatModal);
-              setIsChatOpen(true);
-            }
-          }}
-          className={classes["assistant"]}
-        >
-          <AssistantIcon />
-        </div>
       </Box>
     </Box>
   );
