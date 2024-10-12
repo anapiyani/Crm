@@ -58,10 +58,10 @@ const ResponsiveDrawer = (props: IProps) => {
   const location = useLocation();
   const [open, setOpen] = useState<string | null>(null);
   const [selectedParentIndex, setSelectedParentIndex] = useState<string | null>(
-    null,
+    null
   );
   const [selectedChildIndex, setSelectedChildIndex] = useState<string | null>(
-    null,
+    null
   );
 
   const handleOpenChat = () => {
@@ -189,9 +189,12 @@ const ResponsiveDrawer = (props: IProps) => {
     display: "flex",
     alignItems: "center",
     justifyContent: "flex-start",
-    padding: "1rem 2rem",
+    padding: "1rem 1rem",
     cursor: "pointer",
     color: "#97C3F0",
+    margin: "1rem",
+    borderRadius: "4px",
+    backgroundColor: props.isOpen ? "#0B6BCB" : "",
     "&:hover": {
       backgroundColor: "#12467B",
     },
@@ -226,7 +229,7 @@ const ResponsiveDrawer = (props: IProps) => {
 
   const renderListItems = (
     items: Item[],
-    parentIndex: number | null = null,
+    parentIndex: number | null = null
   ) => {
     return items.map((item, index) => {
       const uniqueIndex =
