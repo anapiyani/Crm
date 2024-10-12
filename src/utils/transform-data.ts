@@ -46,6 +46,7 @@ interface IResourceReturn {
     working?: boolean;
   };
   eventColor?: string;
+  scheduleId?: number;
 }
 
 export const transformSchedulesToFullCalendar = (schedules: ISchedule[]) => {
@@ -65,6 +66,7 @@ export const transformSchedulesToFullCalendar = (schedules: ISchedule[]) => {
         date: date,
       },
       eventColor: isWorkingDay ? undefined : "#DDE7EE",
+      scheduleId: schedule.id,
     });
     appointments.forEach((appointment) => {
       events.push({
@@ -103,7 +105,7 @@ export const transformSchedulesToFullCalendar = (schedules: ISchedule[]) => {
 
 export const transformMonthlySchedulesToFullCalendar = (
   schedules: ISchedule[],
-  date: dayjs.Dayjs,
+  date: dayjs.Dayjs
 ) => {
   const events: IAppointmentReturn[] & IBreakReturn[] = [];
   const resources: IResourceReturn[] = [];

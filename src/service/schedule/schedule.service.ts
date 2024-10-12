@@ -155,3 +155,7 @@ export const updateAppointment = (
     .patch(`/appointments/appointments/${id}/`, data)
     .then((res) => res.data);
 };
+
+export const deleteSchedule = (id: number): Promise<any> => {
+  return api.delete(`/schedule/schedules/${id}/`).then((res) => res.data);
+};
