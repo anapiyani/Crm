@@ -67,7 +67,7 @@ export const kassaDeposit = (formData: IWithdrawal): Promise<IWithdrawal> => {
 };
 
 export const searchKassaData = (
-  formData: ISearchKassa | { customer: number },
+  formData: ISearchKassa | { customer: number }
 ): Promise<IResponseData<KassaResponse[]>> => {
   const params = new URLSearchParams();
 
@@ -86,7 +86,7 @@ export const searchKassaData = (
 };
 
 export const getEmployeeSalaryWallet = (
-  id: number,
+  id: number
 ): Promise<IEmployeeWalletInfo> => {
   return api.get(`/salary-wallet/?user_id=${id}`).then((res) => res.data);
 };
@@ -96,7 +96,7 @@ export const salaryPayment = (formData: ISalaryPayment): Promise<any> => {
 };
 
 export const getIndirectCosts = (
-  formData: IDateRegisters,
+  formData: IDateRegisters
 ): Promise<IIndirectCostsResponse[]> => {
   const params = new URLSearchParams();
   if (formData) {
@@ -117,7 +117,7 @@ export const getIndirectCostsSummary = (): Promise<IIndirectSumarry> => {
 };
 
 export const addCategoryIndirectCosts = (
-  formData: IIndirectCategory,
+  formData: IIndirectCategory
 ): Promise<any> => {
   return api.post("/operations/", formData).then((res) => res.data);
 };
