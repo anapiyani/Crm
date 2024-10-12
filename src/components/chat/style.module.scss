@@ -84,12 +84,12 @@
   background: white;
   display: flex;
   align-items: center;
+  cursor: col-resize;
   svg {
     color: var(--neutral-500);
     rotate: 90deg;
     scale: 1.4;
   }
-  cursor: col-resize;
 }
 
 .messages-container {

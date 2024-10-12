@@ -25,7 +25,6 @@ const ChatModal = ({
   const [userMessage, setUserMessage] = useState<string>("");
   const [messages, setMessages] = useState<TMessages[]>([
     { sender: "bot", text: "Привет! Чем могу помочь?" },
-    { sender: "user", text: "Привет, иди нахуй" },
   ]);
   const [loadingMessageId, setLoadingMessageId] = useState<number | null>(null);
 
