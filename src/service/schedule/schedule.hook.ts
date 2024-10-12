@@ -4,6 +4,7 @@ import {
   addEmployeeToSchedule,
   addTimeOffToScheduleByDate,
   deleteBreakFromSchedule,
+  deleteSchedule,
   longBreak,
   scheduleEmployeeChange,
   scheduleEmployeeSettings,
@@ -130,6 +131,20 @@ export const useSettingsScheduleEmployee = () => {
     },
     onError: () => {
       toast.error("Ошибка при сохранении изменений");
+    },
+  });
+};
+
+export const useDeleteEmployeeSchedule = (date: string) => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: number) => deleteSchedule(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["schedules", date] });
+      toast.success("Смена успешно удалена");
+    },
+    onError: () => {
+      toast.error("Ошибка при удалении смены");
     },
   });
 };

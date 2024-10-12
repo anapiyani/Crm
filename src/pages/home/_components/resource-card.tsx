@@ -10,7 +10,8 @@ interface IResourceCardProps {
   handleResourceClick: (
     id: string,
     username: string,
-    e: React.MouseEvent<HTMLElement>
+    e: React.MouseEvent<HTMLElement>,
+    scheduleId: string | null
   ) => void;
   viewMode: "daily" | "weekly" | "monthly";
 }
@@ -23,7 +24,7 @@ const ResourceCard: React.FC<IResourceCardProps> = ({
     <div
       className={classes["fullcalendar__user"]}
       onClick={(e) => {
-        handleResourceClick(arg.id, arg.title, e);
+        handleResourceClick(arg.id, arg.title, e, arg.extendedProps.scheduleId);
       }}
     >
       {["weekly", "monthly"].includes(viewMode) && (
