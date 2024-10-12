@@ -75,7 +75,7 @@ const CashDesk = () => {
   const { register, handleSubmit, reset, getValues } = useForm<ISearchKassa>();
   const [money_type, setMoney_type] = useState<string[]>([]);
   const [selectedOperationId, setSelectedOperationId] = useState<string | null>(
-    null,
+    null
   );
   const queryClient = useQueryClient();
 
@@ -115,7 +115,7 @@ const CashDesk = () => {
   });
 
   const onSearchSubmit: SubmitHandler<ISearchKassa> = async (
-    data: ISearchKassa,
+    data: ISearchKassa
   ) => {
     const formData = {
       ...data,
@@ -133,7 +133,7 @@ const CashDesk = () => {
         formData.page_size,
         formData.page,
       ],
-      formData,
+      formData
     );
     refetchSearchResult();
   };
@@ -167,7 +167,7 @@ const CashDesk = () => {
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { value, checked } = event.target;
     setMoney_type((prev) =>
-      checked ? [...prev, value] : prev.filter((type) => type !== value),
+      checked ? [...prev, value] : prev.filter((type) => type !== value)
     );
   };
 
@@ -196,16 +196,16 @@ const CashDesk = () => {
 
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
-    value: number,
+    value: number
   ) => {
     setPage(value);
   };
 
   const handlePageSizeChange = (
-    event: React.ChangeEvent<{ value: unknown }>,
+    event: React.ChangeEvent<{ value: unknown }>
   ) => {
     const selectedOption = pageSizeOptions.find(
-      (option) => option.value === Number(event.target.value),
+      (option) => option.value === Number(event.target.value)
     ) || { label: "10", value: 10 };
     setPageSize(selectedOption);
   };

@@ -22,10 +22,10 @@ const EndureModal: React.FC = () => {
   const mutation = useDepositKassa();
   const [summ, setSumm] = useState<number>(0);
   const [selectedOperationId, setSelectedOperationId] = useState<string | null>(
-    null,
+    null
   );
   const [selectedMoneyType, setSelectedMoneyType] = useState<string | null>(
-    null,
+    null
   );
 
   const onSubmit: SubmitHandler<IWithdrawal> = async (data: IWithdrawal) => {

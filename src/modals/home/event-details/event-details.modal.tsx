@@ -67,7 +67,7 @@ const EventDetails: React.FC<IEventDetailsModalProps> = ({ appointmentId }) => {
         parameter: Number(item.parameter_id),
         quantity: item.quantity,
         service: item.service_id,
-      }),
+      })
     );
 
     const servicesToAdd: IServicesAdd = {
@@ -223,7 +223,7 @@ const EventDetails: React.FC<IEventDetailsModalProps> = ({ appointmentId }) => {
 
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
-    value: number,
+    value: number
   ) => {
     setPage(value);
   };
@@ -441,7 +441,7 @@ const EventDetails: React.FC<IEventDetailsModalProps> = ({ appointmentId }) => {
       handleClose={() => modal.hide()}
       className={classNames(
         classes["u-p-0"],
-        currentTab === 2 && classes["event-details__modal"],
+        currentTab === 2 && classes["event-details__modal"]
       )}
       withButtons={false}
       withoutTitle={true}

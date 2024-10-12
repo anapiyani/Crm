@@ -1,19 +1,19 @@
 .toolbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem;
-    &__btns {
-        justify-content: center;
-        button {
-            margin-right: 1rem;
-            &:last-child {
-                margin-right: 0;
-            }
-        }
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  &__btns {
+    justify-content: center;
+    button {
+      margin-right: 1rem;
+      &:last-child {
+        margin-right: 0;
+      }
     }
-    span {
-        font-size: 2rem;
-        text-transform: capitalize;
-    }
+  }
+  span {
+    font-size: 2rem;
+    text-transform: capitalize;
+  }
 }

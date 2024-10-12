@@ -35,7 +35,7 @@ const DepositTopUpModal = ({
 
   const handlePaymentChange = (type: string, amount: number) => {
     const existingPaymentIndex = formData.payments.findIndex(
-      (payment) => payment.money_type === type,
+      (payment) => payment.money_type === type
     );
     if (existingPaymentIndex !== -1) {
       formData.payments[existingPaymentIndex].amount = amount;

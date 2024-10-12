@@ -44,9 +44,8 @@ interface IOption {
 }
 
 const SearchVisits = () => {
-  const { register, handleSubmit, reset, control, setValue } = useForm<
-    IVisitsInfo
-  >();
+  const { register, handleSubmit, reset, control, setValue } =
+    useForm<IVisitsInfo>();
   const [selectedEmployeeIds, setSelectedEmployeeIds] = useState<number[]>([]);
   const [selectedItems, setSelectedItems] = useState<ITreeItemProps[]>([]);
   const [visitsData, setVisitsData] = useState<IVisitsResponse | null>(null);

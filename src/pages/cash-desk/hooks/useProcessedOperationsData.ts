@@ -1,7 +1,7 @@
 import { IKassaOperations, KassaOperationsItem } from "@/ts/kassa.interface.ts";
 
 const useProcessedOperationsData = (
-  operations?: IKassaOperations,
+  operations?: IKassaOperations
 ): { label: string; value: string; isParent: boolean }[] => {
   const result: { label: string; value: string; isParent: boolean }[] = [];
   if (operations) {

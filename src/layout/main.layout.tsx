@@ -14,7 +14,7 @@ const MainLayout = () => {
 
   useEffect(() => {
     const ws = new WebSocket(
-      "wss://crm-beauty-salon-94a93ffd62e6.herokuapp.com/ws/notifications/",
+      "wss://crm-beauty-salon-94a93ffd62e6.herokuapp.com/ws/notifications/"
     );
     let startTime = Date.now();
 

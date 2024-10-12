@@ -212,8 +212,8 @@ const TableHorizontal: React.FC<ContactsTableProps> = ({
                   textAlign: isSingleData
                     ? "left"
                     : index % 2 === 0
-                    ? "right"
-                    : "left",
+                      ? "right"
+                      : "left",
                 }}
               >
                 {isEdit ? (

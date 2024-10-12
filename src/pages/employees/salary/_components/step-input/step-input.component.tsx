@@ -60,7 +60,7 @@ const StepInput: React.FC<StepInputProps> = ({
 
   const handleAutoCompleteChange = (
     event: React.ChangeEvent<{}>,
-    newValue: IOptions | null,
+    newValue: IOptions | null
   ) => {
     setSelectedAutoCompleteOption(newValue);
     onChange(newValue);

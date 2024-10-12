@@ -107,7 +107,7 @@ const Home: React.FC = () => {
   const [burgerMenuEmployeeEl, setBurgerMenuEmployeeEl] =
     useState<HTMLElement | null>(null);
   const [selectedResourceId, setSelectedResourceId] = useState<string | null>(
-    null,
+    null
   );
   const [selectedTitle, setSelectedTitle] = useState<string | null>(null);
   const [events, setEvents] = useState<any[]>([]);
@@ -115,7 +115,7 @@ const Home: React.FC = () => {
   const [selectedEmployee, setSelectedEmployee] = useState<number>();
   const [selectedEmployeeName, setSelectedEmployeeName] = useState<string>("");
   const [viewMode, setViewMode] = useState<"daily" | "weekly" | "monthly">(
-    "daily",
+    "daily"
   );
 
   // prediction dates
@@ -243,7 +243,7 @@ const Home: React.FC = () => {
     if (getEmployeeMonthlyScheduleData && selectedDate) {
       const { events, resources } = transformMonthlySchedulesToFullCalendar(
         getEmployeeMonthlyScheduleData.results,
-        selectedDate,
+        selectedDate
       );
       setEvents(events);
       setResources(resources);
@@ -261,7 +261,7 @@ const Home: React.FC = () => {
   const handleResourceClick = (
     resourceId: string,
     resourceTitle: string,
-    event: React.MouseEvent<HTMLElement>,
+    event: React.MouseEvent<HTMLElement>
   ) => {
     const [resourceEmployeeId, resourceDate] = resourceId.split("-");
     setSelectedResourceId(resourceEmployeeId);
@@ -316,7 +316,7 @@ const Home: React.FC = () => {
 
   const handleShowWeeklySchedule = (
     employeeId: number,
-    employeeName?: string,
+    employeeName?: string
   ) => {
     setSelectedEmployee(employeeId);
     setViewMode("weekly");
@@ -344,14 +344,14 @@ const Home: React.FC = () => {
 
   const handleShowMonthlySchedule = (
     employeeId: number,
-    employeeName: string,
+    employeeName: string
   ) => {
     setSelectedEmployee(employeeId);
     setViewMode("monthly");
   };
 
   function ServerDay(
-    props: PickersDayProps<Dayjs> & { highlightedDays?: string[] },
+    props: PickersDayProps<Dayjs> & { highlightedDays?: string[] }
   ) {
     const { highlightedDays = [], day, outsideCurrentMonth, ...other } = props;
 
@@ -382,7 +382,7 @@ const Home: React.FC = () => {
     const newResponse = await refetchScheduleByDate();
     if (newResponse.data) {
       const { events, resources } = transformSchedulesToFullCalendar(
-        newResponse.data,
+        newResponse.data
       );
       setEvents(events);
       setResources(resources);
@@ -404,7 +404,7 @@ const Home: React.FC = () => {
       .format("HH:mm");
 
     const date = dayjs(eventResizeInfo.event._instance.range.start).format(
-      "YYYY-MM-DD",
+      "YYYY-MM-DD"
     );
 
     let data = {
@@ -436,7 +436,7 @@ const Home: React.FC = () => {
 
   const handleMenuItemClick = (
     modal: any,
-    setAnchorEl: React.Dispatch<React.SetStateAction<HTMLElement | null>>,
+    setAnchorEl: React.Dispatch<React.SetStateAction<HTMLElement | null>>
   ) => {
     NiceModal.show(modal);
     setAnchorEl(null);
@@ -466,7 +466,7 @@ const Home: React.FC = () => {
   useEffect(() => {
     if (viewMode === "weekly" && getEmployeeWeeklyScheduleData) {
       const { events, resources } = transformSchedulesToFullCalendar(
-        getEmployeeWeeklyScheduleData.results,
+        getEmployeeWeeklyScheduleData.results
       );
       setEvents(events);
       setResources(resources);
@@ -554,7 +554,7 @@ const Home: React.FC = () => {
                 ).split("-");
                 const resourceDate = dateParts.join("-");
                 const resource = resources.find(
-                  (res) => res.id === `${resourceEmployeeId}-${resourceDate}`,
+                  (res) => res.id === `${resourceEmployeeId}-${resourceDate}`
                 );
                 return resource?.extendedProps.working || false;
               }}
@@ -564,7 +564,7 @@ const Home: React.FC = () => {
                 ).split("-");
                 const resourceDate = dateParts.join("-");
                 const resource = resources.find(
-                  (res) => res.id === `${resourceEmployeeId}-${resourceDate}`,
+                  (res) => res.id === `${resourceEmployeeId}-${resourceDate}`
                 );
                 if (resource?.extendedProps.working !== true) {
                   info.el.style.backgroundColor = "#DDE7EE";
@@ -671,7 +671,7 @@ const Home: React.FC = () => {
                     classes["u-rotate-270"],
                     classes["u-m-md"],
                     classes["u-text-blue"],
-                    classes["u-cursor-pointer"],
+                    classes["u-cursor-pointer"]
                   )}
                 >
                   <span>Развернуть</span>
@@ -687,7 +687,7 @@ const Home: React.FC = () => {
                     className={classNames(
                       classes["u-flex-row"],
                       classes["u-text-blue"],
-                      classes["u-cursor-pointer"],
+                      classes["u-cursor-pointer"]
                     )}
                     onClick={handlePanelHide}
                   >
@@ -717,7 +717,7 @@ const Home: React.FC = () => {
                       }
                       value={
                         employeeOptions.find(
-                          (option) => option.nodeId === selectedEmployee,
+                          (option) => option.nodeId === selectedEmployee
                         ) || null
                       }
                       onChange={(event, value) => {
@@ -911,7 +911,7 @@ const Home: React.FC = () => {
                                       end_time={appointment.end_time}
                                       toPay={appointment.revenue}
                                     />
-                                  ) : null,
+                                  ) : null
                               )}
                             </div>
                           ))}

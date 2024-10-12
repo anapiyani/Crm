@@ -6,7 +6,7 @@ export const setTokens = (
   refreshToken: string,
   user_id: number,
   full_name: string,
-  role: string,
+  role: string
 ) => {
   accessToken && localStorage.setItem(ACCESS_TOKEN, accessToken);
   refreshToken && localStorage.setItem(REFRESH_TOKEN, refreshToken);

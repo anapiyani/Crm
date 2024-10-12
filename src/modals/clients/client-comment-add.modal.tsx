@@ -40,7 +40,14 @@ const CommentAddModal = () => {
             rows={5}
             sx={{ fontSize: 16, "& textarea": { fontSize: 16 }, mt: "1rem" }}
           />
-          <div style={{ display: "flex",flexDirection:"row", alignItems: "center", marginTop:"1rem" }}>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              marginTop: "1rem",
+            }}
+          >
             <Checkbox
               sx={{
                 "& svg": { width: 20, height: 20 },

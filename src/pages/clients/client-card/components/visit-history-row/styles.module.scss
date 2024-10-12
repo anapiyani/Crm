@@ -4,23 +4,23 @@
   align-items: center;
   padding: 1.6rem;
   border-bottom: 1px solid #cdd7e1;
-  &__content{
+  &__content {
     display: flex;
     align-items: center;
     justify-content: flex-start;
     gap: 0.8rem;
     width: 100%;
-    &__tick{
-        width: 4rem;
-        height: 4rem;
-        padding:0.8rem;
+    &__tick {
+      width: 4rem;
+      height: 4rem;
+      padding: 0.8rem;
     }
-    &__body{
-        display: flex;
-        font: 400 1.4rem Roboto;
+    &__body {
+      display: flex;
+      font: 400 1.4rem Roboto;
     }
   }
-  &__time-info{
+  &__time-info {
     font: 400 1.4rem Roboto;
     display: flex;
     width: 100%;

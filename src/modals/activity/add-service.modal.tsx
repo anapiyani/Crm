@@ -24,7 +24,7 @@ const addServices = ({ onSave, flattenData }: IAddServicesProps) => {
   const handleServiceSelect = (
     selectedService: any,
     selectedParameter: any,
-    quantity: { [key: string]: number },
+    quantity: { [key: string]: number }
   ) => {
     const serviceWithParameter = {
       ...selectedService,
@@ -34,7 +34,7 @@ const addServices = ({ onSave, flattenData }: IAddServicesProps) => {
 
     setTempSelectedServices((prevData) => {
       const existingService = prevData.find(
-        (item) => item.service_id === serviceWithParameter.service_id,
+        (item) => item.service_id === serviceWithParameter.service_id
       );
       if (existingService) {
         return prevData.map((item) =>
@@ -44,7 +44,7 @@ const addServices = ({ onSave, flattenData }: IAddServicesProps) => {
                 quantity: quantity[serviceWithParameter.service_id],
                 parameter: selectedParameter,
               }
-            : item,
+            : item
         );
       } else {
         return [...prevData, serviceWithParameter];

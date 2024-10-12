@@ -11,7 +11,7 @@ interface IEventContentProps {
 const EventContent: React.FC<IEventContentProps> = ({ eventInfo }) => {
   const eventDuration = dayjs(eventInfo.event.end).diff(
     eventInfo.event.start,
-    "minute",
+    "minute"
   );
 
   return (
@@ -34,7 +34,7 @@ const EventContent: React.FC<IEventContentProps> = ({ eventInfo }) => {
           classes["fullcalendar__event--header"],
           classes[
             `fullcalendar__event--${eventInfo.event.extendedProps.status}--header`
-          ],
+          ]
         )}
       >
         {eventInfo.timeText}
