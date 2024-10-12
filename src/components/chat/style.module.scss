@@ -45,7 +45,7 @@
     padding: 2rem;
   }
   &__form {
-    padding: 1rem;
+    padding: 2rem;
     position: absolute;
     bottom: 7rem;
     display: flex;
@@ -58,11 +58,15 @@
 
 .chat-menu-resizer {
   width: 15px;
-  background: #999;
-  cursor: col-resize;
-  &:hover {
-    background: #999;
+  background: white;
+  display: flex;
+  align-items: center;
+  svg {
+    color: var(--neutral-500);
+    rotate: 90deg;
+    scale: 1.4;
   }
+  cursor: col-resize;
 }
 
 .messages-container {

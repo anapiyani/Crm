@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import classes from "./style.module.scss";
 import { Button, Divider, SxProps, TextField } from "@mui/material";
-import { ArrowBack, Send } from "@mui/icons-material";
+import { ArrowBack, Send, DragHandle } from "@mui/icons-material";
 import Icons from "@/assets/icons/icons";
 
 type TMessages = {
@@ -10,7 +10,7 @@ type TMessages = {
 };
 
 const ChatModal = () => {
-  const [chatMenuWidth, setChatMenuWidth] = useState<number>(420);
+  const [chatMenuWidth, setChatMenuWidth] = useState<number>(470);
   const chatMenuRef = useRef<HTMLDivElement>(null);
   const isResizingRef = useRef(false);
   const [userMessage, setUserMessage] = useState<string>("");
@@ -112,10 +112,9 @@ const ChatModal = () => {
           </Button>
         </div>
       </div>
-      <div
-        className={classes["chat-menu-resizer"]}
-        onMouseDown={startResizing}
-      />
+      <div className={classes["chat-menu-resizer"]} onMouseDown={startResizing}>
+        <DragHandle />
+      </div>
     </div>
   );
 };
