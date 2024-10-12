@@ -269,7 +269,7 @@ const Home: React.FC = () => {
   const handleResourceClick = (
     resourceId: string,
     resourceTitle: string,
-    event: React.MouseEvent<HTMLElement>,
+    event: React.MouseEvent<HTMLElement>
     scheduleId: string | null
   ) => {
     const [resourceEmployeeId, resourceDate] = resourceId.split("-");
