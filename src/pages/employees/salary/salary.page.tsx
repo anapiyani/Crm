@@ -9,7 +9,7 @@ import {
   editTemplateGet,
   getTemplateList,
 } from "@/service/employee/employee.service";
-import { ITemplate } from "@/ts/employee.interface";
+import { ITemplate, ITemplateItem } from "@/ts/employee.interface";
 
 const SalaryPage = () => {
   const [choosenTemplate, setChoosenTemplate] = useState<number | null>(null);
@@ -17,7 +17,21 @@ const SalaryPage = () => {
 
   const { data: templateList, isLoading } = useQuery({
     queryKey: ["templateList"],
-    queryFn: () => getTemplateList(),
+    queryFn: () => getTemplateList(undefined, "production"),
+  });
+  const {
+    data: adminTemplateList,
+    isLoading: adminTemplateListLoading,
+  } = useQuery({
+    queryKey: ["adminTemplateList"],
+    queryFn: () => getTemplateList(undefined, "admin"),
+  });
+  const {
+    data: managementTemplateList,
+    isLoading: managementTemplateListLoading,
+  } = useQuery({
+    queryKey: ["managementTemplateList"],
+    queryFn: () => getTemplateList(undefined, "management"),
   });
 
   const {
@@ -32,9 +46,7 @@ const SalaryPage = () => {
 
   useEffect(() => {
     if (templateList) {
-      const firstProductionTemplate = templateList.find(
-        (template) => template.template_type === "production"
-      );
+      const firstProductionTemplate = templateList.results[0];
       if (firstProductionTemplate) {
         setChoosenTemplate(firstProductionTemplate.id!);
       }
@@ -142,9 +154,32 @@ const SalaryPage = () => {
       </div>
       <Divider />
       <div className={classes.salary__content__list__items__item__content}>
-        {templateList?.map(
-          (template) =>
-            template.template_type === type && (
+        {type === "production" &&
+          !isLoading &&
+          templateList?.results.map((template: ITemplateItem) => (
+            <Button
+              key={template.id}
+              variant={
+                choosenTemplate === template.id ? "contained" : undefined
+              }
+              onClick={() => {
+                setChoosenTemplate(template.id!);
+                setNewTemplate(null);
+              }}
+            >
+              <p
+                className={
+                  choosenTemplate === template.id ? classes.active : ""
+                }
+              >
+                {template.name}
+              </p>
+            </Button>
+          ))}
+
+        {type === "management" && !managementTemplateListLoading && (
+          <>
+            {managementTemplateList?.results.map((template: ITemplateItem) => (
               <Button
                 key={template.id}
                 variant={
@@ -163,7 +198,33 @@ const SalaryPage = () => {
                   {template.name}
                 </p>
               </Button>
-            )
+            ))}
+          </>
+        )}
+
+        {type === "admin" && !adminTemplateListLoading && (
+          <>
+            {adminTemplateList?.results.map((template: ITemplateItem) => (
+              <Button
+                key={template.id}
+                variant={
+                  choosenTemplate === template.id ? "contained" : undefined
+                }
+                onClick={() => {
+                  setChoosenTemplate(template.id!);
+                  setNewTemplate(null);
+                }}
+              >
+                <p
+                  className={
+                    choosenTemplate === template.id ? classes.active : ""
+                  }
+                >
+                  {template.name}
+                </p>
+              </Button>
+            ))}
+          </>
         )}
       </div>
     </div>

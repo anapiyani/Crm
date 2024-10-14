@@ -74,13 +74,25 @@ export const useEditTemplate = () => {
   });
 };
 
-export const useAddTemplate = () => {
+export const useAddTemplate = (type: "production" | "management" | "admin") => {
   const queryClient = useQueryClient();
+  let queryKey = ["templateList"];
+  switch (type) {
+    case "production":
+      queryKey = ["templateList"];
+      break;
+    case "management":
+      queryKey = ["managementTemplateList"];
+      break;
+    case "admin":
+      queryKey = ["adminTemplateList"];
+      break;
+  }
   return useMutation<ITemplate, Error, ITemplate>({
     mutationFn: addTemplate,
     onSuccess: (data) => {
       toast.success("Шаблон успешно добавлен!.");
-      queryClient.invalidateQueries({ queryKey: ["templateList"] });
+      queryClient.invalidateQueries({ queryKey });
       return data;
     },
     onError: (error) => {
