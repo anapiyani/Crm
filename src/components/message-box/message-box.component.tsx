@@ -35,7 +35,11 @@ const MessageBox = (props: TProps) => {
         <p>{props.phone}</p>
         <p>
           Статус:{" "}
-          {props.status === "scheduled" ? "Запланировано" : props.status}
+          {props.status === "scheduled"
+            ? "Запланировано"
+            : props.status === "completed"
+              ? "Завершено"
+              : props.status}
         </p>
         <p>
           Сотрудник: {props.employee_first_name} {props.employee_last_name}
