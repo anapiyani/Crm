@@ -7,6 +7,15 @@ export interface IDepartmentData {
   role: IRoles[];
 }
 
+export interface IDepartmentPagination {
+  count: number;
+  total_pages: number;
+  items_per_page: number;
+  next: string | null;
+  previous: string | null;
+  results: IDepartmentData[];
+}
+
 export interface IDepartmentsChild {
   id: number;
   name: string;
