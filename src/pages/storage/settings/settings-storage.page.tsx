@@ -95,7 +95,7 @@ const StorageSettings = () => {
               ) : error ? (
                 toast.error("Ошибка загрузки данных")
               ) : (
-                data?.map((storage: IStorage) => (
+                data?.results.map((storage: IStorage) => (
                   <li key={storage.id}>
                     <Button
                       onClick={() =>
