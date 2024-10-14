@@ -92,9 +92,8 @@ const CreateAppointment: React.FC<ICreateAppointmentModalProps> = ({
   clientName,
 }) => {
   const modal = useModal();
-  const [appointmentForm, setAppointmentForm] = useState<
-    IAppointmentCreateForm
-  >(initialAppointmentForm);
+  const [appointmentForm, setAppointmentForm] =
+    useState<IAppointmentCreateForm>(initialAppointmentForm);
   const [selectedEmployee, setSelectedEmployee] = useState<IOption | null>(
     clientId ? { label: clientName, value: clientId } : null
   );

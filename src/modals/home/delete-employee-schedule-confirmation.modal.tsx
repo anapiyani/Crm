@@ -12,15 +12,13 @@ interface IDeleteEmployeeScheduleConfirmationProps {
   selectedDate: string;
 }
 
-const DeleteEmployeeScheduleConfirmation: React.FC<IDeleteEmployeeScheduleConfirmationProps> = ({
-  employee_id,
-  selectedDate,
-}) => {
+const DeleteEmployeeScheduleConfirmation: React.FC<
+  IDeleteEmployeeScheduleConfirmationProps
+> = ({ employee_id, selectedDate }) => {
   const modal = useModal();
 
-  const { mutate: deleteEmployeeSchedule } = useDeleteEmployeeSchedule(
-    selectedDate
-  );
+  const { mutate: deleteEmployeeSchedule } =
+    useDeleteEmployeeSchedule(selectedDate);
   console.log(employee_id);
 
   return (
@@ -29,7 +27,7 @@ const DeleteEmployeeScheduleConfirmation: React.FC<IDeleteEmployeeScheduleConfir
       open={modal.visible}
       handleClose={() => modal.hide()}
       handleSave={() => {
-        deleteEmployeeSchedule((employee_id as unknown) as number);
+        deleteEmployeeSchedule(employee_id as unknown as number);
         modal.hide();
       }}
     >
