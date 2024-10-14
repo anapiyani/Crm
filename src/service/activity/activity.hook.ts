@@ -105,7 +105,7 @@ export const useCancelPayment = () => {
 export const useAddMaterialsForVisit = () => {
   const queryClient = useQueryClient();
   return useMutation<
-    any,
+    unknown,
     Error,
     { appointment_id: number; appointment_materials: IAppointmentMaterials }
   >({

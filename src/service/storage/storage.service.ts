@@ -3,12 +3,15 @@ import {
   IEditStorage,
   IMaterial,
   IMaterials,
+  IMaterialsResponse,
   IMaterialsStorage,
+  IMaterialsStorageResponse,
   IStorage,
+  IStorageResponse,
 } from "@/ts/storage.interface";
 import api from "../api";
 
-export const getStorages = (): Promise<IStorage[]> => {
+export const getStorages = (): Promise<IStorageResponse> => {
   return api.get("/storages/").then((res) => res.data);
 };
 
@@ -20,7 +23,7 @@ export const editStorage = (storage: IEditStorage): Promise<any> => {
   return api.put(`/storages/${storage.id}/`, storage).then((res) => res.data);
 };
 
-export const getMaterials = (): Promise<IMaterials[]> => {
+export const getMaterials = (): Promise<IMaterialsResponse> => {
   return api.get("/materials/").then((res) => res.data);
 };
 
@@ -30,7 +33,7 @@ export const getStorageMaterials = ({
 }: {
   material: number;
   storage: number;
-}): Promise<IMaterialsStorage[]> => {
+}): Promise<IMaterialsStorageResponse> => {
   return api
     .get(`/material-storage/?material=${material}&storage=${storage}`)
     .then((res) => res.data);

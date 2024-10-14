@@ -50,8 +50,8 @@ const addMaterials = ({ appointment_id }: { appointment_id: number }) => {
 
   const materialsQuantity = useMemo(() => {
     return materialsQuantityData.map((result, index) => {
-      if (result.data) {
-        const totalQuantity = result.data.reduce(
+      if (Array.isArray(result.data?.results)) {
+        const totalQuantity = result.data.results.reduce(
           (acc, item) => acc + Number(item.quantity),
           0
         );
@@ -97,7 +97,7 @@ const addMaterials = ({ appointment_id }: { appointment_id: number }) => {
 
   const materialsOptions = useMemo(() => {
     return materialsData
-      ? materialsData.map((material) => ({
+      ? materialsData.results.map((material) => ({
           label: material.name,
           value: material.id.toString(),
         }))
@@ -117,8 +117,8 @@ const addMaterials = ({ appointment_id }: { appointment_id: number }) => {
   };
 
   useEffect(() => {
-    if (storagesData && storagesData.length > 0 && !selectedStorage) {
-      setSelectedStorage(storagesData[0].id);
+    if (storagesData && storagesData.results.length > 0 && !selectedStorage) {
+      setSelectedStorage(storagesData.results[0].id);
     }
   }, [storagesData, selectedStorage]);
 
@@ -256,7 +256,7 @@ const addMaterials = ({ appointment_id }: { appointment_id: number }) => {
               marginBottom: "1rem",
               width: "500px",
             }}
-            options={storagesData || []}
+            options={storagesData?.results || []}
             getOptionLabel={(option) => option.name}
             renderOption={(props, option) => (
               <li {...props} key={option.id}>
@@ -264,8 +264,9 @@ const addMaterials = ({ appointment_id }: { appointment_id: number }) => {
               </li>
             )}
             value={
-              storagesData?.find((option) => option.id === selectedStorage) ||
-              null
+              storagesData?.results.find(
+                (option) => option.id === selectedStorage
+              ) || null
             }
             onChange={(event, value) => {
               setSelectedStorage(value?.id);
