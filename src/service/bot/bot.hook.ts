@@ -4,7 +4,7 @@ import toast from "react-hot-toast";
 import { TBotResponse } from "@/ts/bot.types";
 
 export const useTextToBot = () => {
-  return useMutation<TBotResponse, Error, { query: string }>({
+  return useMutation<unknown, Error, { query: string }>({
     mutationFn: textToBot,
     onSuccess: () => {
       console.log("Success");

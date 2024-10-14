@@ -23,9 +23,7 @@ const ChatModal = ({
   const chatMenuRef = useRef<HTMLDivElement>(null);
   const isResizingRef = useRef(false);
   const [userMessage, setUserMessage] = useState<string>("");
-  const [messages, setMessages] = useState<TMessages[]>([
-    { sender: "bot", text: "Привет! Чем могу помочь?" },
-  ]);
+  const [messages, setMessages] = useState<TMessages[]>([]);
   const [loadingMessageId, setLoadingMessageId] = useState<number | null>(null);
 
   const FormInputStyles: SxProps = {
@@ -80,21 +78,53 @@ const ChatModal = ({
 
     try {
       const response = await mutation.mutateAsync({ query: userMessage });
-      setMessages((prevMessages) => {
-        const updatedMessages = [...prevMessages];
-        updatedMessages[loadingIndex] = {
-          sender: "bot",
-          text: response?.response || "Ошибка получения ответа",
-        };
-        return updatedMessages;
-      });
+      const historyMessages: TMessages[] = response.history.flatMap((entry) => [
+        {
+          sender: "user" as "user" | "bot",
+          text: entry.user_query,
+        },
+        {
+          sender: "bot" as "user" | "bot",
+          text: entry.bot_response,
+        },
+      ]);
+
+      const botText =
+        response?.response
+          .map(
+            (answer) =>
+              `${response?.human_readable_text} ${answer.date} ${answer.start_time} - ${answer.end_time}: ${answer.services}`
+          )
+          .join("\n") || `${response?.human_readable_text}`;
+
+      const updatedMessages: TMessages[] = [
+        ...historyMessages,
+        ...messages,
+        { sender: "user", text: userMessage },
+        { sender: "bot", text: botText },
+      ];
+
+      setMessages(updatedMessages);
     } catch (error) {
       setMessages((prevMessages) => {
+        console.log(error);
         const updatedMessages = [...prevMessages];
-        updatedMessages[loadingIndex] = {
-          sender: "bot",
-          text: "Что-то пошло не так",
-        };
+        if (loadingIndex !== null) {
+          if (
+            error instanceof Error &&
+            (error as any).response?.data?.gpt_response
+          ) {
+            updatedMessages[loadingIndex] = {
+              sender: "bot",
+              text: (error as any).response.data.gpt_response,
+            };
+          } else {
+            updatedMessages[loadingIndex] = {
+              sender: "bot",
+              text: "Что-то пошло не так.",
+            };
+          }
+        }
         return updatedMessages;
       });
     }
