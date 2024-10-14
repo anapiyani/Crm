@@ -1,11 +1,17 @@
-export type IStorage = {
-  date_created: string;
-  date_updated: string;
-  employee: null | string;
+export interface IStorage {
+  count: number;
+  next: string;
+  previous: string;
+  total_pages: number;
+  items_per_page: number;
+  results: IStorageData[];
+}
+
+export interface IStorageData {
   id: number;
   name: string;
   type: string;
-};
+}
 
 export type IStorageResponse = {
   count: number;

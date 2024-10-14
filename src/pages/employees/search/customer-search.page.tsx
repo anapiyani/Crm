@@ -528,6 +528,12 @@ const EmployeeSearch = () => {
                 shape="rounded"
                 boundaryCount={1}
                 color="primary"
+                sx={{
+                  "& .MuiPagination-ul": {
+                    justifyContent: "center",
+                    margin: "20px 0",
+                  },
+                }}
               />
             </div>
             <Table className={classes.table}>
