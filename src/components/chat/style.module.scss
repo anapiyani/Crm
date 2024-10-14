@@ -131,3 +131,20 @@
   max-width: 50%;
   width: fit-content;
 }
+
+.bot_response_content {
+  display: flex;
+  flex-direction: column;
+  p {
+    font-size: 1.4rem;
+    color: var(--neutral-700);
+  }
+}
+
+.bot_response_answer {
+  h3 {
+    font-weight: 700;
+    font-size: 1.4rem;
+    color: var(--neutral-700);
+  }
+}

@@ -5,10 +5,13 @@ import { ArrowBack, Send, DragHandle } from "@mui/icons-material";
 import Icons from "@/assets/icons/icons";
 import classNames from "classnames";
 import { useTextToBot } from "@/service/bot/bot.hook";
+import { TBotResponse } from "@/ts/bot.types";
+import MessageBox from "../message-box/message-box.component";
+import dayjs from "dayjs";
 
 type TMessages = {
   sender: "user" | "bot";
-  text: string;
+  text: string | React.ReactNode;
 };
 
 const ChatModal = ({
@@ -77,25 +80,44 @@ const ChatModal = ({
     setLoadingMessageId(loadingIndex);
 
     try {
-      const response = await mutation.mutateAsync({ query: userMessage });
-      const historyMessages: TMessages[] = response.history.flatMap((entry) => [
-        {
-          sender: "user" as "user" | "bot",
-          text: entry.user_query,
-        },
-        {
-          sender: "bot" as "user" | "bot",
-          text: entry.bot_response,
-        },
-      ]);
+      const response = (await mutation.mutateAsync({
+        query: userMessage,
+      })) as TBotResponse;
+      const historyMessages: TMessages[] = response.history.flatMap(
+        (entry: { user_query: string; bot_response: string }) => [
+          {
+            sender: "user",
+            text: entry.user_query,
+          },
+          {
+            sender: "bot",
+            text: entry.bot_response,
+          },
+        ]
+      );
 
-      const botText =
-        response?.response
-          .map(
-            (answer) =>
-              `${response?.human_readable_text} ${answer.date} ${answer.start_time} - ${answer.end_time}: ${answer.services}`
-          )
-          .join("\n") || `${response?.human_readable_text}`;
+      const botText = (
+        <>
+          <div className={classes.bot_response_content}>
+            <p>{response.human_readable_text}</p>
+          </div>
+          {response.response?.map((answer, index) => (
+            <div className={classes.bot_response_answer}>
+              <h3>{dayjs(answer.date).format("DD.MM.YYYY")}:</h3>
+              <MessageBox
+                start_time={answer.start_time}
+                end_time={answer.end_time}
+                user_first_name={answer.client_first_name}
+                user_last_name={answer.client_last_name}
+                service={answer.services}
+                employee_first_name={answer.employee_first_name}
+                employee_last_name={answer.employee_last_name}
+                status={answer.status}
+              />
+            </div>
+          ))}
+        </>
+      );
 
       const updatedMessages: TMessages[] = [
         ...historyMessages,
@@ -107,7 +129,6 @@ const ChatModal = ({
       setMessages(updatedMessages);
     } catch (error) {
       setMessages((prevMessages) => {
-        console.log(error);
         const updatedMessages = [...prevMessages];
         if (loadingIndex !== null) {
           if (
