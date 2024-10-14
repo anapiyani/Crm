@@ -11,6 +11,9 @@ export interface IStorageData {
   id: number;
   name: string;
   type: string;
+  employee: string | null;
+  date_created: string;
+  date_updated: string;
 }
 
 export type IStorageResponse = {
