@@ -74,8 +74,6 @@ import { getHierarchyEmployeesByDepartment } from "@/service/hierarchy/hierarchy
 import { processEmployeeOptions } from "@/utils/process-employees-departments";
 import ClientspredictItem from "./_components/clients-predict";
 import { getForecastInfo } from "@/service/kassa/kassa.service";
-import { IAppointment } from "@/ts/schedule.interface";
-import { start } from "repl";
 
 const menuItems = [
   {
@@ -102,14 +100,10 @@ const Home: React.FC = () => {
   const calendarRef = useRef<FullCalendar | null>(null);
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
-  const [
-    burgerMenuAnchorEl,
-    setBurgerMenuAnchorEl,
-  ] = useState<HTMLElement | null>(null);
-  const [
-    burgerMenuEmployeeEl,
-    setBurgerMenuEmployeeEl,
-  ] = useState<HTMLElement | null>(null);
+  const [burgerMenuAnchorEl, setBurgerMenuAnchorEl] =
+    useState<HTMLElement | null>(null);
+  const [burgerMenuEmployeeEl, setBurgerMenuEmployeeEl] =
+    useState<HTMLElement | null>(null);
   const [selectedResourceId, setSelectedResourceId] = useState<string | null>(
     null
   );
@@ -228,9 +222,8 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     if (schedulesData) {
-      const { events, resources } = transformSchedulesToFullCalendar(
-        schedulesData
-      );
+      const { events, resources } =
+        transformSchedulesToFullCalendar(schedulesData);
       setEvents(events);
       setResources(resources);
     }
@@ -269,7 +262,7 @@ const Home: React.FC = () => {
   const handleResourceClick = (
     resourceId: string,
     resourceTitle: string,
-    event: React.MouseEvent<HTMLElement>
+    event: React.MouseEvent<HTMLElement>,
     scheduleId: string | null
   ) => {
     const [resourceEmployeeId, resourceDate] = resourceId.split("-");
