@@ -1,7 +1,7 @@
 import { FormEvent, useCallback, useEffect, useRef, useState } from "react";
 import classes from "./style.module.scss";
 import { Button, Divider, SxProps, TextField } from "@mui/material";
-import { ArrowBack, Send, DragHandle } from "@mui/icons-material";
+import { ArrowBack, DragHandle, Send } from "@mui/icons-material";
 import Icons from "@/assets/icons/icons";
 import classNames from "classnames";
 import { useTextToBot } from "@/service/bot/bot.hook";
@@ -25,7 +25,6 @@ const ChatModal = ({
   const [userMessage, setUserMessage] = useState<string>("");
   const [messages, setMessages] = useState<TMessages[]>([
     { sender: "bot", text: "Привет! Чем могу помочь?" },
-    { sender: "user", text: "Привет, иди нахуй" },
   ]);
   const [loadingMessageId, setLoadingMessageId] = useState<number | null>(null);
 
@@ -35,7 +34,7 @@ const ChatModal = ({
       fontSize: "1.4rem",
     },
     "& .MuiInputLabel-root": {
-      fontSize: "1.4rem",
+      fontSize: "1.5rem",
       padding: "0 1rem",
     },
   };

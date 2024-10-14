@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { getRooms } from "@/service/rooms/rooms.service";
 import { getHierarchy } from "@/service/hierarchy/hierarchy.service";
 import { IRoom } from "@/ts/types";
 import RecursiveCheckbox from "@/components/recursive-checkbox/recursive-checkbox";
@@ -11,6 +10,8 @@ import classes from "./styles.module.scss";
 import NiceModal from "@ebay/nice-modal-react";
 import CreateCabinetModal from "@/modals/employees/create-cabinet.modal";
 import { useUpdateRoom } from "@/service/rooms/rooms.hook";
+import useRooms from "@/pages/employees/hooks/useRooms.ts";
+import CustomPagination from "@/components/customPagination/CustomPagination.tsx";
 
 const EmployeeCabinet = () => {
   const updateRoom = useUpdateRoom();
@@ -18,6 +19,9 @@ const EmployeeCabinet = () => {
   const [selectedItems, setSelectedItems] = useState<
     { id: number; type: "service" | "category"; isChecked: number }[]
   >([]);
+
+  const { roomData, nextPage, prevPage, currentPage, totalPages, isLoading } =
+    useRooms();
 
   const handleRoomClick = (room: IRoom) => {
     setSelectedRoom(room.id);
@@ -41,15 +45,11 @@ const EmployeeCabinet = () => {
   ) => {
     setSelectedItems((prev) => {
       if (isChecked === 1) {
-        // Add the item if it's checked
         return [...prev, { id, type, isChecked }];
       } else if (isChecked === 2) {
-        // Remove the item if it's unchecked
         return prev.filter((item) => !(item.id === id && item.type === type));
       } else if (isChecked === 3) {
-        // For intermediate state, you might want to handle differently.
-        // This example does not add or remove but could be extended based on your needs.
-        return prev; // Keep the state as is or update based on specific logic.
+        return prev;
       }
       return prev;
     });
@@ -63,12 +63,13 @@ const EmployeeCabinet = () => {
     updateRoom.mutate(room);
   };
 
-  const { data: roomData } = useQuery({
-    queryKey: ["roomData"],
-    queryFn: getRooms,
-    staleTime: Infinity,
-    refetchOnWindowFocus: false,
-  });
+  const handlePageChange = (page: number) => {
+    if (page > currentPage) {
+      nextPage();
+    } else if (page < currentPage) {
+      prevPage();
+    }
+  };
 
   const { data: serviceData } = useQuery({
     queryKey: ["serviceData"],
@@ -88,25 +89,36 @@ const EmployeeCabinet = () => {
           </div>
           <Divider />
           <div className={classes["main__content__cabinets__items"]}>
-            <ul>
-              {roomData?.map((room: IRoom) => (
-                <li key={room.id}>
-                  <Button
-                    onClick={() => handleRoomClick(room)}
-                    className={
-                      selectedRoom === room.id ? classes["selected"] : ""
-                    }
-                  >
-                    <p>{room.name}</p>{" "}
-                    <span>
-                      {room.available_online
-                        ? "Доступен онлайн"
-                        : "Не доступен онлайн"}
-                    </span>
-                  </Button>
-                </li>
-              ))}
-            </ul>
+            {isLoading ? (
+              <p>Загрузка...</p>
+            ) : (
+              <>
+                <ul>
+                  {roomData?.map((room: IRoom) => (
+                    <li key={room.id}>
+                      <Button
+                        onClick={() => handleRoomClick(room)}
+                        className={
+                          selectedRoom === room.id ? classes["selected"] : ""
+                        }
+                      >
+                        <p>{room.name}</p>{" "}
+                        <span>
+                          {room.available_online
+                            ? "Доступен онлайн"
+                            : "Не доступен онлайн"}
+                        </span>
+                      </Button>
+                    </li>
+                  ))}
+                </ul>
+                <CustomPagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={handlePageChange}
+                />
+              </>
+            )}
           </div>
         </div>
         <div className={classes["main__content__cabinets"]}>
