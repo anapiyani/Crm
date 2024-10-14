@@ -51,6 +51,7 @@
       line-height: 39.9px;
       padding-left: 0.5rem;
     }
+
     p {
       font-weight: 600;
       font-size: 1.6rem;
@@ -58,6 +59,7 @@
       line-height: 2.4rem;
       padding-left: 0.5rem;
     }
+
     button {
       font-size: 1.6rem;
       text-transform: capitalize;
@@ -67,12 +69,14 @@
   &__chat-contnet {
     padding: 2rem;
   }
+
   &__form {
     padding: 2rem;
     position: absolute;
     bottom: 7rem;
     display: flex;
     width: 100%;
+
     button {
       margin-left: 1rem;
     }
@@ -97,6 +101,7 @@
   align-items: center;
   gap: 0.5rem;
   width: 100%;
+
   img {
     width: 30.76px;
     height: 29px;
