@@ -10,6 +10,48 @@ import {
   Description,
   VisibilityOffOutlined,
 } from "@mui/icons-material";
+import { styled } from "@mui/material/styles";
+
+const StyledIcon = styled("span")<{ fontSize: string }>(({ fontSize }) => ({
+  display: "inline-flex",
+  fontSize,
+}));
+
+const StyledSearchButton = styled(Button)({
+  fontSize: "1.4rem",
+  textTransform: "none",
+  padding: "0.4rem 0.8rem 0.4rem 1.2rem",
+  minHeight: "4rem",
+  boxShadow: "none",
+  borderRadius: "0.8rem",
+});
+
+const StyledShowTagsButton = styled(Button)({
+  fontSize: "1.4rem",
+  color: "#1976d2",
+  textTransform: "none",
+  padding: "0.2rem 1.2rem",
+});
+
+const StyledReportButton = styled(Button)({
+  fontSize: "1.4rem",
+  textTransform: "none",
+  padding: "0.2rem 1.2rem",
+  borderRadius: "0.4rem",
+  backgroundColor: "#1976d2",
+  "&:hover": {
+    backgroundColor: "#115293",
+  },
+  minHeight: "3.2rem",
+});
+
+const StyledChip = styled(Chip)(({ selected }: { selected: boolean }) => ({
+  fontSize: "1.4rem",
+  border: "none",
+  height: "2.4rem",
+  width: "auto",
+  backgroundColor: selected ? "#97C3F0" : "#E3EFFB",
+}));
 
 const Report = () => {
   const [formData, setFormData] = useState({});
@@ -96,20 +138,9 @@ const Report = () => {
             />
           </div>
 
-          <Button
-            variant="contained"
-            color="primary"
-            sx={{
-              fontSize: "1.4rem",
-              textTransform: "none",
-              padding: "0.4rem 0.8rem 0.4rem 1.2rem",
-              minHeight: "4rem",
-              boxShadow: "none",
-              borderRadius: "0.8rem",
-            }}
-          >
+          <StyledSearchButton variant="contained" color="primary">
             Искать
-          </Button>
+          </StyledSearchButton>
         </div>
       </div>
       <div className={classes.report__content}>
@@ -121,19 +152,12 @@ const Report = () => {
 
           <div className={classes.report__tags__list}>
             {tagCategories.primary.map((tag) => (
-              <Chip
+              <StyledChip
                 key={tag}
                 label={tag}
                 variant="outlined"
+                selected={selectedTags.primary === tag}
                 onClick={() => handleTagClick("primary", tag)}
-                sx={{
-                  fontSize: "1.4rem",
-                  border: "none",
-                  height: "2.4rem",
-                  width: "auto",
-                  backgroundColor:
-                    selectedTags.primary === tag ? "#97C3F0" : "#E3EFFB",
-                }}
               />
             ))}
           </div>
@@ -154,19 +178,12 @@ const Report = () => {
 
           <div className={classes.secondaryTags}>
             {tagCategories.secondary[selectedTags.primary || ""]?.map((tag) => (
-              <Chip
+              <StyledChip
                 key={tag}
                 label={tag}
                 variant="outlined"
+                selected={selectedTags.secondary === tag}
                 onClick={() => handleTagClick("secondary", tag)}
-                sx={{
-                  fontSize: "1.4rem",
-                  border: "none",
-                  height: "2.4rem",
-                  width: "auto",
-                  backgroundColor:
-                    selectedTags.secondary === tag ? "#97C3F0" : "#E3EFFB",
-                }}
               />
             ))}
           </div>
@@ -182,7 +199,6 @@ const Report = () => {
                 Пожалуйста, выберите хотя бы один тег для поиска отчётов
               </p>
             )}
-
             <Divider />
           </div>
           {selectedTags.secondary &&
@@ -190,49 +206,35 @@ const Report = () => {
             <div className={classes.reportCard}>
               <div className={classes.reportCard__container}>
                 <div className={classes.reportCard__content}>
-                  <Description sx={{ fontSize: "2.4rem" }} />
+                  <StyledIcon as={Description} fontSize="2.4rem" />{" "}
                   <p className={classes.reportCard__title}>
                     Отчет по абонементам
                   </p>
                 </div>
 
                 <div className={classes.reportCard__actions}>
-                  <Button
+                  <StyledShowTagsButton
                     variant="text"
                     startIcon={
                       showTags ? (
-                        <VisibilityOffOutlined sx={{ fontSize: "2rem" }} />
+                        <StyledIcon
+                          as={VisibilityOffOutlined}
+                          fontSize="2rem"
+                        />
                       ) : (
-                        <VisibilityOutlined sx={{ fontSize: "2rem" }} />
+                        <StyledIcon as={VisibilityOutlined} fontSize="2rem" />
                       )
                     }
                     onClick={toggleShowTags}
-                    sx={{
-                      fontSize: "1.4rem",
-                      color: "#1976d2",
-                      textTransform: "none",
-                      padding: "0.2rem 1.2rem",
-                    }}
                   >
                     {showTags ? "Скрыть теги" : "Показать теги"}
-                  </Button>
-                  <Button
+                  </StyledShowTagsButton>
+                  <StyledReportButton
                     variant="contained"
-                    endIcon={<ArrowForward sx={{ fontSize: "2rem" }} />}
-                    sx={{
-                      fontSize: "1.4rem",
-                      textTransform: "none",
-                      padding: "0.2rem 1.2rem",
-                      borderRadius: "0.4rem",
-                      backgroundColor: "#1976d2",
-                      "&:hover": {
-                        backgroundColor: "#115293",
-                      },
-                      minHeight: "3.2rem",
-                    }}
+                    endIcon={<StyledIcon as={ArrowForward} fontSize="2rem" />}
                   >
                     Перейти к отчету
-                  </Button>
+                  </StyledReportButton>
                 </div>
               </div>
 
@@ -242,21 +244,12 @@ const Report = () => {
                   <div className={classes.reportCard__tagsList}>
                     {tagCategories.tertiary[selectedTags.secondary || ""]?.map(
                       (tag) => (
-                        <Chip
+                        <StyledChip
                           key={tag}
                           label={tag}
                           variant="outlined"
+                          selected={selectedTags.tertiary === tag}
                           onClick={() => handleTagClick("tertiary", tag)}
-                          sx={{
-                            fontSize: "1.4rem",
-                            border: "none",
-                            height: "2.4rem",
-                            width: "auto",
-                            backgroundColor:
-                              selectedTags.tertiary === tag
-                                ? "#97C3F0"
-                                : "#E3EFFB",
-                          }}
                         />
                       )
                     )}

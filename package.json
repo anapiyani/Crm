@@ -34,6 +34,7 @@
     "@mui/lab": "^5.0.0-alpha.172",
     "@mui/material": "^5.16.7",
     "@mui/styled-engine-sc": "^6.0.0-alpha.18",
+    "@mui/styles": "^6.1.3",
     "@mui/x-charts": "^7.8.0",
     "@mui/x-date-pickers": "^7.16.0",
     "@reduxjs/toolkit": "^2.2.6",
