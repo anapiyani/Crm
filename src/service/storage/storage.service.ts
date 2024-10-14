@@ -8,8 +8,14 @@ import {
 } from "@/ts/storage.interface";
 import api from "../api";
 
-export const getStorages = (): Promise<IStorage[]> => {
-  return api.get("/storages/").then((res) => res.data);
+export const getStorages = ({
+  queryKey,
+}: {
+  queryKey: string[];
+}): Promise<IStorage> => {
+  return api
+    .get(`/storages/?page=${queryKey[1]}&page_size=5`)
+    .then((res) => res.data);
 };
 
 export const addStorage = (storage: IAddStorage): Promise<any> => {
@@ -37,7 +43,7 @@ export const getStorageMaterials = ({
 };
 
 export const getMaterialInformation = (
-  id: number | undefined,
+  id: number | undefined
 ): Promise<IMaterial> => {
   return api.get(`/materials/${id}/`).then((res) => res.data);
 };
