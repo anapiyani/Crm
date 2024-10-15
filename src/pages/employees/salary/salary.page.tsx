@@ -19,13 +19,11 @@ const SalaryPage = () => {
     queryKey: ["templateList"],
     queryFn: () => getTemplateList(undefined, "production"),
   });
-  const {
-    data: adminTemplateList,
-    isLoading: adminTemplateListLoading,
-  } = useQuery({
-    queryKey: ["adminTemplateList"],
-    queryFn: () => getTemplateList(undefined, "admin"),
-  });
+  const { data: adminTemplateList, isLoading: adminTemplateListLoading } =
+    useQuery({
+      queryKey: ["adminTemplateList"],
+      queryFn: () => getTemplateList(undefined, "admin"),
+    });
   const {
     data: managementTemplateList,
     isLoading: managementTemplateListLoading,
