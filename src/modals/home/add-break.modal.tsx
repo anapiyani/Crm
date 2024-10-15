@@ -15,7 +15,7 @@ const AddBreak: React.FC<IAddBreakModalProps> = ({ resourceId, date }) => {
   const modal = useModal();
   const addBreakToScheduleMutation = useAddBreakToSchedule();
   const [startTime, setStartTime] = useState<string>("08:00");
-  const [endTime, setEndTime] = useState<string>("23:00");
+  const [endTime, setEndTime] = useState<string>("11:00");
   const [comment, setComment] = useState<string>("");
 
   const handleSaveClick = () => {

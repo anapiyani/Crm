@@ -74,7 +74,7 @@ export const addMaterialsForVisit = ({
 }: {
   appointment_id: number;
   appointment_materials: IAppointmentMaterials;
-}): Promise<any> => {
+}): Promise<unknown> => {
   return api
     .put(
       `/appointments/appointments/${appointment_id}/add-materials/`,

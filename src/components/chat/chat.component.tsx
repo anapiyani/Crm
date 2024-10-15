@@ -1,14 +1,22 @@
 import { FormEvent, useCallback, useEffect, useRef, useState } from "react";
 import classes from "./style.module.scss";
 import { Button, Divider, SxProps, TextField } from "@mui/material";
-import { ArrowBack, DragHandle, Send } from "@mui/icons-material";
+import { ArrowBack, Send, DragHandle } from "@mui/icons-material";
 import Icons from "@/assets/icons/icons";
 import classNames from "classnames";
 import { useTextToBot } from "@/service/bot/bot.hook";
+import { TMessages } from "@/ts/bot.types";
+import useHandleSendMessage from "./hooks/useSendMessage";
 
-type TMessages = {
-  sender: "user" | "bot";
-  text: string;
+const FormInputStyles: SxProps = {
+  width: "100%",
+  "& .MuiOutlinedInput-root": {
+    fontSize: "1.4rem",
+  },
+  "& .MuiInputLabel-root": {
+    fontSize: "1.5rem",
+    padding: "0 1rem",
+  },
 };
 
 const ChatModal = ({
@@ -18,26 +26,14 @@ const ChatModal = ({
   closeMenuChat: () => void;
   open: boolean;
 }) => {
-  const mutation = useTextToBot();
-  const [chatMenuWidth, setChatMenuWidth] = useState<number>(470);
+  const [chatMenuWidth, setChatMenuWidth] = useState<number>(570);
+  const [userMessage, setUserMessage] = useState<string>("");
+  const [messages, setMessages] = useState<TMessages[]>([]);
+  const [loadingMessageId, setLoadingMessageId] = useState<number | null>(null);
   const chatMenuRef = useRef<HTMLDivElement>(null);
   const isResizingRef = useRef(false);
-  const [userMessage, setUserMessage] = useState<string>("");
-  const [messages, setMessages] = useState<TMessages[]>([
-    { sender: "bot", text: "Привет! Чем могу помочь?" },
-  ]);
-  const [loadingMessageId, setLoadingMessageId] = useState<number | null>(null);
-
-  const FormInputStyles: SxProps = {
-    width: "100%",
-    "& .MuiOutlinedInput-root": {
-      fontSize: "1.4rem",
-    },
-    "& .MuiInputLabel-root": {
-      fontSize: "1.5rem",
-      padding: "0 1rem",
-    },
-  };
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const mutation = useTextToBot();
 
   const startResizing = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
@@ -49,7 +45,7 @@ const ChatModal = ({
   const handleMouseMove = useCallback((e: MouseEvent) => {
     if (!isResizingRef.current) return;
     const newWidth = e.offsetX;
-    if (newWidth >= 300 && newWidth <= 800) {
+    if (newWidth >= 330 && newWidth <= 820) {
       setChatMenuWidth(newWidth);
     }
   }, []);
@@ -60,47 +56,21 @@ const ChatModal = ({
     document.removeEventListener("mouseup", stopResizing);
   }, [handleMouseMove]);
 
-  const handleSendMessage = async (event: FormEvent) => {
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const handleSendMessage = useHandleSendMessage(
+    setMessages,
+    setUserMessage,
+    setLoadingMessageId,
+    userMessage,
+    messages
+  );
+
+  const onSubmitForm = async (event: FormEvent) => {
     event.preventDefault();
-
-    if (userMessage.trim() === "") return;
-    const newMessages: TMessages[] = [
-      ...messages,
-      { sender: "user", text: userMessage },
-    ];
-    setMessages(newMessages);
-
-    const loadingIndex = newMessages.length;
-    const loadingMessages: TMessages[] = [
-      ...newMessages,
-      { sender: "bot", text: "Ассистент печатает..." },
-    ];
-    setMessages(loadingMessages);
-    setLoadingMessageId(loadingIndex);
-
-    try {
-      const response = await mutation.mutateAsync({ query: userMessage });
-      setMessages((prevMessages) => {
-        const updatedMessages = [...prevMessages];
-        updatedMessages[loadingIndex] = {
-          sender: "bot",
-          text: response?.response || "Ошибка получения ответа",
-        };
-        return updatedMessages;
-      });
-    } catch (error) {
-      setMessages((prevMessages) => {
-        const updatedMessages = [...prevMessages];
-        updatedMessages[loadingIndex] = {
-          sender: "bot",
-          text: "Что-то пошло не так",
-        };
-        return updatedMessages;
-      });
-    }
-
-    setUserMessage("");
-    setLoadingMessageId(null);
+    handleSendMessage(event);
   };
 
   useEffect(() => {
@@ -113,12 +83,6 @@ const ChatModal = ({
       document.removeEventListener("mouseup", stopResizing);
     };
   }, [handleMouseMove, stopResizing]);
-
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
 
   useEffect(() => {
     scrollToBottom();
@@ -161,7 +125,7 @@ const ChatModal = ({
           ))}
         </div>
         <form
-          onSubmit={handleSendMessage}
+          onSubmit={onSubmitForm}
           className={classes["chat-menu-content__form"]}
         >
           <TextField
