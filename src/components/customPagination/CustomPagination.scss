@@ -30,7 +30,10 @@
     min-width: 36px;
     outline: none;
     padding: 0 8px;
-    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+    transition:
+      background-color 0.3s,
+      color 0.3s,
+      border-color 0.3s;
     user-select: none;
 
     &:hover {
