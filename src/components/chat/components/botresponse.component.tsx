@@ -5,7 +5,7 @@ import { TBotAnswer, TBotResponse } from "@/ts/bot.types";
 
 const renderBotResponse = (botResponse: TBotResponse) => {
   const sameDataResponse = botResponse.appointments?.reduce(
-    (acc, answer) => {
+    (acc: Record<string, TBotAnswer[]>, answer: TBotAnswer) => {
       const key = `${answer.date}`;
       if (!acc[key]) {
         acc[key] = [];

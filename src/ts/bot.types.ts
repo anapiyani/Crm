@@ -1,9 +1,11 @@
 import { ReactNode } from "react";
 
 export type TBotResponse = {
-  response: TBotAnswer[];
+  appointments: TBotAnswer[];
   history: TBotHistory[];
   human_readable_text: string;
+  status: string;
+  type: string;
 };
 
 export type TBotHistory = {
@@ -13,6 +15,9 @@ export type TBotHistory = {
 };
 
 export type TBotAnswer = {
+  appointment_id: number | null;
+  attendance_percentage: number;
+  client_phone_number: string;
   date: string;
   start_time: string;
   end_time: string;
