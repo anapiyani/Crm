@@ -6,26 +6,23 @@ import React, {
   useState,
 } from "react";
 import NiceModal from "@ebay/nice-modal-react";
-import toast from "react-hot-toast";
 import {
   Autocomplete,
-  Divider,
-  TextField,
   Button,
+  Divider,
   Menu,
   MenuItem,
+  TextField,
 } from "@mui/material";
 import InputMask from "react-input-mask";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import {
-  LocalizationProvider,
   DateCalendar,
+  LocalizationProvider,
   PickersDay,
   PickersDayProps,
 } from "@mui/x-date-pickers";
-import { Cached, Search, AddCircle, Help } from "@mui/icons-material";
-
-import { ResourceApi } from "@fullcalendar/resource/index.js";
+import { AddCircle, Cached, Help, Search } from "@mui/icons-material";
 import FullCalendar from "@fullcalendar/react";
 import resourceTimeGridPlugin from "@fullcalendar/resource-timegrid";
 import interactionPlugin from "@fullcalendar/interaction";
@@ -40,14 +37,14 @@ import CustomDatePicker from "@/components/date-picker/date-picker-custom";
 import CustomTextField from "@/components/textField/textField.component";
 import ResourceDropdownMenu from "./_components/resource-dropdown-menu";
 import {
+  AddEmployeeScheduleModal,
+  ChangeEmployeeModal,
   CreateAppointmentModal,
   DeleteBreakModal,
   EventDetailsModal,
-  ShiftReportModal,
-  AddEmployeeScheduleModal,
   ExportAppointmentsModal,
+  ShiftReportModal,
   ShowDeletedAppointmentsModal,
-  ChangeEmployeeModal,
 } from "@/modals";
 
 import Icons from "@/assets/icons/icons";
