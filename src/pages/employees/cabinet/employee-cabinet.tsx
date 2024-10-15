@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getHierarchy } from "@/service/hierarchy/hierarchy.service";
-import { IRoom } from "@/ts/types";
+import { Room } from "@/ts/types";
 import RecursiveCheckbox from "@/components/recursive-checkbox/recursive-checkbox";
 import BreadcrumbsCustom from "@/components/navigation/breadcrumbs/breadcrumbs";
 import { Button, Divider } from "@mui/material";
@@ -23,7 +23,7 @@ const EmployeeCabinet = () => {
   const { roomData, nextPage, prevPage, currentPage, totalPages, isLoading } =
     useRooms();
 
-  const handleRoomClick = (room: IRoom) => {
+  const handleRoomClick = (room: Room) => {
     setSelectedRoom(room.id);
     setSelectedItems(
       room.services.map((serviceId) => ({
@@ -55,7 +55,7 @@ const EmployeeCabinet = () => {
     });
   };
 
-  const handleSave = (room: IRoom) => {
+  const handleSave = (room: Room) => {
     room.services = selectedItems
       .filter((item) => item.type === "service")
       .map((item) => item.id);
@@ -94,7 +94,7 @@ const EmployeeCabinet = () => {
             ) : (
               <>
                 <ul>
-                  {roomData?.map((room: IRoom) => (
+                  {roomData?.map((room: Room) => (
                     <li key={room.id}>
                       <Button
                         onClick={() => handleRoomClick(room)}
@@ -128,7 +128,7 @@ const EmployeeCabinet = () => {
               startIcon={<SaveOutlined />}
               onClick={() =>
                 handleSave(
-                  roomData?.find((room) => room.id === selectedRoom) as IRoom
+                  roomData?.find((room) => room.id === selectedRoom) as Room
                 )
               }
             >
