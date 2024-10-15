@@ -5,13 +5,18 @@ import { ArrowBack, Send, DragHandle } from "@mui/icons-material";
 import Icons from "@/assets/icons/icons";
 import classNames from "classnames";
 import { useTextToBot } from "@/service/bot/bot.hook";
-import { TBotResponse } from "@/ts/bot.types";
-import MessageBox from "../message-box/message-box.component";
-import dayjs from "dayjs";
+import { TMessages } from "@/ts/bot.types";
+import useHandleSendMessage from "./hooks/useSendMessage";
 
-type TMessages = {
-  sender: "user" | "bot";
-  text: string | React.ReactNode;
+const FormInputStyles: SxProps = {
+  width: "100%",
+  "& .MuiOutlinedInput-root": {
+    fontSize: "1.4rem",
+  },
+  "& .MuiInputLabel-root": {
+    fontSize: "1.5rem",
+    padding: "0 1rem",
+  },
 };
 
 const ChatModal = ({
@@ -21,24 +26,14 @@ const ChatModal = ({
   closeMenuChat: () => void;
   open: boolean;
 }) => {
-  const mutation = useTextToBot();
-  const [chatMenuWidth, setChatMenuWidth] = useState<number>(470);
-  const chatMenuRef = useRef<HTMLDivElement>(null);
-  const isResizingRef = useRef(false);
+  const [chatMenuWidth, setChatMenuWidth] = useState<number>(570);
   const [userMessage, setUserMessage] = useState<string>("");
   const [messages, setMessages] = useState<TMessages[]>([]);
   const [loadingMessageId, setLoadingMessageId] = useState<number | null>(null);
-
-  const FormInputStyles: SxProps = {
-    width: "100%",
-    "& .MuiOutlinedInput-root": {
-      fontSize: "1.4rem",
-    },
-    "& .MuiInputLabel-root": {
-      fontSize: "1.5rem",
-      padding: "0 1rem",
-    },
-  };
+  const chatMenuRef = useRef<HTMLDivElement>(null);
+  const isResizingRef = useRef(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const mutation = useTextToBot();
 
   const startResizing = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
@@ -50,7 +45,7 @@ const ChatModal = ({
   const handleMouseMove = useCallback((e: MouseEvent) => {
     if (!isResizingRef.current) return;
     const newWidth = e.offsetX;
-    if (newWidth >= 300 && newWidth <= 800) {
+    if (newWidth >= 330 && newWidth <= 820) {
       setChatMenuWidth(newWidth);
     }
   }, []);
@@ -61,97 +56,21 @@ const ChatModal = ({
     document.removeEventListener("mouseup", stopResizing);
   }, [handleMouseMove]);
 
-  const handleSendMessage = async (event: FormEvent) => {
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const handleSendMessage = useHandleSendMessage(
+    setMessages,
+    setUserMessage,
+    setLoadingMessageId,
+    userMessage,
+    messages
+  );
+
+  const onSubmitForm = async (event: FormEvent) => {
     event.preventDefault();
-
-    if (userMessage.trim() === "") return;
-    const newMessages: TMessages[] = [
-      ...messages,
-      { sender: "user", text: userMessage },
-    ];
-    setMessages(newMessages);
-
-    const loadingIndex = newMessages.length;
-    const loadingMessages: TMessages[] = [
-      ...newMessages,
-      { sender: "bot", text: "Ассистент печатает..." },
-    ];
-    setMessages(loadingMessages);
-    setLoadingMessageId(loadingIndex);
-
-    try {
-      const response = (await mutation.mutateAsync({
-        query: userMessage,
-      })) as TBotResponse;
-      const historyMessages: TMessages[] = response.history.flatMap(
-        (entry: { user_query: string; bot_response: string }) => [
-          {
-            sender: "user",
-            text: entry.user_query,
-          },
-          {
-            sender: "bot",
-            text: entry.bot_response,
-          },
-        ]
-      );
-
-      const botText = (
-        <>
-          <div className={classes.bot_response_content}>
-            <p>{response.human_readable_text}</p>
-          </div>
-          {response.response?.map((answer, index) => (
-            <div className={classes.bot_response_answer}>
-              <h3>{dayjs(answer.date).format("DD.MM.YYYY")}:</h3>
-              <MessageBox
-                start_time={answer.start_time}
-                end_time={answer.end_time}
-                user_first_name={answer.client_first_name}
-                user_last_name={answer.client_last_name}
-                service={answer.services}
-                employee_first_name={answer.employee_first_name}
-                employee_last_name={answer.employee_last_name}
-                status={answer.status}
-              />
-            </div>
-          ))}
-        </>
-      );
-
-      const updatedMessages: TMessages[] = [
-        ...historyMessages,
-        ...messages,
-        { sender: "user", text: userMessage },
-        { sender: "bot", text: botText },
-      ];
-
-      setMessages(updatedMessages);
-    } catch (error) {
-      setMessages((prevMessages) => {
-        const updatedMessages = [...prevMessages];
-        if (loadingIndex !== null) {
-          if (
-            error instanceof Error &&
-            (error as any).response?.data?.gpt_response
-          ) {
-            updatedMessages[loadingIndex] = {
-              sender: "bot",
-              text: (error as any).response.data.gpt_response,
-            };
-          } else {
-            updatedMessages[loadingIndex] = {
-              sender: "bot",
-              text: "Что-то пошло не так.",
-            };
-          }
-        }
-        return updatedMessages;
-      });
-    }
-
-    setUserMessage("");
-    setLoadingMessageId(null);
+    handleSendMessage(event);
   };
 
   useEffect(() => {
@@ -164,12 +83,6 @@ const ChatModal = ({
       document.removeEventListener("mouseup", stopResizing);
     };
   }, [handleMouseMove, stopResizing]);
-
-  const messagesEndRef = useRef<HTMLDivElement>(null);
-
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
 
   useEffect(() => {
     scrollToBottom();
@@ -212,7 +125,7 @@ const ChatModal = ({
           ))}
         </div>
         <form
-          onSubmit={handleSendMessage}
+          onSubmit={onSubmitForm}
           className={classes["chat-menu-content__form"]}
         >
           <TextField

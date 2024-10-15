@@ -260,7 +260,7 @@ const addMaterials = ({ appointment_id }: { appointment_id: number }) => {
             getOptionLabel={(option) => option.name}
             renderOption={(props, option) => (
               <li {...props} key={option.id}>
-                <p style={{ fontSize: "1.6rem" }}>{option.name}</p>
+                <p>{option.name}</p>
               </li>
             )}
             value={

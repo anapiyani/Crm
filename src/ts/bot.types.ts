@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 export type TBotResponse = {
   response: TBotAnswer[];
   history: TBotHistory[];
@@ -20,4 +22,9 @@ export type TBotAnswer = {
   client_first_name: string;
   client_last_name: string;
   services: string;
+};
+
+export type TMessages = {
+  sender: "user" | "bot";
+  text: string | ReactNode;
 };

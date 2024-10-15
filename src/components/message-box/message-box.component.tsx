@@ -7,43 +7,57 @@ type TProps = {
   user_first_name: string;
   user_last_name: string;
   service: string;
-  phone?: string;
   employee_first_name: string;
   employee_last_name: string;
   status: string;
+  attendance_percentage?: number;
+  appointment_id?: number;
+  client_phone_number?: string;
 };
 
-const MessageBox = (props: TProps) => {
+const MessageBox = ({
+  start_time,
+  end_time,
+  user_first_name,
+  user_last_name,
+  service,
+  employee_first_name,
+  employee_last_name,
+  status,
+  attendance_percentage,
+  appointment_id,
+  client_phone_number,
+}: TProps) => {
   return (
     <div className={classes.box}>
       <div className={classes.box__header}>
         <p>
-          {dayjs(`${dayjs().format("YYYY-MM-DD")}T${props.start_time}`).format(
+          {dayjs(`${dayjs().format("YYYY-MM-DD")}T${start_time}`).format(
             "HH:mm"
           )}{" "}
           -{" "}
-          {dayjs(`${dayjs().format("YYYY-MM-DD")}T${props.end_time}`).format(
-            "HH:mm"
-          )}
+          {dayjs(`${dayjs().format("YYYY-MM-DD")}T${end_time}`).format("HH:mm")}
         </p>
       </div>
       <div className={classes.box__main}>
+        <p>{appointment_id ? `ID: ${appointment_id}` : null}</p>
         <p>
-          {props.user_first_name} {props.user_last_name}
+          {user_first_name} {user_last_name}
         </p>
-        <p>{props.service}</p>
-        <p>{props.phone}</p>
+        <p>{service}</p>
+        <p>{client_phone_number}</p>
         <p>
           Статус:{" "}
-          {props.status === "scheduled"
+          {status === "scheduled"
             ? "Запланировано"
-            : props.status === "completed"
+            : status === "completed"
               ? "Завершено"
-              : props.status}
+              : status}
         </p>
         <p>
-          Сотрудник: {props.employee_first_name} {props.employee_last_name}
+          Сотрудник: {employee_first_name} {employee_last_name}
         </p>
+        <p>Явка: {attendance_percentage}%</p>
       </div>
     </div>
   );
