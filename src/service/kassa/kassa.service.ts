@@ -12,6 +12,7 @@ import {
   ISalaryPayment,
   ISearchKassa,
   IWithdrawal,
+  KassaOperationsItem,
   KassaResponse,
 } from "@/ts/kassa.interface";
 import { IResponseData } from "@/ts/types";
@@ -20,7 +21,7 @@ import api from "../api";
 export const getOperations = async (
   q?: string,
   kassaTransaction = false
-): Promise<IKassaOperations> => {
+): Promise<KassaOperationsItem[]> => {
   const baseUrl = "/operations/";
   const params = new URLSearchParams();
 
@@ -34,7 +35,7 @@ export const getOperations = async (
 
   const url = params.toString() ? `${baseUrl}?${params.toString()}` : baseUrl;
 
-  const response = await api.get<IKassaOperations>(url);
+  const response = await api.get<KassaOperationsItem[]>(url);
   return response.data;
 };
 

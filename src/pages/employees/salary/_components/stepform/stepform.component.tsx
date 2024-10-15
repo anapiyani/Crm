@@ -55,14 +55,8 @@ const StepForm: React.FC<IStepFormProps> = ({
     "Привлечение клиентов",
     "Развитие клиентов",
   ]);
-  const {
-    register,
-    handleSubmit,
-    reset,
-    control,
-    setValue,
-    getValues,
-  } = useForm<ITemplate>();
+  const { register, handleSubmit, reset, control, setValue, getValues } =
+    useForm<ITemplate>();
   const assignTemplate = useAssignTemplate();
 
   useEffect(() => {

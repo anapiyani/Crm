@@ -1,9 +1,10 @@
 import { IKassaOperations, KassaOperationsItem } from "@/ts/kassa.interface.ts";
 
 const useProcessedOperationsData = (
-  operations?: IKassaOperations
+  operations?: KassaOperationsItem[]
 ): { label: string; value: string; isParent: boolean }[] => {
   const result: { label: string; value: string; isParent: boolean }[] = [];
+
   if (operations) {
     const traverse = (nodes: KassaOperationsItem[]) => {
       if (nodes) {
@@ -25,7 +26,7 @@ const useProcessedOperationsData = (
         });
       }
     };
-    traverse(operations.results);
+    traverse(operations);
     return result;
   } else {
     return [];
