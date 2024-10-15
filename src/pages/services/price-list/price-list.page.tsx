@@ -153,10 +153,9 @@ const ServicePriceList = () => {
 
   const { traverse } = useTraverseServicePrice();
 
-
   const renderTable = () => {
     return (
-      <div style={{marginTop:"2rem"}}>
+      <div style={{ marginTop: "2rem" }}>
         <TableService
           data={tableData}
           title={selectedDepartment?.name ?? "Отдел"}
@@ -358,7 +357,7 @@ const ServicePriceList = () => {
           )}
         </div>
       </FormControl>
-      <Divider sx={{mt:"2rem"}}/>
+      <Divider sx={{ mt: "2rem" }} />
       {renderTable()}
     </div>
   );

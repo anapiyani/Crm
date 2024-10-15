@@ -21,7 +21,7 @@ const App = () => {
               path={route.path}
               element={<ProtectedRoute>{route.component}</ProtectedRoute>}
             />
-          ))} 
+          ))}
 
           <Route
             path="/analytics/reports/"
@@ -33,7 +33,7 @@ const App = () => {
           >
             <Route path="search" element={<Report />} />
             <Route path="clients" element={<ReportClients />} />
-          </Route> 
+          </Route>
         </Route>
 
         <Route path="*" element={<NotFound />} />
