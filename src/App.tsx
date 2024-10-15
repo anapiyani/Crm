@@ -7,6 +7,7 @@ import { NotFound, Report, ReportClients } from "./pages";
 import { ErrorBoundary } from "react-error-boundary";
 import ErrorFallback from "./ErrorBoundary";
 import ReportsLayout from "./layout/reportsLayout/reports.layout";
+import GeneralReports from "./pages/reports/general-reports/generalReports.page";
 
 const App = () => {
   return (
@@ -33,7 +34,8 @@ const App = () => {
           >
             <Route path="search" element={<Report />} />
             <Route path="clients" element={<ReportClients />} />
-          </Route>
+            <Route path="general-reports" element={<GeneralReports />} />
+          </Route> 
         </Route>
 
         <Route path="*" element={<NotFound />} />
