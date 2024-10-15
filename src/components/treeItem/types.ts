@@ -1,5 +1,5 @@
 import { IService, IServiceCategory } from "@/ts/service.interface";
-import { ISearchResult, ISearchResultStorage } from "@/ts/hierarchy.inteface";
+import { ISearchResult } from "@/ts/hierarchy.inteface";
 
 export type ServiceItemProps = {
   service: IService;
@@ -12,7 +12,7 @@ export type TreeItemProps = {
   category: IServiceCategory;
   selectedServiceId: number | null;
   selectedCategoryId: IServiceCategory | null;
-  searchResults?: ISearchResult | ISearchResultStorage;
+  searchResults?: ISearchResult;
   onSelectCategory: (category: IServiceCategory) => void;
   onSelectService: (service: IService) => void;
   onDropItem: (itemId: number, itemType: string, targetId: number) => void;
@@ -24,7 +24,7 @@ export type TreeItemContentProps = {
   category: IServiceCategory;
   isOpen: boolean;
   toggle: () => void;
-  isHighlighted: boolean;
+  isHighlighted?: boolean;
   selectedCategoryId: IServiceCategory | null;
   onSelectCategory: (category: IServiceCategory) => void;
   drag: (element: HTMLElement | null) => void;
@@ -34,7 +34,7 @@ export type TreeItemContentProps = {
 
 export type TreeViewProps = {
   categories: IServiceCategory[];
-  searchResults?: ISearchResult | ISearchResultStorage;
+  searchResults?: ISearchResult;
   onServiceSelect: (service: IService) => void;
 };
 

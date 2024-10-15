@@ -79,7 +79,7 @@ const TreeItem: FC<TreeItemProps> = ({
           ))}
           {category.services.length > 0 && (
             <ul>
-              {category.services.map((service) => (
+              {category.services.map((service: IService) => (
                 <ServiceItem
                   key={service.id}
                   service={service}
