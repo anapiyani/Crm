@@ -123,6 +123,19 @@ export interface IOptions {
   label: string;
 }
 
+export type ITemplateItem = {
+  id: number;
+  name: string;
+  template_type: string;
+  isEdit: boolean;
+};
+export type ITemplateList = {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: ITemplateItem[];
+};
+
 export interface ITemplate {
   name: string;
   template_type: "production" | "management" | "admin";
