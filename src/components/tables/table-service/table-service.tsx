@@ -1,6 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, CSSProperties } from "react";
 import {
   Card,
+  styled,
   Table,
   TableBody,
   TableCell,
@@ -10,13 +11,13 @@ import {
 } from "@mui/material";
 import { IServicePriceCurrent } from "@/ts/service.interface";
 
-interface ITableServiceProps {
+type ITableServiceProps = {
   data: IServicePriceCurrent[];
   title: string;
   unit?: string;
   hasParameters?: boolean;
   tableHeaders?: { name: string; key?: string }[];
-}
+};
 
 const TableService: React.FC<ITableServiceProps> = ({
   data,
@@ -31,9 +32,46 @@ const TableService: React.FC<ITableServiceProps> = ({
     setTableData(data);
   }, [data]);
 
+  const getRowBackground = (rowType: string): CSSProperties => ({
+    backgroundColor:
+      rowType === "section"
+        ? "#ffd651"
+        : rowType === "category"
+          ? "#BDEAF9"
+          : rowType === "subcategory"
+            ? "#FBC02D"
+            : rowType === "service"
+              ? "#F5F5F5"
+              : "transparent",
+  });
+
+  const getCellPadding = (level: number): CSSProperties => ({
+    paddingLeft: `${level * 20}px`,
+    maxWidth: "800px",
+  });
+
+  const styles: { [key: string]: CSSProperties } = {
+    headerCell: {
+      fontSize: "12px",
+    },
+    tableContainer: {
+      borderRadius: "8px",
+      boxShadow: "none",
+      border: "1px solid var(--divider)",
+      width: hasParameters ? "100%" : "fit-content",
+      minWidth: hasParameters ? "100%" : "600px",
+    },
+  };
+
+  const StyledTableBody = styled(TableBody)({
+    "& .MuiTableCell-root": {
+      fontSize: "12px",
+    },
+  });
+
   const renderHeader = () => {
     return tableHeaders.map((header, index) => (
-      <TableCell key={index} sx={{ fontSize: "12px" }}>
+      <TableCell key={index} sx={styles.headerCell}>
         {header.name}
       </TableCell>
     ));
@@ -42,23 +80,10 @@ const TableService: React.FC<ITableServiceProps> = ({
   const renderRows = (rowData: IServicePriceCurrent[], level = 1) => {
     return rowData.map((row, index) => (
       <React.Fragment key={`${row.title}-${index}`}>
-        <TableRow
-          sx={{
-            backgroundColor:
-              row.type === "section"
-                ? "#ffd651"
-                : row.type === "category"
-                  ? "#BDEAF9"
-                  : row.type === "subcategory"
-                    ? "#FBC02D"
-                    : row.type === "service"
-                      ? "#F5F5F5"
-                      : "transparent",
-          }}
-        >
+        <TableRow sx={row.type ? getRowBackground(row.type) : {}}>
           {!row.isDepartment && (
             <TableCell
-              sx={{ paddingLeft: `${level * 20}px`, maxWidth: "800px" }}
+              sx={getCellPadding(level)}
               colSpan={row.isService ? 1 : tableHeaders.length}
             >
               {row.title}
@@ -91,29 +116,12 @@ const TableService: React.FC<ITableServiceProps> = ({
   };
 
   return (
-    <TableContainer
-      component={Card}
-      sx={{
-        borderRadius: "8px",
-        boxShadow: "none",
-        border: "1px solid var(--divider)",
-        width: hasParameters ? "100%" : "fit-content",
-        minWidth: hasParameters ? "100%" : "600px",
-      }}
-    >
+    <TableContainer component={Card} sx={styles.tableContainer}>
       <Table size="small">
         <TableHead>
           <TableRow>{renderHeader()}</TableRow>
         </TableHead>
-        <TableBody
-          sx={{
-            "& .MuiTableCell-root": {
-              fontSize: "12px",
-            },
-          }}
-        >
-          {renderRows(tableData)}
-        </TableBody>
+        <StyledTableBody>{renderRows(tableData)}</StyledTableBody>
       </Table>
     </TableContainer>
   );

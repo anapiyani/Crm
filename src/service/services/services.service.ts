@@ -83,7 +83,5 @@ export const getServicePriceCurant = (
   if (role) params.append("role", role.toString());
 
   const url = `/services/services-price-curant/?${params.toString()}`;
-  console.log("Full URL:", url);
-
   return api.get(url).then((res) => res.data);
 };
