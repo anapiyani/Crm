@@ -31,6 +31,7 @@ import EmployeePage from "./employees/employee-card/employee.page";
 import DiscountPage from "./discounts/discounts.page";
 import InventoryPage from "./storage/accounting/storage-accounting.page";
 import NotificationPage from "./activity/notification/notification.page";
+import ReportClients from "./reports/clients/report-clients.page";
 
 export {
   Home,
@@ -64,4 +65,5 @@ export {
   DiscountPage,
   InventoryPage,
   NotificationPage,
+  ReportClients,
 };

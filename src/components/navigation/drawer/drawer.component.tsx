@@ -167,7 +167,7 @@ const ResponsiveDrawer = (props: IProps) => {
       icon: <Description />,
       children: [
         { text: "Аналитика", link: "/analytics/" },
-        { text: "Отчеты", link: "/analytics/reports" },
+        { text: "Отчеты", link: "/analytics/reports/search" },
       ],
     },
   ];
