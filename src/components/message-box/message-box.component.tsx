@@ -10,7 +10,6 @@ type TProps = {
   employee_first_name: string;
   employee_last_name: string;
   status: string;
-  attendance_percentage?: number;
   appointment_id?: number;
   client_phone_number?: string;
 };
@@ -24,7 +23,6 @@ const MessageBox = ({
   employee_first_name,
   employee_last_name,
   status,
-  attendance_percentage,
   appointment_id,
   client_phone_number,
 }: TProps) => {
@@ -57,7 +55,6 @@ const MessageBox = ({
         <p>
           Сотрудник: {employee_first_name} {employee_last_name}
         </p>
-        <p>Явка: {attendance_percentage}%</p>
       </div>
     </div>
   );

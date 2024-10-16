@@ -1,6 +1,6 @@
 import { Dispatch, FormEvent, ReactNode, SetStateAction } from "react";
 import { useTextToBot } from "@/service/bot/bot.hook";
-import { TMessages, TBotResponse, TBotAnswer } from "@/ts/bot.types";
+import { TMessages, TBotResponse } from "@/ts/bot.types";
 import { AxiosError } from "axios";
 import renderBotResponse from "../components/botresponse.component";
 
@@ -35,23 +35,10 @@ const useHandleSendMessage = (
       const response = (await mutation.mutateAsync({
         query: userMessage,
       })) as TBotResponse;
-      const historyMessages: TMessages[] = response.history.flatMap(
-        (entry: { user_query: string; bot_response: string }) => [
-          {
-            sender: "user",
-            text: entry.user_query,
-          },
-          {
-            sender: "bot",
-            text: entry.bot_response,
-          },
-        ]
-      );
 
       const botText: ReactNode = renderBotResponse(response);
 
       const updatedMessages: TMessages[] = [
-        ...historyMessages,
         ...messages,
         { sender: "user", text: userMessage },
         { sender: "bot", text: botText },
