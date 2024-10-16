@@ -1,11 +1,17 @@
 import React, { ReactNode, useState } from "react";
-import ExpandLessIcon from "@mui/icons-material/ExpandLess";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import LanOutlinedIcon from "@mui/icons-material/LanOutlined";
-import FolderIcon from "@mui/icons-material/Folder";
-import ContentCutIcon from "@mui/icons-material/ContentCut";
-import { Add, ContentPaste, Delete, Edit } from "@mui/icons-material";
 import {
+  Add,
+  ContentCut,
+  ContentPaste,
+  Delete,
+  Edit,
+  ExpandLess,
+  ExpandMore,
+  Folder,
+  LanOutlined,
+} from "@mui/icons-material";
+import {
+  CircularProgress,
   Divider,
   IconButton,
   ListItemIcon,
@@ -14,69 +20,68 @@ import {
   MenuItem,
 } from "@mui/material";
 import NiceModal from "@ebay/nice-modal-react";
-import createStorageCategoryModal from "@/modals/storage-catalog/create-storage-category.modal";
-import classes from "./styles.module.scss";
+import { useQuery } from "@tanstack/react-query";
 import {
   useDeleteStorageHierarchy,
   useMoveStorageHierarchy,
 } from "@/service/hierarchy/hierarchy.hook";
 import { IMaterial } from "@/ts/storage.interface";
-import {
-  IMoveHierarchy,
-  ISearchResultStorage,
-  IStorageCategory,
-} from "@/ts/hierarchy.inteface";
-import editStorageCategoryModal from "@/modals/storage-catalog/edit-storage-category.modal";
+import { IMoveHierarchy, ISearchResultStorage } from "@/ts/hierarchy.inteface";
 import { useDragAndDrop } from "@/components/treeItem/hooks/useDragAndDrop.ts";
 import MaterialItem from "@/components/treeItem/MaterialItem.tsx";
+import { TKatalogHierarchy } from "@/ts/service.interface.ts";
+import createStorageCategoryModal from "@/modals/storage-catalog/create-storage-category.modal";
+import editStorageCategoryModal from "@/modals/storage-catalog/edit-storage-category.modal";
+import classes from "./styles.module.scss";
+import { getHierarchyKatalog } from "@/service/hierarchy/hierarchy.service";
 
-type ICategoryProps = {
-  category: IStorageCategory;
-  selectedMaterialId: number | null;
-  selectedCategoryId: IStorageCategory | null;
-  searchResults?: ISearchResultStorage;
-  onSelectCategory: (category: IStorageCategory) => void;
-  onSelectMaterial: (material: IMaterial) => void;
-  onDropItem: (itemId: number, itemType: string, targetId: number) => void;
-  isOver: boolean;
-  onHover: (hovered: boolean, category: IStorageCategory) => void;
-};
-
-const levelsIcon: Record<string, ReactNode> = {
+const LEVEL_ICONS: Record<string, ReactNode> = {
   department: (
-    <LanOutlinedIcon
+    <LanOutlined
       style={{ color: "#0B6BCB", fontSize: "24px", marginRight: "1.6rem" }}
     />
   ),
   section: (
-    <FolderIcon
+    <Folder
       style={{ color: "#1E88E5", fontSize: "24px", marginRight: "1.6rem" }}
     />
   ),
   brand: (
-    <FolderIcon
+    <Folder
       style={{ color: "#1565C0", fontSize: "24px", marginRight: "1.6rem" }}
     />
   ),
   group: (
-    <FolderIcon
+    <Folder
       style={{ color: "#7B1FA2", fontSize: "24px", marginRight: "1.6rem" }}
     />
   ),
   category: (
-    <FolderIcon
+    <Folder
       style={{ color: "#EF6C00", fontSize: "24px", marginRight: "1.6rem" }}
     />
   ),
   subcategory: (
-    <FolderIcon
+    <Folder
       style={{ color: "#FBC02D", fontSize: "24px", marginRight: "1.6rem" }}
     />
   ),
 };
 
-const TreeItem: React.FC<ICategoryProps> = ({
-  category,
+type TreeItemProps = {
+  item: TKatalogHierarchy;
+  selectedMaterialId: number | null;
+  selectedCategoryId: TKatalogHierarchy | null;
+  searchResults?: ISearchResultStorage;
+  onSelectCategory: (category: TKatalogHierarchy) => void;
+  onSelectMaterial: (material: IMaterial) => void;
+  onDropItem: (itemId: number, itemType: string, targetId: number) => void;
+  isOver: boolean;
+  onHover: (hovered: boolean, category: TKatalogHierarchy) => void;
+};
+
+const TreeItem: React.FC<TreeItemProps> = ({
+  item,
   selectedMaterialId,
   selectedCategoryId,
   searchResults,
@@ -86,20 +91,37 @@ const TreeItem: React.FC<ICategoryProps> = ({
   isOver,
   onHover,
 }) => {
-  const { isOpen, toggle, isDragging, isOverCurrent, drag, drop } =
-    useDragAndDrop({
-      id: category.id,
-      type: "category",
-      onDropItem,
-      onHover: (isHovering, category) => onHover(isHovering, category),
-    });
+  const [isOpen, setIsOpen] = useState(false);
+  const { isDragging, isOverCurrent, drag, drop } = useDragAndDrop({
+    id: item.id,
+    type: "category",
+    onDropItem,
+    onHover: (isHovering) => onHover(isHovering, item),
+  });
+
+  const {
+    data: children,
+    isPending,
+    isError,
+  } = useQuery({
+    queryKey: ["storageHierarchyData", item.id],
+    queryFn: () => getHierarchyKatalog(item.id),
+    enabled: isOpen,
+    staleTime: Infinity,
+    refetchOnWindowFocus: false,
+  });
 
   const isHighlighted = searchResults?.hierarchical_items.some(
-    (item) =>
-      item.id === category.id &&
-      item.level === category.level &&
-      item.name === category.name
+    (searchItem) =>
+      searchItem.id === item.id &&
+      searchItem.level === item.level &&
+      searchItem.name === item.name
   );
+
+  const toggle = () => {
+    setIsOpen(!isOpen);
+    onSelectCategory(item);
+  };
 
   return (
     <div
@@ -108,63 +130,64 @@ const TreeItem: React.FC<ICategoryProps> = ({
       style={{ backgroundColor: isOver ? "#f0f0f0" : "transparent" }}
     >
       <div
-        onClick={() => {
-          toggle();
-          onSelectCategory(category);
-        }}
-        className={`${classes["tree__branch"]} ${
-          selectedCategoryId === category ? classes["selected"] : ""
-        }`}
+        onClick={toggle}
+        className={`${classes["tree__branch"]} ${selectedCategoryId === item ? classes["selected"] : ""}`}
         ref={drag}
         style={{
           opacity: isDragging ? 0.5 : 1,
           border: isOverCurrent ? "1px dashed #0B6BCB" : "none",
         }}
       >
-        {levelsIcon[category.level]}
+        {LEVEL_ICONS[item.level]}
         <span style={{ fontWeight: isHighlighted ? "bold" : "normal" }}>
-          {category.name}
+          {item.name}
         </span>
-        {(category.children.length > 0 || category.materials.length > 0) && (
-          <span style={{ paddingTop: "8px" }} onClick={toggle}>
-            {isOpen ? (
-              <ExpandLessIcon style={{ fontSize: "24px" }} />
-            ) : (
-              <ExpandMoreIcon style={{ fontSize: "24px" }} />
-            )}
-          </span>
-        )}
+        <span style={{ paddingTop: "8px" }} onClick={toggle}>
+          {isOpen ? (
+            <ExpandLess style={{ fontSize: "24px" }} />
+          ) : (
+            <ExpandMore style={{ fontSize: "24px" }} />
+          )}
+        </span>
       </div>
       {isOpen && (
         <div className={classes["tree__open"]}>
-          {category.children.map((child) => (
-            <TreeItem
-              key={child.id}
-              category={child}
-              selectedMaterialId={selectedMaterialId}
-              selectedCategoryId={selectedCategoryId}
-              searchResults={searchResults}
-              onSelectCategory={onSelectCategory}
-              onSelectMaterial={onSelectMaterial}
-              onDropItem={onDropItem}
-              isOver={isOver}
-              onHover={onHover}
-            />
-          ))}
-          {category.materials.length > 0 && (
-            <ul>
-              {category.materials.map((material) => (
-                <MaterialItem
-                  key={material.id}
-                  material={material}
-                  isSelected={material.id === selectedMaterialId}
-                  onSelect={onSelectMaterial}
-                  isHighlighted={searchResults?.materials.some(
-                    (materialResult) => materialResult.id === material.id
-                  )}
+          {isPending ? (
+            <CircularProgress size={24} />
+          ) : isError ? (
+            <div>Error loading children</div>
+          ) : (
+            <>
+              {children?.map((child) => (
+                <TreeItem
+                  key={child.id}
+                  item={child}
+                  selectedMaterialId={selectedMaterialId}
+                  selectedCategoryId={selectedCategoryId}
+                  searchResults={searchResults}
+                  onSelectCategory={onSelectCategory}
+                  onSelectMaterial={onSelectMaterial}
+                  onDropItem={onDropItem}
+                  isOver={isOver}
+                  onHover={onHover}
                 />
               ))}
-            </ul>
+              {item.materials.length > 0 && (
+                <ul>
+                  {item.materials.map((material) => (
+                    <MaterialItem
+                      key={material.id}
+                      material={material}
+                      isSelected={material.id === selectedMaterialId}
+                      onSelect={onSelectMaterial}
+                      isHighlighted={searchResults?.materials.some(
+                        (materialResult) => materialResult.id === material.id
+                      )}
+                    />
+                  ))}
+                </ul>
+              )}
+            </>
           )}
         </div>
       )}
@@ -173,7 +196,7 @@ const TreeItem: React.FC<ICategoryProps> = ({
 };
 
 interface TreeViewProps {
-  categories: IStorageCategory[];
+  categories: TKatalogHierarchy[];
   searchResults?: ISearchResultStorage;
   onMaterialSelect: (material: IMaterial) => void;
 }
@@ -187,42 +210,23 @@ const TreeViewStorage: React.FC<TreeViewProps> = ({
     null
   );
   const [selectedCategoryId, setSelectedCategoryId] =
-    useState<IStorageCategory | null>(null);
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
+    useState<TKatalogHierarchy | null>(null);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [isDropping, setIsDropping] = useState<boolean>(false);
   const [hoveredCategory, setHoveredCategory] =
-    useState<IStorageCategory | null>(null);
-  const [copiedCategory, setCopiedCategory] = useState<IStorageCategory | null>(
-    null
-  );
+    useState<TKatalogHierarchy | null>(null);
+  const [copiedCategory, setCopiedCategory] =
+    useState<TKatalogHierarchy | null>(null);
 
   const moveHierarchyItems = useMoveStorageHierarchy();
   const deleteHierarchyItems = useDeleteStorageHierarchy();
 
-  const handleClickAnchor = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
   const handleAddHierarchy = (levelName: string) => {
     NiceModal.show(createStorageCategoryModal, {
       level: levelName,
       parent: selectedCategoryId?.id,
     });
     setAnchorEl(null);
-  };
-  const handleCloseAnchor = () => {
-    setAnchorEl(null);
-  };
-
-  const handleSelectMaterial = (material: IMaterial) => {
-    setSelectedMaterialId(material.id);
-    setSelectedCategoryId(null);
-    onMaterialSelect(material);
-  };
-
-  const handleSelectCategory = (category: IStorageCategory) => {
-    setSelectedCategoryId(category);
-    setSelectedMaterialId(null);
   };
 
   const handleDropItem = (
@@ -253,31 +257,40 @@ const TreeViewStorage: React.FC<TreeViewProps> = ({
     };
 
     moveHierarchyItems.mutate(temp, {
-      onSuccess: () => {
-        setIsDropping(false);
-      },
-      onError: () => {
-        setIsDropping(false);
-      },
+      onSuccess: () => setIsDropping(false),
+      onError: () => setIsDropping(false),
     });
   };
 
   const handlePasteItem = () => {
-    const temp: IMoveHierarchy = {
-      item: copiedCategory!.id,
-      type: "hierarchical_item",
-      to: selectedCategoryId!.id,
-    };
-    moveHierarchyItems.mutate(temp);
-  };
-
-  const handleHover = (hovered: boolean, category: IStorageCategory) => {
-    if (hovered) {
-      setHoveredCategory(category);
-    } else {
-      setHoveredCategory(null);
+    if (copiedCategory && selectedCategoryId) {
+      const temp: IMoveHierarchy = {
+        item: copiedCategory.id,
+        type: "hierarchical_item",
+        to: selectedCategoryId.id,
+      };
+      moveHierarchyItems.mutate(temp);
     }
   };
+
+  const renderMenuItem = (level: string, disabled: boolean) => (
+    <MenuItem disabled={disabled} onClick={() => handleAddHierarchy(level)}>
+      <ListItemIcon>{LEVEL_ICONS[level]}</ListItemIcon>
+      <ListItemText primaryTypographyProps={{ fontSize: "1.6rem" }}>
+        {level === "section"
+          ? "Секция"
+          : level === "brand"
+            ? "Марка"
+            : level === "group"
+              ? "Группа"
+              : level === "category"
+                ? "Категория"
+                : level === "subcategory"
+                  ? "Подкатегория"
+                  : ""}
+      </ListItemText>
+    </MenuItem>
+  );
 
   return (
     <div className={classes["windows"]}>
@@ -292,92 +305,48 @@ const TreeViewStorage: React.FC<TreeViewProps> = ({
               borderRadius: "10%",
               padding: "0.5rem",
               boxShadow: "None",
-
-              ...{ "&:hover": { backgroundColor: "var(--primary-700)" } },
-              ...{ "&:disabled": { color: "white" } },
+              "&:hover": { backgroundColor: "var(--primary-700)" },
+              "&:disabled": { color: "white" },
             }}
-            onClick={handleClickAnchor}
+            onClick={(event) => setAnchorEl(event.currentTarget)}
           >
             <Add fontSize="large" />
-            <ExpandMoreIcon />
+            <ExpandMore />
           </IconButton>
           <Menu
-            id="basic-menu"
             anchorEl={anchorEl}
-            open={open}
-            onClose={handleCloseAnchor}
-            MenuListProps={{
-              "aria-labelledby": "basic-button",
-            }}
+            open={Boolean(anchorEl)}
+            onClose={() => setAnchorEl(null)}
           >
-            <MenuItem
-              disabled={[
-                "section",
-                "brand",
-                "group",
-                "category",
-                "subcategory",
-                undefined,
-              ].includes(selectedCategoryId?.level)}
-              onClick={() => handleAddHierarchy("section")}
-            >
-              <ListItemIcon>{levelsIcon["section"]}</ListItemIcon>
-              <ListItemText primaryTypographyProps={{ fontSize: "1.6rem" }}>
-                Секция
-              </ListItemText>
-            </MenuItem>
-            <MenuItem
-              disabled={[
-                "brand",
-                "group",
-                "category",
-                "subcategory",
-                undefined,
-              ].includes(selectedCategoryId?.level)}
-              onClick={() => handleAddHierarchy("service_type")}
-            >
-              <ListItemIcon>{levelsIcon["service_type"]}</ListItemIcon>
-              <ListItemText primaryTypographyProps={{ fontSize: "1.6rem" }}>
-                Марка
-              </ListItemText>
-            </MenuItem>
-            <MenuItem
-              disabled={[
-                "group",
-                "category",
-                "subcategory",
-                undefined,
-              ].includes(selectedCategoryId?.level)}
-              onClick={() => handleAddHierarchy("group")}
-            >
-              <ListItemIcon>{levelsIcon["group"]}</ListItemIcon>
-              <ListItemText primaryTypographyProps={{ fontSize: "1.6rem" }}>
-                Группа
-              </ListItemText>
-            </MenuItem>
-            <MenuItem
-              disabled={["category", "subcategory", undefined].includes(
-                selectedCategoryId?.level
-              )}
-              onClick={() => handleAddHierarchy("category")}
-            >
-              <ListItemIcon>{levelsIcon["category"]}</ListItemIcon>
-              <ListItemText primaryTypographyProps={{ fontSize: "1.6rem" }}>
-                Категория
-              </ListItemText>
-            </MenuItem>
-            <MenuItem
-              disabled={selectedCategoryId?.level == "subcategory"}
-              onClick={() => handleAddHierarchy("subcategory")}
-            >
-              <ListItemIcon>{levelsIcon["subcategory"]}</ListItemIcon>
-              <ListItemText primaryTypographyProps={{ fontSize: "1.6rem" }}>
-                Подкатегория
-              </ListItemText>
-            </MenuItem>
-            <MenuItem onClick={handleCloseAnchor}>
+            {renderMenuItem(
+              "section",
+              !["department"].includes(selectedCategoryId?.level || "")
+            )}
+            {renderMenuItem(
+              "brand",
+              !["department", "section"].includes(
+                selectedCategoryId?.level || ""
+              )
+            )}
+            {renderMenuItem(
+              "group",
+              !["department", "section", "brand"].includes(
+                selectedCategoryId?.level || ""
+              )
+            )}
+            {renderMenuItem(
+              "category",
+              !["department", "section", "brand", "group"].includes(
+                selectedCategoryId?.level || ""
+              )
+            )}
+            {renderMenuItem(
+              "subcategory",
+              selectedCategoryId?.level !== "category"
+            )}
+            <MenuItem onClick={() => setAnchorEl(null)}>
               <ListItemIcon>
-                <ContentCutIcon
+                <ContentCut
                   sx={{
                     fontSize: "24px",
                     marginRight: "1.6rem",
@@ -399,9 +368,8 @@ const TreeViewStorage: React.FC<TreeViewProps> = ({
                 borderRadius: "10%",
                 padding: "0.5rem",
                 boxShadow: "None",
-
-                ...{ "&:hover": { backgroundColor: "var(--primary-700)" } },
-                ...{ "&:disabled": { color: "white" } },
+                "&:hover": { backgroundColor: "var(--primary-700)" },
+                "&:disabled": { color: "white" },
               }}
               onClick={() => {
                 NiceModal.show(editStorageCategoryModal, {
@@ -412,7 +380,6 @@ const TreeViewStorage: React.FC<TreeViewProps> = ({
               <Edit fontSize="large" />
             </IconButton>
           )}
-
           <IconButton
             disabled={selectedCategoryId === null}
             sx={{
@@ -421,15 +388,12 @@ const TreeViewStorage: React.FC<TreeViewProps> = ({
               borderRadius: "10%",
               padding: "0.5rem",
               boxShadow: "None",
-
-              ...{ "&:hover": { backgroundColor: "var(--primary-700)" } },
-              ...{ "&:disabled": { color: "white" } },
+              "&:hover": { backgroundColor: "var(--primary-700)" },
+              "&:disabled": { color: "white" },
             }}
-            onClick={() => {
-              setCopiedCategory(selectedCategoryId);
-            }}
+            onClick={() => setCopiedCategory(selectedCategoryId)}
           >
-            <ContentCutIcon fontSize="large" />
+            <ContentCut fontSize="large" />
           </IconButton>
           {copiedCategory !== null && (
             <IconButton
@@ -440,18 +404,14 @@ const TreeViewStorage: React.FC<TreeViewProps> = ({
                 borderRadius: "10%",
                 padding: "0.5rem",
                 boxShadow: "None",
-
-                ...{ "&:hover": { backgroundColor: "var(--primary-700)" } },
-                ...{ "&:disabled": { color: "white" } },
+                "&:hover": { backgroundColor: "var(--primary-700)" },
+                "&:disabled": { color: "white" },
               }}
-              onClick={() => {
-                handlePasteItem();
-              }}
+              onClick={handlePasteItem}
             >
               <ContentPaste fontSize="large" />
             </IconButton>
           )}
-
           {selectedCategoryId?.level !== "department" && (
             <IconButton
               disabled={selectedCategoryId === null}
@@ -461,12 +421,13 @@ const TreeViewStorage: React.FC<TreeViewProps> = ({
                 borderRadius: "10%",
                 padding: "0.5rem",
                 boxShadow: "None",
-
-                ...{ "&:hover": { backgroundColor: "var(--primary-700)" } },
-                ...{ "&:disabled": { color: "white" } },
+                "&:hover": { backgroundColor: "var(--primary-700)" },
+                "&:disabled": { color: "white" },
               }}
               onClick={() => {
-                deleteHierarchyItems.mutate(selectedCategoryId!.id);
+                if (selectedCategoryId) {
+                  deleteHierarchyItems.mutate(selectedCategoryId.id);
+                }
               }}
             >
               <Delete fontSize="large" />
@@ -479,15 +440,21 @@ const TreeViewStorage: React.FC<TreeViewProps> = ({
         {categories.map((category) => (
           <TreeItem
             key={category.id}
-            category={category}
+            item={category}
             selectedMaterialId={selectedMaterialId}
             selectedCategoryId={selectedCategoryId}
             searchResults={searchResults}
-            onSelectCategory={handleSelectCategory}
-            onSelectMaterial={handleSelectMaterial}
+            onSelectCategory={setSelectedCategoryId}
+            onSelectMaterial={(material) => {
+              setSelectedMaterialId(material.id);
+              setSelectedCategoryId(null);
+              onMaterialSelect(material);
+            }}
             onDropItem={handleDropItem}
             isOver={hoveredCategory?.id === category.id}
-            onHover={handleHover}
+            onHover={(hovered, category) =>
+              setHoveredCategory(hovered ? category : null)
+            }
           />
         ))}
       </div>

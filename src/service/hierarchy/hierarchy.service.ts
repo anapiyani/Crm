@@ -2,6 +2,7 @@ import {
   IEmployeeServiceHierarchy,
   IService,
   IServiceCategory,
+  TKatalogHierarchy,
 } from "@/ts/service.interface";
 import api from "../api";
 import {
@@ -13,13 +14,28 @@ import {
   IMoveHierarchy,
   IRolesbyDepartment,
   ISearchResult,
-  IServiceParent,
   IStorageCategory,
 } from "@/ts/hierarchy.inteface";
 import { IEmployeeDepartment } from "@/ts/client.interface";
 
 export const getHierarchy = (): Promise<IServiceCategory[]> => {
   return api.get("/hierarchy/hierarchy/").then((res) => res.data);
+};
+
+export const getHierarchyKatalog = async (
+  parentId?: number
+): Promise<TKatalogHierarchy[]> => {
+  const url = parentId
+    ? `/hierarchy/katalog?parent_id=${parentId}`
+    : "/hierarchy/katalog";
+
+  try {
+    const response = await api.get(url);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching hierarchy data:", error);
+    throw error;
+  }
 };
 export const getHierarchyByDepartment = (): Promise<IServiceCategory[]> => {
   return api.get("/hierarchy/hierarchy-categories/").then((res) => res.data);

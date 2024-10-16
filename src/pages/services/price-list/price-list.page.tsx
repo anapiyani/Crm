@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import BreadcrumbsCustom from "@/components/navigation/breadcrumbs/breadcrumbs";
 import {
   Divider,
-  Radio,
-  FormLabel,
   FormControl,
   FormControlLabel,
+  FormLabel,
+  Radio,
   RadioGroup,
 } from "@mui/material";
 import classes from "./styles.module.scss";
@@ -15,13 +15,9 @@ import {
   getHierarchy,
   getRolesByDepartments,
 } from "@/service/hierarchy/hierarchy.service";
-import {
-  IServiceCategory,
-  IServicePriceCurrent,
-  IServicePriceTree,
-  useTraverseServicePrice,
-} from "@/ts/service.interface";
+import { IServiceCategory, IServicePriceCurrent } from "@/ts/service.interface";
 import { getServicePriceCurant } from "@/service/services/services.service";
+import { useTraverseServicePrice } from "../hooks/useTraverseServicePrice";
 
 const ServicePriceList = () => {
   const [selectedDepartment, setSelectedDepartment] =
