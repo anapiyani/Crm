@@ -120,7 +120,6 @@ export const updateHierarchy = (
   const reqbody = {
     name: data.name,
     level: data.level,
-    parent: data.parent,
     services: [],
     role: [],
   };
@@ -133,12 +132,12 @@ export const updateHierarchy = (
 };
 
 export const updateStorageHierarchy = (
-  data: IStorageCategory
-): Promise<IStorageCategory> => {
+  data: TKatalogHierarchy
+): Promise<TKatalogHierarchy> => {
   const reqbody = {
     name: data.name,
     level: data.level,
-    parent: data.parent,
+    parent: data.id,
     materials: [],
   };
 

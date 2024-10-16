@@ -6,7 +6,6 @@ import {
   IIndirectCategory,
   IIndirectCostsResponse,
   IIndirectSumarry,
-  IKassaOperations,
   IPeriodCashRegister,
   IResponseKassaNow,
   ISalaryPayment,
@@ -128,7 +127,7 @@ export const deleteCategoryIndirectCosts = (id: number): Promise<any> => {
 };
 
 export const kassaNow = (id: number): Promise<IResponseKassaNow> => {
-  return api.get(`/kassa/${id}/`).then((res) => res.data);
+  return api.get(`/kassa/`).then((res) => res.data);
 };
 
 export const getForecastInfo = ({

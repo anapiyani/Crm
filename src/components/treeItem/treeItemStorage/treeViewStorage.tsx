@@ -373,7 +373,7 @@ const TreeViewStorage: React.FC<TreeViewProps> = ({
               }}
               onClick={() => {
                 NiceModal.show(editStorageCategoryModal, {
-                  category: selectedCategoryId ? selectedCategoryId : undefined,
+                  category: selectedCategoryId,
                 });
               }}
             >
