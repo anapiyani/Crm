@@ -1,7 +1,7 @@
 import BreadcrumbsCustom from "@/components/navigation/breadcrumbs/breadcrumbs";
 import CustomTextField from "@/components/textField/textField.component";
 import TreeViewStorage from "@/components/treeItem/treeItemStorage/treeViewStorage.tsx";
-import { getHierarchyStorage } from "@/service/hierarchy/hierarchy.service";
+import { getHierarchyKatalog } from "@/service/hierarchy/hierarchy.service";
 import { IMaterial, IMaterialnameId } from "@/ts/storage.interface";
 import {
   Autocomplete,
@@ -69,7 +69,7 @@ const StoragePage: React.FC = () => {
 
   const { data, isPending, isError } = useQuery({
     queryKey: ["storageHierarchyData"],
-    queryFn: () => getHierarchyStorage(),
+    queryFn: () => getHierarchyKatalog(),
     staleTime: Infinity,
     refetchOnWindowFocus: false,
   });
