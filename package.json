@@ -10,7 +10,7 @@
     "preview": "vite preview",
     "development": "tsc -b &&vite build --mode development",
     "production": "tsc -b && vite build --mode production",
-    "start": "vite --mode development",
+    "start": "vite --mode development --host",
     "startProd": "vite --mode production",
     "prepare": "husky",
     "format": "prettier --write ."

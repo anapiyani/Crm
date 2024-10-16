@@ -1,4 +1,4 @@
-import { IMaterials } from "@/ts/storage.interface.ts";
+import { IMaterial } from "@/ts/storage.interface.ts";
 
 export interface IDiscount {
   id: number;
@@ -170,6 +170,6 @@ export type IServicePriceTree = {
 export type TKatalogHierarchy = {
   id: number;
   level: string;
-  materials: IMaterials[];
+  materials: IMaterial[];
   name: string;
 };
