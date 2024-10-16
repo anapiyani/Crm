@@ -4,6 +4,7 @@ import {
   Button,
   CircularProgress,
   Divider,
+  Pagination,
   TextField,
 } from "@mui/material";
 import classes from "./styles.module.scss";
@@ -17,8 +18,9 @@ import VerticalTextField from "@/components/textfield-vertical/textfield-vertica
 import { useAddStorage, useEditStorage } from "@/service/storage/storage.hook";
 
 const StorageSettings = () => {
+  const [page, setPage] = useState<string>("1");
   const { data, isPending, error } = useQuery({
-    queryKey: ["storageData"],
+    queryKey: ["storageData", page],
     queryFn: getStorages,
     staleTime: Infinity,
     refetchOnWindowFocus: false,
@@ -78,6 +80,13 @@ const StorageSettings = () => {
     });
   };
 
+  const handlePageChange = (
+    event: React.ChangeEvent<unknown>,
+    value: number
+  ) => {
+    setPage(value.toString());
+  };
+
   return (
     <div className={classes["settings"]}>
       <BreadcrumbsCustom />
@@ -95,7 +104,7 @@ const StorageSettings = () => {
               ) : error ? (
                 toast.error("Ошибка загрузки данных")
               ) : (
-                data?.results.map((storage: IStorage) => (
+                data?.results.map((storage) => (
                   <li key={storage.id}>
                     <Button
                       onClick={() =>
@@ -113,6 +122,37 @@ const StorageSettings = () => {
                 ))
               )}
             </ul>
+            <>
+              {isPending ? (
+                <CircularProgress className={classes.loading} />
+              ) : error ? (
+                toast.error("Ошибка загрузки данных")
+              ) : (
+                <>
+                  {data?.count > 5 && (
+                    <>
+                      <Pagination
+                        count={
+                          data?.total_pages
+                            ? Math.ceil(data?.count / data?.total_pages)
+                            : 1
+                        }
+                        onChange={handlePageChange}
+                        variant="outlined"
+                        shape="rounded"
+                        boundaryCount={1}
+                        color="primary"
+                        sx={{
+                          "& .MuiPagination-ul": {
+                            gap: "5px",
+                          },
+                        }}
+                      />
+                    </>
+                  )}
+                </>
+              )}
+            </>
           </div>
         </div>
         <div className={classes["settings__content__storages"]}>

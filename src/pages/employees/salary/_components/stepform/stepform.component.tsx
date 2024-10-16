@@ -42,7 +42,9 @@ const StepForm: React.FC<IStepFormProps> = ({
 }) => {
   const managmentSteps = 3;
   const editMutation = useEditTemplate();
-  const addMutation = useAddTemplate();
+  const addMutation = useAddTemplate(
+    toEdit?.template_type === "management" ? "management" : "production"
+  );
   const deleteMutation = useDeleteTemplate();
   const [activeStep, setActiveStep] = useState<number>(0);
   const [steps, setSteps] = useState<string[]>([

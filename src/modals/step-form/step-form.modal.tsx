@@ -34,7 +34,7 @@ const StepFormModal = ({
 
   useEffect(() => {
     if (templateList) {
-      const templateNameAndId = templateList.map((template) => {
+      const templateNameAndId = templateList.results.map((template) => {
         return {
           name: template.name,
           id: template.id,
@@ -45,7 +45,7 @@ const StepFormModal = ({
   }, [templateList]);
 
   const choosenTemplate = (id: string) => {
-    templateList?.map((template) => {
+    templateList?.results.map((template) => {
       if (template.id === Number(id)) {
         const formData = {
           user_id: Number(user_id),

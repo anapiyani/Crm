@@ -1,5 +1,6 @@
 import { FC } from "react";
 import "./CustomPagination.scss";
+import { ChevronLeft, ChevronRight } from "@mui/icons-material";
 
 type CustomPaginationProps = {
   currentPage: number;
@@ -47,7 +48,12 @@ const CustomPagination: FC<CustomPaginationProps> = ({
         onClick={() => onPageChange(Math.max(1, currentPage - 1))}
         disabled={currentPage === 1}
       >
-        &lt;
+        <ChevronLeft
+          sx={{
+            fontSize: 20,
+            display: "flex",
+          }}
+        />
       </button>
       {renderPageNumbers()}
       <button
@@ -55,7 +61,12 @@ const CustomPagination: FC<CustomPaginationProps> = ({
         onClick={() => onPageChange(Math.min(totalPages, currentPage + 1))}
         disabled={currentPage === totalPages}
       >
-        &gt;
+        <ChevronRight
+          sx={{
+            fontSize: 20,
+            display: "flex",
+          }}
+        />
       </button>
     </div>
   );

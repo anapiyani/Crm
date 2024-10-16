@@ -48,8 +48,8 @@ const TemplateName: React.FC<TemplateNameProps> = ({
               <Button
                 onClick={() => choosenTemplate && choosenTemplate(templateId!)}
                 sx={{
-                  fontSize: "1.1rem",
-                  padding: "1rem 1.5rem",
+                  fontSize: "1rem",
+                  padding: "0.7rem 4rem",
                   width: "150px",
                 }}
                 variant="outlined"
@@ -74,7 +74,7 @@ const TemplateName: React.FC<TemplateNameProps> = ({
                   <Button
                     sx={{
                       fontSize: "1.1rem",
-                      padding: "1rem 1.5rem",
+                      padding: "1rem 4rem",
                       width: "150px",
                     }}
                     onClick={onSaveName}
