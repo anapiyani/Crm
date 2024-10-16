@@ -36,7 +36,6 @@ const renderBotResponse = (botResponse: TBotResponse) => {
                   employee_first_name,
                   employee_last_name,
                   status,
-                  attendance_percentage,
                   appointment_id,
                   client_phone_number,
                 },
@@ -52,7 +51,6 @@ const renderBotResponse = (botResponse: TBotResponse) => {
                   employee_first_name={employee_first_name}
                   employee_last_name={employee_last_name}
                   status={status}
-                  attendance_percentage={attendance_percentage}
                   appointment_id={appointment_id || undefined}
                   client_phone_number={client_phone_number}
                 />

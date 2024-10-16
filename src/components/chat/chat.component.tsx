@@ -1,12 +1,21 @@
-import { FormEvent, useCallback, useEffect, useRef, useState } from "react";
+import {
+  FormEvent,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import classes from "./style.module.scss";
 import { Button, Divider, SxProps, TextField } from "@mui/material";
 import { ArrowBack, Send, DragHandle } from "@mui/icons-material";
 import Icons from "@/assets/icons/icons";
 import classNames from "classnames";
-import { useTextToBot } from "@/service/bot/bot.hook";
 import { TMessages } from "@/ts/bot.types";
 import useHandleSendMessage from "./hooks/useSendMessage";
+import { useQuery } from "@tanstack/react-query";
+import { getBotHistory } from "@/service/bot/bot.service";
+import renderBotResponse from "./components/botresponse.component";
 
 const FormInputStyles: SxProps = {
   width: "100%",
@@ -33,7 +42,30 @@ const ChatModal = ({
   const chatMenuRef = useRef<HTMLDivElement>(null);
   const isResizingRef = useRef(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const mutation = useTextToBot();
+
+  const { data: historyData, isLoading: getBotHistoryLoading } = useQuery({
+    queryKey: ["botHistory"],
+    queryFn: getBotHistory,
+  });
+
+  const historyMessages: TMessages[] =
+    historyData && historyData.history.length > 0
+      ? historyData.history.flatMap((entry) => [
+          {
+            sender: "user",
+            text: entry.user_query,
+          },
+          {
+            sender: "bot",
+            text: renderBotResponse({
+              appointments: entry.appointments,
+              human_readable_text: entry.human_readable_text,
+              status: "success",
+              type: "bot",
+            }),
+          },
+        ])
+      : [];
 
   const startResizing = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
@@ -72,6 +104,13 @@ const ChatModal = ({
     event.preventDefault();
     handleSendMessage(event);
   };
+
+  // rewrite later
+  useEffect(() => {
+    if (historyData) {
+      setMessages(historyMessages);
+    }
+  }, [historyData]);
 
   useEffect(() => {
     scrollToBottom();
