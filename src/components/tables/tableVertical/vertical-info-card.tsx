@@ -301,6 +301,7 @@ const TableVertical: React.FC<TableVerticalProps> = ({
                       style={{
                         color: "var(--link-500)",
                         textDecoration: "none",
+                        marginLeft: "1rem",
                       }}
                     >
                       {row.linkLabel}

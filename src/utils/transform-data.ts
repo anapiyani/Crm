@@ -15,6 +15,7 @@ interface IAppointmentReturn {
   end: string;
   resourceId: string;
   phoneNumber: string;
+  resourceEditable: false;
   extendedProps: {
     type: string;
     status: string;
@@ -76,6 +77,7 @@ export const transformSchedulesToFullCalendar = (schedules: ISchedule[]) => {
         end: `${date}T${appointment.end_time}`,
         resourceId: resourceId,
         phoneNumber: schedule.employee.phone_number,
+        resourceEditable: false,
         extendedProps: {
           type: "appointment",
           status: appointment.status,
@@ -148,6 +150,7 @@ export const transformMonthlySchedulesToFullCalendar = (
           end: `${formattedDate}T${appointment.end_time}`,
           resourceId: `${schedule.employee.id}-${formattedDate}`,
           phoneNumber: schedule.employee.phone_number,
+          resourceEditable: false,
           extendedProps: {
             type: "appointment",
             status: appointment.status,
