@@ -42,6 +42,13 @@ export interface IWithdrawal {
   money_type: string;
 }
 
+export type TKassaTransaction = {
+  operation_category: "none" | "deposit" | "withdraw";
+  comment: string;
+  amount: string;
+  money_type: "cash" | "card" | "check" | "checking_account";
+};
+
 export interface ISearchKassa {
   from_date: string;
   to_date: string;

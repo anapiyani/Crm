@@ -13,6 +13,7 @@ import {
   IWithdrawal,
   KassaOperationsItem,
   KassaResponse,
+  TKassaTransaction,
 } from "@/ts/kassa.interface";
 import { IResponseData } from "@/ts/types";
 import api from "../api";
@@ -58,8 +59,10 @@ export const getCashRegister = (
   return api.get(url).then((res) => res.data);
 };
 
-export const kassaWithdraw = (formData: IWithdrawal): Promise<IWithdrawal> => {
-  return api.post("/kassa_withdrawal/", formData).then((res) => res.data);
+export const kassaTransaction = (
+  formData: TKassaTransaction
+): Promise<TKassaTransaction> => {
+  return api.post("/kassa_transaction/", formData).then((res) => res.data);
 };
 
 export const kassaDeposit = (formData: IWithdrawal): Promise<IWithdrawal> => {

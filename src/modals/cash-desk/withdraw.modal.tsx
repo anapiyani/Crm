@@ -5,34 +5,38 @@ import classes from "./styles.module.scss";
 import { Autocomplete, Button, Divider, TextField } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { getOperations } from "@/service/kassa/kassa.service";
-import { IWithdrawal } from "@/ts/kassa.interface";
+import { TKassaTransaction } from "@/ts/kassa.interface";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Clear, Done } from "@mui/icons-material";
-import { useWithdrawl } from "@/service/kassa/kassa.hook";
 import toast from "react-hot-toast";
 import useProcessedOperationsData from "@/pages/cash-desk/hooks/useProcessedOperationsData.ts";
+import { useKassaTransaction } from "@/service/kassa/kassa.hook";
+import useSumm from "./hooks/useOnChangeSumm";
 
-const WithdrawModal: React.FC = () => {
-  const { register, handleSubmit, reset } = useForm<IWithdrawal>();
+const WithdrawModal = () => {
+  const { register, handleSubmit, reset } = useForm<TKassaTransaction>();
+  const [selectedMoneyType, setSelectedMoneyType] = useState<
+    "cash" | "card" | "check" | "checking_account" | null
+  >(null);
+  const [selectedOperationId, setSelectedOperationId] = useState<string | null>(
+    null
+  );
+  const { summ, setSumm, onChangeSumm } = useSumm();
+
+  const mutation = useKassaTransaction();
+
   const { data: operationsData } = useQuery({
     queryKey: ["kassaServiceWithdraw"],
     queryFn: () => getOperations("Withdraw", true),
   });
 
-  const mutation = useWithdrawl();
-  const [summ, setSumm] = useState<number>(0);
-  const [selectedOperationId, setSelectedOperationId] = useState<string | null>(
-    null
-  );
-  const [selectedMoneyType, setSelectedMoneyType] = useState<string | null>(
-    null
-  );
-
-  const onSubmit: SubmitHandler<IWithdrawal> = async (data: IWithdrawal) => {
-    const formData = {
+  const onSubmit: SubmitHandler<TKassaTransaction> = async (
+    data: TKassaTransaction
+  ) => {
+    const formData: TKassaTransaction = {
       ...data,
-      operation_type: Number(selectedOperationId),
       money_type: selectedMoneyType!,
+      operation_category: "withdraw",
     };
     if ((selectedOperationId && selectedMoneyType) || summ === 0) {
       mutation.mutate(formData);
@@ -47,11 +51,6 @@ const WithdrawModal: React.FC = () => {
 
   const handleCloseModal = () => {
     modal.hide();
-  };
-
-  const onChangeSumm = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = Number(e.target.value);
-    setSumm(isNaN(value) ? 0 : value);
   };
 
   const modal = useModal();
@@ -181,7 +180,15 @@ const WithdrawModal: React.FC = () => {
             <Autocomplete
               sx={{ width: "60%", marginLeft: 1 }}
               onChange={(event, value) => {
-                setSelectedMoneyType(value ? value.value : null);
+                setSelectedMoneyType(
+                  value
+                    ? (value.value as
+                        | "cash"
+                        | "card"
+                        | "check"
+                        | "checking_account")
+                    : null
+                );
               }}
               options={[
                 { label: "Оплата наличными", value: "cash" },
