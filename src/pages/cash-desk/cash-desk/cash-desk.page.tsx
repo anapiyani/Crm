@@ -1,9 +1,7 @@
 import CustomDatePicker from "@/components/date-picker/date-picker-custom";
 import BreadcrumbsCustom from "@/components/navigation/breadcrumbs/breadcrumbs";
 import ResponsiveTabs from "@/components/tabs/tabs.component";
-import endureModal from "@/modals/cash-desk/endure.modal";
 import salaryModal from "@/modals/cash-desk/salary.modal";
-import withdrawModal from "@/modals/cash-desk/withdraw.modal";
 import {
   getCashRegister,
   getOperations,
@@ -46,6 +44,7 @@ import { Link } from "react-router-dom";
 import CashCard from "../_components/cash-card/cash-card";
 import classes from "./style.module.scss";
 import useProcessedOperationsData from "../hooks/useProcessedOperationsData";
+import transactionModal from "@/modals/cash-desk/transaction.modal";
 
 type IOption = {
   label: string;
@@ -176,11 +175,11 @@ const CashDesk = () => {
   };
 
   const handleWithdrawModal = () => {
-    NiceModal.show(withdrawModal);
+    NiceModal.show(transactionModal, { is_withdraw: true });
   };
 
   const handleEndureModal = () => {
-    NiceModal.show(endureModal);
+    NiceModal.show(transactionModal, { is_withdraw: false });
   };
 
   const handleTabChange = (index: number) => {

@@ -13,7 +13,7 @@ import useProcessedOperationsData from "@/pages/cash-desk/hooks/useProcessedOper
 import { useKassaTransaction } from "@/service/kassa/kassa.hook";
 import useSumm from "./hooks/useOnChangeSumm";
 
-const WithdrawModal = () => {
+const KassaTransactionModal = ({ is_withdraw }: { is_withdraw: boolean }) => {
   const { register, handleSubmit, reset } = useForm<TKassaTransaction>();
   const [selectedMoneyType, setSelectedMoneyType] = useState<
     "cash" | "card" | "check" | "checking_account" | null
@@ -26,8 +26,8 @@ const WithdrawModal = () => {
   const mutation = useKassaTransaction();
 
   const { data: operationsData } = useQuery({
-    queryKey: ["kassaServiceWithdraw"],
-    queryFn: () => getOperations("Withdraw", true),
+    queryKey: [is_withdraw ? "kassaServiceWithdraw" : "kassaServiceEndure"],
+    queryFn: () => getOperations(is_withdraw ? "Withdraw" : "Deposit", true),
   });
 
   const onSubmit: SubmitHandler<TKassaTransaction> = async (
@@ -36,7 +36,7 @@ const WithdrawModal = () => {
     const formData: TKassaTransaction = {
       ...data,
       money_type: selectedMoneyType!,
-      operation_category: "withdraw",
+      operation_category: is_withdraw ? "withdraw" : "deposit",
     };
     if ((selectedOperationId && selectedMoneyType) || summ === 0) {
       mutation.mutate(formData);
@@ -56,7 +56,7 @@ const WithdrawModal = () => {
   const modal = useModal();
   return (
     <ModalWindow
-      title={"Снять деньги из кассы"}
+      title={is_withdraw ? "Снять деньги из кассы" : "Внести деньги в кассу"}
       open={modal.visible}
       handleClose={handleCloseModal}
       className={classes["u-p-0"]}
@@ -220,7 +220,7 @@ const WithdrawModal = () => {
             startIcon={<Done />}
             type="submit"
           >
-            Снять деньги
+            {is_withdraw ? "Снять деньги" : "Внести деньги"}
           </Button>
         </div>
       </form>
@@ -228,4 +228,4 @@ const WithdrawModal = () => {
   );
 };
 
-export default NiceModal.create(WithdrawModal);
+export default NiceModal.create(KassaTransactionModal);
