@@ -29,7 +29,7 @@ import {
   ContentCut,
   Payments,
 } from "@mui/icons-material";
-import { NavLink, To, useLocation } from "react-router-dom";
+import { NavLink, To, useLocation, useNavigate } from "react-router-dom";
 import { CSSProperties } from "react";
 
 type IProps = {
@@ -58,8 +58,13 @@ const StyledBox = styled(Box)(
     width: isMinimized ? "6rem" : "28.6rem",
     backgroundColor: isSecondary ? "#4393E4" : "#0B6BCB",
     padding: isMinimized ? "0.5rem" : "1rem",
-    height: "100vh",
-    overflowY: "auto",
+    height: "100%",
+    overflowY: "hidden",
+    scrollbarWidth: "none",
+    msOverflowStyle: "none",
+    "&::-webkit-scrollbar": {
+      display: "none",
+    },
     transition: "width 0.2s",
   })
 );
@@ -130,17 +135,27 @@ const ReportsDrawer = (props: IProps) => {
   const location = useLocation();
   const [isMinimized, setIsMinimized] = useState<boolean>(true);
   const [selectedParent, setSelectedParent] = useState<Item | null>(null);
+  const [selectedChild, setSelectedChild] = useState<Item | null>(null);
+  const navigate = useNavigate();
 
   const toggleMinimized = () => {
     setIsMinimized(!isMinimized);
-    if (!isMinimized) setSelectedParent(null);
+    if (!isMinimized) {
+      setSelectedParent(null);
+      setSelectedChild(null);
+    }
   };
 
   const handleParentClick = (item: Item) => {
     if (item.children && item.children.length > 0) {
       setSelectedParent(item);
+      const firstChild = item.children[0];
+      setSelectedChild(firstChild);
+      navigate(firstChild.link);
     } else {
-      setSelectedParent(null);
+      setSelectedParent(item);
+      setSelectedChild(null);
+      navigate(item.link);
     }
   };
 
@@ -244,16 +259,26 @@ const ReportsDrawer = (props: IProps) => {
     return items.map((item, index) => (
       <Fragment key={index}>
         <ListItem disablePadding>
-          <NavLink to={item.link} style={navLinkStyles}>
+          {item.children && item.children.length > 0 ? (
             <StyledListItemButton
-              selected={location.pathname === item.link}
+              selected={location.pathname.startsWith(item.link)}
               isMinimized={isMinimized}
               onClick={() => handleParentClick(item)}
             >
               <StyledIconContainer>{item.icon}</StyledIconContainer>
               {!isMinimized && <StyledListItemText primary={item.text} />}
             </StyledListItemButton>
-          </NavLink>
+          ) : (
+            <NavLink to={item.link} style={navLinkStyles}>
+              <StyledListItemButton
+                selected={location.pathname === item.link}
+                isMinimized={isMinimized}
+              >
+                <StyledIconContainer>{item.icon}</StyledIconContainer>
+                {!isMinimized && <StyledListItemText primary={item.text} />}
+              </StyledListItemButton>
+            </NavLink>
+          )}
         </ListItem>
       </Fragment>
     ));
@@ -278,8 +303,9 @@ const ReportsDrawer = (props: IProps) => {
             <ListItem key={index} disablePadding>
               <NavLink to={child.link} style={navLinkStyles}>
                 <StyledListItemButton
-                  selected={location.pathname === child.link}
+                  selected={selectedChild?.link === child.link}
                   isMinimized={false}
+                  onClick={() => setSelectedChild(child)}
                 >
                   <ListItemText primary={child.text} />
                 </StyledListItemButton>
@@ -292,7 +318,7 @@ const ReportsDrawer = (props: IProps) => {
   };
 
   return (
-    <Box display="flex">
+    <Box display="flex" sx={{ height: "100%" }}>
       <StyledBox isMinimized={isMinimized}>
         <Box style={boxStyles(isMinimized)}>
           {!isMinimized && <p style={drawerTitleStyles}>Отчеты</p>}

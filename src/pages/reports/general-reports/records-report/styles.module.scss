@@ -1,4 +1,4 @@
-.generalReports {
+.recordsReports {
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -29,24 +29,16 @@
     }
 
     &__list {
-      &__header {
-        display: flex;
-        flex-direction: column;
-        padding: 1.6rem 0;
-        gap: 0.8rem;
-        &__title {
-          font-size: 2.4rem;
-          color: #171a1c;
+        &__header {
+          display: flex;
+          flex-direction: column;
+          padding: 1.6rem 0;
+          gap: 0.8rem;
+          &__title {
+            font-size: 2.4rem;
+            color: #171a1c;
+          }
         }
-      }
-      &__tags {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(min-content, 1fr));
-        grid-auto-flow: column;
-        grid-template-rows: repeat(2, auto);
-        gap: 0.8rem;
-        justify-content: start;
-      }
     }
   }
 }

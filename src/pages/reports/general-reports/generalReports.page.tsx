@@ -1,19 +1,21 @@
 import React, { useState } from "react";
 import classes from "./styles.module.scss";
 import BreadcrumbsCustom from "@/components/navigation/breadcrumbs/breadcrumbs";
-import { Button, Box, Divider, Chip, styled, IconButton, Collapse } from "@mui/material";
+import {
+  Button,
+  Box,
+  Divider,
+  Chip,
+  styled,
+  IconButton,
+  Collapse,
+} from "@mui/material";
 import CustomDatePicker from "@/components/date-picker/date-picker-custom";
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
+import ReportsHeader from "../_components/reports-header.component";
 
 const GeneralReports = () => {
-  const [startDate, setStartDate] = useState<string | null>("01.08.2024");
-  const [endDate, setEndDate] = useState<string | null>("14.08.2024");
   const [isExpanded, setIsExpanded] = useState<boolean>(true);
-
-  const handleReset = () => {
-    setStartDate(null);
-    setEndDate(null);
-  };
 
   const StyledChip = styled(Chip)(({ selected }: { selected: boolean }) => ({
     fontSize: "1.4rem",
@@ -53,32 +55,21 @@ const GeneralReports = () => {
 
   return (
     <div className={classes.generalReports}>
-      <div className={classes.generalReports__upper}>
-        <BreadcrumbsCustom />
-        <p className={classes.generalReports__upper__reportTitle}>Название отчета</p>
-        <p className={classes.generalReports__upper__reportDescription}>
-          Выберите интересующий вас отчет, задайте отчетный период и нажмите на кнопку
-          "Создать отчет" или скачайте его в Excel.
-        </p>
-        <Box className={classes.generalReports__upper__reportSearchBar}>
-          <div className={classes.generalReports__upper__reportSearchBar__dateRange}>
-            <CustomDatePicker />
-            <span>-</span>
-            <CustomDatePicker />
-          </div>
-          <div className={classes.generalReports__upper__reportSearchBar__buttonGroup}>
-            <Button variant="outlined" onClick={handleReset}>Сбросить</Button>
-            <Button variant="outlined">Скачать в Excel</Button>
-            <Button variant="contained" color="primary">Создать отчет</Button>
-          </div>
-        </Box>
-      </div>
+      <ReportsHeader />
 
       <div className={classes.generalReports__content}>
         <div className={classes.generalReports__content__filters}>
           <div className={classes.generalReports__content__filters__header}>
-            <div className={classes.generalReports__content__filters__header__content}>
-              <p className={classes.generalReports__content__filters__header__content__title}>
+            <div
+              className={
+                classes.generalReports__content__filters__header__content
+              }
+            >
+              <p
+                className={
+                  classes.generalReports__content__filters__header__content__title
+                }
+              >
                 Фильтры отчета
               </p>
               <IconButton onClick={toggleExpand}>
@@ -96,7 +87,11 @@ const GeneralReports = () => {
         <Collapse in={isExpanded} timeout="auto" unmountOnExit>
           <div className={classes.generalReports__content__list}>
             <div className={classes.generalReports__content__list__header}>
-              <p className={classes.generalReports__content__list__header__title}>Список тегов</p>
+              <p
+                className={classes.generalReports__content__list__header__title}
+              >
+                Список тегов
+              </p>
               <Divider />
             </div>
 
