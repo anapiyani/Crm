@@ -439,9 +439,15 @@ const CashDesk = () => {
               <div style={{ display: "flex", width: "90%" }}>
                 <CustomDatePicker
                   value={fromDate}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    setFromDate(e.target.value)
-                  }
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    setFromDate(e.target.value);
+                    if (
+                      toDate &&
+                      dayjs(e.target.value).isAfter(dayjs(toDate))
+                    ) {
+                      setToDate("");
+                    }
+                  }}
                 />
                 <p style={{ marginRight: "1rem", marginLeft: "1rem" }}>-</p>
                 <CustomDatePicker
