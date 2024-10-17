@@ -60,7 +60,10 @@ const KassaTransactionModal = ({ is_withdraw }: { is_withdraw: boolean }) => {
       open={modal.visible}
       handleClose={handleCloseModal}
       className={classes["u-p-0"]}
-      titleStyles={{ fontSize: "2.4rem", color: "#C41C1C" }}
+      titleStyles={{
+        fontSize: "2.4rem",
+        color: is_withdraw ? "#C41C1C" : "#2E7D32",
+      }}
       withButtons={false}
     >
       <form onSubmit={handleSubmit(onSubmit)} className={classes.modalContent}>
