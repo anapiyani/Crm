@@ -7,6 +7,9 @@ import { NotFound, Report, ReportClients } from "./pages";
 import { ErrorBoundary } from "react-error-boundary";
 import ErrorFallback from "./ErrorBoundary";
 import ReportsLayout from "./layout/reportsLayout/reports.layout";
+import GeneralReports from "./pages/reports/general-reports/generalReports.page";
+import RecordsReport from "./pages/reports/general-reports/records-report/recordsReport.page";
+import VisitsReport from "./pages/reports/general-reports/paid-visits-report/visitsReport.page";
 
 const App = () => {
   return (
@@ -32,7 +35,27 @@ const App = () => {
             }
           >
             <Route path="search" element={<Report />} />
-            <Route path="clients" element={<ReportClients />} />
+            <Route path="general-reports/clients" element={<ReportClients />} />
+            <Route
+              path="general-reports/cabinets-load-report"
+              element={<GeneralReports />}
+            />
+            <Route
+              path="general-reports/full-report"
+              element={<GeneralReports />}
+            />
+            <Route
+              path="general-reports/admin-functions-report"
+              element={<GeneralReports />}
+            />
+            <Route
+              path="general-reports/records-report"
+              element={<RecordsReport />}
+            />
+            <Route
+              path="general-reports/paid-visits-report"
+              element={<VisitsReport />}
+            />
           </Route>
         </Route>
 

@@ -75,7 +75,7 @@ const Report = () => {
     setShowTags((prev) => !prev);
   };
 
-  interface TagCategories {
+ type TagCategories = {
     primary: string[];
     secondary: Record<string, string[]>;
     tertiary: Record<string, string[]>;
@@ -103,7 +103,7 @@ const Report = () => {
     },
   };
 
-  interface SelectedTags {
+  type SelectedTags = {
     primary: string | null;
     secondary: string | null;
     tertiary: string | null;
