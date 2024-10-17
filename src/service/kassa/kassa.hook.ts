@@ -2,13 +2,13 @@ import {
   IIndirectCategory,
   ISalaryPayment,
   IWithdrawal,
+  TKassaTransaction,
 } from "@/ts/kassa.interface";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import {
   addCategoryIndirectCosts,
-  kassaDeposit,
-  kassaWithdraw,
+  kassaTransaction,
   salaryPayment,
 } from "./kassa.service";
 
@@ -28,35 +28,19 @@ export const useSalary = () => {
   });
 };
 
-export const useWithdrawl = () => {
+export const useKassaTransaction = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<IWithdrawal, Error, IWithdrawal>({
-    mutationFn: kassaWithdraw,
+  return useMutation<TKassaTransaction, Error, TKassaTransaction>({
+    mutationFn: kassaTransaction,
     onSuccess: (data) => {
-      toast.success("Деньги успешно сняты");
+      toast.success("Транзакция средств в кассе успешно выполнена");
       queryClient.invalidateQueries({ queryKey: ["cashregister"] });
       queryClient.invalidateQueries({ queryKey: ["searchResult"] });
       return data;
     },
     onError: () => {
-      toast.error("Ошибка при снятии денег");
-    },
-  });
-};
-
-export const useDepositKassa = () => {
-  const queryClient = useQueryClient();
-  return useMutation<IWithdrawal, Error, IWithdrawal>({
-    mutationFn: kassaDeposit,
-    onSuccess: (data) => {
-      toast.success("Деньги успешно зачислены");
-      queryClient.invalidateQueries({ queryKey: ["cashregister"] });
-      queryClient.invalidateQueries({ queryKey: ["searchResult"] });
-      return data;
-    },
-    onError: () => {
-      toast.error("Ошибка при зачислении денег");
+      toast.error("Ошибка при транзакции средств в кассе");
     },
   });
 };

@@ -5,34 +5,38 @@ import classes from "./styles.module.scss";
 import { Autocomplete, Button, Divider, TextField } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { getOperations } from "@/service/kassa/kassa.service";
-import { IWithdrawal } from "@/ts/kassa.interface";
+import { TKassaTransaction } from "@/ts/kassa.interface";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { Clear, Done } from "@mui/icons-material";
-import { useWithdrawl } from "@/service/kassa/kassa.hook";
 import toast from "react-hot-toast";
 import useProcessedOperationsData from "@/pages/cash-desk/hooks/useProcessedOperationsData.ts";
+import { useKassaTransaction } from "@/service/kassa/kassa.hook";
+import useSumm from "./hooks/useOnChangeSumm";
 
-const WithdrawModal: React.FC = () => {
-  const { register, handleSubmit, reset } = useForm<IWithdrawal>();
-  const { data: operationsData } = useQuery({
-    queryKey: ["kassaServiceWithdraw"],
-    queryFn: () => getOperations("Withdraw", true),
-  });
-
-  const mutation = useWithdrawl();
-  const [summ, setSumm] = useState<number>(0);
+const KassaTransactionModal = ({ is_withdraw }: { is_withdraw: boolean }) => {
+  const { register, handleSubmit, reset } = useForm<TKassaTransaction>();
+  const [selectedMoneyType, setSelectedMoneyType] = useState<
+    "cash" | "card" | "check" | "checking_account" | null
+  >(null);
   const [selectedOperationId, setSelectedOperationId] = useState<string | null>(
     null
   );
-  const [selectedMoneyType, setSelectedMoneyType] = useState<string | null>(
-    null
-  );
+  const { summ, setSumm, onChangeSumm } = useSumm();
 
-  const onSubmit: SubmitHandler<IWithdrawal> = async (data: IWithdrawal) => {
-    const formData = {
+  const mutation = useKassaTransaction();
+
+  const { data: operationsData } = useQuery({
+    queryKey: [is_withdraw ? "kassaServiceWithdraw" : "kassaServiceEndure"],
+    queryFn: () => getOperations(is_withdraw ? "Withdraw" : "Deposit", true),
+  });
+
+  const onSubmit: SubmitHandler<TKassaTransaction> = async (
+    data: TKassaTransaction
+  ) => {
+    const formData: TKassaTransaction = {
       ...data,
-      operation_type: Number(selectedOperationId),
       money_type: selectedMoneyType!,
+      operation_category: is_withdraw ? "withdraw" : "deposit",
     };
     if ((selectedOperationId && selectedMoneyType) || summ === 0) {
       mutation.mutate(formData);
@@ -49,19 +53,17 @@ const WithdrawModal: React.FC = () => {
     modal.hide();
   };
 
-  const onChangeSumm = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = Number(e.target.value);
-    setSumm(isNaN(value) ? 0 : value);
-  };
-
   const modal = useModal();
   return (
     <ModalWindow
-      title={"Снять деньги из кассы"}
+      title={is_withdraw ? "Снять деньги из кассы" : "Внести деньги в кассу"}
       open={modal.visible}
       handleClose={handleCloseModal}
       className={classes["u-p-0"]}
-      titleStyles={{ fontSize: "2.4rem", color: "#C41C1C" }}
+      titleStyles={{
+        fontSize: "2.4rem",
+        color: is_withdraw ? "#C41C1C" : "#2E7D32",
+      }}
       withButtons={false}
     >
       <form onSubmit={handleSubmit(onSubmit)} className={classes.modalContent}>
@@ -181,7 +183,15 @@ const WithdrawModal: React.FC = () => {
             <Autocomplete
               sx={{ width: "60%", marginLeft: 1 }}
               onChange={(event, value) => {
-                setSelectedMoneyType(value ? value.value : null);
+                setSelectedMoneyType(
+                  value
+                    ? (value.value as
+                        | "cash"
+                        | "card"
+                        | "check"
+                        | "checking_account")
+                    : null
+                );
               }}
               options={[
                 { label: "Оплата наличными", value: "cash" },
@@ -213,7 +223,7 @@ const WithdrawModal: React.FC = () => {
             startIcon={<Done />}
             type="submit"
           >
-            Снять деньги
+            {is_withdraw ? "Снять деньги" : "Внести деньги"}
           </Button>
         </div>
       </form>
@@ -221,4 +231,4 @@ const WithdrawModal: React.FC = () => {
   );
 };
 
-export default NiceModal.create(WithdrawModal);
+export default NiceModal.create(KassaTransactionModal);

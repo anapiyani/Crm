@@ -21,14 +21,14 @@ import {
 } from "@/ts/activity.interface";
 
 const addMaterials = ({ appointment_id }: { appointment_id: number }) => {
-  const addMaterialsMutation = useAddMaterialsForVisit();
-  const modal = useModal();
   const [selectedEmployee, setSelectedEmployee] = useState<number>();
   const [selectedEmployeeName, setSelectedEmployeeName] = useState<string>("");
   const [materials, setMaterials] = useState<
     { label: string; value: string }[]
   >([]);
   const [selectedStorage, setSelectedStorage] = useState<number>();
+  const addMaterialsMutation = useAddMaterialsForVisit();
+  const modal = useModal();
 
   const materialsQuantityData = useQueries({
     queries: materials.map((item) => ({
@@ -41,12 +41,6 @@ const addMaterials = ({ appointment_id }: { appointment_id: number }) => {
       staleTime: Infinity,
     })),
   });
-
-  useEffect(() => {
-    if (selectedStorage) {
-      materialsQuantityData.forEach((result) => result.refetch());
-    }
-  }, [selectedStorage]);
 
   const materialsQuantity = useMemo(() => {
     return materialsQuantityData.map((result, index) => {
@@ -71,7 +65,6 @@ const addMaterials = ({ appointment_id }: { appointment_id: number }) => {
     return useQuery({
       queryKey: ["employeeDepartmentHierarchyData"],
       queryFn: () => getHierarchyEmployeesByDepartment(),
-      staleTime: 1000 * 60 * 5,
       refetchOnMount: false,
       refetchOnWindowFocus: false,
     });
@@ -116,12 +109,6 @@ const addMaterials = ({ appointment_id }: { appointment_id: number }) => {
     setMaterials(materials);
   };
 
-  useEffect(() => {
-    if (storagesData && storagesData.results.length > 0 && !selectedStorage) {
-      setSelectedStorage(storagesData.results[0].id);
-    }
-  }, [storagesData, selectedStorage]);
-
   const onSave = () => {
     const materialsToSend: IMaterialsForVisit[] = materials.map((material) => {
       return {
@@ -138,6 +125,18 @@ const addMaterials = ({ appointment_id }: { appointment_id: number }) => {
     };
     addMaterialsMutation.mutate({ appointment_id, appointment_materials });
   };
+
+  useEffect(() => {
+    if (selectedStorage) {
+      materialsQuantityData.forEach((result) => result.refetch());
+    }
+  }, [selectedStorage]);
+
+  useEffect(() => {
+    if (storagesData && storagesData.results.length > 0 && !selectedStorage) {
+      setSelectedStorage(storagesData.results[0].id);
+    }
+  }, [storagesData, selectedStorage]);
 
   return (
     <ModalWindow
