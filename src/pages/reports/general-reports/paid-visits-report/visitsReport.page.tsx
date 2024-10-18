@@ -8,6 +8,7 @@ import {
   FormControl,
   FormControlLabel,
   IconButton,
+  MenuItem,
   Radio,
   RadioGroup,
   styled,
@@ -22,6 +23,7 @@ import {
 import { IServiceCategory } from "@/ts/service.interface";
 import { useQuery } from "@tanstack/react-query";
 import RadioButtons from "./_components/radiogroup";
+import PaymentFilter from "./_components/paymentFilter";
 
 type ITreeItemProps = {
   id: number;
@@ -41,6 +43,10 @@ const attendanceOptions = [
   { value: "paymentDate", label: "По дате оплаты" },
   { value: "startDate", label: "По дате начала" },
 ];
+
+const StyledMenuItem = styled(MenuItem)({
+  fontSize: 16,
+});
 
 const VisitsReport = () => {
   const [isExpanded, setIsExpanded] = useState<boolean>(true);
@@ -124,30 +130,28 @@ const VisitsReport = () => {
       );
 
       if (allServicesChecked && allChildrenChecked) {
-        return 1; // Fully checked
+        return 1;
       } else if (
         (anyServicesChecked || anyChildrenChecked) &&
         !(allServicesChecked && allChildrenChecked)
       ) {
-        return 3; // Indeterminate
+        return 3;
       } else {
-        return 2; // Unchecked
+        return 2;
       }
     });
 
-    // Determine the overall state of the parent category
     const allChecked = childStates.every((state) => state === 1);
     const anyIndeterminate = childStates.some((state) => state === 3);
 
-    let parentState = 2; // Default to unchecked
+    let parentState = 2;
 
     if (allChecked) {
-      parentState = 1; // All checked
+      parentState = 1;
     } else if (anyIndeterminate || childCheckedState === 3) {
-      parentState = 3; // Indeterminate
+      parentState = 3;
     }
 
-    // Update the parent category's state
     handleServiceChange(
       parentCategory.id,
       parentState,
@@ -157,7 +161,6 @@ const VisitsReport = () => {
       parentCategory.parent_name
     );
 
-    // Recursively propagate the state change to the parent's parent
     onParentChange(parentCategory.parent, parentState);
   };
 
@@ -337,6 +340,79 @@ const VisitsReport = () => {
                 options={attendanceOptions}
                 defaultValue="paymentDate"
               />
+            </div>
+          </div>
+          <div className={classes.visitsReports__content__list}>
+            <div className={classes.visitsReports__content__list__header}>
+              <p
+                className={classes.visitsReports__content__list__header__title}
+              >
+                Сотрудники
+              </p>
+              <Divider />
+              <TextField
+                select
+                variant="outlined"
+                size="small"
+                sx={{ width: "36rem" }}
+                InputProps={{ sx: { fontSize: 16 } }}
+                defaultValue={"Выберите сотрудника"}
+              >
+                <StyledMenuItem value="Выберите сотрудника">
+                  Выберите сотрудника
+                </StyledMenuItem>
+              </TextField>
+            </div>
+          </div>
+          <div className={classes.visitsReports__content__list}>
+            <div className={classes.visitsReports__content__list__header}>
+              <p
+                className={classes.visitsReports__content__list__header__title}
+              >
+                Клиент
+              </p>
+              <Divider />
+              <TextField
+                fullWidth
+                variant="outlined"
+                size="small"
+                sx={{ width: "36rem" }}
+                InputProps={{ sx: { fontSize: 16 } }}
+                placeholder="Имя / телефон / карта / ID"
+              />
+            </div>
+          </div>
+          <div className={classes.visitsReports__content__list}>
+            <div className={classes.visitsReports__content__list__header}>
+              <p
+                className={classes.visitsReports__content__list__header__title}
+              >
+                Настройки
+              </p>
+              <Divider />
+              <PaymentFilter />
+            </div>
+          </div>
+          <div className={classes.visitsReports__content__list}>
+            <div className={classes.visitsReports__content__list__header}>
+              <p
+                className={classes.visitsReports__content__list__header__title}
+              >
+                Сегмент клиентов
+              </p>
+              <Divider />
+              <TextField
+                select
+                variant="outlined"
+                size="small"
+                sx={{ width: "36rem" }}
+                InputProps={{ sx: { fontSize: 16 } }}
+                defaultValue={"Выберите сотрудника"}
+              >
+                <StyledMenuItem value="Выберите сотрудника">
+                  Все клиенты
+                </StyledMenuItem>
+              </TextField>
             </div>
           </div>
         </Collapse>
