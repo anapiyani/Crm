@@ -110,7 +110,6 @@ const DiscountPage = () => {
   };
   const params = useParams<{ id: string }>();
 
-  // Handler to open and close the modal
   const [isModalOpen, setModalOpen] = useState(false);
 
   const handleOpenModal = () => {
@@ -570,7 +569,6 @@ const DiscountPage = () => {
         </div>
         {renderContentMain()}
 
-        {/* Add the DiscountModal here */}
         <DiscountModal open={isModalOpen} onClose={handleCloseModal} />
       </div>
     </LocalizationProvider>

@@ -154,7 +154,6 @@ const DiscountModal = ({
           </Grid>
         </Grid>
 
-        {/* Ежедневно TextField */}
         <Grid
           container
           alignItems="center"
@@ -186,7 +185,6 @@ const DiscountModal = ({
           </Grid>
         </Grid>
 
-        {/* Время */}
         <Grid
           container
           spacing={2}
@@ -251,7 +249,6 @@ const DiscountModal = ({
           </Grid>
         </Grid>
 
-        {/* Категория */}
         <Grid
           container
           alignItems="center"
@@ -284,7 +281,6 @@ const DiscountModal = ({
           </Grid>
         </Grid>
 
-        {/* Действует */}
         <Grid
           container
           alignItems="center"
@@ -317,7 +313,6 @@ const DiscountModal = ({
           </Grid>
         </Grid>
 
-        {/* Комментарий */}
         <Grid
           container
           alignItems="center"
@@ -333,14 +328,13 @@ const DiscountModal = ({
               variant="outlined"
               size="small"
               multiline
-              rows={3} // Make the comments field 3 rows high
+              rows={3}
               sx={{ fontSize: 16 }}
               InputProps={{ sx: { fontSize: 16 } }}
             />
           </Grid>
         </Grid>
 
-        {/* Скидка */}
         <Grid container alignItems="center" spacing={2}>
           <Grid item xs={3}>
             <Typography sx={{ fontSize: 16 }}>Скидка</Typography>
@@ -408,7 +402,6 @@ const DiscountModal = ({
           </Grid>
         </Grid>
 
-        {/* Additional Information under Скидка */}
         <Typography
           sx={{
             fontSize: 16,

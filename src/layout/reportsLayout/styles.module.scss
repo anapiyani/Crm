@@ -1,6 +1,7 @@
 .layout {
-  display: flex;
+  display: flex !important;
   min-height: 100vh;
+  justify-content: space-between !important;
 
   &__sidebar {
     flex-shrink: 0;
