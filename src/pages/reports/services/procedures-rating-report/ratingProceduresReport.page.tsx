@@ -58,7 +58,9 @@ const RatingProceduresReport = () => {
 
       <div className={classes.ratingProcedureReport__content}>
         <div className={classes.ratingProcedureReport__content__filters}>
-          <div className={classes.ratingProcedureReport__content__filters__header}>
+          <div
+            className={classes.ratingProcedureReport__content__filters__header}
+          >
             <div
               className={
                 classes.ratingProcedureReport__content__filters__header__content
@@ -85,9 +87,13 @@ const RatingProceduresReport = () => {
 
         <Collapse in={isExpanded} timeout="auto" unmountOnExit>
           <div className={classes.ratingProcedureReport__content__list}>
-            <div className={classes.ratingProcedureReport__content__list__header}>
+            <div
+              className={classes.ratingProcedureReport__content__list__header}
+            >
               <p
-                className={classes.ratingProcedureReport__content__list__header__title}
+                className={
+                  classes.ratingProcedureReport__content__list__header__title
+                }
               >
                 Список тегов
               </p>

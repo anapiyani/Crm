@@ -71,7 +71,7 @@ const App = () => {
               path="services/services-and-goods-month-report"
               element={<ProvidedServicesReport />}
             />
-              <Route
+            <Route
               path="services/services-and-goods-report"
               element={<ServicesGoodsReport />}
             />

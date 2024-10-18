@@ -247,11 +247,23 @@ const ReportsDrawer = (props: IProps) => {
       text: "Услуги",
       icon: <ContentCut />,
       link: "/analytics/reports/services",
-      children:[
-        {text:"Отчет по оказанным услугам", link:"/analytics/reports/services/provided-services-report"},
-        {text:"Отчет по рейтингу процедур", link:"/analytics/reports/services/procedures-rating-report"},
-        {text:"Отчет по услугам и товарам", link:"/analytics/reports/services/services-and-goods-report"},
-        {text:"Отчет по услугам и товарам по месяцам", link:"/analytics/reports/services/services-and-goods-month-report"},
+      children: [
+        {
+          text: "Отчет по оказанным услугам",
+          link: "/analytics/reports/services/provided-services-report",
+        },
+        {
+          text: "Отчет по рейтингу процедур",
+          link: "/analytics/reports/services/procedures-rating-report",
+        },
+        {
+          text: "Отчет по услугам и товарам",
+          link: "/analytics/reports/services/services-and-goods-report",
+        },
+        {
+          text: "Отчет по услугам и товарам по месяцам",
+          link: "/analytics/reports/services/services-and-goods-month-report",
+        },
       ],
     },
     {
