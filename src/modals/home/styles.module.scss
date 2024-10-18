@@ -8,6 +8,14 @@
     margin-bottom: 1rem;
   }
 }
+.buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+  button {
+    font-size: 1.4rem;
+  }
+}
 
 .create-appointment {
   &__params-text {
@@ -237,6 +245,87 @@
       font-size: 1.6rem;
       line-height: 2.4rem;
       min-width: 10rem;
+    }
+  }
+}
+
+.client {
+  width: 100%;
+  display: flex;
+  gap: 2rem;
+  &__main {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    &__header {
+      display: flex;
+      flex-direction: column;
+      h1 {
+        font-size: 2.4rem;
+        font-weight: 600;
+        line-height: 3.6rem;
+        color: var(--primary-400);
+      }
+      hr {
+        background-color: var(--primary-400);
+      }
+    }
+    &__content {
+      width: 100%;
+      justify-content: end;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+  }
+  &__addContact {
+    display: flex;
+    flex-direction: column;
+    width: 500px;
+    &__content {
+      &__header {
+        display: flex;
+        flex-direction: column;
+        h1 {
+          font-size: 2.4rem;
+          font-weight: 600;
+          line-height: 3.6rem;
+          color: var(--success-400);
+        }
+        hr {
+          background-color: var(--success-400);
+        }
+      }
+      &__main {
+        width: 100%;
+        justify-content: end;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        margin-top: 2rem;
+      }
+    }
+    &__info {
+      margin-top: 1rem;
+      &__header {
+        display: flex;
+        flex-direction: column;
+        h1 {
+          font-size: 2.4rem;
+          font-weight: 600;
+          line-height: 3.6rem;
+          color: var(--warning-400);
+        }
+        hr {
+          background-color: var(--warning-400);
+        }
+      }
+      &__content_info {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        margin-top: 2rem;
+      }
     }
   }
 }

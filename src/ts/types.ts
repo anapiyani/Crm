@@ -12,6 +12,7 @@ export interface IUser {
   date_of_birth: string;
   phone_number: string;
   phone_number_whatsapp: string;
+  user_id?: number;
 }
 
 export interface IEmployeeAddForm {

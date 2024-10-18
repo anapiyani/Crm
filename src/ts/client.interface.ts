@@ -10,7 +10,7 @@ export interface IClientAddForm {
   sms_notification: boolean;
   description: string;
   description_as_main_characteristic: boolean;
-  employee: number;
+  employee: number | null;
 }
 
 export interface IPersonalDiscount {

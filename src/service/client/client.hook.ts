@@ -9,16 +9,17 @@ import {
 
 export const useAddClient = () => {
   return useMutation<ICreateClientReturn, Error, IClientAddForm>({
-    mutationFn: addClient,
+    mutationFn: async (clientData: IClientAddForm) => {
+      const response = await addClient(clientData);
+      return response;
+    },
     onSuccess: (data) => {
       toast.success("Клиент успешно добавлен!.");
-      return data;
     },
     onError: (error) => {
       const errorMessage = error.message;
       toast.error(errorMessage);
     },
-    // "Произошла ошибка при добавлении клиента." ||
   });
 };
 
