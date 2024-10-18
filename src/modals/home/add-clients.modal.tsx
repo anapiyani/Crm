@@ -19,6 +19,8 @@ import InputMask from "react-input-mask";
 import { Clear, Done } from "@mui/icons-material";
 import flagIcon from "@/assets/icons/Flags.svg";
 import classes from "./styles.module.scss";
+import { useAddClient } from "@/service/client/client.hook";
+import { IClientAddForm } from "@/ts/client.interface";
 
 type FormValues = {
   surname: string;
@@ -31,7 +33,7 @@ type FormValues = {
   gender: "женский" | "мужской";
   whatsapp: string;
   mobile: string;
-  email?: string;
+  email: string;
   instagram?: string;
   occupation?: string;
 };
@@ -60,6 +62,8 @@ const contactSx: SxProps = {
 
 const AddClients: React.FC = () => {
   const modal = useModal();
+  const { mutate: addClient } = useAddClient();
+
   const {
     control,
     handleSubmit,
@@ -75,8 +79,31 @@ const AddClients: React.FC = () => {
   });
 
   const onSubmit = async (data: FormValues) => {
-    console.log("Form data:", data);
+    const formData: IClientAddForm = {
+      user: {
+        email: data.email,
+        first_name: data.name,
+        last_name: data.surname,
+        gender: data.gender,
+        phone_number: data.mobile,
+        phone_number_whatsapp: data.whatsapp,
+        date_of_birth: "2002-11-25", // hardcoded date
+      },
+      category: data.category || "Без категории",
+      occupation: data.occupation || "Не указано",
+      invite_source: "Не указано", // hardcoded value
+      card_number: "Не указано", // hardcoded value
+      sms_notification: false, // hardcoded value
+      description: data.comment || "",
+      description_as_main_characteristic: false, // hardcoded value
+      employee: null, // tf is this??? hardcoded value... ig
+    };
 
+    addClient(formData, {
+      onSuccess: () => {
+        modal.hide();
+      },
+    });
     modal.hide();
   };
 
@@ -358,6 +385,7 @@ const AddClients: React.FC = () => {
                     value: /^\S+@\S+$/i,
                     message: "Неверный формат email",
                   },
+                  required: "Заполните обязательное поле",
                 }}
                 render={({ field }) => (
                   <CustomTextField
