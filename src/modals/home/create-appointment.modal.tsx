@@ -55,6 +55,7 @@ import { getScheduleByDate } from "@/service/schedule/schedule.service";
 import { searchClient } from "@/service/client/client.service";
 import { IClientSearch } from "@/ts/client.interface";
 import { debounce } from "lodash";
+import AddClients from "./add-clients.modal";
 
 interface ICreateAppointmentModalProps {
   start: string;
@@ -467,7 +468,9 @@ const CreateAppointment: React.FC<ICreateAppointmentModalProps> = ({
                     padding: "0",
                     minWidth: "3rem",
                   }}
-                  onClick={() => console.log(employee)}
+                  onClick={() => {
+                    NiceModal.show(AddClients);
+                  }}
                 >
                   <AddCircle />
                 </Button>
