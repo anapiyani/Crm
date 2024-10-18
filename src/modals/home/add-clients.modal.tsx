@@ -1,5 +1,6 @@
+import React from "react";
 import NiceModal, { useModal } from "@ebay/nice-modal-react";
-import classes from "./styles.module.scss";
+import { useForm, Controller } from "react-hook-form";
 import ModalWindow from "@/components/modal-window/modal-window";
 import {
   Button,
@@ -15,8 +16,25 @@ import VerticalTextField from "@/components/textfield-vertical/textfield-vertica
 import CustomAutoComplete from "@/components/autocomplete/custom-autocomplete.component";
 import CustomTextField from "@/components/textField/textField.component";
 import InputMask from "react-input-mask";
-import flagIcon from "@/assets/icons/Flags.svg";
 import { Clear, Done } from "@mui/icons-material";
+import flagIcon from "@/assets/icons/Flags.svg";
+import classes from "./styles.module.scss";
+
+type FormValues = {
+  surname: string;
+  name: string;
+  middlename?: string;
+  category?: string;
+  subcategory?: string;
+  city?: string;
+  comment?: string;
+  gender: "женский" | "мужской";
+  whatsapp: string;
+  mobile: string;
+  email?: string;
+  instagram?: string;
+  occupation?: string;
+};
 
 const autoCompleteSx: SxProps = {
   "& .MuiAutocomplete-inputRoot": {
@@ -42,8 +60,23 @@ const contactSx: SxProps = {
 
 const AddClients: React.FC = () => {
   const modal = useModal();
+  const {
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormValues>({
+    defaultValues: {
+      gender: "женский",
+      category: "Без категории",
+      subcategory: "Без категории",
+      city: "Не обнаружено",
+      occupation: "Не указано",
+    },
+  });
 
-  const handleCloseModal = () => {
+  const onSubmit = async (data: FormValues) => {
+    console.log("Form data:", data);
+
     modal.hide();
   };
 
@@ -56,117 +89,188 @@ const AddClients: React.FC = () => {
       withButtons={false}
       titleStyles={{ fontSize: "2.4rem", color: "#2E7D32" }}
     >
-      <div className={classes.client}>
+      <form onSubmit={handleSubmit(onSubmit)} className={classes.client}>
         <div className={classes.client__main}>
           <div className={classes.client__main__header}>
             <h1>Главное</h1>
             <Divider />
           </div>
           <div className={classes.client__main__content}>
-            <VerticalTextField
-              type="text"
-              label={"Фамилия"}
-              placeholder={"Фамилия"}
-              required
+            <Controller
+              name="surname"
+              control={control}
+              rules={{ required: "Заполните обязательное поле" }}
+              render={({ field }) => (
+                <VerticalTextField
+                  {...field}
+                  type="text"
+                  label="Фамилия"
+                  placeholder="Фамилия"
+                  required
+                  error={!!errors.surname}
+                  helperText={errors.surname?.message}
+                />
+              )}
             />
-            <VerticalTextField
-              type="text"
-              label={"Имя"}
-              placeholder={"Имя"}
-              required
+            <Controller
+              name="name"
+              control={control}
+              rules={{ required: "Заполните обязательное поле" }}
+              render={({ field }) => (
+                <VerticalTextField
+                  {...field}
+                  type="text"
+                  label="Имя"
+                  placeholder="Имя"
+                  required
+                  error={!!errors.name}
+                  helperText={errors.name?.message}
+                />
+              )}
             />
-            <VerticalTextField
-              type="text"
-              label={"Отчество"}
-              placeholder={"Отчество"}
-              required
+            <Controller
+              name="middlename"
+              control={control}
+              render={({ field }) => (
+                <VerticalTextField
+                  {...field}
+                  type="text"
+                  label="Отчество"
+                  placeholder="Отчество"
+                />
+              )}
             />
-            <CustomAutoComplete
+            <Controller
               name="category"
-              sx={autoCompleteSx}
-              selectValue="label"
-              size="small"
-              label="Категория"
-              options={[]}
-              onChange={(value) => {
-                console.log(value);
-              }}
-              className="main__lower__autocomplete"
-              placeholder="Выберите категорию"
-              value={{ label: "Без категории", value: "no" }}
+              control={control}
+              render={({ field }) => (
+                <CustomAutoComplete
+                  sx={autoCompleteSx}
+                  name="category"
+                  selectValue="label"
+                  size="small"
+                  label="Категория"
+                  options={[
+                    { label: "Без категории", value: "Без категории" },
+                    { label: "VIP-клиент", value: "VIP-клиент" },
+                    { label: "Постоянный клиент", value: "Постоянный клиент" },
+                    { label: "Сотрудник", value: "Сотрудник" },
+                  ]}
+                  className="main__lower__autocomplete"
+                  onChange={(value) => {
+                    field.onChange(value?.value);
+                  }}
+                  value={
+                    field.value
+                      ? { label: field.value, value: field.value }
+                      : null
+                  }
+                  placeholder="Выберите категорию"
+                />
+              )}
             />
-            <CustomAutoComplete
+            <Controller
               name="subcategory"
-              sx={autoCompleteSx}
-              selectValue="label"
-              size="small"
-              label="Доп. категория"
-              options={[]}
-              onChange={(value) => {
-                console.log(value);
-              }}
-              className="main__lower__autocomplete"
-              placeholder="Выберите категорию"
-              value={{ label: "Без категории", value: "no" }}
+              control={control}
+              render={({ field }) => (
+                <CustomAutoComplete
+                  sx={autoCompleteSx}
+                  selectValue="label"
+                  size="small"
+                  label="Доп. категория"
+                  options={[{ label: "Не указано", value: "Не указано" }]}
+                  onChange={(value) => {
+                    field.onChange(value?.value);
+                  }}
+                  name="subcategory"
+                  value={
+                    field.value
+                      ? { label: field.value, value: field.value }
+                      : null
+                  }
+                  className="main__lower__autocomplete"
+                  placeholder="Выберите категорию"
+                />
+              )}
             />
-            <CustomAutoComplete
+            <Controller
               name="city"
-              sx={autoCompleteSx}
-              selectValue="label"
-              size="small"
-              label="Город"
-              options={[]}
-              onChange={(value) => {
-                console.log(value);
-              }}
-              className="main__lower__autocomplete"
-              placeholder="Выберите город"
-              value={{ label: "Не обноружено", value: "no" }}
+              control={control}
+              render={({ field }) => (
+                <CustomAutoComplete
+                  name="city"
+                  sx={autoCompleteSx}
+                  selectValue="label"
+                  size="small"
+                  label="Город"
+                  onChange={(value) => {
+                    field.onChange(value?.value);
+                  }}
+                  value={
+                    field.value
+                      ? { label: field.value, value: field.value }
+                      : null
+                  }
+                  options={[{ label: "Не обнаружено", value: "Не обнаружено" }]}
+                  className="main__lower__autocomplete"
+                  placeholder="Выберите город"
+                />
+              )}
             />
-            <VerticalTextField
-              type="text"
-              label={"Комментарий"}
-              placeholder={"Комментарий"}
+            <Controller
+              name="comment"
+              control={control}
+              render={({ field }) => (
+                <VerticalTextField
+                  {...field}
+                  type="text"
+                  label="Комментарий"
+                  placeholder="Комментарий"
+                />
+              )}
             />
-            <div>
-              <FormControl>
-                <RadioGroup
-                  aria-labelledby="demo-radio-buttons-group-label"
-                  name="gender"
-                  row
-                  defaultValue="женский"
-                >
-                  <FormControlLabel
-                    value="женский"
-                    control={<Radio />}
-                    label="Жен."
-                    sx={{
-                      "& .MuiFormControlLabel-label": {
-                        fontSize: "1.6rem",
-                      },
-                      "& .MuiSvgIcon-root": {
-                        height: "2rem",
-                        width: "2rem",
-                      },
-                    }}
-                  />
-                  <FormControlLabel
-                    value="мужской"
-                    control={<Radio />}
-                    label="Муж."
-                    sx={{
-                      "& .MuiFormControlLabel-label": {
-                        fontSize: "1.6rem",
-                      },
-                      "& .MuiSvgIcon-root": {
-                        height: "2rem",
-                        width: "2rem",
-                      },
-                    }}
-                  />
-                </RadioGroup>
-              </FormControl>
-            </div>
+            <Controller
+              name="gender"
+              control={control}
+              render={({ field }) => (
+                <FormControl>
+                  <RadioGroup
+                    {...field}
+                    aria-labelledby="demo-radio-buttons-group-label"
+                    row
+                  >
+                    <FormControlLabel
+                      value="женский"
+                      control={<Radio />}
+                      label="Жен."
+                      sx={{
+                        "& .MuiFormControlLabel-label": {
+                          fontSize: "1.6rem",
+                        },
+                        "& .MuiSvgIcon-root": {
+                          height: "2rem",
+                          width: "2rem",
+                        },
+                      }}
+                    />
+                    <FormControlLabel
+                      value="мужской"
+                      control={<Radio />}
+                      label="Муж."
+                      sx={{
+                        "& .MuiFormControlLabel-label": {
+                          fontSize: "1.6rem",
+                        },
+                        "& .MuiSvgIcon-root": {
+                          height: "2rem",
+                          width: "2rem",
+                        },
+                      }}
+                    />
+                  </RadioGroup>
+                </FormControl>
+              )}
+            />
           </div>
         </div>
         <div className={classes.client__addContact}>
@@ -176,67 +280,107 @@ const AddClients: React.FC = () => {
               <Divider />
             </div>
             <div className={classes.client__addContact__content__main}>
-              <InputMask mask="+7(999)999 9999">
-                {(inputProps: any) => (
+              <Controller
+                name="whatsapp"
+                control={control}
+                rules={{ required: "Заполните обязательное поле" }}
+                render={({ field }) => (
+                  <InputMask
+                    mask="+7(999)999 9999"
+                    value={field.value}
+                    onChange={field.onChange}
+                  >
+                    {(inputProps: any) => (
+                      <CustomTextField
+                        {...inputProps}
+                        size="small"
+                        sx={contactSx}
+                        placeholder="+7(999)999 9999"
+                        label="WhatsApp"
+                        error={!!errors.whatsapp}
+                        helperText={errors.whatsapp?.message}
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              <img
+                                src={flagIcon}
+                                alt="Flag"
+                                style={{ width: 24, height: 24 }}
+                              />
+                            </InputAdornment>
+                          ),
+                        }}
+                      />
+                    )}
+                  </InputMask>
+                )}
+              />
+              <Controller
+                name="mobile"
+                control={control}
+                rules={{ required: "Заполните обязательное поле" }}
+                render={({ field }) => (
+                  <InputMask
+                    mask="+7(999)999 9999"
+                    value={field.value}
+                    onChange={field.onChange}
+                  >
+                    {(inputProps: any) => (
+                      <CustomTextField
+                        {...inputProps}
+                        size="small"
+                        sx={contactSx}
+                        label="Моб. телефон"
+                        placeholder="+7(999)999 9999"
+                        error={!!errors.mobile}
+                        helperText={errors.mobile?.message}
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position="start">
+                              <img
+                                src={flagIcon}
+                                alt="Flag"
+                                style={{ width: 24, height: 24 }}
+                              />
+                            </InputAdornment>
+                          ),
+                        }}
+                      />
+                    )}
+                  </InputMask>
+                )}
+              />
+              <Controller
+                name="email"
+                control={control}
+                rules={{
+                  pattern: {
+                    value: /^\S+@\S+$/i,
+                    message: "Неверный формат email",
+                  },
+                }}
+                render={({ field }) => (
                   <CustomTextField
-                    {...(inputProps as any)}
+                    {...field}
                     size="small"
-                    sx={{
-                      height: "40px",
-                      "& .MuiOutlinedInput-root": {
-                        fontSize: "1.6rem",
-                        height: "40px",
-                      },
-                    }}
-                    placeholder="+7(999)999 9999"
-                    label={"WhatsApp"}
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <img
-                            src={flagIcon}
-                            alt="Flag"
-                            style={{ width: 24, height: 24 }}
-                          />
-                        </InputAdornment>
-                      ),
-                    }}
+                    sx={contactSx}
+                    label="Email"
+                    error={!!errors.email}
+                    helperText={errors.email?.message}
                   />
                 )}
-              </InputMask>
-              <InputMask mask="+7(999)999 9999">
-                {(inputProps: any) => (
+              />
+              <Controller
+                name="instagram"
+                control={control}
+                render={({ field }) => (
                   <CustomTextField
-                    {...inputProps}
+                    {...field}
                     size="small"
-                    sx={{
-                      height: "40px",
-                      "& .MuiOutlinedInput-root": {
-                        fontSize: "1.6rem",
-                        height: "40px",
-                      },
-                    }}
-                    label={"Моб. телефон"}
-                    placeholder="+7(999)999 9999"
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          <img
-                            src={flagIcon}
-                            alt="Flag"
-                            style={{ width: 24, height: 24 }}
-                          />
-                        </InputAdornment>
-                      ),
-                    }}
+                    sx={contactSx}
+                    label="Instagram"
                   />
                 )}
-              </InputMask>
-              <CustomTextField size="small" sx={contactSx} label={"Email"} />
-              <CustomTextField
-                size="small"
-                sx={contactSx}
-                label={"Instagram"}
               />
             </div>
           </div>
@@ -247,29 +391,55 @@ const AddClients: React.FC = () => {
                 <Divider />
               </div>
               <div className={classes.client__addContact__info__content_info}>
-                <CustomAutoComplete
+                <Controller
                   name="occupation"
-                  sx={autoCompleteSx}
-                  selectValue="label"
-                  size="small"
-                  label="Род занятий"
-                  options={[]}
-                  onChange={(value) => {
-                    console.log(value);
-                  }}
-                  className="main__lower__autocomplete"
-                  placeholder="Выберите род занятий"
-                  value={{ label: "Без ", value: "no" }}
+                  control={control}
+                  render={({ field }) => (
+                    <CustomAutoComplete
+                      {...field}
+                      sx={autoCompleteSx}
+                      selectValue="label"
+                      size="small"
+                      label="Род занятий"
+                      options={[
+                        { label: "Не указано", value: "Не указано" },
+                        {
+                          label: "Безработный/домохозяйка",
+                          value: "Безработный/домохозяйка",
+                        },
+                        { label: "Бизнесмен", value: "Бизнесмен" },
+                        { label: "Госслужащий", value: "Госслужащий" },
+                        { label: "Инженер", value: "Инженер" },
+                        {
+                          label: "Офисный сотрудник",
+                          value: "Офисный сотрудник",
+                        },
+                        { label: "Пенсионер", value: "Пенсионер" },
+                        { label: "Рабочий", value: "Рабочий" },
+                        { label: "Студент", value: "Студент" },
+                      ]}
+                      className="main__lower__autocomplete"
+                      onChange={(value) => {
+                        field.onChange(value?.value);
+                      }}
+                      value={
+                        field.value
+                          ? { label: field.value, value: field.value }
+                          : null
+                      }
+                      placeholder="Выберите род занятий"
+                    />
+                  )}
                 />
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </form>
       <div className={classes["buttons"]}>
         <Button
           variant="outlined"
-          onClick={handleCloseModal}
+          onClick={() => modal.hide()}
           startIcon={<Clear />}
         >
           Отменить
@@ -279,6 +449,7 @@ const AddClients: React.FC = () => {
           disableElevation
           startIcon={<Done />}
           type="submit"
+          onClick={handleSubmit(onSubmit)}
         >
           Добавить клиента
         </Button>
@@ -287,6 +458,4 @@ const AddClients: React.FC = () => {
   );
 };
 
-const AddClientsModal = NiceModal.create(AddClients);
-
-export default AddClientsModal;
+export default NiceModal.create(AddClients);
