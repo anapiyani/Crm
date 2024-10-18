@@ -20,7 +20,7 @@ import { Clear, Done } from "@mui/icons-material";
 import flagIcon from "@/assets/icons/Flags.svg";
 import classes from "./styles.module.scss";
 import { useAddClient } from "@/service/client/client.hook";
-import { IClientAddForm } from "@/ts/client.interface";
+import { IClientAddForm, ICreateClientReturn } from "@/ts/client.interface";
 
 type FormValues = {
   surname: string;
@@ -60,7 +60,11 @@ const contactSx: SxProps = {
   },
 };
 
-const AddClients: React.FC = () => {
+type TProps = {
+  showClient: (client: ICreateClientReturn) => void;
+};
+
+const AddClients = ({ showClient }: TProps) => {
   const modal = useModal();
   const { mutate: addClient } = useAddClient();
 
@@ -68,6 +72,7 @@ const AddClients: React.FC = () => {
     control,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<FormValues>({
     defaultValues: {
       gender: "женский",
@@ -100,10 +105,12 @@ const AddClients: React.FC = () => {
     };
 
     addClient(formData, {
-      onSuccess: () => {
+      onSuccess: (clientsData) => {
+        showClient(clientsData);
         modal.hide();
       },
     });
+
     modal.hide();
   };
 
