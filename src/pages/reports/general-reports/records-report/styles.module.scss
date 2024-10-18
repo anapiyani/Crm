@@ -29,16 +29,16 @@
     }
 
     &__list {
-        &__header {
-          display: flex;
-          flex-direction: column;
-          padding: 1.6rem 0;
-          gap: 0.8rem;
-          &__title {
-            font-size: 2.4rem;
-            color: #171a1c;
-          }
+      &__header {
+        display: flex;
+        flex-direction: column;
+        padding: 1.6rem 0;
+        gap: 0.8rem;
+        &__title {
+          font-size: 2.4rem;
+          color: #171a1c;
         }
+      }
     }
   }
 }

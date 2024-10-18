@@ -1,0 +1,57 @@
+.servicesGoodsReport {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    background-color: #fbfcfe;
+    height: 100%;
+  
+    &__content {
+      padding: 2rem 3rem;
+      display: flex;
+      flex-direction: column;
+      width: 80%;
+      &__filters {
+        &__header {
+          display: flex;
+          flex-direction: column;
+          padding: 1.6rem 0;
+          gap: 0.8rem;
+  
+          &__content {
+            display: flex;
+            justify-content: space-between;
+            &__title {
+              font-size: 3.4rem;
+              color: #171a1c;
+            }
+          }
+        }
+      }
+  
+      &__list {
+        &__header {
+          display: flex;
+          flex-direction: column;
+          padding: 1.6rem 0;
+          gap: 0.8rem;
+          &__title {
+            font-size: 2.4rem;
+            color: #171a1c;
+          }
+          &__checkbox {
+            margin-left: 1rem;
+            max-height: 30rem;
+          }
+        }
+        &__tags {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(min-content, 1fr));
+          grid-auto-flow: column;
+          grid-template-rows: repeat(2, auto);
+          gap: 0.8rem;
+          justify-content: start;
+        }
+      }
+    }
+  }
+  

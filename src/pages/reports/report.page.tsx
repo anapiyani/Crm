@@ -75,11 +75,11 @@ const Report = () => {
     setShowTags((prev) => !prev);
   };
 
- type TagCategories = {
+  type TagCategories = {
     primary: string[];
     secondary: Record<string, string[]>;
     tertiary: Record<string, string[]>;
-  }
+  };
 
   const tagCategories: TagCategories = {
     primary: [
@@ -107,7 +107,7 @@ const Report = () => {
     primary: string | null;
     secondary: string | null;
     tertiary: string | null;
-  }
+  };
 
   const [selectedTags, setSelectedTags] = useState<SelectedTags>({
     primary: null,

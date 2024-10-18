@@ -255,7 +255,15 @@ const RecursiveCheckbox: React.FC<ITreeItemProps> = ({
         <span onClick={toggle} className={classes["tree__label"]}>
           {category.name}
           {(category.children.length > 0 || category.services.length > 0) && (
-            <span style={{alignItems:"center", display:"flex", color:"#0000008F"}}>{isOpen ? <ArrowDropUp /> : <ArrowDropDown />}</span>
+            <span
+              style={{
+                alignItems: "center",
+                display: "flex",
+                color: "#0000008F",
+              }}
+            >
+              {isOpen ? <ArrowDropUp /> : <ArrowDropDown />}
+            </span>
           )}
         </span>
       </div>
