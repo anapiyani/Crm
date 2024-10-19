@@ -438,7 +438,12 @@ const EventDetails: React.FC<IEventDetailsModalProps> = ({ appointmentId }) => {
     <ModalWindow
       title={"Запись клиента"}
       open={modal.visible}
-      handleClose={() => modal.hide()}
+      handleClose={() => {
+        console.log("modal hide");
+        modal.hide().then(() => {
+          modal.remove();
+        });
+      }}
       className={classNames(
         classes["u-p-0"],
         currentTab === 2 && classes["event-details__modal"]
@@ -548,7 +553,10 @@ const EventDetails: React.FC<IEventDetailsModalProps> = ({ appointmentId }) => {
               sx={{
                 fontSize: "1.4rem",
               }}
-              onClick={() => modal.hide()}
+              onClick={() => {
+                modal.hide();
+                modal.remove();
+              }}
             >
               Отменить
             </Button>

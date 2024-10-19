@@ -334,20 +334,11 @@ const ClientCard = () => {
       editType: "text",
     },
     {
-      property: "Фамилия",
-      value: userInfoData?.last_name || "Не указано",
-      editType: "text",
-    },
-    {
-      property: "Имя",
-      value: userInfoData?.first_name || "Не указано",
-      editType: "text",
-    },
-    {
       property: "Моб. телефон",
       value: userInfoData?.phone_number || "Не указано",
       editType: "text",
     },
+
     {
       property: "Явка",
       value: `${userInfoData?.attendance}% (${userInfoData?.total_appointments} из ${userInfoData?.unattended_appointments} не пришёл)`,
@@ -649,7 +640,7 @@ const ClientCard = () => {
                 icon={<PaymentsOutlined />}
                 iconColor="#2196F3"
                 textTitle="Текущая скидка"
-                valueText={"10%"}
+                valueText={"10"}
               />
             </div>
             <RevenueChart
