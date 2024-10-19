@@ -53,8 +53,9 @@ import { getHierarchyByEmployeeId } from "@/service/hierarchy/hierarchy.service"
 import { flattenEmployeeHierarchy } from "@/utils/flatten-employee-hierarchy";
 import { getScheduleByDate } from "@/service/schedule/schedule.service";
 import { searchClient } from "@/service/client/client.service";
-import { IClientSearch } from "@/ts/client.interface";
+import { IClientSearch, ICreateClientReturn } from "@/ts/client.interface";
 import { debounce } from "lodash";
+import AddClients from "./add-clients.modal";
 
 interface ICreateAppointmentModalProps {
   start: string;
@@ -371,6 +372,13 @@ const CreateAppointment: React.FC<ICreateAppointmentModalProps> = ({
     []
   );
 
+  const showClient = (data: ICreateClientReturn) => {
+    setSelectedEmployee({
+      label: `${data.user.first_name} ${data.user.last_name}`,
+      value: data.user.user_id!, // user_id is always defined here! (change later)
+    });
+  };
+
   const employeeOptions = useMemo(() => {
     return employeeData.map((employee) => ({
       label: `${employee.user.first_name} ${employee.user.last_name}`,
@@ -439,12 +447,13 @@ const CreateAppointment: React.FC<ICreateAppointmentModalProps> = ({
                 />
               ) : (
                 <CustomAutoComplete
+                  key={selectedEmployee ? selectedEmployee.value : "default"}
                   className={classes["u-w-full"]}
                   name="client"
                   selectValue={"label"}
                   label="Клиент"
                   isDisabled={hasClient ? true : false}
-                  value={selectedEmployee}
+                  value={selectedEmployee ? selectedEmployee : null}
                   onChange={(value) => setSelectedEmployee(value)}
                   onChangeText={(value) =>
                     debouncedSearchClient(value ? value : "")
@@ -467,7 +476,9 @@ const CreateAppointment: React.FC<ICreateAppointmentModalProps> = ({
                     padding: "0",
                     minWidth: "3rem",
                   }}
-                  onClick={() => console.log(employee)}
+                  onClick={() => {
+                    NiceModal.show(AddClients, { showClient });
+                  }}
                 >
                   <AddCircle />
                 </Button>
