@@ -35,6 +35,7 @@ import { Link } from "react-router-dom";
 import dayjs from "dayjs";
 import CustomDatePicker from "@/components/date-picker/date-picker-custom";
 import getUserAge from "@/utils/getUserAge";
+import useFormState from "./hooks/useFormState.ts";
 
 interface IOption {
   label: string;
@@ -42,31 +43,8 @@ interface IOption {
 }
 
 const EmployeeSearch = () => {
-  const [formData, setFormData] = useState<ISearchFormData>({
-    search: "",
-    phone_number: "",
-    whatsapp: "",
-    user_id: "",
-    email: "",
-    is_active: null,
-    employmentDateFrom: "",
-    employmentDateTo: "",
-    age_from: "",
-    age_to: "",
-    gender: "",
-    role: "employee",
-    roleEmployee: "",
-    reviewFrom: "",
-    reviewAbout: "",
-    reviewDateFrom: "",
-    reviewDateTo: "",
-    page: 1,
-    page_size: 10,
-    works_from: "",
-    works_to: "",
-    date_of_birth_from: "",
-    date_of_birth_to: "",
-  });
+  const { formData, setFormData } = useFormState();
+
   const [selectedRoles, setSelectedRoles] = useState(
     formData.roleEmployee.split(", ").filter(Boolean)
   );
@@ -273,27 +251,6 @@ const EmployeeSearch = () => {
                     }))
                   }
                 />
-
-                {/* <VerticalTextField
-                  label="Дата рождения"
-                  placeholder="С"
-                  placeholderOptional="По"
-                  type="double"
-                  doubleDivier="-"
-                  onChangeFrom={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      [`date_of_birth_from`]: e.target.value,
-                    }))
-                  }
-                  onChangeTo={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      [`date_of_birth_to`]: e.target.value,
-                    }))
-                  }
-                /> */}
-
                 <div
                   style={{
                     display: "flex",
@@ -420,7 +377,7 @@ const EmployeeSearch = () => {
             title={"Должность"}
             children={
               <div className={classes["main__upper__card"]}>
-                {departmentData?.map((item: IDepartmentData) =>
+                {departmentData?.results?.map((item: IDepartmentData) =>
                   item.role.length > 0 ? (
                     <TriStateCheckbox key={item.name} label={item.name}>
                       {item.role.map((position) => (

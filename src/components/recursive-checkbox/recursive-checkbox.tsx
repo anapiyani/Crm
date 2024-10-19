@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import ExpandLessIcon from "@mui/icons-material/ExpandLess";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import classes from "./styles.module.scss";
@@ -86,7 +86,6 @@ const RecursiveCheckbox: React.FC<ITreeItemProps> = ({
     } else if (anyServicesChecked || anyChildrenChecked) {
       state = 3; // Indeterminate
     }
-
     setChecked(state);
   };
 
