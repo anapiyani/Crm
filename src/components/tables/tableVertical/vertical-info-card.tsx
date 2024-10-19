@@ -16,6 +16,7 @@ import {
   IconButton,
   TextField,
 } from "@mui/material";
+import classes from "./styles.module.css";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -296,14 +297,7 @@ const TableVertical: React.FC<TableVerticalProps> = ({
                 ) : row.link ? (
                   <>
                     {row.value}{" "}
-                    <a
-                      href={row.link}
-                      style={{
-                        color: "var(--link-500)",
-                        textDecoration: "none",
-                        marginLeft: "1rem",
-                      }}
-                    >
+                    <a className={classes.link} href={row.link}>
                       {row.linkLabel}
                     </a>
                   </>

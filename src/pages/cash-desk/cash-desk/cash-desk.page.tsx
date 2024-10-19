@@ -267,6 +267,13 @@ const CashDesk = () => {
     return incomeAllMoney()! - expenseAllMoney()!;
   };
 
+  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFromDate(e.target.value);
+    if (toDate && dayjs(e.target.value).isAfter(dayjs(toDate))) {
+      setToDate("");
+    }
+  };
+
   return (
     <div className={classes.main}>
       <BreadcrumbsCustom />
@@ -440,13 +447,7 @@ const CashDesk = () => {
                 <CustomDatePicker
                   value={fromDate}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                    setFromDate(e.target.value);
-                    if (
-                      toDate &&
-                      dayjs(e.target.value).isAfter(dayjs(toDate))
-                    ) {
-                      setToDate("");
-                    }
+                    handleDateChange(e);
                   }}
                 />
                 <p style={{ marginRight: "1rem", marginLeft: "1rem" }}>-</p>

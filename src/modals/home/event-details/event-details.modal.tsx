@@ -58,10 +58,8 @@ const EventDetails: React.FC<IEventDetailsModalProps> = ({ appointmentId }) => {
   const [page, setPage] = useState(1);
   const TemporaryDeleteAppointment = useTemporaryDeleteAppointment();
   const updateAppointmentStatus = useUpdateAppointmentStatus().mutate;
-  const [
-    serviceAppointments,
-    setServiceAppointments,
-  ] = useState<IServicesAdd | null>(null);
+  const [serviceAppointments, setServiceAppointments] =
+    useState<IServicesAdd | null>(null);
 
   const onAddServices = (servicesData: ITableRowData[]) => {
     const appointment_services: IAppointmentServiceToAdd[] = servicesData.map(
@@ -152,41 +150,35 @@ const EventDetails: React.FC<IEventDetailsModalProps> = ({ appointmentId }) => {
     refetchOnWindowFocus: false,
   });
 
-  const {
-    data: customerAppointmentNoShowData,
-    refetch: noDataRefetch,
-  } = useQuery({
-    queryKey: ["customerAppointmentNoShowData", clientId],
-    queryFn: () =>
-      clientId ? getCustomerAppointmentNoShowById(clientId) : undefined,
-    enabled: !!clientId,
-    staleTime: Infinity,
-    refetchOnWindowFocus: false,
-  });
+  const { data: customerAppointmentNoShowData, refetch: noDataRefetch } =
+    useQuery({
+      queryKey: ["customerAppointmentNoShowData", clientId],
+      queryFn: () =>
+        clientId ? getCustomerAppointmentNoShowById(clientId) : undefined,
+      enabled: !!clientId,
+      staleTime: Infinity,
+      refetchOnWindowFocus: false,
+    });
 
-  const {
-    data: customerAppointmentPlanned,
-    refetch: plannedRefetch,
-  } = useQuery({
-    queryKey: ["customerAppointmentPlanned", clientId],
-    queryFn: () =>
-      clientId ? getCustomerAppointmentPlannedById(clientId) : undefined,
-    enabled: !!clientId,
-    staleTime: Infinity,
-    refetchOnWindowFocus: false,
-  });
+  const { data: customerAppointmentPlanned, refetch: plannedRefetch } =
+    useQuery({
+      queryKey: ["customerAppointmentPlanned", clientId],
+      queryFn: () =>
+        clientId ? getCustomerAppointmentPlannedById(clientId) : undefined,
+      enabled: !!clientId,
+      staleTime: Infinity,
+      refetchOnWindowFocus: false,
+    });
 
-  const {
-    data: customerDeletedAppointments,
-    refetch: deletedRefetch,
-  } = useQuery({
-    queryKey: ["customerDeletedAppointments", clientId],
-    queryFn: () =>
-      clientId ? getCustomerDeletedAppointments(clientId) : undefined,
-    enabled: !!clientId,
-    staleTime: Infinity,
-    refetchOnWindowFocus: false,
-  });
+  const { data: customerDeletedAppointments, refetch: deletedRefetch } =
+    useQuery({
+      queryKey: ["customerDeletedAppointments", clientId],
+      queryFn: () =>
+        clientId ? getCustomerDeletedAppointments(clientId) : undefined,
+      enabled: !!clientId,
+      staleTime: Infinity,
+      refetchOnWindowFocus: false,
+    });
 
   const refetchAll = useCallback(() => {
     if (clientId) {
