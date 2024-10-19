@@ -16,7 +16,7 @@ import {
   IconButton,
   TextField,
 } from "@mui/material";
-import classes from "./styles.module.css";
+import classes from "./styles.module.scss";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
