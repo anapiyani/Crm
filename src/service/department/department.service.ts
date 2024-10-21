@@ -1,5 +1,6 @@
 import { IRoleChange, IRoleCreate } from "@/ts/types";
 import {
+  IDepartmentChild,
   IDepartmentPagination,
   IDepartmentsParent,
 } from "@/ts/departments.interface";
@@ -10,8 +11,16 @@ export const getDepartment = (): Promise<IDepartmentPagination> => {
   return api.get("/hierarchy/hierarchy-departments/").then((res) => res.data);
 };
 
-const getHierarchyDepartments = (): Promise<IDepartmentsParent[]> => {
-  return api.get("/hierarchy/hierarchy-departments");
+export const getHierarchyDepartments = (): Promise<{
+  data: IDepartmentsParent[];
+}> => {
+  return api.get("/hierarchy/v2/departments");
+};
+
+export const getDepartmentRoles = (
+  department_id: number
+): Promise<{ data: IDepartmentChild[] }> => {
+  return api.get(`/hierarchy/v2/departments/${department_id}/roles/`);
 };
 
 export const updateRole = ({ id, name }: IRoleChange): Promise<IRoleChange> => {

@@ -34,3 +34,8 @@ export type IDepartmentsParent = {
   id: number;
   name: string;
 };
+
+export type IDepartmentChild = {
+  id: number;
+  name: string;
+};
