@@ -556,8 +556,8 @@ const EmployeeSearch = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {employeeData?.data?.results?.length > 0 ? (
-                  employeeData.data.results.map((row) => (
+                {employeeData?.results && employeeData?.results?.length > 0 ? (
+                  employeeData.results.map((row) => (
                     <TableRow key={row.id}>
                       <TableCell>{row.user_id}</TableCell>
                       <TableCell>

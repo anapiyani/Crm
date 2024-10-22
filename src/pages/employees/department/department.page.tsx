@@ -10,14 +10,13 @@ import { getDepartment } from "@/service/department/department.service";
 import toast from "react-hot-toast";
 import { IDepartmentData, IRoles } from "@/ts/departments.interface";
 import {
-  useUpdateRole,
-  useDeleteRole,
   useCreateRole,
+  useDeleteRole,
+  useUpdateRole,
 } from "@/service/department/department.hook";
 import ModalWindow from "@/components/modal-window/modal-window";
 import classNames from "classnames";
 import CreateDepartmentModal from "@/modals/employees/create-department.modal";
-import { useCreateHierarchy } from "@/service/hierarchy/hierarchy.hook";
 import NiceModal from "@ebay/nice-modal-react";
 
 const Department = () => {
@@ -49,7 +48,7 @@ const Department = () => {
   };
 
   const handlePositionClick = (positionId: number) => {
-    const department = data?.find(
+    const department = data?.results?.find(
       (dept: IDepartmentData) => dept.id === selectedDepartment
     );
 
@@ -66,7 +65,7 @@ const Department = () => {
     setPositionName(event.target.value);
   };
 
-  const selectedDepartmentData = data?.find(
+  const selectedDepartmentData = data?.results?.find(
     (department: IDepartmentData) => department.id === selectedDepartment
   );
 
@@ -132,7 +131,7 @@ const Department = () => {
           <div className={classes["department__content__column__items"]}>
             {isPending ? <CircularProgress /> : ""}
             <ul>
-              {data?.map((item: IDepartmentData) => (
+              {data?.results?.map((item: IDepartmentData) => (
                 <li key={item.id}>
                   <Button
                     onClick={() => handleDepartmentClick(item.id)}

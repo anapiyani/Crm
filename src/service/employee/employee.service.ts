@@ -1,6 +1,5 @@
-import { IEmployeeAddForm } from "@/ts/types";
+import { IDepartment, IEmployeeAddForm } from "@/ts/types";
 import api from "../api";
-import { IDepartment } from "@/ts/types";
 import {
   ICardInfoEmployee,
   IEmployeesData,
@@ -38,7 +37,7 @@ export const searchDepartment = (): Promise<IDepartment> => {
 
 export const searchEmployee = (
   formData?: Partial<ISearchFormData>
-): Promise<void | IEmployeesData> => {
+): Promise<IEmployeesData> => {
   const params = new URLSearchParams();
   Object.entries(formData!).forEach(([key, value]) => {
     if (value) {
