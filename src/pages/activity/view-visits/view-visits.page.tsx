@@ -168,7 +168,7 @@ const ViewVisits = () => {
               />
               <LabelInfo
                 name={"Оплату принял"}
-                info={`${visitInfo?.written_by.name}`}
+                info={`${visitInfo?.received_by_employee}`}
                 isClick={true}
               />
               <LabelInfo

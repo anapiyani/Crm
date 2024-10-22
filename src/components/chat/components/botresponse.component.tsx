@@ -4,6 +4,9 @@ import classes from "../style.module.scss";
 import { TBotAnswer, TBotResponse } from "@/ts/bot.types";
 
 const renderBotResponse = (botResponse: TBotResponse) => {
+  if (botResponse.gpt_response) {
+  }
+
   const sameDataResponse = botResponse.appointments?.reduce(
     (acc: Record<string, TBotAnswer[]>, answer: TBotAnswer) => {
       const key = `${answer.date}`;
@@ -19,7 +22,11 @@ const renderBotResponse = (botResponse: TBotResponse) => {
   return (
     <div>
       <div className={classes.bot_response_content}>
-        <p>{botResponse.human_readable_text}</p>
+        {botResponse.gpt_response ? (
+          <p>{botResponse.gpt_response}</p>
+        ) : (
+          <p>{botResponse.human_readable_text}</p>
+        )}
       </div>
       {sameDataResponse &&
         Object.keys(sameDataResponse).map((key, index) => (
