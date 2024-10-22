@@ -741,7 +741,7 @@ const CashDesk = () => {
                       </p>
                     </TableCell>
                     <TableCell>
-                      {result.overall_change_in_cash_register?.card !==
+                      {result?.overall_change_in_cash_register?.card !==
                         "0.00" || null ? (
                         <p
                           style={{
@@ -750,8 +750,8 @@ const CashDesk = () => {
                             gap: "0.5rem",
                           }}
                         >
-                          {result.overall_change_in_cash_register.card
-                            ? result.overall_change_in_cash_register.card
+                          {result.overall_change_in_cash_register?.card
+                            ? result.overall_change_in_cash_register?.card
                             : null}{" "}
                           ₸
                           <CreditCard />
@@ -766,7 +766,7 @@ const CashDesk = () => {
                             gap: "0.5rem",
                           }}
                         >
-                          {result.overall_change_in_cash_register.cash} ₸{" "}
+                          {result.overall_change_in_cash_register?.cash} ₸{" "}
                           <Payments />
                         </p>
                       )}
@@ -779,7 +779,7 @@ const CashDesk = () => {
                             gap: "0.5rem",
                           }}
                         >
-                          {result.overall_change_in_cash_register.check} ₸{" "}
+                          {result.overall_change_in_cash_register?.check} ₸{" "}
                           <LocalActivity />
                         </p>
                       )}
@@ -794,7 +794,7 @@ const CashDesk = () => {
                         >
                           {
                             result.overall_change_in_cash_register
-                              .checking_account
+                              ?.checking_account
                           }
                           ₸ <MenuBook />
                         </p>

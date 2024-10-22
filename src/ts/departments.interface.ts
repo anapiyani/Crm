@@ -29,3 +29,13 @@ export interface IRoles {
   id: number;
   name: string;
 }
+
+export type IDepartmentsParent = {
+  id: number;
+  name: string;
+};
+
+export type IDepartmentChild = {
+  id: number;
+  name: string;
+};
