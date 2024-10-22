@@ -446,6 +446,7 @@ const CashDesk = () => {
               <div style={{ display: "flex", width: "90%" }}>
                 <CustomDatePicker
                   value={fromDate}
+                  max={toDate}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                     handleDateChange(e);
                   }}

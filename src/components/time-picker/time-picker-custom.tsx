@@ -130,8 +130,27 @@ const CustomTimePicker: React.FC<CustomTimePickerProps> = ({
             <Box display="flex" justifyContent="space-between" p={1} gap={1}>
               <TextField
                 defaultValue={selectedHour}
-                onChange={(e) => handleHourChange(e.target.value)}
-                inputProps={{ maxLength: 2 }}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  if (/^\d*$/.test(value)) {
+                    if (Number(value)) {
+                      if (Number(value) < 0) {
+                        handleHourChange("00");
+                      }
+                      if (Number(value) > 23) {
+                        e.target.value = "23";
+                        handleHourChange("23");
+                      } else {
+                        handleHourChange(value);
+                      }
+                    }
+                  } else {
+                    e.target.value = "";
+                  }
+                }}
+                inputProps={{
+                  maxLength: 2,
+                }}
                 sx={{
                   width: 60,
                   "& .MuiInputBase-root": {
@@ -141,8 +160,25 @@ const CustomTimePicker: React.FC<CustomTimePickerProps> = ({
               />
               <TextField
                 defaultValue={selectedMinute}
-                onChange={(e) => handleMinuteChange(e.target.value)}
-                inputProps={{ maxLength: 2 }}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  if (/^\d*$/.test(value)) {
+                    if (Number(value)) {
+                      if (Number(value) < 0) {
+                        handleHourChange("00");
+                      }
+                      if (Number(value) > 59) {
+                        e.target.value = "59";
+                        handleHourChange("59");
+                      } else {
+                        handleHourChange(value);
+                      }
+                    }
+                  } else {
+                    e.target.value = "";
+                  }
+                }}
+                inputProps={{ maxLength: 2, inputMode: "numeric" }}
                 sx={{
                   width: 60,
                   "& .MuiInputBase-root": {

@@ -94,6 +94,7 @@ export interface IViewVistInfo {
   employee_name: string;
   employee_role: string;
   end_time: string;
+  received_by_employee: string;
   id: number;
   material_purchases: IMaterialPurchasesView[];
   salary_info: ISalaryInfo[];

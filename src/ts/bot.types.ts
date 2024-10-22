@@ -1,7 +1,14 @@
 import { ReactNode } from "react";
 
 export type TBotResponse = {
-  appointments: TBotAnswer[];
+  gpt_response?: string;
+  // appointments?: {
+  //   appointments: TBotAnswer[];
+  //   human_readable_text: string;
+  //   status: string;
+  //   type: string;
+  // };
+  apointments?: TBotAnswer[];
   human_readable_text: string;
   status: string;
   type: string;
