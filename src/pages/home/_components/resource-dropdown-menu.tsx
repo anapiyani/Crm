@@ -25,6 +25,7 @@ interface IResourceDropdownMenuProps {
   onClose: () => void;
   resourceId: string;
   date: string;
+  scheduleId: string;
   username?: string;
   handleOpenSchedule: (id: number) => void;
   handleMonthSchedule?: (id: number, employee_name: string) => void;
@@ -34,6 +35,7 @@ interface IResourceDropdownMenuProps {
 const ResourceDropdownMenu: React.FC<IResourceDropdownMenuProps> = ({
   anchorEl,
   onClose,
+  scheduleId,
   resourceId,
   username,
   handleOpenSchedule,
@@ -56,8 +58,11 @@ const ResourceDropdownMenu: React.FC<IResourceDropdownMenuProps> = ({
     });
   };
 
-  const handleDeleteEmployeeSchedule = () => {
-    NiceModal.show(DeleteEmployeeScheduleConfirmationModal, {});
+  const handleDeleteEmployeeSchedule = (date: string) => {
+    NiceModal.show(DeleteEmployeeScheduleConfirmationModal, {
+      employee_id: scheduleId,
+      selectedDate: date,
+    });
   };
 
   const handleTakeDayoff = () => {
@@ -121,7 +126,7 @@ const ResourceDropdownMenu: React.FC<IResourceDropdownMenuProps> = ({
       icon: <Delete />,
       text: "Удалить смену",
       onClick: () => {
-        handleDeleteEmployeeSchedule();
+        handleDeleteEmployeeSchedule(date);
         onClose();
       },
     },

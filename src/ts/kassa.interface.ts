@@ -1,9 +1,18 @@
-export interface IKassaOperations {
-  children: IKassaOperations[] | [];
+export type KassaOperationsItem = {
   id: number;
   name: string;
   parent: null | number;
-}
+  expense: boolean;
+  children: KassaOperationsItem[] | [];
+};
+
+export type IKassaOperations = {
+  count: number;
+  items_per_page: number;
+  next: string | null;
+  previous: string | null;
+  results: KassaOperationsItem[] | [];
+};
 
 export interface ICashRegister {
   from_date?: string;
@@ -32,6 +41,13 @@ export interface IWithdrawal {
   amount: string;
   money_type: string;
 }
+
+export type TKassaTransaction = {
+  operation_category: "none" | "deposit" | "withdraw";
+  comment: string;
+  amount: string;
+  money_type: "cash" | "card" | "check" | "checking_account";
+};
 
 export interface ISearchKassa {
   from_date: string;

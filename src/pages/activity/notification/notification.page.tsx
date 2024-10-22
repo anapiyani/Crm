@@ -370,11 +370,11 @@ const NotificationPage = () => {
                 />
                 <RoleEmployeeCheckbox
                   onEmployeeSelectionChange={(
-                    selectedEmployeeIds: { id: number; color?: string }[],
+                    selectedEmployeeIds: { id: number; color?: string }[]
                   ) => {
                     setValue(
                       "employee",
-                      selectedEmployeeIds.map((item) => item.id),
+                      selectedEmployeeIds.map((item) => item.id)
                     );
                   }}
                 />
@@ -412,7 +412,7 @@ const NotificationPage = () => {
                       }}
                       selectedOption={
                         employeeOptions?.find(
-                          (option) => Number(option.value) === field.value,
+                          (option) => Number(option.value) === field.value
                         ) || null
                       }
                     />

@@ -53,8 +53,9 @@ import { getHierarchyByEmployeeId } from "@/service/hierarchy/hierarchy.service"
 import { flattenEmployeeHierarchy } from "@/utils/flatten-employee-hierarchy";
 import { getScheduleByDate } from "@/service/schedule/schedule.service";
 import { searchClient } from "@/service/client/client.service";
-import { IClientSearch } from "@/ts/client.interface";
+import { IClientSearch, ICreateClientReturn } from "@/ts/client.interface";
 import { debounce } from "lodash";
+import AddClients from "./add-clients.modal";
 
 interface ICreateAppointmentModalProps {
   start: string;
@@ -95,13 +96,13 @@ const CreateAppointment: React.FC<ICreateAppointmentModalProps> = ({
   const [appointmentForm, setAppointmentForm] =
     useState<IAppointmentCreateForm>(initialAppointmentForm);
   const [selectedEmployee, setSelectedEmployee] = useState<IOption | null>(
-    clientId ? { label: clientName, value: clientId } : null,
+    clientId ? { label: clientName, value: clientId } : null
   );
   const [selectedServices, setSelectedServices] = useState<IOption | null>(
-    null,
+    null
   );
   const [selectedParameters, setSelectedParameters] = useState<IOption | null>(
-    null,
+    null
   );
   const [selectedEmployeeId, setSelectedEmployeeId] = useState<
     string | null | undefined
@@ -166,8 +167,8 @@ const CreateAppointment: React.FC<ICreateAppointmentModalProps> = ({
     queryFn: () =>
       Promise.all(
         appointmentDates.map((date) =>
-          getScheduleByDate(date.date.format("YYYY-MM-DD")),
-        ),
+          getScheduleByDate(date.date.format("YYYY-MM-DD"))
+        )
       ),
     staleTime: Infinity,
     refetchOnWindowFocus: false,
@@ -212,13 +213,13 @@ const CreateAppointment: React.FC<ICreateAppointmentModalProps> = ({
     }));
 
     const dates = appointmentDates.map((date) =>
-      date.date.format("YYYY-MM-DD"),
+      date.date.format("YYYY-MM-DD")
     );
     const start_times = appointmentDates.map((date) =>
-      date.start_time.format("HH:mm"),
+      date.start_time.format("HH:mm")
     );
     const end_times = appointmentDates.map((date) =>
-      date.end_time.format("HH:mm"),
+      date.end_time.format("HH:mm")
     );
 
     const updatedForm: IAppointmentCreateForm = {
@@ -244,7 +245,7 @@ const CreateAppointment: React.FC<ICreateAppointmentModalProps> = ({
   const handleAddService = () => {
     if (selectedServices && selectedParameters) {
       const service = servicesDataByEmployee?.find(
-        (service) => service.service_id === selectedServices.value,
+        (service) => service.service_id === selectedServices.value
       );
       if (service) {
         setServiceTableData([
@@ -260,7 +261,7 @@ const CreateAppointment: React.FC<ICreateAppointmentModalProps> = ({
             unitPrice: Number(
               service.parameters
                 .find((param) => param.id === selectedParameters.value)
-                ?.price.toString(),
+                ?.price.toString()
             ),
             parameter: selectedParameters.label,
             parameter_id: selectedParameters.value,
@@ -297,8 +298,8 @@ const CreateAppointment: React.FC<ICreateAppointmentModalProps> = ({
     setServiceTableData(
       serviceTableData &&
         serviceTableData.map((item) =>
-          item.id === id ? { ...item, quantity } : item,
-        ),
+          item.id === id ? { ...item, quantity } : item
+        )
     );
   };
 
@@ -313,7 +314,7 @@ const CreateAppointment: React.FC<ICreateAppointmentModalProps> = ({
       quantity: number;
       serviceName: string;
       service_id: number;
-    }[],
+    }[]
   ) => {
     setServiceTableData((prevData) => {
       const newData = [...(prevData || [])];
@@ -358,7 +359,7 @@ const CreateAppointment: React.FC<ICreateAppointmentModalProps> = ({
           setClientsData(res);
         });
       }, 300),
-    [],
+    []
   );
 
   const debouncedSearchEmployee = useMemo(
@@ -368,8 +369,15 @@ const CreateAppointment: React.FC<ICreateAppointmentModalProps> = ({
           setEmployeeData(res);
         });
       }, 300),
-    [],
+    []
   );
+
+  const showClient = (data: ICreateClientReturn) => {
+    setSelectedEmployee({
+      label: `${data.user.first_name} ${data.user.last_name}`,
+      value: data.user.user_id!, // user_id is always defined here! (change later)
+    });
+  };
 
   const employeeOptions = useMemo(() => {
     return employeeData.map((employee) => ({
@@ -393,7 +401,7 @@ const CreateAppointment: React.FC<ICreateAppointmentModalProps> = ({
           <p
             className={classNames(
               classes["create-appointment__params-text"],
-              classes["u-mt-2"],
+              classes["u-mt-2"]
             )}
           >
             Основные параметры
@@ -439,12 +447,13 @@ const CreateAppointment: React.FC<ICreateAppointmentModalProps> = ({
                 />
               ) : (
                 <CustomAutoComplete
+                  key={selectedEmployee ? selectedEmployee.value : "default"}
                   className={classes["u-w-full"]}
                   name="client"
                   selectValue={"label"}
                   label="Клиент"
                   isDisabled={hasClient ? true : false}
-                  value={selectedEmployee}
+                  value={selectedEmployee ? selectedEmployee : null}
                   onChange={(value) => setSelectedEmployee(value)}
                   onChangeText={(value) =>
                     debouncedSearchClient(value ? value : "")
@@ -467,7 +476,9 @@ const CreateAppointment: React.FC<ICreateAppointmentModalProps> = ({
                     padding: "0",
                     minWidth: "3rem",
                   }}
-                  onClick={() => console.log(employee)}
+                  onClick={() => {
+                    NiceModal.show(AddClients, { showClient });
+                  }}
                 >
                   <AddCircle />
                 </Button>
@@ -488,8 +499,8 @@ const CreateAppointment: React.FC<ICreateAppointmentModalProps> = ({
                       appointmentDates.map((item) =>
                         item.id === dateEntry.id
                           ? { ...item, date: date as Dayjs }
-                          : item,
-                      ),
+                          : item
+                      )
                     )
                   }
                   sx={{
@@ -507,8 +518,8 @@ const CreateAppointment: React.FC<ICreateAppointmentModalProps> = ({
                       appointmentDates.map((item) =>
                         item.id === dateEntry.id
                           ? { ...item, start_time: newValue as Dayjs }
-                          : item,
-                      ),
+                          : item
+                      )
                     )
                   }
                   sx={{
@@ -526,8 +537,8 @@ const CreateAppointment: React.FC<ICreateAppointmentModalProps> = ({
                       appointmentDates.map((item) =>
                         item.id === dateEntry.id
                           ? { ...item, end_time: newValue as Dayjs }
-                          : item,
-                      ),
+                          : item
+                      )
                     )
                   }
                   sx={{
@@ -603,7 +614,7 @@ const CreateAppointment: React.FC<ICreateAppointmentModalProps> = ({
                   NiceModal.show(ChooseServiceModal, {
                     onSave: handleSaveSelectedServices,
                     flattenData: flattenEmployeeHierarchy(
-                      employeeHierarchyData || [],
+                      employeeHierarchyData || []
                     ),
                   });
                 }}
@@ -624,9 +635,15 @@ const CreateAppointment: React.FC<ICreateAppointmentModalProps> = ({
 
                   setParametersData(
                     servicesDataByEmployee?.find(
-                      (service) => service.id === value?.value,
-                    )?.parameters || [],
+                      (service) => service.id === value?.value
+                    )?.parameters || []
                   );
+                  if ((parametersData.length = 1)) {
+                    setSelectedParameters({
+                      label: parametersData[0].name,
+                      value: parametersData[0].id,
+                    });
+                  }
                 }}
                 options={
                   servicesDataByEmployee
@@ -681,7 +698,7 @@ const CreateAppointment: React.FC<ICreateAppointmentModalProps> = ({
               <p
                 className={classNames(
                   classes["create-appointment__params-text"],
-                  classes["u-mt-2"],
+                  classes["u-mt-2"]
                 )}
               >
                 Комментарий

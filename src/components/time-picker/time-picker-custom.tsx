@@ -38,6 +38,51 @@ const CustomTimePicker: React.FC<CustomTimePickerProps> = ({
   );
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
+  const handleHourInput = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const value = e.target.value;
+    if (/^\d*$/.test(value)) {
+      if (Number(value)) {
+        if (Number(value) < 0) {
+          handleHourChange("00");
+          return "00";
+        }
+        if (Number(value) > 23) {
+          handleHourChange("23");
+          return "23";
+        } else {
+          handleHourChange(value);
+          return value;
+        }
+      }
+    } else {
+      return "";
+    }
+  };
+
+  const handleMinuteInput = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const value = e.target.value;
+    if (/^\d*$/.test(value)) {
+      if (Number(value)) {
+        if (Number(value) < 0) {
+          handleMinuteChange("00");
+          return "00";
+        }
+        if (Number(value) > 59) {
+          handleMinuteChange("59");
+          return "59";
+        } else {
+          handleMinuteChange(value);
+          return value;
+        }
+      }
+    }
+    return "";
+  };
+
   const handleHourChange = (newHour: string) => {
     const formattedHour = newHour.padStart(2, "0");
     setSelectedHour(formattedHour);
@@ -130,8 +175,13 @@ const CustomTimePicker: React.FC<CustomTimePickerProps> = ({
             <Box display="flex" justifyContent="space-between" p={1} gap={1}>
               <TextField
                 defaultValue={selectedHour}
-                onChange={(e) => handleHourChange(e.target.value)}
-                inputProps={{ maxLength: 2 }}
+                onChange={(e) => {
+                  e.target.value =
+                    handleHourInput(e) !== undefined ? handleHourInput(e)! : "";
+                }}
+                inputProps={{
+                  maxLength: 2,
+                }}
                 sx={{
                   width: 60,
                   "& .MuiInputBase-root": {
@@ -141,8 +191,13 @@ const CustomTimePicker: React.FC<CustomTimePickerProps> = ({
               />
               <TextField
                 defaultValue={selectedMinute}
-                onChange={(e) => handleMinuteChange(e.target.value)}
-                inputProps={{ maxLength: 2 }}
+                onChange={(e) => {
+                  e.target.value =
+                    handleMinuteInput(e) !== undefined
+                      ? handleMinuteInput(e)!
+                      : "";
+                }}
+                inputProps={{ maxLength: 2, inputMode: "numeric" }}
                 sx={{
                   width: 60,
                   "& .MuiInputBase-root": {

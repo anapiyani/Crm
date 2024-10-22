@@ -67,7 +67,7 @@ const EventDetails: React.FC<IEventDetailsModalProps> = ({ appointmentId }) => {
         parameter: Number(item.parameter_id),
         quantity: item.quantity,
         service: item.service_id,
-      }),
+      })
     );
 
     const servicesToAdd: IServicesAdd = {
@@ -223,7 +223,7 @@ const EventDetails: React.FC<IEventDetailsModalProps> = ({ appointmentId }) => {
 
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
-    value: number,
+    value: number
   ) => {
     setPage(value);
   };
@@ -438,10 +438,15 @@ const EventDetails: React.FC<IEventDetailsModalProps> = ({ appointmentId }) => {
     <ModalWindow
       title={"Запись клиента"}
       open={modal.visible}
-      handleClose={() => modal.hide()}
+      handleClose={() => {
+        console.log("modal hide");
+        modal.hide().then(() => {
+          modal.remove();
+        });
+      }}
       className={classNames(
         classes["u-p-0"],
-        currentTab === 2 && classes["event-details__modal"],
+        currentTab === 2 && classes["event-details__modal"]
       )}
       withButtons={false}
       withoutTitle={true}
@@ -548,7 +553,10 @@ const EventDetails: React.FC<IEventDetailsModalProps> = ({ appointmentId }) => {
               sx={{
                 fontSize: "1.4rem",
               }}
-              onClick={() => modal.hide()}
+              onClick={() => {
+                modal.hide();
+                modal.remove();
+              }}
             >
               Отменить
             </Button>

@@ -3,8 +3,9 @@ import ResponsiveDrawer from "@/components/navigation/drawer/drawer.component";
 import { Outlet } from "react-router-dom";
 import classes from "./styles.module.scss";
 import { useEffect, useState } from "react";
+import ChatModal from "@/components/chat/chat.component";
 
-const MainLayout = () => {
+export default function MainLayout() {
   const [isOpenMenu, setIsOpenMenu] = useState<boolean>(false);
   const [socket, setSocket] = useState<WebSocket | null>(null);
 
@@ -14,7 +15,7 @@ const MainLayout = () => {
 
   useEffect(() => {
     const ws = new WebSocket(
-      "wss://crm-beauty-salon-94a93ffd62e6.herokuapp.com/ws/notifications/",
+      "wss://crm-beauty-salon-94a93ffd62e6.herokuapp.com/ws/notifications/"
     );
     let startTime = Date.now();
 
@@ -74,17 +75,41 @@ const MainLayout = () => {
     setIsOpenMenu(false);
   };
 
+  const openChatMenu = () => {
+    setIsOpenMenu(true);
+  };
+
   return (
     <div className={classes["layout"]}>
       <div className={classes["layout__sidebar"]}>
-        <ResponsiveDrawer handleClose={handleCloseModal} isOpen={isOpenMenu} />
+        <ResponsiveDrawer
+          openChatMenu={openChatMenu}
+          handleClose={handleCloseModal}
+          isOpen={isOpenMenu}
+        />
       </div>
       <div className={classes["layout__main"]}>
         <TopBar mobileOpen={isOpenMenu} openMenuBar={openMenuBar} />
-        <Outlet />
+        <div className={classes["layout__content-wrapper"]}>
+          {isOpenMenu && (
+            <ChatModal
+              closeMenuChat={() => {
+                setIsOpenMenu(false);
+              }}
+              open={isOpenMenu}
+            />
+          )}
+          <div className={classes["layout__content"]}>
+            {isOpenMenu && (
+              <div
+                className={classes["layout__overlay"]}
+                onClick={handleCloseModal}
+              />
+            )}
+            <Outlet />
+          </div>
+        </div>
       </div>
     </div>
   );
-};
-
-export default MainLayout;
+}

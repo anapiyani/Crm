@@ -1,20 +1,14 @@
 import CustomDatePicker from "@/components/date-picker/date-picker-custom";
 import BreadcrumbsCustom from "@/components/navigation/breadcrumbs/breadcrumbs";
 import ResponsiveTabs from "@/components/tabs/tabs.component";
-import endureModal from "@/modals/cash-desk/endure.modal";
 import salaryModal from "@/modals/cash-desk/salary.modal";
-import withdrawModal from "@/modals/cash-desk/withdraw.modal";
 import {
   getCashRegister,
   getOperations,
   kassaNow,
   searchKassaData,
 } from "@/service/kassa/kassa.service";
-import {
-  ICashRegister,
-  IKassaOperations,
-  ISearchKassa,
-} from "@/ts/kassa.interface";
+import { ICashRegister, ISearchKassa } from "@/ts/kassa.interface";
 import NiceModal from "@ebay/nice-modal-react";
 import {
   CalendarMonth,
@@ -49,11 +43,13 @@ import { SubmitHandler, useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import CashCard from "../_components/cash-card/cash-card";
 import classes from "./style.module.scss";
+import useProcessedOperationsData from "../hooks/useProcessedOperationsData";
+import transactionModal from "@/modals/cash-desk/transaction.modal";
 
-interface IOption {
+type IOption = {
   label: string;
   value: number;
-}
+};
 
 const CashDesk = () => {
   const { data: operationsData } = useQuery({
@@ -138,7 +134,7 @@ const CashDesk = () => {
       ],
       formData
     );
-    refetchSearchResult();
+    await refetchSearchResult();
   };
 
   const cashRegister: ICashRegister = {
@@ -156,44 +152,15 @@ const CashDesk = () => {
     queryFn: () => getCashRegister(cashRegister),
   });
 
+  const options = useProcessedOperationsData(operationsData);
+
   useEffect(() => {
     refetchCashRegister();
   }, [activeTab]);
 
   const onRefetchCashRegister = async () => {
-    await setToday(false);
-    refetchCashRegister();
-  };
-
-  const processOperationsData = (
-    operations: IKassaOperations[]
-  ): { label: string; value: string; isParent: boolean }[] => {
-    const result: { label: string; value: string; isParent: boolean }[] = [];
-
-    const traverse = (
-      nodes: IKassaOperations[],
-      parent: IKassaOperations | null
-    ) => {
-      nodes.forEach((node) => {
-        if (node.children && node.children.length > 0) {
-          result.push({
-            label: node.name,
-            value: node.id.toString(),
-            isParent: true,
-          });
-          traverse(node.children, node);
-        } else {
-          result.push({
-            label: node.name,
-            value: node.id.toString(),
-            isParent: false,
-          });
-        }
-      });
-    };
-
-    traverse(operations, null);
-    return result;
+    setToday(false);
+    await refetchCashRegister();
   };
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -202,18 +169,17 @@ const CashDesk = () => {
       checked ? [...prev, value] : prev.filter((type) => type !== value)
     );
   };
-  const options = operationsData ? processOperationsData(operationsData) : [];
 
   const handleSalaryModal = () => {
     NiceModal.show(salaryModal);
   };
 
   const handleWithdrawModal = () => {
-    NiceModal.show(withdrawModal);
+    NiceModal.show(transactionModal, { is_withdraw: true });
   };
 
   const handleEndureModal = () => {
-    NiceModal.show(endureModal);
+    NiceModal.show(transactionModal, { is_withdraw: false });
   };
 
   const handleTabChange = (index: number) => {
@@ -297,18 +263,15 @@ const CashDesk = () => {
     }
   };
 
-  const incomeAllMoneyPeriod = () => {
-    if (cashRegisterData) {
-      return (
-        Number(cashRegisterData.overall_cash_money) +
-        Number(cashRegisterData.overall_card_money) +
-        Number(cashRegisterData.overall_check_money) +
-        Number(cashRegisterData.overall_checking_account_money)
-      );
-    }
-  };
   const overall_AllMoney = () => {
     return incomeAllMoney()! - expenseAllMoney()!;
+  };
+
+  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFromDate(e.target.value);
+    if (toDate && dayjs(e.target.value).isAfter(dayjs(toDate))) {
+      setToDate("");
+    }
   };
 
   return (
@@ -483,9 +446,10 @@ const CashDesk = () => {
               <div style={{ display: "flex", width: "90%" }}>
                 <CustomDatePicker
                   value={fromDate}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    setFromDate(e.target.value)
-                  }
+                  max={toDate}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    handleDateChange(e);
+                  }}
                 />
                 <p style={{ marginRight: "1rem", marginLeft: "1rem" }}>-</p>
                 <CustomDatePicker
@@ -778,7 +742,7 @@ const CashDesk = () => {
                       </p>
                     </TableCell>
                     <TableCell>
-                      {result.overall_change_in_cash_register?.card !==
+                      {result?.overall_change_in_cash_register?.card !==
                         "0.00" || null ? (
                         <p
                           style={{
@@ -787,8 +751,8 @@ const CashDesk = () => {
                             gap: "0.5rem",
                           }}
                         >
-                          {result.overall_change_in_cash_register.card
-                            ? result.overall_change_in_cash_register.card
+                          {result.overall_change_in_cash_register?.card
+                            ? result.overall_change_in_cash_register?.card
                             : null}{" "}
                           ₸
                           <CreditCard />
@@ -803,7 +767,7 @@ const CashDesk = () => {
                             gap: "0.5rem",
                           }}
                         >
-                          {result.overall_change_in_cash_register.cash} ₸{" "}
+                          {result.overall_change_in_cash_register?.cash} ₸{" "}
                           <Payments />
                         </p>
                       )}
@@ -816,7 +780,7 @@ const CashDesk = () => {
                             gap: "0.5rem",
                           }}
                         >
-                          {result.overall_change_in_cash_register.check} ₸{" "}
+                          {result.overall_change_in_cash_register?.check} ₸{" "}
                           <LocalActivity />
                         </p>
                       )}
@@ -831,7 +795,7 @@ const CashDesk = () => {
                         >
                           {
                             result.overall_change_in_cash_register
-                              .checking_account
+                              ?.checking_account
                           }
                           ₸ <MenuBook />
                         </p>

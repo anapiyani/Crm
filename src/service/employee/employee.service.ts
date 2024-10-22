@@ -1,12 +1,12 @@
-import { IEmployeeAddForm } from "@/ts/types";
+import { IDepartment, IEmployeeAddForm } from "@/ts/types";
 import api from "../api";
-import { IDepartment } from "@/ts/types";
 import {
   ICardInfoEmployee,
   IEmployeesData,
   ISalaryWalletResponse,
   ISearchFormData,
   ITemplate,
+  ITemplateList,
   IUserDetails,
   IUserDetailsChange,
 } from "@/ts/employee.interface";
@@ -37,7 +37,7 @@ export const searchDepartment = (): Promise<IDepartment> => {
 
 export const searchEmployee = (
   formData?: Partial<ISearchFormData>
-): Promise<void | IEmployeesData> => {
+): Promise<IEmployeesData> => {
   const params = new URLSearchParams();
   Object.entries(formData!).forEach(([key, value]) => {
     if (value) {
@@ -70,8 +70,24 @@ export const editEmployee = ({
     .then((res) => res.data);
 };
 
-export const getTemplateList = (): Promise<ITemplate[]> => {
-  return api.get("/templates/").then((res) => res.data);
+export const getTemplateList = (
+  page?: number,
+  type?: string,
+  page_size?: number
+): Promise<ITemplateList> => {
+  const params = new URLSearchParams();
+  if (page) {
+    params.append("page", page.toString());
+  }
+  if (type) {
+    params.append("type", type);
+  }
+  if (page_size) {
+    params.append("page_size", page_size.toString());
+  }
+  return api
+    .get(`/templates-list/?${params.toString()}`)
+    .then((res) => res.data);
 };
 
 export const editTemplateGet = (id: number): Promise<ITemplate> => {
@@ -125,6 +141,6 @@ export const employeeSearch = (search: string): Promise<IClientSearch[]> => {
   params.append("search", search);
 
   return api
-    .get(`/search_for_employee/?${params.toString()}`)
+    .get(`users/search_for_employee/?${params.toString()}`)
     .then((res) => res.data);
 };

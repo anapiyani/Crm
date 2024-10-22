@@ -109,7 +109,7 @@ const ViewVisits = () => {
   const confirmPayment = (
     id: number | undefined,
     toPay: number | undefined,
-    clientId: number | undefined,
+    clientId: number | undefined
   ) => {
     NiceModal.show(confirmPaymentModal, {
       idPayment: id,
@@ -168,7 +168,7 @@ const ViewVisits = () => {
               />
               <LabelInfo
                 name={"Оплату принял"}
-                info={`${visitInfo?.written_by.name}`}
+                info={`${visitInfo?.received_by_employee}`}
                 isClick={true}
               />
               <LabelInfo
@@ -243,7 +243,7 @@ const ViewVisits = () => {
                     confirmPayment(
                       visitInfo && visitInfo.id,
                       visitInfo && visitInfo.itogo,
-                      visitInfo && visitInfo.client.id,
+                      visitInfo && visitInfo.client.id
                     )
                   }
                   icon={CreditCardOutlined}
@@ -526,7 +526,7 @@ const ViewVisits = () => {
                     <strong>
                       {visitInfo.salary_info.reduce(
                         (total, item) => total + item.salary_change,
-                        0,
+                        0
                       )}{" "}
                       ₸
                     </strong>

@@ -105,7 +105,7 @@ const CustomerDevelopment: React.FC<ICustomerDevelopmentProps> = ({
 
   const handleDeleteServices = (id: string) => {
     setServicesWithOtherPercent((prevDevServices) =>
-      prevDevServices.filter((service) => service.id !== id),
+      prevDevServices.filter((service) => service.id !== id)
     );
   };
 
@@ -134,7 +134,7 @@ const CustomerDevelopment: React.FC<ICustomerDevelopmentProps> = ({
                   onChange={(value) => field.field.onChange(value)}
                   selectedOption={
                     options.find(
-                      (option) => option.value === field.field.value,
+                      (option) => option.value === field.field.value
                     ) || null
                   }
                 />

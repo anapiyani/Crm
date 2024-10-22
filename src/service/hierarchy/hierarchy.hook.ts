@@ -1,15 +1,19 @@
-import { IService, IServiceCategory } from "@/ts/service.interface";
+import {
+  IService,
+  IServiceCategory,
+  TKatalogHierarchy,
+} from "@/ts/service.interface";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   addHierarchy,
-  moveHierarchy,
-  updateHierarchy,
-  deleteHierarchy,
   addStorageHierarchy,
-  moveStorageHierarchy,
-  updateStorageHierarchy,
-  deleteStorageHierarchy,
   createServiceBasic,
+  deleteHierarchy,
+  deleteStorageHierarchy,
+  moveHierarchy,
+  moveStorageHierarchy,
+  updateHierarchy,
+  updateStorageHierarchy,
 } from "./hierarchy.service";
 import toast from "react-hot-toast";
 import {
@@ -105,7 +109,7 @@ export const useUpdateHierarchy = () => {
 
 export const useUpdateStorageHierarchy = () => {
   const queryClient = useQueryClient();
-  return useMutation<IStorageCategory, Error, IStorageCategory>({
+  return useMutation<TKatalogHierarchy, Error, TKatalogHierarchy>({
     mutationFn: updateStorageHierarchy,
     onSuccess: () => {
       toast.success("Иерархия успешно обновлена.");

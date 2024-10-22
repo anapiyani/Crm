@@ -1,3 +1,5 @@
+import { IMaterial } from "@/ts/storage.interface.ts";
+
 export interface IDiscount {
   id: number;
   type: {
@@ -30,6 +32,7 @@ export interface IService {
   parent: number | null;
   parent_name: string;
 }
+
 export interface IServicePrices {
   service: string;
   roles: {
@@ -123,3 +126,50 @@ export interface IHierarchyFlattenService {
     price: number;
   }[];
 }
+
+export type IServicePriceCurrent = {
+  title: string;
+  isService: boolean;
+  isDepartment: boolean;
+  cost?: number;
+  costFrom?: number;
+  costTo?: number;
+  shortHair?: number;
+  mediumHair?: number;
+  longHair?: number;
+  veryLongHair?: number;
+  children: IServicePriceCurrent[];
+  type?: "department" | "section" | "category" | "subcategory" | "service";
+};
+
+export type IServiceService = {
+  min_price: number;
+  service: {
+    name: string;
+    role_id: number;
+    role_name: string;
+    price_details: {
+      parameter_id: number;
+      parameter_name: string;
+      service_price_id: number;
+      price: number;
+      type: string;
+    }[];
+  };
+  service_id: number;
+};
+
+export type IServicePriceTree = {
+  id: number;
+  name: string;
+  level: string;
+  children?: IServicePriceTree[] | [];
+  services?: IServiceService[];
+};
+
+export type TKatalogHierarchy = {
+  id: number;
+  level: string;
+  materials: IMaterial[];
+  name: string;
+};

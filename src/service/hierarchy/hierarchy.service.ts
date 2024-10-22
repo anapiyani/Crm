@@ -2,6 +2,7 @@ import {
   IEmployeeServiceHierarchy,
   IService,
   IServiceCategory,
+  TKatalogHierarchy,
 } from "@/ts/service.interface";
 import api from "../api";
 import {
@@ -13,13 +14,28 @@ import {
   IMoveHierarchy,
   IRolesbyDepartment,
   ISearchResult,
-  IServiceParent,
   IStorageCategory,
 } from "@/ts/hierarchy.inteface";
 import { IEmployeeDepartment } from "@/ts/client.interface";
 
 export const getHierarchy = (): Promise<IServiceCategory[]> => {
   return api.get("/hierarchy/hierarchy/").then((res) => res.data);
+};
+
+export const getHierarchyKatalog = async (
+  parentId?: number
+): Promise<TKatalogHierarchy[]> => {
+  const url = parentId
+    ? `/hierarchy/katalog?parent_id=${parentId}`
+    : "/hierarchy/katalog";
+
+  try {
+    const response = await api.get(url);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching hierarchy data:", error);
+    throw error;
+  }
 };
 export const getHierarchyByDepartment = (): Promise<IServiceCategory[]> => {
   return api.get("/hierarchy/hierarchy-categories/").then((res) => res.data);
@@ -59,17 +75,15 @@ export const addStorageHierarchy = (
     .then((res) => res.data);
 };
 
-export const moveHierarchy = (
+export const moveHierarchy = async (
   data: IMoveHierarchy
 ): Promise<IServiceCategory> => {
-  const params = new URLSearchParams({
-    item_id: data.item.toString(),
-    item_type: data.type,
-    new_parent_id: data.to.toString(),
-  }).toString();
-  return api
-    .post("/hierarchy/hierarchical-items/move/?" + params)
-    .then((res) => res.data);
+  const body = {
+    material_id: data.item,
+    new_location_id: data.to,
+  };
+  const res = await api.post("/hierarchy/move-material-to-location/", body);
+  return res.data;
 };
 
 export const createServiceBasic = (data: {
@@ -104,7 +118,6 @@ export const updateHierarchy = (
   const reqbody = {
     name: data.name,
     level: data.level,
-    parent: data.parent,
     services: [],
     role: [],
   };
@@ -117,12 +130,12 @@ export const updateHierarchy = (
 };
 
 export const updateStorageHierarchy = (
-  data: IStorageCategory
-): Promise<IStorageCategory> => {
+  data: TKatalogHierarchy
+): Promise<TKatalogHierarchy> => {
   const reqbody = {
     name: data.name,
     level: data.level,
-    parent: data.parent,
+    parent: data.id,
     materials: [],
   };
 

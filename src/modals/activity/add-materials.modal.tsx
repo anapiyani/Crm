@@ -21,14 +21,14 @@ import {
 } from "@/ts/activity.interface";
 
 const addMaterials = ({ appointment_id }: { appointment_id: number }) => {
-  const addMaterialsMutation = useAddMaterialsForVisit();
-  const modal = useModal();
   const [selectedEmployee, setSelectedEmployee] = useState<number>();
   const [selectedEmployeeName, setSelectedEmployeeName] = useState<string>("");
   const [materials, setMaterials] = useState<
     { label: string; value: string }[]
   >([]);
   const [selectedStorage, setSelectedStorage] = useState<number>();
+  const addMaterialsMutation = useAddMaterialsForVisit();
+  const modal = useModal();
 
   const materialsQuantityData = useQueries({
     queries: materials.map((item) => ({
@@ -42,18 +42,12 @@ const addMaterials = ({ appointment_id }: { appointment_id: number }) => {
     })),
   });
 
-  useEffect(() => {
-    if (selectedStorage) {
-      materialsQuantityData.forEach((result) => result.refetch());
-    }
-  }, [selectedStorage]);
-
   const materialsQuantity = useMemo(() => {
     return materialsQuantityData.map((result, index) => {
-      if (result.data) {
-        const totalQuantity = result.data.reduce(
+      if (Array.isArray(result.data?.results)) {
+        const totalQuantity = result.data.results.reduce(
           (acc, item) => acc + Number(item.quantity),
-          0,
+          0
         );
         return {
           material: materials[index].value,
@@ -71,7 +65,6 @@ const addMaterials = ({ appointment_id }: { appointment_id: number }) => {
     return useQuery({
       queryKey: ["employeeDepartmentHierarchyData"],
       queryFn: () => getHierarchyEmployeesByDepartment(),
-      staleTime: 1000 * 60 * 5,
       refetchOnMount: false,
       refetchOnWindowFocus: false,
     });
@@ -97,7 +90,7 @@ const addMaterials = ({ appointment_id }: { appointment_id: number }) => {
 
   const materialsOptions = useMemo(() => {
     return materialsData
-      ? materialsData.map((material) => ({
+      ? materialsData.results.map((material) => ({
           label: material.name,
           value: material.id.toString(),
         }))
@@ -116,12 +109,6 @@ const addMaterials = ({ appointment_id }: { appointment_id: number }) => {
     setMaterials(materials);
   };
 
-  useEffect(() => {
-    if (storagesData && storagesData.length > 0 && !selectedStorage) {
-      setSelectedStorage(storagesData[0].id);
-    }
-  }, [storagesData, selectedStorage]);
-
   const onSave = () => {
     const materialsToSend: IMaterialsForVisit[] = materials.map((material) => {
       return {
@@ -138,6 +125,18 @@ const addMaterials = ({ appointment_id }: { appointment_id: number }) => {
     };
     addMaterialsMutation.mutate({ appointment_id, appointment_materials });
   };
+
+  useEffect(() => {
+    if (selectedStorage) {
+      materialsQuantityData.forEach((result) => result.refetch());
+    }
+  }, [selectedStorage]);
+
+  useEffect(() => {
+    if (storagesData && storagesData.results.length > 0 && !selectedStorage) {
+      setSelectedStorage(storagesData.results[0].id);
+    }
+  }, [storagesData, selectedStorage]);
 
   return (
     <ModalWindow
@@ -168,7 +167,7 @@ const addMaterials = ({ appointment_id }: { appointment_id: number }) => {
             }
             value={
               employeeOptions.find(
-                (option) => option.nodeId === selectedEmployee,
+                (option) => option.nodeId === selectedEmployee
               ) || null
             }
             onChange={(event, value) => {
@@ -225,7 +224,7 @@ const addMaterials = ({ appointment_id }: { appointment_id: number }) => {
           <div
             className={classNames(
               classes.materials__material_find,
-              classes.materials__materials_show,
+              classes.materials__materials_show
             )}
           >
             <p>Доступно для продажи:</p>
@@ -238,7 +237,7 @@ const addMaterials = ({ appointment_id }: { appointment_id: number }) => {
                   <p>
                     {material.label} -{" "}
                     {materialsQuantity.find(
-                      (item) => item.material === material.value,
+                      (item) => item.material === material.value
                     )?.quantity || 0}{" "}
                     шт
                   </p>
@@ -256,16 +255,17 @@ const addMaterials = ({ appointment_id }: { appointment_id: number }) => {
               marginBottom: "1rem",
               width: "500px",
             }}
-            options={storagesData || []}
+            options={storagesData?.results || []}
             getOptionLabel={(option) => option.name}
             renderOption={(props, option) => (
               <li {...props} key={option.id}>
-                <p style={{ fontSize: "1.6rem" }}>{option.name}</p>
+                <p>{option.name}</p>
               </li>
             )}
             value={
-              storagesData?.find((option) => option.id === selectedStorage) ||
-              null
+              storagesData?.results.find(
+                (option) => option.id === selectedStorage
+              ) || null
             }
             onChange={(event, value) => {
               setSelectedStorage(value?.id);

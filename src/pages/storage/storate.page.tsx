@@ -1,30 +1,23 @@
 import BreadcrumbsCustom from "@/components/navigation/breadcrumbs/breadcrumbs";
-import SearchFilterCard from "@/components/search-filter-card/search-filter-card";
 import CustomTextField from "@/components/textField/textField.component";
-import TreeView from "@/components/treeItem/treeItem";
-import TreeViewStorage from "@/components/treeItem/treeItemStorage/treeItemStorage";
-import {
-  getHierarchy,
-  getHierarchySearchOption,
-  getHierarchyStorage,
-  getSearchResults,
-} from "@/service/hierarchy/hierarchy.service";
+import TreeViewStorage from "@/components/treeItem/treeItemStorage/treeViewStorage.tsx";
+import { getHierarchyKatalog } from "@/service/hierarchy/hierarchy.service";
 import { IMaterial, IMaterialnameId } from "@/ts/storage.interface";
 import {
-  Divider,
-  CircularProgress,
   Autocomplete,
+  Box,
   Button,
+  CircularProgress,
+  Divider,
+  Link,
   Pagination,
-  TableContainer,
+  Paper,
   Table,
   TableBody,
-  TableRow,
   TableCell,
-  Link,
+  TableContainer,
   TableHead,
-  Paper,
-  Box,
+  TableRow,
 } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
 
@@ -33,23 +26,20 @@ import { useEffect, useState } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import {
-  LanOutlined,
-  Folder,
-  Science,
-  TableChartOutlined,
-  Settings,
-  Add,
-  Edit,
-  PlayArrow,
-  DoNotDisturbAltOutlined,
   Check,
+  DoNotDisturbAltOutlined,
+  Edit,
+  Folder,
+  LanOutlined,
+  PlayArrow,
+  Science,
+  Settings,
+  TableChartOutlined,
 } from "@mui/icons-material";
 import toast from "react-hot-toast";
 import ResponsiveTabs from "@/components/tabs/tabs.component";
 import classes from "./styles.module.scss";
 import TableVertical from "@/components/tables/tableVertical/vertical-info-card";
-import { purchaseHistoryData } from "./data";
-import FloatingPriceTable from "./_components/table-floatingPrice/tableFloatingPrice";
 import NormativeService from "./_components/table-normativeService/tableNormativeService";
 import TableView from "./_components/table-view/tableView";
 import TableStock from "./_components/table-stock/tableStock.tsx";
@@ -79,7 +69,7 @@ const StoragePage: React.FC = () => {
 
   const { data, isPending, isError } = useQuery({
     queryKey: ["storageHierarchyData"],
-    queryFn: () => getHierarchyStorage(),
+    queryFn: () => getHierarchyKatalog(),
     staleTime: Infinity,
     refetchOnWindowFocus: false,
   });

@@ -241,83 +241,75 @@ const ClientCard = () => {
     setPage(value);
   };
 
-  const {
-    data: customerAppointmentNoShowData,
-    refetch: noDataRefetch,
-  } = useQuery({
-    queryKey: ["customerAppointmentNoShowData", params.id],
-    queryFn: () =>
-      params.id
-        ? getCustomerAppointmentNoShowById(Number(params.id))
-        : undefined,
-    enabled: !!params.id,
-    staleTime: Infinity,
-    refetchOnWindowFocus: false,
-  });
+  const { data: customerAppointmentNoShowData, refetch: noDataRefetch } =
+    useQuery({
+      queryKey: ["customerAppointmentNoShowData", params.id],
+      queryFn: () =>
+        params.id
+          ? getCustomerAppointmentNoShowById(Number(params.id))
+          : undefined,
+      enabled: !!params.id,
+      staleTime: Infinity,
+      refetchOnWindowFocus: false,
+    });
 
-  const {
-    data: customerAppointmentPlanned,
-    refetch: plannedRefetch,
-  } = useQuery({
-    queryKey: ["customerAppointmentPlanned", params.id],
-    queryFn: () =>
-      params.id
-        ? getCustomerAppointmentPlannedById(Number(params.id))
-        : undefined,
-    enabled: !!params.id,
-    staleTime: Infinity,
-    refetchOnWindowFocus: false,
-  });
+  const { data: customerAppointmentPlanned, refetch: plannedRefetch } =
+    useQuery({
+      queryKey: ["customerAppointmentPlanned", params.id],
+      queryFn: () =>
+        params.id
+          ? getCustomerAppointmentPlannedById(Number(params.id))
+          : undefined,
+      enabled: !!params.id,
+      staleTime: Infinity,
+      refetchOnWindowFocus: false,
+    });
 
-  const {
-    data: customerDeletedAppointments,
-    refetch: deletedRefetch,
-  } = useQuery({
-    queryKey: ["customerDeletedAppointments", params.id],
-    queryFn: () =>
-      params.id ? getCustomerDeletedAppointments(Number(params.id)) : undefined,
-    enabled: !!params.id,
-    staleTime: Infinity,
-    refetchOnWindowFocus: false,
-  });
+  const { data: customerDeletedAppointments, refetch: deletedRefetch } =
+    useQuery({
+      queryKey: ["customerDeletedAppointments", params.id],
+      queryFn: () =>
+        params.id
+          ? getCustomerDeletedAppointments(Number(params.id))
+          : undefined,
+      enabled: !!params.id,
+      staleTime: Infinity,
+      refetchOnWindowFocus: false,
+    });
 
-  const {
-    data: clientTransactions,
-    isLoading: clientTransactionsLoading,
-  } = useQuery({
-    queryKey: [
-      "clientTransactions",
-      params.id,
-      pageSizeTransaction.value,
-      pageTransaction,
-    ],
-    queryFn: () =>
-      searchKassaData({
-        customer: Number(params.id),
-        page: pageTransaction,
-        page_size: pageSizeTransaction.value,
-      }),
-  });
+  const { data: clientTransactions, isLoading: clientTransactionsLoading } =
+    useQuery({
+      queryKey: [
+        "clientTransactions",
+        params.id,
+        pageSizeTransaction.value,
+        pageTransaction,
+      ],
+      queryFn: () =>
+        searchKassaData({
+          customer: Number(params.id),
+          page: pageTransaction,
+          page_size: pageSizeTransaction.value,
+        }),
+    });
 
-  const {
-    data: clientDepositHistory,
-    isLoading: clientDepositHistoryLoading,
-  } = useQuery({
-    queryKey: [
-      "getDepositHistory",
-      {
-        user_id: Number(params.id),
-        page: pageDeposit,
-        page_size: pageSizeDeposit,
-      },
-    ],
-    queryFn: () =>
-      getDepositHistory({
-        user_id: Number(params.id),
-        page: pageDeposit,
-        page_size: pageDepositCount,
-      }),
-  });
+  const { data: clientDepositHistory, isLoading: clientDepositHistoryLoading } =
+    useQuery({
+      queryKey: [
+        "getDepositHistory",
+        {
+          user_id: Number(params.id),
+          page: pageDeposit,
+          page_size: pageSizeDeposit,
+        },
+      ],
+      queryFn: () =>
+        getDepositHistory({
+          user_id: Number(params.id),
+          page: pageDeposit,
+          page_size: pageDepositCount,
+        }),
+    });
 
   const mainTableData: DataRow[] = [
     { property: "ID клиента", value: userInfoData?.user_id },
@@ -342,20 +334,11 @@ const ClientCard = () => {
       editType: "text",
     },
     {
-      property: "Фамилия",
-      value: userInfoData?.last_name || "Не указано",
-      editType: "text",
-    },
-    {
-      property: "Имя",
-      value: userInfoData?.first_name || "Не указано",
-      editType: "text",
-    },
-    {
       property: "Моб. телефон",
       value: userInfoData?.phone_number || "Не указано",
       editType: "text",
     },
+
     {
       property: "Явка",
       value: `${userInfoData?.attendance}% (${userInfoData?.total_appointments} из ${userInfoData?.unattended_appointments} не пришёл)`,
@@ -657,7 +640,7 @@ const ClientCard = () => {
                 icon={<PaymentsOutlined />}
                 iconColor="#2196F3"
                 textTitle="Текущая скидка"
-                valueText={"10%"}
+                valueText={"10"}
               />
             </div>
             <RevenueChart

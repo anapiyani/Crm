@@ -1,21 +1,24 @@
 import ModalWindow from "@/components/modal-window/modal-window";
 import VerticalTextField from "@/components/textfield-vertical/textfield-vertical";
 import { useUpdateStorageHierarchy } from "@/service/hierarchy/hierarchy.hook";
-import { IStorageCategory } from "@/ts/hierarchy.inteface";
 import NiceModal, { useModal } from "@ebay/nice-modal-react";
 import { useState } from "react";
+import { TKatalogHierarchy } from "@/ts/service.interface.ts";
 
 interface EditCategoryModalProps {
-  category: IStorageCategory;
+  // TODO: Change to
+  category: TKatalogHierarchy | null;
 }
 
 const EditStorageCategoryModal: React.FC<EditCategoryModalProps> = ({
   category,
 }) => {
   const modal = useModal();
-  const [categoryName, setCategoryName] = useState<string>(category.name);
+  const [categoryName, setCategoryName] = useState<string>(
+    category?.name || ""
+  );
   const updateHierarchyMutation = useUpdateStorageHierarchy();
-  const handleUpdateHierarchy = (category: IStorageCategory) => {
+  const handleUpdateHierarchy = (category: TKatalogHierarchy) => {
     updateHierarchyMutation.mutate(category);
   };
   return (
@@ -24,7 +27,7 @@ const EditStorageCategoryModal: React.FC<EditCategoryModalProps> = ({
       open={modal.visible}
       handleClose={() => modal.hide()}
       handleSave={() => {
-        handleUpdateHierarchy({ ...category, name: categoryName });
+        category && handleUpdateHierarchy({ ...category, name: categoryName });
         modal.hide();
       }}
       children={

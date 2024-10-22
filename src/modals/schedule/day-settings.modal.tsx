@@ -231,7 +231,7 @@ const DaySettings = ({ TodayData }: { TodayData: string }) => {
   };
 
   const handleStartDate = () => {
-    return dayjs(TodayData).format("YYYY-MM-DD");
+    return dayjs(TodayData).format("YYYY-DD-MM");
   };
 
   const handleWeekdayChange = (
@@ -329,7 +329,10 @@ const DaySettings = ({ TodayData }: { TodayData: string }) => {
             </p>
             <div>
               <CustomDatePicker
-                onChange={(e) => setStartingDate(e.target.value)}
+                onChange={(e) => {
+                  setStartingDate(e.target.value);
+                  console.log(e.target.value);
+                }}
                 defaultValue={handleStartDate()}
               />
             </div>

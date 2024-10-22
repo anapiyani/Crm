@@ -54,7 +54,9 @@
           background-color: #e3effb;
           text-align: center;
           cursor: pointer;
-          transition: background-color 0.3s ease, border-color 0.3s ease;
+          transition:
+            background-color 0.3s ease,
+            border-color 0.3s ease;
           &:hover {
             background-color: #f9f9f9;
           }
@@ -133,7 +135,9 @@
           background-color: #e3effb;
           text-align: center;
           cursor: pointer;
-          transition: background-color 0.3s ease, border-color 0.3s ease;
+          transition:
+            background-color 0.3s ease,
+            border-color 0.3s ease;
           &:hover {
             background-color: #f9f9f9;
           }

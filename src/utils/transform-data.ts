@@ -15,6 +15,7 @@ interface IAppointmentReturn {
   end: string;
   resourceId: string;
   phoneNumber: string;
+  resourceEditable: false;
   extendedProps: {
     type: string;
     status: string;
@@ -46,6 +47,7 @@ interface IResourceReturn {
     working?: boolean;
   };
   eventColor?: string;
+  scheduleId?: number;
 }
 
 export const transformSchedulesToFullCalendar = (schedules: ISchedule[]) => {
@@ -65,6 +67,7 @@ export const transformSchedulesToFullCalendar = (schedules: ISchedule[]) => {
         date: date,
       },
       eventColor: isWorkingDay ? undefined : "#DDE7EE",
+      scheduleId: schedule.id,
     });
     appointments.forEach((appointment) => {
       events.push({
@@ -74,6 +77,7 @@ export const transformSchedulesToFullCalendar = (schedules: ISchedule[]) => {
         end: `${date}T${appointment.end_time}`,
         resourceId: resourceId,
         phoneNumber: schedule.employee.phone_number,
+        resourceEditable: false,
         extendedProps: {
           type: "appointment",
           status: appointment.status,
@@ -103,7 +107,7 @@ export const transformSchedulesToFullCalendar = (schedules: ISchedule[]) => {
 
 export const transformMonthlySchedulesToFullCalendar = (
   schedules: ISchedule[],
-  date: dayjs.Dayjs,
+  date: dayjs.Dayjs
 ) => {
   const events: IAppointmentReturn[] & IBreakReturn[] = [];
   const resources: IResourceReturn[] = [];
@@ -146,6 +150,7 @@ export const transformMonthlySchedulesToFullCalendar = (
           end: `${formattedDate}T${appointment.end_time}`,
           resourceId: `${schedule.employee.id}-${formattedDate}`,
           phoneNumber: schedule.employee.phone_number,
+          resourceEditable: false,
           extendedProps: {
             type: "appointment",
             status: appointment.status,

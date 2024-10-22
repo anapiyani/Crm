@@ -12,6 +12,7 @@ export interface IUser {
   date_of_birth: string;
   phone_number: string;
   phone_number_whatsapp: string;
+  user_id?: number;
 }
 
 export interface IEmployeeAddForm {
@@ -49,12 +50,21 @@ export interface IRoleCreate {
   id: number | null;
 }
 
-export interface IRoom {
+export type Room = {
   id: number;
   name: string;
   available_online: boolean;
   services: number[];
-}
+};
+
+export type RoomsData = {
+  count: number;
+  items_per_page: number;
+  next: string | null;
+  previous: string | null;
+  total_pages: number;
+  results: Room[];
+};
 
 export interface IResponseData<T> {
   count: number;

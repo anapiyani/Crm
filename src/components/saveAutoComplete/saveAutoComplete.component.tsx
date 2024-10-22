@@ -59,8 +59,8 @@ const SaveAutoComplete = ({
             onDelete={() => {
               setSavedMaterials(
                 savedMaterials.filter(
-                  (material) => material.value !== option.value,
-                ),
+                  (material) => material.value !== option.value
+                )
               );
             }}
             deleteIcon={<Clear color="error" />}

@@ -74,7 +74,7 @@ const MonthlyCalendar: React.FC<MonthProps> = ({
         date: new Date(
           prevMonth.getFullYear(),
           prevMonth.getMonth(),
-          daysInPrevMonth - firstDay + i,
+          daysInPrevMonth - firstDay + i
         ),
         isCurrentMonth: false,
         isToday: false,
@@ -92,22 +92,22 @@ const MonthlyCalendar: React.FC<MonthProps> = ({
 
       const isSelected = formattedSelectedDates.some(
         (selectedDate) =>
-          selectedDate.toDateString() === currentDate.toDateString(),
+          selectedDate.toDateString() === currentDate.toDateString()
       );
       const isHoliday = formattedHolidays.some(
-        (holiday) => holiday.toDateString() === currentDate.toDateString(),
+        (holiday) => holiday.toDateString() === currentDate.toDateString()
       );
       const isSickLeave = formattedSickLeaves.some(
-        (sickLeave) => sickLeave.toDateString() === currentDate.toDateString(),
+        (sickLeave) => sickLeave.toDateString() === currentDate.toDateString()
       );
       const isTimeOff = formattedTimeOffs.some(
-        (timeOff) => timeOff.toDateString() === currentDate.toDateString(),
+        (timeOff) => timeOff.toDateString() === currentDate.toDateString()
       );
       const isTraining = formattedTrainings.some(
-        (training) => training.toDateString() === currentDate.toDateString(),
+        (training) => training.toDateString() === currentDate.toDateString()
       );
       const isVacation = formattedVacations.some(
-        (vacation) => vacation.toDateString() === currentDate.toDateString(),
+        (vacation) => vacation.toDateString() === currentDate.toDateString()
       );
 
       days.push({

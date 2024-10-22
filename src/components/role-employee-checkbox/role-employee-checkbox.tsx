@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { getRoleEployeeByDepartment } from "@/service/hierarchy/hierarchy.service";
 import { IDepartmentHierarchy } from "@/ts/hierarchy.inteface";
 import { useQuery } from "@tanstack/react-query";
@@ -162,7 +162,7 @@ const RoleEmployeeCheckbox: React.FC<RoleEmployeeCheckboxProps> = ({
             <input
               type="checkbox"
               id={item.department}
-              checked={!!checkedItems[item.department]}
+              checked={checkedItems[item.department]}
               onChange={(e) =>
                 handleCheck(
                   item.department,
@@ -235,7 +235,7 @@ const RoleEmployeeCheckbox: React.FC<RoleEmployeeCheckboxProps> = ({
                           <input
                             type="checkbox"
                             id={`emp_${employee.user_id}`}
-                            checked={!!checkedItems[`emp_${employee.user_id}`]}
+                            checked={checkedItems[`emp_${employee.user_id}`]}
                             onChange={(e) =>
                               handleCheck(
                                 `emp_${employee.user_id}`,

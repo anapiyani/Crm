@@ -1,20 +1,16 @@
-.topbar{
-   
-    &__toolbar{
-        
-        &__user{
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            gap: 11px;
-            padding-left: 1.6rem;
-        }
-        &__iconContainer{
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-
-        }
+.topbar {
+  &__toolbar {
+    &__user {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 11px;
+      padding-left: 1.6rem;
     }
-    
+    &__iconContainer {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+    }
+  }
 }

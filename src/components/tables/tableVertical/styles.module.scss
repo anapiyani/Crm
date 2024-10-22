@@ -1,7 +1,13 @@
-.table__header{
-    width: 41rem;
-    padding:1.6rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+.table__header {
+  width: 41rem;
+  padding: 1.6rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.link {
+  color: var(--link-500);
+  text-decoration: none;
+  margin-left: "1rem";
 }

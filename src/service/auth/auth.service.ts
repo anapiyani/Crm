@@ -10,7 +10,7 @@ export interface ILoginResponse {
 
 export const login = (
   email: string,
-  password: string,
+  password: string
 ): Promise<ILoginResponse> => {
   return api.post("/api/auth/", { email, password }).then((res) => {
     return res.data;

@@ -104,7 +104,7 @@ const AddPeriodModal = () => {
               fullWidth={true}
               value={
                 employeeOptions.find(
-                  (option) => option.nodeId === selectedEmployee,
+                  (option) => option.nodeId === selectedEmployee
                 ) || null
               }
               onChange={(event, value) => {
@@ -214,7 +214,7 @@ const AddPeriodModal = () => {
           <div
             className={classNames(
               classes["add-employees-schedule__container--data"],
-              classes.checkbox,
+              classes.checkbox
             )}
           >
             <input
@@ -230,7 +230,7 @@ const AddPeriodModal = () => {
             <div
               className={classNames(
                 classes["add-employees-schedule__container--data"],
-                classes.transfer,
+                classes.transfer
               )}
             >
               <p
@@ -248,7 +248,7 @@ const AddPeriodModal = () => {
                 fullWidth={true}
                 value={
                   employeeOptions.find(
-                    (option) => option.nodeId === selectedEmployee,
+                    (option) => option.nodeId === selectedEmployee
                   ) || null
                 }
                 onChange={(event, value) => {

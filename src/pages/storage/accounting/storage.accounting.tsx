@@ -1,16 +1,9 @@
 import BreadcrumbsCustom from "@/components/navigation/breadcrumbs/breadcrumbs";
-import SearchFilterCard from "@/components/search-filter-card/search-filter-card";
 import CustomTextField from "@/components/textField/textField.component";
-import TreeView from "@/components/treeItem/treeItem";
-import TreeViewStorage from "@/components/treeItem/treeItemStorage/treeItemStorage";
-import {
-  getHierarchy,
-  getHierarchySearchOption,
-  getHierarchyStorage,
-  getSearchResults,
-} from "@/service/hierarchy/hierarchy.service";
+import TreeViewStorage from "@/components/treeItem/treeItemStorage/treeViewStorage.tsx";
+import { getHierarchyStorage } from "@/service/hierarchy/hierarchy.service";
 import { IMaterial } from "@/ts/storage.interface";
-import { Divider, CircularProgress, Autocomplete, Button } from "@mui/material";
+import { Autocomplete, Button, CircularProgress, Divider } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
 
 import { useQuery } from "@tanstack/react-query";
@@ -18,23 +11,16 @@ import { useState } from "react";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import {
-  LanOutlined,
   Folder,
-  Science,
-  TableChartOutlined,
-  Settings,
-  Add,
-  Edit,
+  LanOutlined,
   PlayArrow,
-  DoNotDisturbAltOutlined,
-  Check,
+  Science,
+  Settings,
+  TableChartOutlined,
 } from "@mui/icons-material";
-import toast from "react-hot-toast";
 import ResponsiveTabs from "@/components/tabs/tabs.component";
 import classes from "./styles.module.scss";
 import TableVertical from "@/components/tables/tableVertical/vertical-info-card";
-
-
 
 const StorageAccountingPage: React.FC = () => {
   const [material, setMaterial] = useState<IMaterial | null>(null);
@@ -77,7 +63,6 @@ const StorageAccountingPage: React.FC = () => {
     setCurrentTab(tabIndex);
   };
 
-  
   const [formData, setFormData] = useState({
     category: "",
     department: "",
@@ -149,7 +134,7 @@ const StorageAccountingPage: React.FC = () => {
             </div>
           </div>
         );
-      
+
       default:
         return <div></div>;
     }
@@ -204,7 +189,7 @@ const StorageAccountingPage: React.FC = () => {
             <Divider />
           </div>
         );
-      
+
       default:
         return <div></div>;
     }
@@ -222,42 +207,27 @@ const StorageAccountingPage: React.FC = () => {
                     <TableVertical data={overviewData} title="Обзор" />
                   </Grid>
 
-                  <Grid xs={12}>
-                    
-                  </Grid>
+                  <Grid xs={12}></Grid>
 
-                  <Grid xs={12}>
-                  </Grid>
+                  <Grid xs={12}></Grid>
                 </Grid>
               </Grid>
 
               <Grid container md={3.7}>
                 <Grid container xs={12}>
-                  <Grid xs={12}>
-                  </Grid>
-                  <Grid xs={12}>
-            
-                  </Grid>
-                  <Grid xs={12}>
-                
-                  </Grid>
-                  <Grid xs={12}>
-                  </Grid>
+                  <Grid xs={12}></Grid>
+                  <Grid xs={12}></Grid>
+                  <Grid xs={12}></Grid>
+                  <Grid xs={12}></Grid>
                 </Grid>
               </Grid>
 
               <Grid container md={4.6}>
                 <Grid container xs={12}>
-                  <Grid xs={12}>
-                  </Grid>
-                  <Grid xs={12}>
-                  
-                  </Grid>
-                  <Grid xs={12}>
-                  </Grid>
-                  <Grid xs={12}>
-                  
-                  </Grid>
+                  <Grid xs={12}></Grid>
+                  <Grid xs={12}></Grid>
+                  <Grid xs={12}></Grid>
+                  <Grid xs={12}></Grid>
                 </Grid>
               </Grid>
             </Grid>

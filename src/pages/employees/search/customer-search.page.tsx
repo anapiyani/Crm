@@ -25,65 +25,104 @@ import {
   TriStateCheckbox,
 } from "@/components/intermediate-checkbox/intermediate-checkbox";
 import { useEffect, useState } from "react";
-import { getDepartment } from "@/service/department/department.service";
 import { searchEmployee } from "@/service/employee/employee.service";
 import { useQuery } from "@tanstack/react-query";
-import { IDepartmentData } from "@/ts/departments.interface";
 import { ISearchFormData } from "@/ts/employee.interface";
 import TextsmsOutlinedIcon from "@mui/icons-material/TextsmsOutlined";
 import { Link } from "react-router-dom";
 import dayjs from "dayjs";
 import CustomDatePicker from "@/components/date-picker/date-picker-custom";
 import getUserAge from "@/utils/getUserAge";
+import useFormState from "./hooks/useFormState.ts";
+import {
+  getDepartmentRoles,
+  getHierarchyDepartments,
+} from "@/service/department/department.service.ts";
 
-interface IOption {
+type IOption = {
   label: string;
   value: number;
-}
+};
 
 const EmployeeSearch = () => {
-  const [formData, setFormData] = useState<ISearchFormData>({
-    search: "",
-    phone_number: "",
-    whatsapp: "",
-    user_id: "",
-    email: "",
-    is_active: null,
-    employmentDateFrom: "",
-    employmentDateTo: "",
-    age_from: "",
-    age_to: "",
-    gender: "",
-    role: "employee",
-    roleEmployee: "",
-    reviewFrom: "",
-    reviewAbout: "",
-    reviewDateFrom: "",
-    reviewDateTo: "",
-    page: 1,
-    page_size: 10,
-    works_from: "",
-    works_to: "",
-    date_of_birth_from: "",
-    date_of_birth_to: "",
-  });
-  const [selectedRoles, setSelectedRoles] = useState(
-    formData.roleEmployee.split(", ").filter(Boolean),
+  const { formData, setFormData } = useFormState();
+  const [selectedRoles, setSelectedRoles] = useState<string[]>(
+    formData.roleEmployee.split(", ").filter(Boolean)
   );
-  const [pageSize, setPageSize] = useState<IOption>({ label: "10", value: 10 });
-  const [page, setPage] = useState(1);
+  const [departments, setDepartments] = useState<
+    { id: number; name: string }[]
+  >([]);
+  const [departmentRoles, setDepartmentRoles] = useState<{
+    [key: number]: { id: number; name: string }[];
+  }>({});
 
-  const pageSizeOptions: IOption[] = [
-    { label: "10", value: 10 },
-    { label: "20", value: 20 },
-    { label: "50", value: 50 },
-    { label: "100", value: 100 },
-  ];
+  const [openDepartments, setOpenDepartments] = useState<number[]>([]);
+
+  const [loadingDepartments, setLoadingDepartments] = useState<number[]>([]);
+
+  const handleDepartmentToggle = async (deptId: number) => {
+    if (!openDepartments.includes(deptId)) {
+      setLoadingDepartments((prev) => [...prev, deptId]);
+      setOpenDepartments((prev) => [...prev, deptId]);
+      try {
+        const roles = await getDepartmentRoles(deptId);
+        setDepartmentRoles((prev) => ({
+          ...prev,
+          [deptId]: roles.data || [],
+        }));
+      } catch (error) {
+        console.error("Error loading roles for department:", error);
+      } finally {
+        setLoadingDepartments((prev) => prev.filter((id) => id !== deptId));
+      }
+    } else {
+      setOpenDepartments((prev) => prev.filter((id) => id !== deptId));
+    }
+  };
+
+  const { data: departmentsData, isLoading: departmentsLoading } = useQuery({
+    queryKey: ["departments"],
+    queryFn: getHierarchyDepartments,
+  });
+
+  const { data: rolesData } = useQuery({
+    queryKey: ["roles", openDepartments],
+    queryFn: async () => {
+      const promises = openDepartments.map((id) => getDepartmentRoles(id));
+      return Promise.all(promises);
+    },
+    enabled: openDepartments.length > 0,
+  });
 
   useEffect(() => {
-    const defaultSize = pageSizeOptions.find((o) => o.value === pageSize.value);
-    if (defaultSize) setPageSize(defaultSize);
-  }, [pageSize.value]);
+    if (rolesData) {
+      const newRolesMap = openDepartments.reduce(
+        (acc, deptId, index) => {
+          acc[deptId] = rolesData[index]?.data || [];
+          return acc;
+        },
+        {} as { [key: number]: { id: number; name: string }[] }
+      );
+      setDepartmentRoles((prevRoles) => ({ ...prevRoles, ...newRolesMap }));
+    }
+  }, [rolesData, openDepartments]);
+
+  useEffect(() => {
+    if (departmentsData?.data) {
+      setDepartments(departmentsData.data);
+    }
+  }, [departmentsData]);
+
+  const {
+    data: employeeData,
+    refetch: refetchEmployeeData,
+    isPending: employeePending,
+    isError: employeeError,
+  } = useQuery({
+    queryKey: ["employeeData", formData.page, formData.page_size],
+    queryFn: () => searchEmployee(formData),
+    enabled: false,
+  });
 
   const handleFormDataChange = (field: keyof ISearchFormData, value: any) => {
     setFormData((prev) => ({
@@ -94,35 +133,13 @@ const EmployeeSearch = () => {
 
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
-    value: number,
+    value: number
   ) => {
     handleFormDataChange("page", value);
   };
 
-  const {
-    data: departmentData,
-    isPending: departmentPending,
-    isError: departmentError,
-  } = useQuery({
-    queryKey: ["departmentData"],
-    queryFn: getDepartment,
-    staleTime: 300,
-  });
-
-  const {
-    data: employeeData,
-    refetch: refetchEmployeeData,
-    isPending: employeePending,
-    isError: employeeError,
-  } = useQuery({
-    queryKey: ["employeeData", page, pageSize],
-    queryFn: () => searchEmployee(formData),
-    enabled: false,
-  });
-
   const handleSubmit = () => {
     console.log(formData);
-    searchEmployee(formData);
     refetchEmployeeData();
   };
 
@@ -144,7 +161,6 @@ const EmployeeSearch = () => {
       return Array.from(set);
     });
   };
-
   const handleClear = () => {
     setFormData({
       search: "",
@@ -171,6 +187,7 @@ const EmployeeSearch = () => {
       date_of_birth_from: "",
       date_of_birth_to: "",
     });
+    setSelectedRoles([]);
   };
 
   useEffect(() => {
@@ -273,27 +290,6 @@ const EmployeeSearch = () => {
                     }))
                   }
                 />
-
-                {/* <VerticalTextField
-                  label="Дата рождения"
-                  placeholder="С"
-                  placeholderOptional="По"
-                  type="double"
-                  doubleDivier="-"
-                  onChangeFrom={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      [`date_of_birth_from`]: e.target.value,
-                    }))
-                  }
-                  onChangeTo={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      [`date_of_birth_to`]: e.target.value,
-                    }))
-                  }
-                /> */}
-
                 <div
                   style={{
                     display: "flex",
@@ -308,7 +304,7 @@ const EmployeeSearch = () => {
                       setFormData((prev) => ({
                         ...prev,
                         [`date_of_birth_from`]: dayjs(e.target.value).format(
-                          "DD.MM.YYYY",
+                          "DD.MM.YYYY"
                         ),
                       }))
                     }
@@ -320,7 +316,7 @@ const EmployeeSearch = () => {
                       setFormData((prev) => ({
                         ...prev,
                         [`date_of_birth_to`]: dayjs(e.target.value).format(
-                          "DD.MM.YYYY",
+                          "DD.MM.YYYY"
                         ),
                       }));
                     }}
@@ -420,29 +416,40 @@ const EmployeeSearch = () => {
             title={"Должность"}
             children={
               <div className={classes["main__upper__card"]}>
-                {departmentData?.map((item: IDepartmentData) =>
-                  item.role.length > 0 ? (
-                    <TriStateCheckbox key={item.name} label={item.name}>
-                      {item.role.map((position) => (
-                        <ChildCheckbox
-                          key={position.name}
-                          label={position.name}
-                          parentChecked={selectedRoles.includes(position.name)}
-                          onChildChange={(isChecked) => console.log(isChecked)}
-                          onInputChange={(isChecked) =>
-                            handleCheckboxChange(
-                              position.name,
-                              isChecked ? true : false,
-                            )
-                          }
-                        />
+                {departments.map((department) => (
+                  <TriStateCheckbox
+                    key={department.id}
+                    label={department.name}
+                    onChange={() => {
+                      console.log(
+                        `Checkbox state changed for ${department.name}`
+                      );
+                    }}
+                    onToggle={() => handleDepartmentToggle(department.id)}
+                  >
+                    {openDepartments.includes(department.id) &&
+                      (loadingDepartments.includes(department.id) ? (
+                        <CircularProgress size={24} />
+                      ) : (
+                        departmentRoles[department.id]?.map((role) => (
+                          <ChildCheckbox
+                            key={role.id}
+                            label={role.name}
+                            parentChecked={selectedRoles.includes(role.name)}
+                            onChildChange={(isChecked) =>
+                              console.log(isChecked)
+                            }
+                            onInputChange={(isChecked) =>
+                              handleCheckboxChange(role.name, isChecked)
+                            }
+                          />
+                        ))
                       ))}
-                    </TriStateCheckbox>
-                  ) : null,
-                )}
+                  </TriStateCheckbox>
+                ))}
               </div>
             }
-          ></SearchFilterCard>
+          />
         </div>
         <div className={classes["main__upper__reviews"]}>
           <SearchFilterCard
@@ -528,6 +535,12 @@ const EmployeeSearch = () => {
                 shape="rounded"
                 boundaryCount={1}
                 color="primary"
+                sx={{
+                  "& .MuiPagination-ul": {
+                    justifyContent: "center",
+                    margin: "20px 0",
+                  },
+                }}
               />
             </div>
             <Table className={classes.table}>
@@ -543,8 +556,8 @@ const EmployeeSearch = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {employeeData!.results?.length > 0 ? (
-                  employeeData!.results.map((row, index) => (
+                {employeeData?.results && employeeData?.results?.length > 0 ? (
+                  employeeData.results.map((row) => (
                     <TableRow key={row.id}>
                       <TableCell>{row.user_id}</TableCell>
                       <TableCell>
