@@ -46,12 +46,14 @@ const CustomTimePicker: React.FC<CustomTimePickerProps> = ({
       if (Number(value)) {
         if (Number(value) < 0) {
           handleHourChange("00");
+          return "00";
         }
         if (Number(value) > 23) {
           handleHourChange("23");
-          return (e.target.value = "23");
+          return "23";
         } else {
           handleHourChange(value);
+          return value;
         }
       }
     } else {
@@ -67,12 +69,14 @@ const CustomTimePicker: React.FC<CustomTimePickerProps> = ({
       if (Number(value)) {
         if (Number(value) < 0) {
           handleMinuteChange("00");
+          return "00";
         }
         if (Number(value) > 59) {
           handleMinuteChange("59");
-          return (e.target.value = "59");
+          return "59";
         } else {
           handleMinuteChange(value);
+          return value;
         }
       }
     }
