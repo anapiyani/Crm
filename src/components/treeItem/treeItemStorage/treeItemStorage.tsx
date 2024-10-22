@@ -73,7 +73,8 @@ const TreeItem: FC<ICategoryProps> = ({
       id: category.id,
       type: "category",
       onDropItem,
-      onHover: (isHovering, category) => onHover(isHovering, category),
+      onHover: (isHovering) => onHover(isHovering, category),
+      isBlocked: false,
     });
 
   const isHighlighted = searchResults?.hierarchical_items.some(

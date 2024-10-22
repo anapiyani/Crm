@@ -75,17 +75,15 @@ export const addStorageHierarchy = (
     .then((res) => res.data);
 };
 
-export const moveHierarchy = (
+export const moveHierarchy = async (
   data: IMoveHierarchy
 ): Promise<IServiceCategory> => {
-  const params = new URLSearchParams({
-    item_id: data.item.toString(),
-    item_type: data.type,
-    new_parent_id: data.to.toString(),
-  }).toString();
-  return api
-    .post("/hierarchy/hierarchical-items/move/?" + params)
-    .then((res) => res.data);
+  const body = {
+    material_id: data.item,
+    new_location_id: data.to,
+  };
+  const res = await api.post("/hierarchy/move-material-to-location/", body);
+  return res.data;
 };
 
 export const createServiceBasic = (data: {
