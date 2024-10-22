@@ -38,6 +38,47 @@ const CustomTimePicker: React.FC<CustomTimePickerProps> = ({
   );
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
+  const handleHourInput = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const value = e.target.value;
+    if (/^\d*$/.test(value)) {
+      if (Number(value)) {
+        if (Number(value) < 0) {
+          handleHourChange("00");
+        }
+        if (Number(value) > 23) {
+          handleHourChange("23");
+          return (e.target.value = "23");
+        } else {
+          handleHourChange(value);
+        }
+      }
+    } else {
+      return "";
+    }
+  };
+
+  const handleMinuteInput = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    const value = e.target.value;
+    if (/^\d*$/.test(value)) {
+      if (Number(value)) {
+        if (Number(value) < 0) {
+          handleMinuteChange("00");
+        }
+        if (Number(value) > 59) {
+          handleMinuteChange("59");
+          return (e.target.value = "59");
+        } else {
+          handleMinuteChange(value);
+        }
+      }
+    }
+    return "";
+  };
+
   const handleHourChange = (newHour: string) => {
     const formattedHour = newHour.padStart(2, "0");
     setSelectedHour(formattedHour);
@@ -131,22 +172,8 @@ const CustomTimePicker: React.FC<CustomTimePickerProps> = ({
               <TextField
                 defaultValue={selectedHour}
                 onChange={(e) => {
-                  const value = e.target.value;
-                  if (/^\d*$/.test(value)) {
-                    if (Number(value)) {
-                      if (Number(value) < 0) {
-                        handleHourChange("00");
-                      }
-                      if (Number(value) > 23) {
-                        e.target.value = "23";
-                        handleHourChange("23");
-                      } else {
-                        handleHourChange(value);
-                      }
-                    }
-                  } else {
-                    e.target.value = "";
-                  }
+                  e.target.value =
+                    handleHourInput(e) !== undefined ? handleHourInput(e)! : "";
                 }}
                 inputProps={{
                   maxLength: 2,
@@ -161,22 +188,10 @@ const CustomTimePicker: React.FC<CustomTimePickerProps> = ({
               <TextField
                 defaultValue={selectedMinute}
                 onChange={(e) => {
-                  const value = e.target.value;
-                  if (/^\d*$/.test(value)) {
-                    if (Number(value)) {
-                      if (Number(value) < 0) {
-                        handleHourChange("00");
-                      }
-                      if (Number(value) > 59) {
-                        e.target.value = "59";
-                        handleHourChange("59");
-                      } else {
-                        handleHourChange(value);
-                      }
-                    }
-                  } else {
-                    e.target.value = "";
-                  }
+                  e.target.value =
+                    handleMinuteInput(e) !== undefined
+                      ? handleMinuteInput(e)!
+                      : "";
                 }}
                 inputProps={{ maxLength: 2, inputMode: "numeric" }}
                 sx={{

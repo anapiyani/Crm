@@ -7,7 +7,7 @@ const renderBotResponse = (botResponse: TBotResponse) => {
   if (botResponse.gpt_response) {
   }
 
-  const sameDataResponse = botResponse.appointments?.appointments?.reduce(
+  const sameDataResponse = botResponse.appointments?.reduce(
     (acc: Record<string, TBotAnswer[]>, answer: TBotAnswer) => {
       const key = `${answer.date}`;
       if (!acc[key]) {
