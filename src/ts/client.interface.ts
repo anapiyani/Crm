@@ -97,7 +97,7 @@ export interface IClientHistoryDeposit {
 }
 
 export interface IClientDepositTopUp {
-  user_id: number;
+  customer_id: number;
   payments: IPayment[];
   comment: string;
   employee_id?: number | null;

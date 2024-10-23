@@ -38,6 +38,7 @@ import { getHierarchyByEmployeeId } from "@/service/hierarchy/hierarchy.service"
 import { useAddServiceForAppointment } from "@/service/appointments/appointments.hook";
 import { IServicesAdd } from "@/ts/appointments.interface";
 import addMaterialsModal from "@/modals/activity/add-materials.modal";
+import { useState } from "react";
 
 const ViewVisits = () => {
   const params = useParams<{ id: string }>();
@@ -300,49 +301,55 @@ const ViewVisits = () => {
                 </TableHead>
                 <TableBody>
                   {visitInfo.material_purchases.map((purchase) => (
-                    <TableRow key={purchase.id}>
-                      <TableCell>
-                        <p style={{ fontSize: "1.6rem" }}>
-                          {purchase.material_name} <br />{" "}
-                          <span style={{ fontSize: "1.2rem" }}>
-                            {purchase.material || "Для любой длины"}
-                          </span>
-                        </p>
-                      </TableCell>
-                      <TableCell>
-                        <Link className={classes.link} to="/">
-                          Добавить комментарий <Comment />
-                        </Link>
-                      </TableCell>
-                      <TableCell>
-                        <Link to="/" className={classes.link}>
-                          Добавить из посещения
-                        </Link>
-                      </TableCell>
-                      <TableCell>
-                        <Link to="/" className={classes.link}>
-                          Имя Фамилия
-                        </Link>
-                      </TableCell>
-                      <TableCell>{purchase.quantity} шт.</TableCell>
-                      <TableCell>
-                        <p>{purchase.price} ₸</p>{" "}
-                        <Link to="/" className={classes.link}>
-                          <Edit
-                            sx={{
-                              fontSize: "1.5rem",
-                            }}
-                          />
-                          Редактировать
-                        </Link>{" "}
-                      </TableCell>
-                      <TableCell>
-                        <p>-</p>
-                      </TableCell>
-                      <TableCell>
-                        <p>{purchase.price} ₸</p>
-                      </TableCell>
-                    </TableRow>
+                    <>
+                      <TableRow key={purchase.id}>
+                        <TableCell>
+                          <p style={{ fontSize: "1.6rem" }}>
+                            {purchase.material_name} <br />{" "}
+                            <span style={{ fontSize: "1.2rem" }}>
+                              {purchase.material || "Для любой длины"}
+                            </span>
+                          </p>
+                        </TableCell>
+                        <TableCell>
+                          <Link className={classes.link} to="/">
+                            Добавить комментарий <Comment />
+                          </Link>
+                        </TableCell>
+                        <TableCell>
+                          <Link to="/" className={classes.link}>
+                            Добавить из посещения
+                          </Link>
+                        </TableCell>
+                        <TableCell>
+                          <Link to="/" className={classes.link}>
+                            Имя Фамилия
+                          </Link>
+                        </TableCell>
+                        <TableCell>{purchase.quantity} шт.</TableCell>
+                        <TableCell>
+                          <p>{purchase.price} ₸</p>{" "}
+                          <p
+                            className={classes.link}
+                            onClick={() => console.log("edit")}
+                          >
+                            <Edit
+                              sx={{
+                                fontSize: "1.5rem",
+                              }}
+                            />
+                            Редактировать
+                          </p>{" "}
+                        </TableCell>
+                        <TableCell>
+                          <p>-</p>
+                        </TableCell>
+                        <TableCell>
+                          <p>{purchase.price} ₸</p>
+                        </TableCell>
+                      </TableRow>
+                      <div></div>
+                    </>
                   ))}
                 </TableBody>
               </Table>

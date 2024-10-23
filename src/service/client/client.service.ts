@@ -20,11 +20,9 @@ export const getDeposit = (user_id: number): Promise<IClientDeposit> => {
 };
 
 export const getDepositHistory = (
-  formData: IClientDepositHistory
+  user_id: number
 ): Promise<IClientDepositHistoryResponse> => {
-  return api
-    .get("/deposit-history/", { params: formData })
-    .then((res) => res.data);
+  return api.get(`/deposit/${user_id}/history/`).then((res) => res.data);
 };
 
 export const depositTopUp = (formData: IClientDepositTopUp): Promise<any> => {
@@ -32,7 +30,7 @@ export const depositTopUp = (formData: IClientDepositTopUp): Promise<any> => {
 };
 
 export const depositUpdate = (formData: IClientDepositTopUp): Promise<any> => {
-  return api.post("/deposit/update/", formData).then((res) => res.data);
+  return api.post("/deposit/replace/", formData).then((res) => res.data);
 };
 
 export const searchClient = (search: string): Promise<IClientSearch[]> => {
