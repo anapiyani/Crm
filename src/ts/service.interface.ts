@@ -69,6 +69,16 @@ export interface IServiceCostData {
   roots?: number;
 }
 
+export type THierarchyDepartments = {
+  id: number;
+  name: string;
+};
+
+export type THierarchyDepartmentsChild = {
+  services: THierarchyDepartments[];
+  children: THierarchyDepartments[];
+};
+
 export interface IServiceCategory {
   id: number;
   name: string;

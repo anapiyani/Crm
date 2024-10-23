@@ -21,6 +21,7 @@ interface ITreeItemProps {
     isChecked: number;
   }[];
   onParentChange?: (parentId: number | null, childCheckedState: number) => void;
+  onExpand?: (categoryId: number) => Promise<void>; // Updated type
 }
 
 const RecursiveCheckbox: React.FC<ITreeItemProps> = ({
@@ -28,6 +29,7 @@ const RecursiveCheckbox: React.FC<ITreeItemProps> = ({
   onServiceChange,
   preCheckedItems,
   onParentChange,
+  onExpand,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [checked, setChecked] = useState<number>(2); // 1: Checked, 2: Unchecked, 3: Indeterminate
@@ -237,7 +239,12 @@ const RecursiveCheckbox: React.FC<ITreeItemProps> = ({
     propagateParentChange(parentCategory.parent, parentState); // Continue propagation
   };
 
-  const toggle = () => setIsOpen(!isOpen);
+  const toggle = async () => {
+    if (!isOpen && onExpand) {
+      await onExpand(category.id);
+    }
+    setIsOpen(!isOpen);
+  };
 
   return (
     <div className={classes["tree"]}>
@@ -252,9 +259,7 @@ const RecursiveCheckbox: React.FC<ITreeItemProps> = ({
         />
         <span onClick={toggle} className={classes["tree__label"]}>
           {category.name}
-          {(category.children.length > 0 || category.services.length > 0) && (
-            <span>{isOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}</span>
-          )}
+          <span>{isOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}</span>
         </span>
       </div>
       {isOpen && (
@@ -266,6 +271,7 @@ const RecursiveCheckbox: React.FC<ITreeItemProps> = ({
               onServiceChange={onServiceChange}
               preCheckedItems={preCheckedItems}
               onParentChange={onParentChange}
+              onExpand={onExpand}
             />
           ))}
           {category.services.length > 0 && (

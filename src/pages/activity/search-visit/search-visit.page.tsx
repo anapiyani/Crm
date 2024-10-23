@@ -1,3 +1,5 @@
+// вот в этом файле используется чекбоксы которые раскрываются
+
 import BreadcrumbsCustom from "@/components/navigation/breadcrumbs/breadcrumbs";
 import {
   Button,
@@ -13,14 +15,13 @@ import CustomAutoComplete from "@/components/autocomplete/custom-autocomplete.co
 import VerticalTextField from "@/components/textfield-vertical/textfield-vertical";
 import RoleEmployeeCheckbox from "@/components/role-employee-checkbox/role-employee-checkbox";
 import { useState } from "react";
-import RecursiveCheckbox from "@/components/recursive-checkbox/recursive-checkbox";
 import { useQuery } from "@tanstack/react-query";
 import {
-  getHierarchy,
   getHierarchyById,
+  getHierarchyDepartments,
 } from "@/service/hierarchy/hierarchy.service";
-import { IServiceCategory } from "@/ts/service.interface";
-import { Adjust, Inventory, CardGiftcard } from "@mui/icons-material";
+import { THierarchyDepartments } from "@/ts/service.interface";
+import { Adjust } from "@mui/icons-material";
 import EmployeeVisitsTable from "@/pages/employees/employee-visits/visits-table/employee-visits-table";
 import { TableData } from "@/modals/home/event-details/data";
 import { Controller, SubmitHandler, useForm } from "react-hook-form";
@@ -28,6 +29,7 @@ import { IVisitsInfo, IVisitsResponse } from "@/ts/activity.interface";
 import { searchVisits } from "@/service/activity/activity.service";
 import toast from "react-hot-toast";
 import CustomDatePicker from "@/components/date-picker/date-picker-custom";
+import LazyLoadingCheckbox from "@/components/lazyLoadingCheckbox/lazyLoadingCheckbox";
 
 interface ITreeItemProps {
   id: number;
@@ -240,9 +242,9 @@ const SearchVisits = () => {
     data: dataServices,
     isLoading: isLoadingServices,
     error: errorServices,
-  } = useQuery<IServiceCategory[], Error>({
+  } = useQuery<THierarchyDepartments[], Error>({
     queryKey: ["servicesAppointentSearch"],
-    queryFn: getHierarchy,
+    queryFn: getHierarchyDepartments,
     staleTime: Infinity,
     refetchOnWindowFocus: false,
   });
@@ -591,15 +593,11 @@ const SearchVisits = () => {
             <div className={classes.visits__content__infos__header}>
               <h2 className={classes["u-header-text"]}>Основная информация</h2>
               <Divider />
-              {dataServices?.map((service) => (
-                <RecursiveCheckbox
-                  key={`category-${service.id}`}
-                  category={service}
-                  onServiceChange={handleServiceChange}
-                  preCheckedItems={selectedItems}
-                  onParentChange={onParentChange}
-                />
-              ))}
+              <LazyLoadingCheckbox
+                onServiceChange={handleServiceChange}
+                preCheckedItems={selectedItems}
+                onParentChange={onParentChange}
+              />
             </div>
           </div>
         </div>

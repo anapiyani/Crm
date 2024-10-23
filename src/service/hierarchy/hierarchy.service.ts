@@ -2,6 +2,8 @@ import {
   IEmployeeServiceHierarchy,
   IService,
   IServiceCategory,
+  THierarchyDepartments,
+  THierarchyDepartmentsChild,
   TKatalogHierarchy,
 } from "@/ts/service.interface";
 import api from "../api";
@@ -37,6 +39,33 @@ export const getHierarchyKatalog = async (
     throw error;
   }
 };
+
+export const getHierarchyDepartments = async (): Promise<
+  THierarchyDepartments[]
+> => {
+  const url = "/hierarchy/v3/departments/";
+
+  try {
+    const response = await api.get(url);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching hierarchy data:", error);
+    throw error;
+  }
+};
+
+export const getHierarchyById = async (
+  id: number
+): Promise<THierarchyDepartmentsChild> => {
+  try {
+    const response = await api.get(`hierarchy/v3/departments/${id}/children`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching hierarchy by id:", error);
+    throw error;
+  }
+};
+
 export const getHierarchyByDepartment = (): Promise<IServiceCategory[]> => {
   return api.get("/hierarchy/hierarchy-categories/").then((res) => res.data);
 };
@@ -178,9 +207,6 @@ export const getHierarchyByEmployeeId = (
     .then((res) => res.data);
 };
 
-export const getHierarchyById = (id: number): Promise<IServiceCategory> => {
-  return api.get(`/hierarchy/hierarchy/${id}/`).then((res) => res.data);
-};
 export const getHierarchyStorageById = (
   id: number
 ): Promise<IStorageCategory> => {
