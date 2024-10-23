@@ -4,6 +4,7 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import classes from "./styles.module.scss";
 import { IService, IServiceCategory } from "@/ts/service.interface";
 import { getHierarchyById } from "@/service/hierarchy/hierarchy.service";
+import { ArrowDropDown, ArrowDropUp } from "@mui/icons-material";
 
 interface ITreeItemProps {
   category: IServiceCategory;
@@ -253,7 +254,15 @@ const RecursiveCheckbox: React.FC<ITreeItemProps> = ({
         <span onClick={toggle} className={classes["tree__label"]}>
           {category.name}
           {(category.children.length > 0 || category.services.length > 0) && (
-            <span>{isOpen ? <ExpandLessIcon /> : <ExpandMoreIcon />}</span>
+            <span
+              style={{
+                alignItems: "center",
+                display: "flex",
+                color: "#0000008F",
+              }}
+            >
+              {isOpen ? <ArrowDropUp /> : <ArrowDropDown />}
+            </span>
           )}
         </span>
       </div>

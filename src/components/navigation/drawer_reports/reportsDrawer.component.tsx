@@ -8,7 +8,15 @@ import {
   ListItemText,
   styled,
 } from "@mui/material";
-import { Fragment, ReactNode, useState } from "react";
+import {
+  Fragment,
+  JSXElementConstructor,
+  Key,
+  ReactElement,
+  ReactNode,
+  ReactPortal,
+  useState,
+} from "react";
 import {
   Inventory2,
   FirstPageOutlined,
@@ -21,7 +29,7 @@ import {
   ContentCut,
   Payments,
 } from "@mui/icons-material";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, To, useLocation, useNavigate } from "react-router-dom";
 import { CSSProperties } from "react";
 
 type IProps = {
@@ -39,14 +47,27 @@ type Item = BaseItem & {
   children?: BaseItem[];
 };
 
-const StyledBox = styled(Box)(({ isMinimized }: { isMinimized: boolean }) => ({
-  width: isMinimized ? "6rem" : "28.6rem",
-  backgroundColor: "#0B6BCB",
-  padding: isMinimized ? "0.5rem" : "1rem",
-  height: "100vh",
-  overflowY: "auto",
-  transition: "width 0.3s",
-}));
+const StyledBox = styled(Box)(
+  ({
+    isMinimized,
+    isSecondary,
+  }: {
+    isMinimized: boolean;
+    isSecondary?: boolean;
+  }) => ({
+    width: isMinimized ? "6rem" : "28.6rem",
+    backgroundColor: isSecondary ? "#4393E4" : "#0B6BCB",
+    padding: isMinimized ? "0.5rem" : "1rem",
+    height: "100%",
+    overflowY: "hidden",
+    scrollbarWidth: "none",
+    msOverflowStyle: "none",
+    "&::-webkit-scrollbar": {
+      display: "none",
+    },
+    transition: "width 0.2s",
+  })
+);
 
 const StyledIconButton = styled(IconButton)({
   color: "#fff",
@@ -113,9 +134,29 @@ const drawerTitleStyles: CSSProperties = {
 const ReportsDrawer = (props: IProps) => {
   const location = useLocation();
   const [isMinimized, setIsMinimized] = useState<boolean>(true);
+  const [selectedParent, setSelectedParent] = useState<Item | null>(null);
+  const [selectedChild, setSelectedChild] = useState<Item | null>(null);
+  const navigate = useNavigate();
 
   const toggleMinimized = () => {
     setIsMinimized(!isMinimized);
+    if (!isMinimized) {
+      setSelectedParent(null);
+      setSelectedChild(null);
+    }
+  };
+
+  const handleParentClick = (item: Item) => {
+    if (item.children && item.children.length > 0) {
+      setSelectedParent(item);
+      const firstChild = item.children[0];
+      setSelectedChild(firstChild);
+      navigate(firstChild.link);
+    } else {
+      setSelectedParent(item);
+      setSelectedChild(null);
+      navigate(item.link);
+    }
   };
 
   const items = [
@@ -123,21 +164,74 @@ const ReportsDrawer = (props: IProps) => {
       text: "Поиск отчетов",
       icon: <SearchOutlined />,
       link: "/analytics/reports/search",
+      children: [
+        {
+          text: "Отчет по поисковым запросам",
+          link: "/analytics/reports/search/query-report",
+        },
+        {
+          text: "Отчет по аналитике поиска",
+          link: "/analytics/reports/search/analytics-report",
+        },
+      ],
     },
     {
       text: "Все отчеты",
       icon: <Topic />,
       link: "/analytics/reports/all-reports",
+      children: [
+        {
+          text: "Отчет об использовании",
+          link: "/analytics/reports/all-reports/usage-report",
+        },
+        {
+          text: "Отчет по загрузке",
+          link: "/analytics/reports/all-reports/load-report",
+        },
+      ],
     },
     {
       text: "Клиенты",
       icon: <Groups />,
       link: "/analytics/reports/clients",
+      children: [
+        {
+          text: "Отчет по активным клиентам",
+          link: "/analytics/reports/clients/active-clients-report",
+        },
+        {
+          text: "Отчет по ушедшим клиентам",
+          link: "/analytics/reports/clients/lost-clients-report",
+        },
+      ],
     },
+
     {
       text: "Общие отчеты",
       icon: <InsertDriveFile />,
       link: "/analytics/reports/general-reports",
+      children: [
+        {
+          text: "Отчет об использовании адм. функций",
+          link: "/analytics/reports/general-reports/admin-functions-report",
+        },
+        {
+          text: "Отчет по загрузке кабинетов",
+          link: "/analytics/reports/general-reports/cabinets-load-report",
+        },
+        {
+          text: "Отчет по записям",
+          link: "/analytics/reports/general-reports/records-report",
+        },
+        {
+          text: "Отчет по оплаченным посещениям",
+          link: "/analytics/reports/general-reports/paid-visits-report",
+        },
+        {
+          text: "Полный отчет",
+          link: "/analytics/reports/general-reports/full-report",
+        },
+      ],
     },
     {
       text: "Склад",
@@ -153,6 +247,24 @@ const ReportsDrawer = (props: IProps) => {
       text: "Услуги",
       icon: <ContentCut />,
       link: "/analytics/reports/services",
+      children: [
+        {
+          text: "Отчет по оказанным услугам",
+          link: "/analytics/reports/services/provided-services-report",
+        },
+        {
+          text: "Отчет по рейтингу процедур",
+          link: "/analytics/reports/services/procedures-rating-report",
+        },
+        {
+          text: "Отчет по услугам и товарам",
+          link: "/analytics/reports/services/services-and-goods-report",
+        },
+        {
+          text: "Отчет по услугам и товарам по месяцам",
+          link: "/analytics/reports/services/services-and-goods-month-report",
+        },
+      ],
     },
     {
       text: "Финансы",
@@ -165,34 +277,84 @@ const ReportsDrawer = (props: IProps) => {
     return items.map((item, index) => (
       <Fragment key={index}>
         <ListItem disablePadding>
-          <NavLink to={item.link} style={navLinkStyles}>
+          {item.children && item.children.length > 0 ? (
             <StyledListItemButton
-              selected={location.pathname === item.link}
+              selected={location.pathname.startsWith(item.link)}
               isMinimized={isMinimized}
+              onClick={() => handleParentClick(item)}
             >
               <StyledIconContainer>{item.icon}</StyledIconContainer>
               {!isMinimized && <StyledListItemText primary={item.text} />}
             </StyledListItemButton>
-          </NavLink>
+          ) : (
+            <NavLink to={item.link} style={navLinkStyles}>
+              <StyledListItemButton
+                selected={location.pathname === item.link}
+                isMinimized={isMinimized}
+              >
+                <StyledIconContainer>{item.icon}</StyledIconContainer>
+                {!isMinimized && <StyledListItemText primary={item.text} />}
+              </StyledListItemButton>
+            </NavLink>
+          )}
         </ListItem>
       </Fragment>
     ));
   };
 
+  const renderSecondaryDrawer = () => {
+    if (
+      !selectedParent ||
+      !selectedParent.children ||
+      selectedParent.children.length === 0
+    ) {
+      return null;
+    }
+
+    return (
+      <StyledBox isMinimized={false} isSecondary={true}>
+        <Box style={boxStyles(false)}>
+          <p style={drawerTitleStyles}>{selectedParent.text}</p>
+        </Box>
+        <List>
+          {selectedParent.children.map((child, index) => (
+            <ListItem key={index} disablePadding>
+              <NavLink to={child.link} style={navLinkStyles}>
+                <StyledListItemButton
+                  selected={selectedChild?.link === child.link}
+                  isMinimized={false}
+                  onClick={() => setSelectedChild(child)}
+                >
+                  <ListItemText primary={child.text} />
+                </StyledListItemButton>
+              </NavLink>
+            </ListItem>
+          ))}
+        </List>
+      </StyledBox>
+    );
+  };
+
   return (
-    <StyledBox isMinimized={isMinimized}>
-      <Box style={boxStyles(isMinimized)}>
-        {!isMinimized && <p style={drawerTitleStyles}>Отчеты</p>}
-        <StyledIconButton onClick={toggleMinimized}>
-          {isMinimized ? (
-            <MenuOutlined sx={{ fontSize: "3.2rem" }} />
-          ) : (
-            <FirstPageOutlined sx={{ fontSize: "2.4rem" }} />
-          )}
-        </StyledIconButton>
-      </Box>
-      <List>{renderListItems(items)}</List>
-    </StyledBox>
+    <Box display="flex" sx={{ height: "100%" }}>
+      <StyledBox isMinimized={isMinimized}>
+        <Box style={boxStyles(isMinimized)}>
+          {!isMinimized && <p style={drawerTitleStyles}>Отчеты</p>}
+          <StyledIconButton onClick={toggleMinimized}>
+            {isMinimized ? (
+              <MenuOutlined sx={{ fontSize: "3.2rem" }} />
+            ) : (
+              <FirstPageOutlined sx={{ fontSize: "2.4rem" }} />
+            )}
+          </StyledIconButton>
+        </Box>
+        <List>{renderListItems(items)}</List>
+      </StyledBox>
+
+      {!isMinimized || (selectedParent && selectedParent.children)
+        ? renderSecondaryDrawer()
+        : null}
+    </Box>
   );
 };
 
