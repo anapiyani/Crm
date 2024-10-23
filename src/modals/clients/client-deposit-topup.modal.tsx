@@ -23,7 +23,7 @@ const DepositTopUpModal = ({
   const mutation = useDepositTopUp();
   const user_id = localStorage.getItem("user_id");
   const formData: IClientDepositTopUp = {
-    user_id: Number(id),
+    customer_id: Number(id),
     comment: "",
     employee_id: Number(user_id) || 0,
     payments: [],
